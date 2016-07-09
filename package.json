@@ -1,0 +1,54 @@
+{
+  "name": "postman-runtime",
+  "version": "2.0.1-rc.1",
+  "description": "Underlyng library of executing Postman Collections (used by Newman)",
+  "main": "index.js",
+  "directories": {
+    "example": "example",
+    "man": "man",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node npm/test.js",
+    "test-system": "node npm/test-system.js",
+    "test-lint": "node npm/test-lint.js",
+    "test-unit": "node npm/test-unit.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:postmanlabs/postman-runtime.git"
+  },
+  "author": "Postman Labs <help@getpostman.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "atob": "2.0.0",
+    "backbone": "1.3.3",
+    "btoa": "1.1.2",
+    "cheerio": "0.20.0",
+    "crypto-js": "3.1.6",
+    "lodash": "3.10.1",
+    "node-uuid": "1.4.7",
+    "postman-collection": "0.4.0",
+    "request": "2.72.0",
+    "serialised-error": "1.1.2",
+    "tv4": "1.2.7",
+    "xml2js": "0.4.16"
+  },
+  "devDependencies": {
+    "async": "2.0.0-rc.6",
+    "colors": "1.1.2",
+    "eslint": "2.13.1",
+    "eslint-plugin-security": "1.2.0",
+    "expect.js": "0.3.1",
+    "js-yaml": "3.6.1",
+    "mocha": "2.4.5",
+    "nsp": "2.5.0",
+    "shelljs": "0.7.0",
+    "sinon": "1.17.3"
+  },
+  "browser": {
+    "./lib/uvm/script.js": "./lib/uvm/browser/script.js",
+    "./lib/uvm/host.js": "./lib/uvm/browser/host.js",
+    "request": "./lib/requester/browser/request.js"
+  }
+}
