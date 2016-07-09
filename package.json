@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "2.0.1-rc.1",
+  "version": "2.0.1-rc.2",
   "description": "Underlyng library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
