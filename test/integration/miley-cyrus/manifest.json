@@ -1,0 +1,34 @@
+{
+  "name": "Universal VM",
+  "version": "1.0.2",
+  "manifest_version": 2,
+  "minimum_chrome_version": "23",
+  "app": {
+    "background": {
+      "scripts": ["main.js"]
+    }
+  },
+  "icons": {
+    "128": "icon_128.png"
+  },
+  "sandbox": {
+
+  },
+  "permissions":[
+    "webview",
+    "system.display",
+    "http://*/*",
+    "https://*/*",
+    "contextMenus",
+    "unlimitedStorage",
+    "storage",
+    "fileSystem",
+    "fileSystem.write",
+    "notifications",
+    "identity",
+    {"socket": [
+      "tcp-connect:*:*",
+      "tcp-listen:*:*"
+    ]}
+  ]
+}
