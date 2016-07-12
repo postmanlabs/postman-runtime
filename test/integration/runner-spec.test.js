@@ -17,8 +17,8 @@ describe('Runner', function () {
                 testables = {
                     iterationsStarted: [],
                     iterationsComplete: [],
-                    itemsStarted: [],
-                    itemsComplete: [],
+                    itemsStarted: {},
+                    itemsComplete: {},
                 },  // populate during the run, and then perform tests on it, at the end.
 
                 /**
@@ -77,16 +77,20 @@ describe('Runner', function () {
                         check(function () {
                             expect(err).to.be(null);
 
-                            testables.itemsStarted.push(item);
+                            testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
+                            testables.itemsStarted[cursor.iteration].push(item);
                             runStore.position = cursor.position;
+                            runStore.ref = cursor.ref;
                         });
                     },
                     item: function (err, cursor, item) {
                         check(function () {
                             expect(err).to.be(null);
                             expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
 
-                            testables.iterationsComplete.push(item);
+                            testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
+                            testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
                     beforePrerequest: function (err, cursor, events, item) {
@@ -96,10 +100,9 @@ describe('Runner', function () {
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
 
-                            // This collection has no pre-request scripts
-                            // todo: fix this
-                            // expect(events.length).to.be(0);
+                            expect(events.length).to.be(0);
                         });
                     },
                     prerequest: function (err, cursor, results, item) {
@@ -109,10 +112,10 @@ describe('Runner', function () {
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
 
                             // This collection has no pre-request scripts
                             expect(results.length).to.be(0);
-
                         });
                     },
                     beforeTest: function (err, cursor, events, item) {
@@ -122,6 +125,7 @@ describe('Runner', function () {
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
 
                             // This collection has no pre-request scripts
                             expect(events.length).to.be(1);
@@ -134,18 +138,50 @@ describe('Runner', function () {
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
 
                             // This collection has no pre-request scripts
                             expect(results.length).to.be(1);
 
                             var result = results[0];
-                            expect(result.error).to.be(null);
+                            expect(result.error).to.be(undefined);
 
                             var scriptResult = results[0];
                             expect(scriptResult.result.masked.scriptType).to.eql('test');
                         });
                     },
+                    beforeRequest: function (err, cursor, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    request: function (err, cursor, response, request, item) {
+                        expect(err).to.be(null);
+
+                        // Sanity
+                        expect(cursor.iteration).to.eql(runStore.iteration);
+                        expect(cursor.position).to.eql(runStore.position);
+                        expect(cursor.ref).to.eql(runStore.ref);
+
+                        expect(response.code).to.be(200);
+                    },
                     done: function () {
+                        expect(testables.started).to.be(true);
+
+                        // Ensure that we ran (and completed two iterations)
+                        expect(testables.iterationsStarted).to.eql([0, 1]);
+                        expect(testables.iterationsComplete).to.eql([0, 1]);
+
+                        // Expect the end position to be correct
+                        expect(runStore.iteration).to.be(1);
+                        expect(runStore.position).to.be(2);
+                        console.log(testables);
+                        console.log(runStore);
                         mochaDone();
                     }
                 });
