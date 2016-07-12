@@ -6,7 +6,7 @@ var _ = require('lodash'),
 /* global describe, it */
 describe('Option', function () {
     describe('Stop On Error', function () {
-        it('should gracefully stop an iteration on errors', function (mochaDone) {
+        it('should gracefully stop a run when there are script errors', function (mochaDone) {
             var runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
