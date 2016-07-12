@@ -4,90 +4,79 @@ var _ = require('lodash'),
     sdk = require('postman-collection');
 
 /* global describe, it */
-describe('Runner', function () {
-    describe('Set Next Request', function () {
-        it('should be able to jump to the middle of a collection', function (mochaDone) {
+describe('Option', function () {
+    describe('Stop On Error', function () {
+        it('should gracefully stop an iteration on HTTP errors', function (mochaDone) {
             var runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
+                        "name": "test",
+                        "_postman_id": "cd9e83b1-03dd-18ae-ff02-574414594a87",
                         "description": "",
                         "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
                     },
                     "item": [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "post",
-                            "event": [
+                            "name": "Request Methods",
+                            "description": "HTTP has multiple request \"verbs\", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n",
+                            "item": [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "postman.setEnvironmentVariable('method', 'get');\npostman.setEnvironmentVariable('count', '1');\nconsole.log('Environment is now: ', environment);\npostman.setNextRequest('method');"
+                                    "name": "First Request",
+                                    "event": [
+                                        {
+                                            "listen": "test",
+                                            "script": {
+                                                "type": "text/javascript",
+                                                "exec": "tests[\"Body contains headers\"] = responseBody.has(\"headers\");\ntests[\"Body contains args\"] = responseBody.has(\"args\");\ntests[\"Body contains url\"] = responseBody.has(\"url\");\n\nvar data = JSON.parse(responseBody)\n\ntests[\"Args key contains argument passed as url parameter\"] = 'test' in data.args"
+                                            }
+                                        }
+                                    ],
+                                    "request": {
+                                        "url": "https://echo.getpostman.com/get?test=123",
+                                        "method": "GET"
+                                    }
+                                },
+                                {
+                                    "name": "Second Request",
+                                    "event": [
+                                        {
+                                            "listen": "prerequest",
+                                            "script": {
+                                                "type": "text/javascript",
+                                                "exec": "console.log('yo', 'I am running!');"
+                                            }
+                                        },
+                                        {
+                                            "listen": "test",
+                                            "script": {
+                                                "type": "text/javascript",
+                                                "exec": ";"
+                                            }
+                                        }
+                                    ],
+                                    "request": {
+                                        "url": "https://somenonexistantdomain/get?test=123",
+                                        "method": "GET"
+                                    }
+                                },
+                                {
+                                    "name": "Third Request",
+                                    "event": [
+                                        {
+                                            "listen": "test",
+                                            "script": {
+                                                "type": "text/javascript",
+                                                "exec": ";"
+                                            }
+                                        }
+                                    ],
+                                    "request": {
+                                        "url": "https://echo.getpostman.com/get?test=123",
+                                        "method": "GET"
                                     }
                                 }
-                            ],
-                            "request": {
-                                "url": "httpbin.org/post",
-                                "method": "POST",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
-                                },
-                                "description": ""
-                            },
-                            "response": []
-                        },
-                        {
-                            "id": "5c822123-4bb4-62df-4aa5-ef509a84de8e",
-                            "name": "html",
-                            "event": [
-                                {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "var count = _.parseInt(postman.getEnvironmentVariable('count'));\ncount++;\npostman.setEnvironmentVariable('count', String(count));\n\nif (responseCode.code === 200) {\n    postman.setEnvironmentVariable('method', 'headers');\n    console.log('Setting next request to \"method\"');\n    postman.setNextRequest('method');\n}"
-                                    }
-                                }
-                            ],
-                            "request": {
-                                "url": "http://httpbin.org/html",
-                                "method": "GET",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
-                                },
-                                "description": ""
-                            },
-                            "response": []
-                        },
-                        {
-                            "id": "b6dda40c-4045-fcc3-df78-97e27564db8f",
-                            "name": "method",
-                            "event": [
-                                {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "var jsonData = JSON.parse(responseBody);\nvar count = _.parseInt(postman.getEnvironmentVariable('count'));\ncount++;\npostman.setEnvironmentVariable('count', String(count));\n\nif (jsonData.url === 'http://httpbin.org/get') {\n    console.log('Setting next request to \"html\"');\n    postman.setNextRequest('html');\n}\nelse if (!jsonData.url && jsonData.headers) {\n    console.log('Ending here.'); tests['Success'] = _.parseInt(postman.getEnvironmentVariable('count')) === 4\n    postman.setNextRequest(null);\n}\nelse {\n    console.log('Not setting next request.. ', responseBody);\n}"
-                                    }
-                                }
-                            ],
-                            "request": {
-                                "url": "httpbin.org/{{method}}",
-                                "method": "GET",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
-                                },
-                                "description": ""
-                            },
-                            "response": []
+                            ]
                         }
                     ]
                 },
@@ -111,12 +100,22 @@ describe('Runner', function () {
                 };
 
             runner.run(collection, {
-                iterationCount: 2
+                iterationCount: 2,
+                stopOnError: true
             }, function (err, run) {
                 var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
+                    console: function (cursor, level, msg1, msg2) {
+                        check(function () {
+                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(level).to.be('log');
+                            expect(msg1).to.be('yo');
+                            expect(msg2).to.be('I am running!');
+                            testables.console = true;
+                        });
+                    },
                     start: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
@@ -159,6 +158,8 @@ describe('Runner', function () {
                             testables.itemsStarted[cursor.iteration].push(item);
                             runStore.position = cursor.position;
                             runStore.ref = cursor.ref;
+
+                            expect(item.name).to.not.be('Third Request');
                         });
                     },
                     item: function (err, cursor, item) {
@@ -169,6 +170,8 @@ describe('Runner', function () {
 
                             testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
                             testables.itemsComplete[cursor.iteration].push(item);
+
+                            expect(item.name).to.not.be('Third Request');
                         });
                     },
                     beforePrerequest: function (err, cursor, events, item) {
@@ -180,20 +183,26 @@ describe('Runner', function () {
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
 
-                            expect(events.length).to.be(0);
+                            if (item.name === 'Second Request') {
+                                expect(events.length).to.be(1);
+                            }
+                            else {
+                                expect(events.length).to.be(0);
+                            }
+
+                            expect(item.name).to.not.be('Third Request');
                         });
                     },
                     prerequest: function (err, cursor, results, item) {
                         check(function () {
-                            expect(err).to.be(null);
-
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
 
-                            // This collection has no pre-request scripts
-                            expect(results.length).to.be(0);
+                            expect(err).to.be(null);
+
+                            expect(item.name).to.not.be('Third Request');
                         });
                     },
                     beforeTest: function (err, cursor, events, item) {
@@ -207,6 +216,14 @@ describe('Runner', function () {
 
                             // This collection has no pre-request scripts
                             expect(events.length).to.be(1);
+
+                            // This should never be called for the
+                            // second request.
+                            if (cursor.iteration === 1) {
+                                expect(item.name).to.not.be('Second Request');
+                            }
+
+                            expect(item.name).to.not.be('Third Request');
                         });
                     },
                     test: function (err, cursor, results, item) {
@@ -218,14 +235,19 @@ describe('Runner', function () {
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
 
-                            // This collection has no pre-request scripts
-                            expect(results.length).to.be(1);
-
                             var result = results[0];
                             expect(result.error).to.be(undefined);
 
                             var scriptResult = results[0];
                             expect(scriptResult.result.masked.scriptType).to.eql('test');
+
+                            // This should never be called for the
+                            // second request.
+                            if (cursor.iteration === 1) {
+                                expect(item.name).to.not.be('Second Request');
+                            }
+
+                            expect(item.name).to.not.be('Third Request');
                         });
                     },
                     beforeRequest: function (err, cursor, request, item) {
@@ -236,56 +258,63 @@ describe('Runner', function () {
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
+
+                            expect(item.name).to.not.be('Third Request');
                         });
                     },
                     request: function (err, cursor, response, request, item) {
                         check(function () {
-                            expect(err).to.be(null);
-
-                            expect(request.url.toString()).to.be.ok();
-
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
 
-                            expect(response.code).to.be(200);
                             expect(request).to.be.ok();
+                            expect(request.url.toString()).to.be.ok();
+
+                            if (item.name === 'Second Request') {
+                                expect(err.message).to.be('getaddrinfo ENOTFOUND somenonexistantdomain ' +
+                                    'somenonexistantdomain:443');
+                                return;
+                            }
+                            expect(err).to.be(null);
+                            expect(response.code).to.be(200);
+
+                            expect(item.name).to.not.be('Third Request');
                         });
                     },
                     done: function (err) {
-                        check(function () {
-                            expect(err).to.be(null);
+                        expect(err).to.be(null);
 
-                            expect(testables.started).to.be(true);
+                        expect(testables.started).to.be(true);
+                        expect(testables.console).to.be(true);
 
-                            // Ensure that we ran (and completed two iterations)
-                            expect(testables.iterationsStarted).to.eql([0, 1]);
-                            expect(testables.iterationsComplete).to.eql([0, 1]);
+                        // Ensure that we ran (and completed three iterations)
+                        // The second iteration should be stopped at the second request.
+                        expect(testables.iterationsStarted).to.eql([0, 1]);
+                        expect(testables.iterationsComplete).to.eql([0, 1]);
 
-                            expect(testables.itemsStarted[0].length).to.be(4);
-                            expect(testables.itemsComplete[0].length).to.be(4);
-                            expect(_.map(testables.itemsStarted[0], 'name')).to.eql([
-                                'post', 'method', 'html', 'method'
-                            ]);
-                            expect(_.map(testables.itemsComplete[0], 'name')).to.eql([
-                                'post', 'method', 'html', 'method'
-                            ]);
+                        // First iteration
+                        expect(testables.itemsStarted[0].length).to.be(2);
+                        expect(testables.itemsComplete[0].length).to.be(2);
+                        expect(_.map(testables.itemsStarted[0], 'name')).to.eql([
+                            'First Request', 'Second Request'
+                        ]);
+                        expect(_.map(testables.itemsComplete[0], 'name')).to.eql([
+                            'First Request', 'Second Request'
+                        ]);
 
-                            expect(testables.itemsStarted[1].length).to.be(4);
-                            expect(testables.itemsComplete[1].length).to.be(4);
-                            expect(_.map(testables.itemsStarted[1], 'name')).to.eql([
-                                'post', 'method', 'html', 'method'
-                            ]);
-                            expect(_.map(testables.itemsComplete[1], 'name')).to.eql([
-                                'post', 'method', 'html', 'method'
-                            ]);
+                        // Second Iteration
+                        expect(testables.itemsStarted[1].length).to.be(2);
+                        expect(testables.itemsComplete[1].length).to.be(2);
+                        expect(_.map(testables.itemsStarted[1], 'name')).to.eql([
+                            'First Request', 'Second Request'
+                        ]);
+                        expect(_.map(testables.itemsComplete[1], 'name')).to.eql([
+                            'First Request', 'Second Request'
+                        ]);
 
-                            // Expect the end position to be correct
-                            expect(runStore.iteration).to.be(1);
-                            expect(runStore.position).to.be(2);
-                            mochaDone();
-                        });
+                        mochaDone();
                     }
                 });
             });
