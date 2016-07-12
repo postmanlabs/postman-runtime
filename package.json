@@ -51,5 +51,8 @@
     "./lib/uvm/script.js": "./lib/uvm/browser/script.js",
     "./lib/uvm/host.js": "./lib/uvm/browser/host.js",
     "request": "./lib/requester/browser/request.js"
+  },
+  "engines": {
+    "node": ">=4"
   }
 }
