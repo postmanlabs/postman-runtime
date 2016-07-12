@@ -7,11 +7,7 @@ var _ = require('lodash'),
 describe('Runner', function () {
     describe('Set Next Request', function () {
         it('should be able to jump to the middle of a collection', function (mochaDone) {
-            var runner = new runtime.Runner({
-                    run: {
-                        stopOnError: true
-                    }
-                }),
+            var runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
