@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "2.0.1-rc.2",
+  "version": "2.1.0",
   "description": "Underlyng library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -12,7 +12,8 @@
     "test": "node npm/test.js",
     "test-system": "node npm/test-system.js",
     "test-lint": "node npm/test-lint.js",
-    "test-unit": "node npm/test-unit.js"
+    "test-unit": "node npm/test-unit.js",
+    "test-integration": "node npm/test-integration.js"
   },
   "repository": {
     "type": "git",
