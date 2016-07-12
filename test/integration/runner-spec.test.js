@@ -12,7 +12,89 @@ describe('Runner', function () {
                         stopOnError: true
                     }
                 }),
-                rawCollection = require('../../example/set-next-request-middle.json'),
+                rawCollection = {
+                    "variables": [],
+                    "info": {
+                        "name": "NewmanSetNextRequest",
+                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
+                        "description": "",
+                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    },
+                    "item": [
+                        {
+                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
+                            "name": "post",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": "postman.setEnvironmentVariable('method', 'get');\npostman.setEnvironmentVariable('count', '1');\nconsole.log('Environment is now: ', environment);\npostman.setNextRequest('method');"
+                                    }
+                                }
+                            ],
+                            "request": {
+                                "url": "httpbin.org/post",
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": []
+                                },
+                                "description": ""
+                            },
+                            "response": []
+                        },
+                        {
+                            "id": "5c822123-4bb4-62df-4aa5-ef509a84de8e",
+                            "name": "html",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": "var count = _.parseInt(postman.getEnvironmentVariable('count'));\ncount++;\npostman.setEnvironmentVariable('count', String(count));\n\nif (responseCode.code === 200) {\n    postman.setEnvironmentVariable('method', 'headers');\n    console.log('Setting next request to \"method\"');\n    postman.setNextRequest('method');\n}"
+                                    }
+                                }
+                            ],
+                            "request": {
+                                "url": "http://httpbin.org/html",
+                                "method": "GET",
+                                "header": [],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": []
+                                },
+                                "description": ""
+                            },
+                            "response": []
+                        },
+                        {
+                            "id": "b6dda40c-4045-fcc3-df78-97e27564db8f",
+                            "name": "method",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": "var jsonData = JSON.parse(responseBody);\nvar count = _.parseInt(postman.getEnvironmentVariable('count'));\ncount++;\npostman.setEnvironmentVariable('count', String(count));\n\nif (jsonData.url === 'http://httpbin.org/get') {\n    console.log('Setting next request to \"html\"');\n    postman.setNextRequest('html');\n}\nelse if (!jsonData.url && jsonData.headers) {\n    console.log('Ending shit here.'); tests['Success'] = _.parseInt(postman.getEnvironmentVariable('count')) === 4\n    postman.setNextRequest(null);\n}\nelse {\n    console.log('Not setting next request.. ', responseBody);\n}"
+                                    }
+                                }
+                            ],
+                            "request": {
+                                "url": "httpbin.org/{{method}}",
+                                "method": "GET",
+                                "header": [],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": []
+                                },
+                                "description": ""
+                            },
+                            "response": []
+                        }
+                    ]
+                },
                 collection = new sdk.Collection(rawCollection),
                 testables = {
                     iterationsStarted: [],
@@ -164,6 +246,8 @@ describe('Runner', function () {
                         check(function () {
                             expect(err).to.be(null);
 
+                            expect(request.url.toString()).to.be.ok();
+
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
@@ -173,8 +257,10 @@ describe('Runner', function () {
                             expect(request).to.be.ok();
                         });
                     },
-                    done: function () {
+                    done: function (err) {
                         check(function () {
+                            expect(err).to.be(null);
+
                             expect(testables.started).to.be(true);
 
                             // Ensure that we ran (and completed two iterations)
@@ -202,7 +288,6 @@ describe('Runner', function () {
                             // Expect the end position to be correct
                             expect(runStore.iteration).to.be(1);
                             expect(runStore.position).to.be(2);
-                            console.log(testables);
                             mochaDone();
                         });
                     }
