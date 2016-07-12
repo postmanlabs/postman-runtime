@@ -161,28 +161,50 @@ describe('Runner', function () {
                         });
                     },
                     request: function (err, cursor, response, request, item) {
-                        expect(err).to.be(null);
+                        check(function () {
+                            expect(err).to.be(null);
 
-                        // Sanity
-                        expect(cursor.iteration).to.eql(runStore.iteration);
-                        expect(cursor.position).to.eql(runStore.position);
-                        expect(cursor.ref).to.eql(runStore.ref);
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
 
-                        expect(response.code).to.be(200);
+                            expect(response.code).to.be(200);
+                            expect(request).to.be.ok();
+                        });
                     },
                     done: function () {
-                        expect(testables.started).to.be(true);
+                        check(function () {
+                            expect(testables.started).to.be(true);
 
-                        // Ensure that we ran (and completed two iterations)
-                        expect(testables.iterationsStarted).to.eql([0, 1]);
-                        expect(testables.iterationsComplete).to.eql([0, 1]);
+                            // Ensure that we ran (and completed two iterations)
+                            expect(testables.iterationsStarted).to.eql([0, 1]);
+                            expect(testables.iterationsComplete).to.eql([0, 1]);
 
-                        // Expect the end position to be correct
-                        expect(runStore.iteration).to.be(1);
-                        expect(runStore.position).to.be(2);
-                        console.log(testables);
-                        console.log(runStore);
-                        mochaDone();
+                            expect(testables.itemsStarted[0].length).to.be(4);
+                            expect(testables.itemsComplete[0].length).to.be(4);
+                            expect(_.map(testables.itemsStarted[0], 'name')).to.eql([
+                                'post', 'method', 'html', 'method'
+                            ]);
+                            expect(_.map(testables.itemsComplete[0], 'name')).to.eql([
+                                'post', 'method', 'html', 'method'
+                            ]);
+
+                            expect(testables.itemsStarted[1].length).to.be(4);
+                            expect(testables.itemsComplete[1].length).to.be(4);
+                            expect(_.map(testables.itemsStarted[1], 'name')).to.eql([
+                                'post', 'method', 'html', 'method'
+                            ]);
+                            expect(_.map(testables.itemsComplete[1], 'name')).to.eql([
+                                'post', 'method', 'html', 'method'
+                            ]);
+
+                            // Expect the end position to be correct
+                            expect(runStore.iteration).to.be(1);
+                            expect(runStore.position).to.be(2);
+                            console.log(testables);
+                            mochaDone();
+                        });
                     }
                 });
             });
