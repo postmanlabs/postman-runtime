@@ -1,7 +1,7 @@
 /* global describe, it */
 var expect = require('expect.js');
 
-describe('shippable.yml', function () {
+describe('travis.yml', function () {
     var fs = require('fs'),
         yaml = require('js-yaml'),
         travisYAML,
@@ -32,8 +32,8 @@ describe('shippable.yml', function () {
             expect(travisYAML.node_js).to.eql(['4']);
         });
 
-        it.skip('node version must match rest of the tests', function () {
-            expect(travisYAML.node_js).to.eql([packageFile.engines.node]);
+        it('node version must match rest of the tests', function () {
+            expect(travisYAML.node_js).to.eql([packageFile.engines.node.charAt(2)]);
         });
     });
 });
