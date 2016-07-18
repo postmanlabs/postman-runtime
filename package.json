@@ -37,7 +37,6 @@
     "xml2js": "0.4.16"
   },
   "devDependencies": {
-    "async": "2.0.0-rc.6",
     "colors": "1.1.2",
     "eslint": "2.13.1",
     "eslint-plugin-security": "1.2.0",
