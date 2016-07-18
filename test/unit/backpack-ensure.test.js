@@ -1,28 +1,39 @@
 /* global describe, it */
-var expect = require('expect.js');
+var expect = require('expect.js'),
+    sinon = require('sinon');
 
 describe('backpack.ensure', function () {
     var ensure = require('../../lib/backpack').ensure;
 
-    it('should bind functions', function () {
-        expect(ensure).to.be.ok();
-        expect(ensure).to.be.a('function');
+    it('should return a function if the original argument is a function and not otherwise', function () {
+        var fn = function () { return 1; };
+
+        expect(ensure(fn)).be(fn);
+        expect(ensure('blah')).be(undefined);
+        expect(ensure(1234)).be(undefined);
     });
 
-    it('must accept a function and a context', function () {
-        var ctx = {},
-            ensured = ensure(function () {
-                expect(this).to.be(ctx);
-            }, ctx);
-        expect(ensured).to.be.a('function');
-        ensured();
+    it('must execute original function that was ensured', function () {
+        var fn = sinon.spy(),
+            ensured = ensure(fn);
+
+        // call the ensured function and test if original was executed
+        ensured('hello');
+
+        sinon.assert.calledOnce(fn);
+        sinon.assert.calledWith(fn, 'hello');
     });
 
-    it('must accept only a function', function () {
-        var ensured = ensure(function () {
-            expect(this).to.be(global);
-        });
-        expect(ensured).to.be.a('function');
-        ensured();
+    it('must bind the function to a context', function () {
+        var fn = sinon.spy(),
+            ctx = {},
+            ensured = ensure(fn, ctx);
+
+        // call the ensured function and test if original was executed
+        ensured('hello');
+
+        sinon.assert.calledOnce(fn);
+        sinon.assert.calledWith(fn, 'hello');
+        sinon.assert.calledOn(fn, ctx);
     });
 });
