@@ -1,7 +1,7 @@
 /* global describe, it */
 var expect = require('expect.js');
 
-describe('backpack.multiback', function () {
+describe('backpack.ensure', function () {
     var ensure = require('../../lib/backpack').ensure;
 
     it('should bind functions', function () {
