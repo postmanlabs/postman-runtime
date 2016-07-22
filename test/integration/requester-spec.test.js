@@ -1223,4 +1223,418 @@ describe('Requester', function () {
             });
         });
     });
+
+    describe('File Handling', function () {
+        it('should upload a file if a file resolver is provided', function (mochaDone) {
+            var runner = new runtime.Runner(),
+                fakeFileResolver = {
+                    createReadStream: function () {
+                        return "fake-file-content"
+                    }
+                },
+                rawCollection = {
+                    "variables": [],
+                    "info": {
+                        "name": "EmptyRawBody",
+                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
+                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    },
+                    "item": [
+                        {
+                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
+                            "name": "First Request",
+                            "request": {
+                                "url": "http://echo.getpostman.com/post",
+                                "method": "POST",
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "myfile",
+                                            "type": "file",
+                                            "src": "/some/path"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                collection = new sdk.Collection(rawCollection),
+                testables = {
+                    iterationsStarted: [],
+                    iterationsComplete: [],
+                    itemsStarted: {},
+                    itemsComplete: {}
+                },  // populate during the run, and then perform tests on it, at the end.
+
+                /**
+                 * Since each callback runs in a separate callstack, this helper function
+                 * ensures that any errors are forwarded to mocha
+                 *
+                 * @param func
+                 */
+                check = function (func) {
+                    try { func(); }
+                    catch (e) { mochaDone(e); }
+                };
+
+            runner.run(collection, {
+                iterationCount: 1,
+                requester: {
+                    followRedirects: false,
+                    fileResolver: fakeFileResolver
+                }
+            }, function (err, run) {
+                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+
+                expect(err).to.be(null);
+                run.start({
+                    start: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor).to.have.property('position', 0);
+                            expect(cursor).to.have.property('iteration', 0);
+                            expect(cursor).to.have.property('length', 1);
+                            expect(cursor).to.have.property('cycles', 1);
+                            expect(cursor).to.have.property('eof', false);
+                            expect(cursor).to.have.property('empty', false);
+                            expect(cursor).to.have.property('bof', true);
+                            expect(cursor).to.have.property('cr', false);
+                            expect(cursor).to.have.property('ref');
+
+                            // Set this to true, and verify at the end, so that the test will fail even if this
+                            // callback is never called.
+                            testables.started = true;
+                        });
+                    },
+                    beforeIteration: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            testables.iterationsStarted.push(cursor.iteration);
+                            runStore.iteration = cursor.iteration;
+                        });
+                    },
+                    iteration: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+
+                            testables.iterationsComplete.push(cursor.iteration);
+                        });
+                    },
+                    beforeItem: function (err, cursor, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
+                            testables.itemsStarted[cursor.iteration].push(item);
+                            runStore.position = cursor.position;
+                            runStore.ref = cursor.ref;
+                        });
+                    },
+                    item: function (err, cursor, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
+                            testables.itemsComplete[cursor.iteration].push(item);
+                        });
+                    },
+                    beforePrerequest: function (err, cursor, events, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            expect(events.length).to.be(0);
+                        });
+                    },
+                    prerequest: function (err, cursor, results, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            // This collection has no pre-request scripts
+                            expect(results).to.be.empty();
+                        });
+                    },
+                    beforeTest: function (err, cursor, events, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            // This collection has no pre-request scripts
+                            expect(events).to.be.empty();
+                        });
+                    },
+                    test: function (err, cursor, results, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(results).to.be.empty();
+                        });
+                    },
+                    beforeRequest: function (err, cursor, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    request: function (err, cursor, response, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            expect(request.url.toString()).to.be.ok();
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            expect(response.code).to.be(200);
+                            expect(request).to.be.ok();
+
+                            var body = JSON.parse(response.body);
+                            expect(body.args).to.be.empty();
+                            expect(body.data).to.be.empty();
+                            expect(body.files).to.be.empty();
+                            expect(body.form).to.be.eql({ myfile: 'fake-file-content' });
+                        });
+                    },
+                    done: function (err) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            mochaDone();
+                        });
+                    }
+                });
+            });
+        });
+
+        it('should not upload a file if no file resolver is provided', function (mochaDone) {
+            var runner = new runtime.Runner(),
+                rawCollection = {
+                    "variables": [],
+                    "info": {
+                        "name": "EmptyRawBody",
+                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
+                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    },
+                    "item": [
+                        {
+                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
+                            "name": "First Request",
+                            "request": {
+                                "url": "http://echo.getpostman.com/post",
+                                "method": "POST",
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "myfile",
+                                            "type": "file",
+                                            "src": "/some/path"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                collection = new sdk.Collection(rawCollection),
+                testables = {
+                    iterationsStarted: [],
+                    iterationsComplete: [],
+                    itemsStarted: {},
+                    itemsComplete: {}
+                },  // populate during the run, and then perform tests on it, at the end.
+
+                /**
+                 * Since each callback runs in a separate callstack, this helper function
+                 * ensures that any errors are forwarded to mocha
+                 *
+                 * @param func
+                 */
+                check = function (func) {
+                    try { func(); }
+                    catch (e) { mochaDone(e); }
+                };
+
+            runner.run(collection, {
+                iterationCount: 1,
+                requester: {
+                    followRedirects: false,
+                }
+            }, function (err, run) {
+                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+
+                expect(err).to.be(null);
+                run.start({
+                    start: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor).to.have.property('position', 0);
+                            expect(cursor).to.have.property('iteration', 0);
+                            expect(cursor).to.have.property('length', 1);
+                            expect(cursor).to.have.property('cycles', 1);
+                            expect(cursor).to.have.property('eof', false);
+                            expect(cursor).to.have.property('empty', false);
+                            expect(cursor).to.have.property('bof', true);
+                            expect(cursor).to.have.property('cr', false);
+                            expect(cursor).to.have.property('ref');
+
+                            // Set this to true, and verify at the end, so that the test will fail even if this
+                            // callback is never called.
+                            testables.started = true;
+                        });
+                    },
+                    beforeIteration: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            testables.iterationsStarted.push(cursor.iteration);
+                            runStore.iteration = cursor.iteration;
+                        });
+                    },
+                    iteration: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+
+                            testables.iterationsComplete.push(cursor.iteration);
+                        });
+                    },
+                    beforeItem: function (err, cursor, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
+                            testables.itemsStarted[cursor.iteration].push(item);
+                            runStore.position = cursor.position;
+                            runStore.ref = cursor.ref;
+                        });
+                    },
+                    item: function (err, cursor, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
+                            testables.itemsComplete[cursor.iteration].push(item);
+                        });
+                    },
+                    beforePrerequest: function (err, cursor, events, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            expect(events.length).to.be(0);
+                        });
+                    },
+                    prerequest: function (err, cursor, results, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            // This collection has no pre-request scripts
+                            expect(results).to.be.empty();
+                        });
+                    },
+                    beforeTest: function (err, cursor, events, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            // This collection has no pre-request scripts
+                            expect(events).to.be.empty();
+                        });
+                    },
+                    test: function (err, cursor, results, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(results).to.be.empty();
+                        });
+                    },
+                    beforeRequest: function (err, cursor, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    request: function (err, cursor, response, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            expect(request.url.toString()).to.be.ok();
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            expect(response.code).to.be(200);
+                            expect(request).to.be.ok();
+
+                            var body = JSON.parse(response.body);
+                            expect(body.args).to.be.empty();
+                            expect(body.data).to.be.empty();
+                            expect(body.files).to.be.empty();
+                            expect(body.form).to.be.empty();
+                        });
+                    },
+                    done: function (err) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            mochaDone();
+                        });
+                    }
+                });
+            });
+        });
+    });
 });
