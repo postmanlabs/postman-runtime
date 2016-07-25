@@ -2,7 +2,8 @@
  * @fileOverview This test specs runs tests on the package.json file of repository. It has a set of strict tests on the
  * content of the file as well. Any change to package.json must be accompanied by valid test case in this spec-sheet.
  */
-var expect = require('expect.js');
+var _ = require('lodash'),
+    expect = require('expect.js');
 
 /* global describe, it */
 describe('project repository', function () {
@@ -76,8 +77,11 @@ describe('project repository', function () {
                 expect(json.dependencies).to.be.a('object');
             });
 
-            it('must point to a valid and precise (no * or ^) semver', function () {
-                Object.keys(json.dependencies).forEach(function (dependencyName) {
+            it('must point to a valid semver', function () {
+                var packages = _.without(Object.keys(json.dependencies),
+                    // These are trusted packages
+                    'request', 'postman-collection', 'serialised-error');
+                packages.forEach(function (dependencyName) {
                     expect(json.dependencies[dependencyName]).to.match(new RegExp('^((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
                         '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));
                 });
@@ -89,9 +93,9 @@ describe('project repository', function () {
                 expect(json.devDependencies).to.be.a('object');
             });
 
-            it('must point to a valid and precise (no * or ^) semver', function () {
+            it('must point to a valid semver', function () {
                 Object.keys(json.devDependencies).forEach(function (dependencyName) {
-                    expect(json.devDependencies[dependencyName]).to.match(new RegExp('^((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
+                    expect(json.devDependencies[dependencyName]).to.match(new RegExp('[^]((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
                         '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));
                 });
             });
