@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 2.2.2 (July 25, 2016)
+* Updated the version of the request module
+
 #### 2.2.1 (July 21, 2016)
 * Allow setting of duplicate headers (same name, but different value)
 * Do not send a request body if the body type is set, but it is empty
