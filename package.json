@@ -31,7 +31,7 @@
     "lodash": "3.10.1",
     "node-uuid": "1.4.7",
     "postman-collection": "0.4.3",
-    "request": "2.72.0",
+    "request": "2.74.1",
     "serialised-error": "1.1.2",
     "tv4": "1.2.7",
     "xml2js": "0.4.16"
