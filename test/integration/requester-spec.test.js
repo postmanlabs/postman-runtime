@@ -1701,8 +1701,8 @@ describe('Requester', function () {
                 iterationCount: 1,
                 requester: {
                     followRedirects: false,
-                    fileResolver: require('fs')
-                }
+                },
+                fileResolver: require('fs')
             }, function (err, run) {
                 var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
 
