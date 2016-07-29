@@ -1860,7 +1860,7 @@ describe('Requester', function () {
     });
 
     describe('Path Variables', function () {
-        it.only('should be resolved before sending the request', function (mochaDone) {
+        it('should be resolved before sending the request', function (mochaDone) {
             var runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
