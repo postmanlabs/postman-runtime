@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 2.2.4 (July 29, 2016)
+* Fixed a bug that caused non-file form data to be ignored
+
 #### 2.2.3 (July 29, 2016)
 * Disabled file uploads if no fileResolver is provided
 * Ensure that URL encoding is done in an XHR compatible way by the request library
