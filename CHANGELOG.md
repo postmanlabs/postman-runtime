@@ -1,5 +1,12 @@
 # Postman Runtime Changelog
 
+#### 2.2.3 (July 29, 2016)
+* Disabled file uploads if no fileResolver is provided
+* Ensure that URL encoding is done in an XHR compatible way by the request library
+* Allow aborting of individual HTTP requests
+* Parse XHR headers using the Postman Collection SDK
+* Updated the SDK version to v0.4.6
+
 #### 2.2.2 (July 25, 2016)
 * Updated the version of the request module
 
