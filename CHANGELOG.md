@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 2.3.1 (August 05, 2016)
+* Added support for client side SSL authentication
+
 #### 2.3.0 (August 04, 2016)
 * Ability to insert delays between requests
 * Ability to stop a run on any sort of failure (test case failure as well as errors)
