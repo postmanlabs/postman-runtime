@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 2.3.2 (August 05, 2016)
+* Added support for resolving binary files on the fly
+
 #### 2.3.1 (August 05, 2016)
 * Added support for client side SSL authentication
 
