@@ -2277,7 +2277,7 @@ describe('Requester', function () {
             });
         });
 
-        it.only('should upload a binary data file', function (mochaDone) {
+        it('should upload a binary data file', function (mochaDone) {
             var runner = new runtime.Runner(),
                 path = require('path'),
                 rawCollection = {
@@ -2292,7 +2292,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "http://echo.getpostman.com/post",
+                                "url": "http://httpbin.org/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "file",
@@ -2467,11 +2467,8 @@ describe('Requester', function () {
                             expect(request).to.be.ok();
 
                             var body = JSON.parse(response.body);
-                            console.log(response.body);
-                            // expect(body.args).to.be.empty();
-                            // expect(body.data).to.be.empty();
-                            // expect(body.files).to.have.property('one.txt');
-                            // expect(body.form).to.have.property('myParam', 'myValue');
+                            expect(body.args).to.be.empty();
+                            expect(_.startsWith(body.data, 'data:application/octet-stream;base64')).to.be(true);
                         });
                     },
                     done: function (err) {
