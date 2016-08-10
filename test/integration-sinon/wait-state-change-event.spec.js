@@ -5,11 +5,7 @@ module.exports = {
 
     collection: {
         item: [{
-            request: "https://echo.getpostman.com/get?testvar={{test-var}}"
+            request: "https://echo.getpostman.com/get"
         }]
-    },
-
-    environment: {
-        "test-var": "test-var-value"
     }
 }

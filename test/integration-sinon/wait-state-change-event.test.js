@@ -1,4 +1,4 @@
-describe('waitStateChange event', function () {
+describe('waitStateChange event for item', function () {
     it('must be emitted twice', function () {
         expect(testrun.waitStateChange.calledTwice).be.ok();
     });
@@ -9,7 +9,10 @@ describe('waitStateChange event', function () {
 
     it('must send the time for possible next state change after start', function () {
         expect(testrun.waitStateChange.getCall(0).args[3]).be(200);
-        expect(testrun.waitStateChange.getCall(0).args[4]).be(0);
+    });
+
+    it('start delay source must be "item"', function () {
+        expect(testrun.waitStateChange.getCall(0).args[4]).be('item');
     });
 
     it('must be emitted second time saying that waiting state ends', function () {
@@ -17,7 +20,10 @@ describe('waitStateChange event', function () {
     });
 
     it('must send the time for last state change after end', function () {
-        expect(testrun.waitStateChange.getCall(1).args[3]).be(0);
-        expect(testrun.waitStateChange.getCall(1).args[4]).be(200);
+        expect(testrun.waitStateChange.getCall(1).args[3]).be(200);
+    });
+
+    it('end delay source must be "item"', function () {
+        expect(testrun.waitStateChange.getCall(1).args[4]).be('item');
     });
 });
