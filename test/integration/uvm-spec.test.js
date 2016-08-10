@@ -25,7 +25,7 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "try {\n    var jsonObject = xml2Json(responseBody);\n    console.log(jsonObject);\n    tests[\"xml2Json\"]=true;\n}\ncatch(e) {\n    console.log(\"xml2Json not supported\");\n    tests[\"xml2Json\"]=false;\n}\n\n\ntry {\n    console.log(postman.getResponseHeader(\"Content-Length\"));\n    tests[\"GetResponseHeader\"]=true;\n} catch(e) {\n    console.log(\"getResponseHeader not supported\");\n    tests[\"GetResponseHeader\"]=false;\n}\n\n\ntry {\n    var mykookie = postman.getResponseCookie(\"hi\");\n    tests[\"GetResponseCookie\"]=mykookie.value ==='hello';\n} catch(e) {\n    console.log(\"getResponseCookie not supported\");\n    tests[\"GetResponseCookie\"]=false;\n}\n\ntry {\n    console.log(\"RESCOOK: \" , responseCookies);\n} catch(e) {\n    console.log(\"responseCookies not supported\");\n}\n\ntests[\"Correct global\"] = globals.g1==\"0\";\n\nconsole.log(\"Request: \" + JSON.stringify(request));\nconsole.log(\"Environment: \" + JSON.stringify(environment));\nconsole.log(\"Globals: \" + JSON.stringify(globals));\nconsole.log(\"Response hedaers: \" + JSON.stringify(responseHeaders));\nconsole.log(\"Response body: \" + JSON.stringify(responseBody));\nconsole.log(\"Response time: \" + JSON.stringify(responseTime));\nconsole.log(\"Response code: \" + JSON.stringify(responseCode));\n\n\ntry {\n    console.log(postman.clearEnvironmentVariables());\n} catch(e) {\n    console.log(\"clearEnvironmentVariables not supported\");\n}\n\ntry {\n    console.log(postman.clearGlobalVariables());\n} catch(e) {\n    console.log(\"clearGlobalVariables not supported\");\n}\n\npostman.setGlobalVariable(\"g1\", \"0\");\npostman.setEnvironmentVariable(\"e1\", \"0\");\n\ntry {\n    _.each([1], function(v) {tests['Lodash working'] = true;});\n}\ncatch(e) {\n    tests['Lodash working'] = false;\n}\n\n\nvar newString=\"diabetes\";\ntests[\"SugarJS working\"]=newString.has(\"betes\");\n\ntests[\"tv4 present\"] = (typeof tv4.validate === \"function\");\n\ntests[\"CryptoJS md5\"] = (CryptoJS.MD5(\"jasonpurse\") == \"288d14f08b5ad40da43dbe06467729c9\");"
+                                        "exec": "try {\n    var jsonObject = xml2Json(responseBody);\n    console.log(jsonObject);\n    tests[\"xml2Json\"]=true;\n}\ncatch(e) {\n   console.log(\"xml2Json not supported\");\n    tests[\"xml2Json\"]=false;\n}\n\n\ntry {\n    console.log(postman.getResponseHeader(\"Content-Length\"));\n    tests[\"GetResponseHeader\"]=true;\n} catch(e) {\n    console.log(\"getResponseHeader not supported\");\n    tests[\"GetResponseHeader\"]=false;\n}\n\n\ntry {\n    var mykookie = postman.getResponseCookie(\"hi\");\n    tests[\"GetResponseCookie\"]=mykookie.value ==='hello';\n} catch(e) {\n    console.log(\"getResponseCookie not supported\");\n    tests[\"GetResponseCookie\"]=false;\n}\n\ntry {\n    console.log(\"RESCOOK: \" , responseCookies);\n} catch(e) {\n    console.log(\"responseCookies not supported\");\n}\n\ntests[\"Correct global\"] = globals.g1==\"0\";\n\nconsole.log(\"Request: \" + JSON.stringify(request));\nconsole.log(\"Environment: \" + JSON.stringify(environment));\nconsole.log(\"Globals: \" + JSON.stringify(globals));\nconsole.log(\"Response hedaers: \" + JSON.stringify(responseHeaders));\nconsole.log(\"Response body: \" + JSON.stringify(responseBody));\nconsole.log(\"Response time: \" + JSON.stringify(responseTime));\nconsole.log(\"Response code: \" + JSON.stringify(responseCode));\n\n\ntry {\n    console.log(postman.clearEnvironmentVariables());\n} catch(e) {\n    console.log(\"clearEnvironmentVariables not supported\");\n}\n\ntry {\n    console.log(postman.clearGlobalVariables());\n} catch(e) {\n    console.log(\"clearGlobalVariables not supported\");\n}\n\npostman.setGlobalVariable(\"g1\", \"0\");\npostman.setEnvironmentVariable(\"e1\", \"0\");\n\ntry {\n    _.each([1], function(v) {tests['Lodash working'] = true;});\n}\ncatch(e) {\n    tests['Lodash working'] = false;\n}\n\n\nvar newString=\"diabetes\";\ntests[\"SugarJS working\"]=newString.has(\"betes\");\n\ntests[\"tv4 present\"] = (typeof tv4.validate === \"function\");\n\ntests[\"CryptoJS md5\"] = (CryptoJS.MD5(\"jasonpurse\") == \"288d14f08b5ad40da43dbe06467729c9\");"
                                     }
                                 },
                                 {
@@ -350,6 +350,19 @@ describe('UVM', function () {
                                 "description": ""
                             },
                             "response": []
+                        },
+                        {
+                            "name": "Buffer and JSON",
+                            "request": "echo.getpostman.com/get",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": "console.log('running buffer and json tests'); tests['global JSON object'] = typeof JSON.stringify === 'function'; tests['global Buffer object'] = !!Buffer"
+                                    }
+                                }
+                            ],
                         }
                     ]
                 },
@@ -392,7 +405,7 @@ describe('UVM', function () {
                             expect(err).to.be(null);
                             expect(cursor).to.have.property('position', 0);
                             expect(cursor).to.have.property('iteration', 0);
-                            expect(cursor).to.have.property('length', 11);
+                            expect(cursor).to.have.property('length', 12);
                             expect(cursor).to.have.property('cycles', 1);
                             expect(cursor).to.have.property('eof', false);
                             expect(cursor).to.have.property('empty', false);
@@ -530,12 +543,12 @@ describe('UVM', function () {
                             expect(testables.iterationsStarted).to.eql([0]);
                             expect(testables.iterationsComplete).to.eql([0]);
 
-                            expect(testables.itemsStarted[0].length).to.be(11);
-                            expect(testables.itemsComplete[0].length).to.be(11);
+                            expect(testables.itemsStarted[0].length).to.be(12);
+                            expect(testables.itemsComplete[0].length).to.be(12);
 
                             // Expect the end position to be correct
                             expect(runStore.iteration).to.be(0);
-                            expect(runStore.position).to.be(10);
+                            expect(runStore.position).to.be(11);
                             mochaDone();
                         });
                     }
@@ -568,7 +581,9 @@ describe('UVM', function () {
                                             "var d = new Date(1470659144696);", // Monday, Aug 08, 2016
                                             "tests['date prototype'] = ('Monday' === d.format('{Weekday}'));",
                                             "tests['string prototype'] = 'asdasd'.has('as');",
-                                            "tests['Object'] = typeof Object.each === 'function'"
+                                            "tests['Object'] = typeof Object.each === 'function'",
+                                            "tests['Date.create'] = typeof Date.create === 'function';",
+                                            "tests['Other Date functions'] = !!(1).daysAfter(new Date()).format('{yyyy}{MM}{dd}');"
                                         ]
                                     }
                                 }
@@ -718,14 +733,13 @@ describe('UVM', function () {
                             // This collection has no pre-request scripts
                             expect(results.length).to.be(1);
 
-                            var result = results[0];
-                            expect(result.error).to.be(undefined);
+                            var scriptResult = results[0];
+                            expect(scriptResult.error).to.be(undefined);
 
-                            _.each(result.result.globals.tests, function (result, name) {
-                                console.log(name, result);
+                            _.forOwn(scriptResult.result.globals.tests, function (result) {
+                                expect(result).to.be.ok();
                             });
 
-                            var scriptResult = results[0];
                             expect(scriptResult.result.masked.scriptType).to.eql('test');
                         });
                     },
