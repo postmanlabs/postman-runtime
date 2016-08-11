@@ -778,5 +778,225 @@ describe('UVM', function () {
                 });
             });
         });
+
+        it('should work correctly with extended object prototypes', function (mochaDone) {
+            var runner = new runtime.Runner(),
+                rawCollection = {
+                    "variables": [],
+                    "info": {
+                        "name": "SugarJS and native prototypes work",
+                        "_postman_id": "8f31aeff-c5b5-5c42-9540-fae109785538",
+                        "description": "A set of requests to test Array, String, Date, and Function prototypes",
+                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    },
+                    "item": [
+                        {
+                            "name": "objectPrototype",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": "// Extended Array prototype tests\ntests[\"Array prototype none\"] = ['a', 'b', 'c'].none('d');\ntests[\"Array prototype any\"] = [ [1,2], [2,3] ].any([2,3]);\ntests[\"Array prototype average\"] = [ 1, 2, 3, 4, 5 ].average() === 3;\n\n// Extended Date prototype tests\nconsole.log(Object.keys(new Date()));\ntests[\"Date prototype getTime\"] = Date.now()==(new Date()).getTime();\ntests[\"Date prototype isFuture\"] = Date.create('next week').isFuture();\ntests[\"Date prototype isLeapYear\"] = Date.create('2000').isLeapYear();\ntests[\"Date prototype isPast\"] = Date.create('last week').isPast();\ntests[\"Date prototype isValid\"] = new Date().isValid();\ntests[\"Date prototype negated isValid\"] = !(new Date('random string').isValid());\n\n// Extended Function prototype tests\nvar fCount = 0;\nvar fn = (function() {\n  fCount++;\n}).once(); fn(); fn(); fn();\ntests[\"Function prototype once\"] = fCount===1;\n\n// Extended Number prototype tests\ntests[\"Number prototype hex\"] = (56).hex() === '38';\ntests[\"Number prototype isEven\"] = (56).isEven() === true;\ntests[\"Number prototype ordinalize\"] = (56).ordinalize() === '56th';\ntests[\"Number prototype format\"] = (56789.10).format() === '56,789.1';\n\n// Extended String prototype tests\ntests[\"String prototype endsWith\"] = 'jumpy'.endsWith('py');\ntests[\"String prototype negated endsWith\"] = !('jumpy'.endsWith('MPY'));\ntests[\"String prototype camelize\"] = 'a-beta'.camelize() === 'ABeta';\ntests[\"String prototype repeat\"] = 'a'.repeat(5) === 'aaaaa';\ntests[\"String prototype shift\"] = 'abc'.shift(5) === 'fgh';\ntests[\"String prototype spacify\"] = 'a-b_cD'.spacify() === 'a b c d';"
+                                    }
+                                }
+                            ],
+                            "request": {
+                                "url": "echo.getpostman.com/get",
+                                "method": "GET",
+                                "header": [],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": []
+                                },
+                                "description": ""
+                            },
+                            "response": []
+                        }
+                    ]
+                },
+                collection = new sdk.Collection(rawCollection),
+                testables = {
+                    iterationsStarted: [],
+                    iterationsComplete: [],
+                    itemsStarted: {},
+                    itemsComplete: {}
+                },  // populate during the run, and then perform tests on it, at the end.
+
+                /**
+                 * Since each callback runs in a separate callstack, this helper function
+                 * ensures that any errors are forwarded to mocha
+                 *
+                 * @param func
+                 */
+                check = function (func) {
+                    try {
+                        func();
+                    }
+                    catch (e) {
+                        mochaDone(e);
+                    }
+                };
+
+            runner.run(collection, {
+                iterationCount: 1
+            }, function (err, run) {
+                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+
+                expect(err).to.be(null);
+                run.start({
+                    console: function () {
+                        console.dir(arguments, { colors: true, depth: 10000 });
+                    },
+                    exception: function (err) {
+                        console.dir(err.stack, { colors: true, depth: 10000 });
+                    },
+                    error: function (err) {
+                        console.dir(err.stack, { colors: true, depth: 10000 });
+                    },
+                    start: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor).to.have.property('position', 0);
+                            expect(cursor).to.have.property('iteration', 0);
+                            expect(cursor).to.have.property('length', 1);
+                            expect(cursor).to.have.property('cycles', 1);
+                            expect(cursor).to.have.property('eof', false);
+                            expect(cursor).to.have.property('empty', false);
+                            expect(cursor).to.have.property('bof', true);
+                            expect(cursor).to.have.property('cr', false);
+                            expect(cursor).to.have.property('ref');
+
+                            // Set this to true, and verify at the end, so that the test will fail even if this
+                            // callback is never called.
+                            testables.started = true;
+                        });
+                    },
+                    beforeIteration: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            testables.iterationsStarted.push(cursor.iteration);
+                            runStore.iteration = cursor.iteration;
+                        });
+                    },
+                    iteration: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+
+                            testables.iterationsComplete.push(cursor.iteration);
+                        });
+                    },
+                    beforeItem: function (err, cursor, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
+                            testables.itemsStarted[cursor.iteration].push(item);
+                            runStore.position = cursor.position;
+                            runStore.ref = cursor.ref;
+                        });
+                    },
+                    item: function (err, cursor, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
+                            testables.itemsComplete[cursor.iteration].push(item);
+                        });
+                    },
+                    beforePrerequest: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    prerequest: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    beforeTest: function (err, cursor, events) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            // This collection has no pre-request scripts
+                            expect(events.length).to.be(1);
+                        });
+                    },
+                    test: function (err, cursor, results) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            // This collection has no pre-request scripts
+                            expect(results.length).to.be(1);
+
+                            var scriptResult = results[0];
+                            expect(scriptResult.error).to.be(undefined);
+
+                            _.forOwn(scriptResult.result.globals.tests, function (result) {
+                                expect(result).to.be.ok();
+                            });
+
+                            expect(scriptResult.result.masked.scriptType).to.eql('test');
+                        });
+                    },
+                    beforeRequest: function (err, cursor, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    request: function (err, cursor, response, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            expect(request.url.toString()).to.be.ok();
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            expect(response.code).to.be(200);
+                            expect(request).to.be.ok();
+                        });
+                    },
+                    done: function (err) {
+                        check(function () {
+                            err && console.log(err.stack);
+                            expect(err).to.be(null);
+                            mochaDone();
+                        });
+                    }
+                });
+            });
+        });
     });
 });
