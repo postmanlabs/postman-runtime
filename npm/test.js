@@ -6,7 +6,8 @@ require('async').series([
     require('./test-lint'),
     require('./test-system'),
     require('./test-unit'),
-    require('./test-integration')
+    require('./test-integration'),
+    require('./test-integration-sinon')
 ], function (code) {
     !code && console.log('\npostman-runtime tests: all ok!'.green);
     exit(code);
