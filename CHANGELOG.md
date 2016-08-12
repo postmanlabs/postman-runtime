@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+#### 2.4.1 (August 05, 2016)
+* Fixed a bug that caused the Runtime sandbox to fail when installed with npm@2
+* Updated the proxy fetching logic to use URLs as a string instead of an SDK object
+
 #### 2.4.0 (August 12, 2016)
 * Changes to the Node script sandbox, SugarJS now works correctly.
 * Ensure that `getResponseCookie` is case-insensitive always
