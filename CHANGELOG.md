@@ -1,5 +1,14 @@
 # Postman Runtime Changelog
 
+#### 2.4.0 (August 12, 2016)
+* Changes to the Node script sandbox, SugarJS now works correctly.
+* Ensure that `getResponseCookie` is case-insensitive always
+* Check to ensure that Runtime does not crash if the path for file uploads is empty
+* Ensured that the Accept header is always set (unless the user has overridden it)
+* Headers that are added by Runtime are now always bubbled up
+* Added support for specifying a delay between two iterations
+* Requester now has the ability to fetch proxy configuration externally
+
 #### 2.3.2 (August 05, 2016)
 * Added support for resolving binary files on the fly
 
