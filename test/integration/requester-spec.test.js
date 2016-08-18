@@ -2976,11 +2976,14 @@ describe('Requester', function () {
                     catch (e) { mochaDone(e); }
                 },
 
+                clientCertKey = fs.readFileSync(path.join(__dirname, 'data', 'client1-key.pem')),
+                clientCert = fs.readFileSync(path.join(__dirname, 'data', 'client1-crt.pem')),
+
                 FakeCertificateManager = function () {
                     this.getCertificateContents = function (hostname, callback) {
                         return callback(null, {
-                            key: fs.readFileSync(path.join(__dirname, 'data', 'client1-key.pem')),
-                            pem: fs.readFileSync(path.join(__dirname, 'data', 'client1-crt.pem'))
+                            key: clientCertKey,
+                            pem: clientCert
                         });
                     }
                 };
@@ -3114,6 +3117,9 @@ describe('Requester', function () {
                             expect(err).to.be(null);
 
                             expect(request.url.toString()).to.be.ok();
+                            expect(request._.certificate).to.be.ok();
+                            expect(request._.certificate).to.have.property('key', clientCertKey);
+                            expect(request._.certificate).to.have.property('pem', clientCert);
 
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
