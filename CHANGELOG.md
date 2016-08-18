@@ -1,6 +1,10 @@
 # Postman Runtime Changelog
 
-#### 2.4.1 (August 05, 2016)
+#### 2.4.2 (August 18, 2016)
+* Runtime now uses the length of iteration data as the default iteration count (if data is provided)
+* Added functionality to bubble up the proxy configuration in the `request` event
+
+#### 2.4.1 (August 12, 2016)
 * Fixed a bug that caused the Runtime sandbox to fail when installed with npm@2
 * Updated the proxy fetching logic to use URLs as a string instead of an SDK object
 
