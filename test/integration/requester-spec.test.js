@@ -3119,9 +3119,9 @@ describe('Requester', function () {
                             expect(err).to.be(null);
 
                             expect(request.url.toString()).to.be.ok();
-                            expect(request._.certificate).to.be.ok();
-                            expect(request._.certificate).to.have.property('keyPath', clientKeyPath);
-                            expect(request._.certificate).to.have.property('pemPath', clientCertPath);
+                            expect(request._._postman_certificate).to.be.ok();
+                            expect(request._._postman_certificate).to.have.property('keyPath', clientKeyPath);
+                            expect(request._._postman_certificate).to.have.property('pemPath', clientCertPath);
 
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
