@@ -2976,11 +2976,16 @@ describe('Requester', function () {
                     catch (e) { mochaDone(e); }
                 },
 
+                clientKeyPath = path.join(__dirname, 'data', 'client1-key.pem'),
+                clientCertPath = path.join(__dirname, 'data', 'client1-crt.pem'),
+
                 FakeCertificateManager = function () {
                     this.getCertificateContents = function (hostname, callback) {
                         return callback(null, {
-                            key: fs.readFileSync(path.join(__dirname, 'data', 'client1-key.pem')),
-                            pem: fs.readFileSync(path.join(__dirname, 'data', 'client1-crt.pem'))
+                            key: fs.readFileSync(clientKeyPath),
+                            pem: fs.readFileSync(clientCertPath),
+                            keyPath: clientKeyPath,
+                            pemPath: clientCertPath
                         });
                     }
                 };
@@ -3114,6 +3119,9 @@ describe('Requester', function () {
                             expect(err).to.be(null);
 
                             expect(request.url.toString()).to.be.ok();
+                            expect(request._._postman_certificate).to.be.ok();
+                            expect(request._._postman_certificate).to.have.property('keyPath', clientKeyPath);
+                            expect(request._._postman_certificate).to.have.property('pemPath', clientCertPath);
 
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);

@@ -625,14 +625,15 @@ describe('UVM', function () {
 
                 expect(err).to.be(null);
                 run.start({
-                    console: function () {
-                        console.dir(arguments, { colors: true, depth: 10000 });
-                    },
                     exception: function (err) {
-                        console.dir(err.stack, { colors: true, depth: 10000 });
+                        check(function () {
+                            expect(err).to.be(null);
+                        });
                     },
                     error: function (err) {
-                        console.dir(err.stack, { colors: true, depth: 10000 });
+                        check(function () {
+                            expect(err).to.be(null);
+                        });
                     },
                     start: function (err, cursor) {
                         check(function () {
