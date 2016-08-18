@@ -2976,14 +2976,16 @@ describe('Requester', function () {
                     catch (e) { mochaDone(e); }
                 },
 
-                clientCertKey = fs.readFileSync(path.join(__dirname, 'data', 'client1-key.pem')),
-                clientCert = fs.readFileSync(path.join(__dirname, 'data', 'client1-crt.pem')),
+                clientKeyPath = path.join(__dirname, 'data', 'client1-key.pem'),
+                clientCertPath = path.join(__dirname, 'data', 'client1-crt.pem'),
 
                 FakeCertificateManager = function () {
                     this.getCertificateContents = function (hostname, callback) {
                         return callback(null, {
-                            key: clientCertKey,
-                            pem: clientCert
+                            key: fs.readFileSync(clientKeyPath),
+                            pem: fs.readFileSync(clientCertPath),
+                            keyPath: clientKeyPath,
+                            pemPath: clientCertPath
                         });
                     }
                 };
@@ -3118,8 +3120,8 @@ describe('Requester', function () {
 
                             expect(request.url.toString()).to.be.ok();
                             expect(request._.certificate).to.be.ok();
-                            expect(request._.certificate).to.have.property('key', clientCertKey);
-                            expect(request._.certificate).to.have.property('pem', clientCert);
+                            expect(request._.certificate).to.have.property('keyPath', clientKeyPath);
+                            expect(request._.certificate).to.have.property('pemPath', clientCertPath);
 
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
