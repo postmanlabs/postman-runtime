@@ -1,4 +1,5 @@
 var _ = require('lodash'),
+    request = require('postman-request'),
     expect = require('expect.js'),
     runtime = require('../../index'),
     sdk = require('postman-collection');
@@ -3376,7 +3377,7 @@ describe('Requester', function () {
                         }
                     ]
                 },
-                cookieJar = require('request').jar(),
+                cookieJar = request.jar(),
                 collection = new sdk.Collection(rawCollection),
                 testables = {
                     iterationsStarted: [],
@@ -3607,7 +3608,7 @@ describe('Requester', function () {
                     catch (e) { mochaDone(e); }
                 },
 
-                cookieJar = require('request').jar();
+                cookieJar = request.jar();
 
             cookieJar.setCookie('yo=hello', 'http://httpbin.org/cookies');
 
