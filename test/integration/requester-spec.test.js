@@ -4037,7 +4037,7 @@ describe('Requester', function () {
             });
 
             after('Stop HTTPS server', function (done) {
-                server.close();
+                server.close(); // todo: wait for the server connections to drain
                 done();
             });
 
