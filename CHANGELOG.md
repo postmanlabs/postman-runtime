@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 2.4.3 (August 23, 2016)
+* Use `postman-request` instead of the `request` library, which contains fixes to support deflate encoding
+
 #### 2.4.2 (August 18, 2016)
 * Runtime now uses the length of iteration data as the default iteration count (if data is provided)
 * Added functionality to bubble up the proxy configuration in the `request` event
