@@ -3781,14 +3781,16 @@ describe('Requester', function () {
         describe('Raw Deflate', function () {
             var port,
                 fs = require('fs'),
-                path = require('path');
+                path = require('path'),
+                server;
 
-            beforeEach('Start HTTPS server', function (done) {
-                var https = require('https'),
-                    server = https.createServer({
-                        key: fs.readFileSync(path.join(__dirname, 'data', 'server-key.pem')),
-                        cert: fs.readFileSync(path.join(__dirname, 'data', 'server-crt.pem'))
-                    });
+            before('Start HTTPS server', function (done) {
+                var https = require('https');
+
+                server = https.createServer({
+                    key: fs.readFileSync(path.join(__dirname, 'data', 'server-key.pem')),
+                    cert: fs.readFileSync(path.join(__dirname, 'data', 'server-crt.pem'))
+                });
 
                 server.on('request', function (req, res) {
                     res.statusCode = 200;
@@ -3805,6 +3807,11 @@ describe('Requester', function () {
                 });
 
                 server.listen(0, 'localhost');
+            });
+
+            after('Stop HTTPS server', function (done) {
+                server.close();
+                done();
             });
 
             it('should handle raw deflate responses', function (mochaDone) {
@@ -4000,15 +4007,17 @@ describe('Requester', function () {
 
         describe('Deflate', function () {
             var port,
+                server,
                 fs = require('fs'),
                 path = require('path');
 
-            beforeEach('Start HTTPS server', function (done) {
-                var https = require('https'),
-                    server = https.createServer({
-                        key: fs.readFileSync(path.join(__dirname, 'data', 'server-key.pem')),
-                        cert: fs.readFileSync(path.join(__dirname, 'data', 'server-crt.pem'))
-                    });
+            before('Start HTTPS server', function (done) {
+                var https = require('https');
+
+                server = https.createServer({
+                    key: fs.readFileSync(path.join(__dirname, 'data', 'server-key.pem')),
+                    cert: fs.readFileSync(path.join(__dirname, 'data', 'server-crt.pem'))
+                });
 
                 server.on('request', function (req, res) {
                     res.statusCode = 200;
@@ -4025,6 +4034,11 @@ describe('Requester', function () {
                 });
 
                 server.listen(0, 'localhost');
+            });
+
+            after('Stop HTTPS server', function (done) {
+                server.close();
+                done();
             });
 
             it('should handle deflate responses', function (mochaDone) {
@@ -4216,15 +4230,17 @@ describe('Requester', function () {
 
         describe('GZip', function () {
             var port,
+                server,
                 fs = require('fs'),
                 path = require('path');
 
-            beforeEach('Start HTTPS server', function (done) {
-                var https = require('https'),
-                    server = https.createServer({
-                        key: fs.readFileSync(path.join(__dirname, 'data', 'server-key.pem')),
-                        cert: fs.readFileSync(path.join(__dirname, 'data', 'server-crt.pem'))
-                    });
+            before('Start HTTPS server', function (done) {
+                var https = require('https');
+
+                server = https.createServer({
+                    key: fs.readFileSync(path.join(__dirname, 'data', 'server-key.pem')),
+                    cert: fs.readFileSync(path.join(__dirname, 'data', 'server-crt.pem'))
+                });
 
                 server.on('request', function (req, res) {
                     res.statusCode = 200;
@@ -4241,6 +4257,11 @@ describe('Requester', function () {
                 });
 
                 server.listen(0, 'localhost');
+            });
+
+            after('Stop HTTPS server', function (done) {
+                server.close();
+                done();
             });
 
             it('should handle gzip responses', function (mochaDone) {
