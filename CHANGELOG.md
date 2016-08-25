@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 2.4.4 (August 25, 2016)
+* Fixed a bug that caused incorrect host headers to be inserted in requests
+
 #### 2.4.3 (August 23, 2016)
 * Use `postman-request` instead of the `request` library, which contains fixes to support deflate encoding
 
