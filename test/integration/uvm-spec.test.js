@@ -1,6 +1,6 @@
 var _ = require('lodash'),
     expect = require('expect.js'),
-    request = require('request'),
+    request = require('postman-request'),
     runtime = require('../../index'),
     sdk = require('postman-collection');
 
@@ -846,14 +846,20 @@ describe('UVM', function () {
 
                 expect(err).to.be(null);
                 run.start({
-                    console: function () {
-                        console.dir(arguments, { colors: true, depth: 10000 });
+                    console: function (cursor, level) {
+                        expect(level).to.be('log');
+                        expect(cursor.iteration).to.be(runStore.iteration);
+                        expect(cursor.position).to.be(runStore.position);
                     },
                     exception: function (err) {
-                        console.dir(err.stack, { colors: true, depth: 10000 });
+                        check(function () {
+                            expect(err).to.not.be.ok();
+                        });
                     },
                     error: function (err) {
-                        console.dir(err.stack, { colors: true, depth: 10000 });
+                        check(function () {
+                            expect(err).to.not.be.ok();
+                        });
                     },
                     start: function (err, cursor) {
                         check(function () {
