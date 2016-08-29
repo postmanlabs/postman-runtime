@@ -1,4 +1,19 @@
 describe('waitStateChange event for iteration', function () {
+    var testrun;
+
+    before(function (done) {
+        this.run({
+            delay: {iteration: 200},
+            iterationCount: 2,
+            collection: {
+                item: {request: 'https://echo.getpostman.com/get'}
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
     it('must be emitted twice', function () {
         expect(testrun.waitStateChange.calledTwice).be.ok();
     });

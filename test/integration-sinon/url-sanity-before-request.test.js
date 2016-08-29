@@ -1,11 +1,39 @@
-describe('sanity test', function () {
+describe('url sanity test', function () {
+    var testrun;
+
+    before(function (done) {
+        this.run({
+            collection: {
+                item: {
+                    request: {
+                        url: {
+                            host: ['{{url}}'],
+                            path: [':verb'],
+                            variable: [{
+                                value: 'get',
+                                id: 'verb'
+                            }]
+                        },
+                        method: 'GET'
+                    }
+                }
+            },
+            globals: {
+                url: 'http://httpbin.org'
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
     it('must have started and completed the test run', function () {
         expect(testrun).be.ok();
         expect(testrun.done.calledOnce).be.ok();
         expect(testrun.start.calledOnce).be.ok();
     });
 
-    it('must parse the url after variable resolution', function () {
+    it('must parse the url after variable resolution and path variable resolution', function () {
         var request = testrun.beforeRequest.getCall(0).args[2];
 
         expect(testrun.beforeRequest.calledOnce).be.ok(); // one request

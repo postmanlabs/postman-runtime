@@ -1,4 +1,18 @@
 describe('waitStateChange event for item', function () {
+    var testrun;
+
+    before(function (done) {
+        this.run({
+            delay: {item: 200},
+            collection: {
+                item: {request: 'https://echo.getpostman.com/get?1'}
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
     it('must be emitted twice', function () {
         expect(testrun.waitStateChange.calledTwice).be.ok();
     });

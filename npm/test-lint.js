@@ -11,6 +11,7 @@ var async = require('async'),
         './lib/backpack',
         './test/system',
         './test/unit',
+        './test/integration-sinon',
         './npm/*.js',
         './index.js'
     ];
