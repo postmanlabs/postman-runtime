@@ -50,6 +50,7 @@
     "mocha": "^2.4.5",
     "nsp": "^2.5.0",
     "postman-jsdoc-theme": "^0.0.2",
+    "recursive-readdir": "2.0.0",
     "shelljs": "^0.7.0",
     "sinon": "^1.17.3"
   },
