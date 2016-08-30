@@ -1,4 +1,19 @@
-describe('waitStateChange event for item', function () {
+describe('waitStateChange event for iteration', function () {
+    var testrun;
+
+    before(function (done) {
+        this.run({
+            delay: {iteration: 200},
+            iterationCount: 2,
+            collection: {
+                item: {request: 'https://echo.getpostman.com/get'}
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
     it('must be emitted twice', function () {
         expect(testrun.waitStateChange.calledTwice).be.ok();
     });
@@ -12,7 +27,7 @@ describe('waitStateChange event for item', function () {
     });
 
     it('start delay source must be "item"', function () {
-        expect(testrun.waitStateChange.getCall(0).args[4]).be('item');
+        expect(testrun.waitStateChange.getCall(0).args[4]).be('iteration');
     });
 
     it('must be emitted second time saying that waiting state ends', function () {
@@ -23,7 +38,7 @@ describe('waitStateChange event for item', function () {
         expect(testrun.waitStateChange.getCall(1).args[3]).be(200);
     });
 
-    it('end delay source must be "item"', function () {
-        expect(testrun.waitStateChange.getCall(1).args[4]).be('item');
+    it('end delay source must be "iteration"', function () {
+        expect(testrun.waitStateChange.getCall(1).args[4]).be('iteration');
     });
 });

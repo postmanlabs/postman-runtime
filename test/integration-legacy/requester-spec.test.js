@@ -1701,10 +1701,15 @@ describe('Requester', function () {
 
                 expect(err).to.be(null);
                 run.start({
-                    console: function (level, message) {
+                    console: function (cursor, level, message) {
                         check(function () {
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
                             expect(level).to.be('warn');
-                            expect(message).to.be('Unable to load file for upload: /some/path');
+                            expect(message).to.be('unable to load form file for upload: "/some/path"');
                         });
                     },
                     start: function (err, cursor) {
@@ -2537,9 +2542,10 @@ describe('Requester', function () {
 
                 expect(err).to.be(null);
                 run.start({
-                    console: function () {
+                    console: function (cursor, level, message) {
                         check(function () {
-                            throw new Error('Console should not be called!');
+                            expect(level).be('warn');
+                            expect(message).be('unable to load raw file for upload: "undefined"');
                         });
                     },
                     start: function (err, cursor) {
