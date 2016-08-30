@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 2.4.5 (August 25, 2016)
+* Fixed a bug that caused runtime to crash on invalid file path for formdata or binary files
+
 #### 2.4.4 (August 25, 2016)
 * Fixed a bug that caused incorrect host headers to be inserted in requests
 
