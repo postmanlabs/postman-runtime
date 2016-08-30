@@ -1703,6 +1703,11 @@ describe('Requester', function () {
                 run.start({
                     console: function (cursor, level, message) {
                         check(function () {
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
                             expect(level).to.be('warn');
                             expect(message).to.be('unable to load form file for upload: "/some/path"');
                         });
