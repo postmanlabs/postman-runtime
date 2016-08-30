@@ -1,4 +1,18 @@
 describe('sanity test', function () {
+    var testrun;
+
+    before(function (done) {
+        this.run({
+            collection: {
+                item: {request: 'https://echo.getpostman.com/get?testvar={{testVar}}'}
+            },
+            environment: {testVar: 'test-var-value'}
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
     it('must have started and completed the test run', function () {
         expect(testrun).be.ok();
         expect(testrun.done.calledOnce).be.ok();

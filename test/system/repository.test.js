@@ -95,7 +95,7 @@ describe('project repository', function () {
 
             it('must point to a valid semver', function () {
                 Object.keys(json.devDependencies).forEach(function (dependencyName) {
-                    expect(json.devDependencies[dependencyName]).to.match(new RegExp('[^]((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
+                    expect(json.devDependencies[dependencyName]).to.match(new RegExp('((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
                         '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));
                 });
             });
