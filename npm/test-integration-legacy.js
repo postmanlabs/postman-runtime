@@ -6,7 +6,7 @@ var fs = require('fs'),
     path = require('path'),
     Mocha = require('mocha'),
 
-    SPEC_SOURCE_DIR = './test/integration';
+    SPEC_SOURCE_DIR = './test/integration-legacy';
 
 module.exports = function (exit) {
     // banner line
