@@ -270,7 +270,7 @@
     "lodash/prop-shorthand": "error",
 
     "lodash/prefer-constant": "warn",
-    "lodash/prefer-get": "error",
+    "lodash/prefer-get": "warn",
     "lodash/prefer-includes": "error",
     "lodash/prefer-is-nil": "warn",
     "lodash/prefer-lodash-chain": "warn",
