@@ -3,14 +3,16 @@ var _ = require('lodash'),
     runtime = require('../../index'),
     sdk = require('postman-collection');
 
-/* global describe, it, beforeEach */
+/* global describe, it, beforeEach, afterEach */
 describe('Localhost requests', function () {
     describe('IPv6 server', function () {
-        var port;
+        var server,
+            port;
 
         beforeEach('Start IPv6 server', function (done) {
-            var http = require('http'),
-                server = http.createServer();
+            var http = require('http');
+
+            server = http.createServer();
 
             server.on('request', function (req, res) {
                 res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -39,15 +41,6 @@ describe('Localhost requests', function () {
                         {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
-                            "event": [
-                                {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests['worked'] = responseCode.code === 302;"
-                                    }
-                                }
-                            ],
                             "request": {
                                 "url": "http://localhost:" + port + '/',
                                 "method": "GET"
@@ -171,9 +164,6 @@ describe('Localhost requests', function () {
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
-
-                            // This collection has no pre-request scripts
-                            expect(events.length).to.be(1);
                         });
                     },
                     test: function (err, cursor, results, item) {
@@ -184,15 +174,6 @@ describe('Localhost requests', function () {
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
-
-                            // This collection has no pre-request scripts
-                            expect(results.length).to.be(1);
-
-                            var result = results[0];
-                            expect(result.error).to.be(undefined);
-
-                            var scriptResult = results[0];
-                            expect(scriptResult.result.masked.scriptType).to.eql('test');
                         });
                     },
                     beforeRequest: function (err, cursor, request, item) {
@@ -233,11 +214,13 @@ describe('Localhost requests', function () {
     });
 
     describe('IPv4 server', function () {
-        var port;
+        var server,
+            port;
 
         beforeEach('Start IPv4 server', function (done) {
-            var http = require('http'),
-                server = http.createServer();
+            var http = require('http');
+
+            server = http.createServer();
 
             server.on('request', function (req, res) {
                 res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -266,15 +249,6 @@ describe('Localhost requests', function () {
                         {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
-                            "event": [
-                                {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests['worked'] = responseCode.code === 302;"
-                                    }
-                                }
-                            ],
                             "request": {
                                 "url": "http://localhost:" + port + '/',
                                 "method": "GET"
@@ -398,9 +372,6 @@ describe('Localhost requests', function () {
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
-
-                            // This collection has no pre-request scripts
-                            expect(events.length).to.be(1);
                         });
                     },
                     test: function (err, cursor, results, item) {
@@ -411,15 +382,6 @@ describe('Localhost requests', function () {
                             expect(cursor.iteration).to.eql(runStore.iteration);
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
-
-                            // This collection has no pre-request scripts
-                            expect(results.length).to.be(1);
-
-                            var result = results[0];
-                            expect(result.error).to.be(undefined);
-
-                            var scriptResult = results[0];
-                            expect(scriptResult.result.masked.scriptType).to.eql('test');
                         });
                     },
                     beforeRequest: function (err, cursor, request, item) {

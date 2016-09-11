@@ -4,13 +4,13 @@
 
 # scripts that are called at very beginning, before repo cloning
 init:
+  # So that the build output does not cause windows to fail.
   - git config --global core.autocrlf input
 
 # environment variables
 environment:
   matrix:
     - nodejs_version: "4"
-    - nodejs_version: "5"
     - nodejs_version: "6"
 
 # scripts that run after cloning repository
