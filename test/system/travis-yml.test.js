@@ -29,7 +29,7 @@ describe('travis.yml', function () {
     describe('strucure', function () {
         it('language must be set to node', function () {
             expect(travisYAML.language).to.be('node_js');
-            expect(travisYAML.node_js).to.eql(['4', '5', '6']);
+            expect(travisYAML.node_js).to.eql(['4', '6']);
         });
 
         it.skip('node version must match rest of the tests', function () {
