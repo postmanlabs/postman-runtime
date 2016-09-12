@@ -18,8 +18,8 @@ describe('travis.yml', function () {
   // No try-catch here, any errors will be caught by the package.json tests.
     packageFile = JSON.parse(fs.readFileSync('package.json').toString());
 
-    it('must exist', function () {
-        expect(fs.existsSync('.travis.yml')).to.be.ok();
+    it('must exist', function (done) {
+        fs.stat('.travis.yml', done);
     });
 
     it('must be a valid yml', function () {

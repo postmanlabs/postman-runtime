@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+#### 2.5.0 (September 12, 2016)
+* Optimized memory usage by evaluating SugarJS only once per run
+* Added a workaround for Windows, where the localhost detection for IPv6 was not working correctly in some cases
+
 #### 2.4.5 (August 25, 2016)
 * Fixed a bug that caused runtime to crash on invalid file path for formdata or binary files
 
