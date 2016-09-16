@@ -250,6 +250,7 @@ describe('Runner', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
 
                             expect(response.code).to.be(200);
+                            expect(response.status).to.be('OK');
                             expect(request).to.be.ok();
                         });
                     },

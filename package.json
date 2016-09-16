@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Underlyng library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -30,10 +30,11 @@
     "btoa": "1.1.2",
     "cheerio": "0.22.0",
     "crypto-js": "3.1.6",
+    "http-reasons": "0.1.0",
     "lodash": "3.10.1",
     "node-uuid": "1.4.7",
-    "postman-collection": "0.4.14",
-    "postman-request": "2.74.1-postman.1",
+    "postman-collection": "0.5.0",
+    "postman-request": "2.74.1-postman.2",
     "resolve-from": "2.0.0",
     "serialised-error": "1.1.2",
     "tv4": "1.2.7",
