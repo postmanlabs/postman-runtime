@@ -56,7 +56,7 @@
     "postman-jsdoc-theme": "0.0.2",
     "recursive-readdir": "2.0.0",
     "shelljs": "0.7.3",
-    "sinon": "1.17.5"
+    "sinon": "1.17.6"
   },
   "browser": {
     "./lib/uvm/script.js": "./lib/uvm/browser/script.js",
