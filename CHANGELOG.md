@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+#### 2.5.1 (September 16, 2016)
+* Fixed a bug that caused utf-8 values to not be encoded properly
+* Updated SDK version to 0.5.0 which contains fixes for AWS auth and OAuth1
+
 #### 2.5.0 (September 12, 2016)
 * Optimized memory usage by evaluating SugarJS only once per run
 * Added a workaround for Windows, where the localhost detection for IPv6 was not working correctly in some cases
