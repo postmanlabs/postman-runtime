@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 2.5.2 (September 21, 2016)
+* Updated version of `postman-collection`, which contains bugfixes for AWS Auth and file uploads
+
 #### 2.5.1 (September 16, 2016)
 * Fixed a bug that caused utf-8 values to not be encoded properly
 * Updated SDK version to 0.5.0 which contains fixes for AWS auth and OAuth1
