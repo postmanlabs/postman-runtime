@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### Unreleased
+* [Breaking] Changed the runtime API to receive a VariableScope instead of plain object
+
 #### 2.5.2 (September 21, 2016)
 * Updated version of `postman-collection`, which contains bugfixes for AWS Auth and file uploads
 
@@ -51,7 +54,7 @@
 
 #### 2.2.5 (July 30, 2016)
 * Added support for exposing "responseCookies" array and "getResponseCookie" function in the sandbox
-* Fixed file handling behavior, now the runner will ignore files (with a warning) if no fileResolver is provided 
+* Fixed file handling behavior, now the runner will ignore files (with a warning) if no fileResolver is provided
 
 #### 2.2.4 (July 29, 2016)
 * Fixed a bug that caused non-file form data to be ignored
