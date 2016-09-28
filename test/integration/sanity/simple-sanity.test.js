@@ -6,7 +6,9 @@ describe('sanity test', function () {
             collection: {
                 item: {request: 'https://echo.getpostman.com/get?testvar={{testVar}}'}
             },
-            environment: {testVar: 'test-var-value'}
+            environment: {
+                values: [{key: 'testVar', value: 'test-var-value'}]
+            }
         }, function (err, results) {
             testrun = results;
             done(err);
