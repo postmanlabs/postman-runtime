@@ -3,6 +3,9 @@
 #### Unreleased
 * [Breaking] Changed the runtime API to receive a VariableScope instead of plain object
 
+#### 2.5.4 (September 28, 2016)
+* Fixed a bug with comma's not being escaped in query strings
+
 #### 2.5.3 (September 26, 2016)
 * Changed runtime behavior ro allow access to the `window` object on browsers
 * Fixed a bug that caused 'false' to not be cast to a string in the sandbox
