@@ -6,10 +6,14 @@ describe('UVM allowed globals', function () {
             'Uint16Array', 'Int8Array', 'Boolean', 'RangeError', 'isFinite', 'encodeURIComponent', 'encodeURI',
             'decodeURI', 'String', 'undefined', 'Symbol', 'Set', 'WeakMap', 'Math', 'DataView', 'Int32Array',
             'Function', 'Number', 'Infinity', 'Promise', 'Float64Array', 'Float32Array', 'Map', 'RegExp',
-            'decodeURIComponent', 'escape', 'Uint8Array', 'code', 'globals', 'environment', 'data',
+            'decodeURIComponent', 'escape', 'Uint8Array', 'globals', 'environment', 'data',
             'iteration', 'request', 'responseCookies', 'responseBody', 'responseCode', 'responseHeaders',
             'responseTime', 'tests', '_', 'CryptoJS', 'tv4', 'cheerio', 'Backbone', 'xml2js', 'atob', 'btoa', 'Buffer',
-            'xml2Json', 'postman', 'setTimeout', 'setInterval', 'XMLHttpRequest', 'console'].sort();
+            'xml2Json', 'postman', 'setTimeout', 'setInterval', 'XMLHttpRequest', 'console'];
+
+    // add `Proxy` and `Reflect` objects for Node v6, which has them globally available.
+    (typeof Proxy !== 'undefined') && globals.push('Proxy');
+    (typeof Reflect !== 'undefined') && globals.push('Reflect');
 
     before(function (done) {
         this.run({
@@ -43,6 +47,6 @@ describe('UVM allowed globals', function () {
 
         var args = testrun.console.getCall(0).args;
         expect(args[1]).to.be('log');
-        expect(args[2].sort()).to.eql(globals);
+        expect(args[2].sort()).to.eql(globals.sort());
     });
 });
