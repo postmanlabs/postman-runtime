@@ -104,6 +104,15 @@ describe('project repository', function () {
                 expect(fs.existsSync(json.main)).to.be.ok();
             });
         });
+
+        describe('greenkeeper', function () {
+            it('must ignore Lodash for non v4', function () {
+                var isIgnored = _.includes(_.get(json, 'greenkeeper.ignore'), 'lodash');
+
+                // @todo: Remove the GreenKeeper ignore from package.json along with this test, after Lodash v4
+                expect((isIgnored ? /^3/ : /^4/).test(json.dependencies.lodash)).to.be(true);
+            });
+        });
     });
 
     describe('README.md', function () {
