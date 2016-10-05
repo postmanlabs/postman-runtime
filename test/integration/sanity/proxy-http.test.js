@@ -1,23 +1,28 @@
 describe('sanity test', function () {
-    var testrun;
+    var proxy = require('http-proxy'),
+
+        server = new proxy.createProxyServer({target: 'https://echo.getpostman.com/get'}),
+
+        testrun;
 
     before(function (done) {
-        // start an http proxy server using 'http-proxy' module
-        // https://github.com/nodejitsu/node-http-proxy#setup-a-basic-stand-alone-proxy-server
-        // start it on some port, say 9090
+        var fakeProxyManager = {
+            getProxyConfiguration: function (url, callback) {
+                callback(null, server.options);
+            }
+        };
 
-        // create a an object "fakeProxyManager", which has one property called "getProxyConfiguration"
-        // "getProxyConfiguration" will be called in request-wrapper.js, line 83
-        // return the correct proxy config from the "getProxyConfiguration" function
+        server.listen(9090);
 
-        // this.run({
-        //     collection: {
-        //         item: {request: 'https://echo.getpostman.com/get'}
-        //     },
-        //     requester: { proxyManager: fakeProxyManager }
-        // }, function (err, results) {
-        //     done(err);
-        // });
+        this.run({
+            collection: {
+                item: {request: 'https://echo.getpostman.com/get'}
+            },
+            requester: {proxyManager: fakeProxyManager}
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
     });
 
     it('must have started and completed the test run', function () {
@@ -33,7 +38,7 @@ describe('sanity test', function () {
         expect(response.json()).be.ok();
     });
 
-    after(function (done) {
-        // stop your server
-    })
+    after(function () {
+        server.close();
+    });
 });
