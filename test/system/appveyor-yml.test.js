@@ -23,7 +23,7 @@ describe('appveyor.yml', function () {
         expect(appveyorYAMLError && appveyorYAMLError.message || appveyorYAMLError).to.not.be.ok();
     });
 
-    describe('strucure', function () {
+    describe('structure', function () {
         it('init script must exist', function () {
             expect(appveyorYAML.init[0]).to.be('git config --global core.autocrlf input');
         });
@@ -43,6 +43,12 @@ describe('appveyor.yml', function () {
             }
 
             !travisYAMLError && expect(travisYAML.node_js).to.eql(appveyorNodeVersions);
+        });
+
+        it('Install scripts must be configured correctly', function () {
+            expect(appveyorYAML.install[0].ps).to.be('Install-Product node $env:nodejs_version');
+            expect(appveyorYAML.install[1]).to.be('npm cache clean');
+            expect(appveyorYAML.install[2]).to.be('npm install');
         });
 
         it('MS build script and deploy must be turned off', function () {
