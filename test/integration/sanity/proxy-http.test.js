@@ -1,14 +1,23 @@
 describe('sanity test', function () {
-    var proxy = require('http-proxy'),
+    var _ = require('lodash'),
+        proxy = require('http-proxy'),
 
-        server = new proxy.createProxyServer({target: 'https://echo.getpostman.com/get'}),
+        server = new proxy.createProxyServer({
+            target: 'http://echo.getpostman.com',
+            headers: {
+                'x-postman-proxy': 'true'
+            }
+        }),
 
         testrun;
 
     before(function (done) {
         var fakeProxyManager = {
             getProxyConfiguration: function (url, callback) {
-                callback(null, server.options);
+                callback(null, {
+                    proxy: 'http://localhost:9090',
+                    tunnel: false
+                });
             }
         };
 
@@ -16,9 +25,13 @@ describe('sanity test', function () {
 
         this.run({
             collection: {
-                item: {request: 'https://echo.getpostman.com/get'}
+                item: {
+                    request: 'http://echo.getpostman.com/get'
+                }
             },
-            requester: {proxyManager: fakeProxyManager}
+            requester: {
+                proxyManager: fakeProxyManager
+            }
         }, function (err, results) {
             testrun = results;
             done(err);
@@ -32,10 +45,10 @@ describe('sanity test', function () {
     });
 
     it('must receive response from the proxy', function () {
-        var response = testrun.request.getCall(0).args[2];
+        var response = testrun.request.getCall(0).args[2].json();
 
         expect(testrun.request.calledOnce).be.ok(); // one request
-        expect(response.json()).be.ok();
+        expect(_.get(response, 'headers.x-postman-proxy')).to.be('true');
     });
 
     after(function () {
