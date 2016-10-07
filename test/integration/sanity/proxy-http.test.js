@@ -2,26 +2,28 @@ describe('sanity test', function () {
     var _ = require('lodash'),
         proxy = require('http-proxy'),
 
+        server,
+        testrun;
+
+    before(function (done) {
+        var port = 9090, // @todo: configure port dynamically via random number generation
+            fakeProxyManager = {
+                getProxyConfiguration: function (url, callback) {
+                    callback(null, {
+                        proxy: 'http://localhost:' + port,
+                        tunnel: false
+                    });
+                }
+            };
+
         server = new proxy.createProxyServer({
             target: 'http://echo.getpostman.com',
             headers: {
                 'x-postman-proxy': 'true'
             }
-        }),
+        });
 
-        testrun;
-
-    before(function (done) {
-        var fakeProxyManager = {
-            getProxyConfiguration: function (url, callback) {
-                callback(null, {
-                    proxy: 'http://localhost:9090',
-                    tunnel: false
-                });
-            }
-        };
-
-        server.listen(9090);
+        server.listen(port);
 
         this.run({
             collection: {
