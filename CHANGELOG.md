@@ -1,7 +1,8 @@
 # Postman Runtime Changelog
 
-#### Unreleased
-* [Breaking] Changed the runtime API to receive a VariableScope instead of plain object
+#### 3.0.0
+* [Breaking] Changed the runtime API to receive a VariableScope instead of plain object for environments and globals
+* Restricted scopes of test and pre-request scripts
 
 #### 2.5.4 (September 28, 2016)
 * Fixed a bug with comma's not being escaped in query strings
