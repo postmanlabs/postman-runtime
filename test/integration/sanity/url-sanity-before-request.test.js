@@ -19,7 +19,7 @@ describe('url sanity test', function () {
                 }
             },
             globals: {
-                url: 'http://httpbin.org'
+                values: [{key: 'url', value: 'http://httpbin.org'}]
             }
         }, function (err, results) {
             testrun = results;

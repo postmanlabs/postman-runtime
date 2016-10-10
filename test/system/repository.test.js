@@ -13,8 +13,8 @@ describe('project repository', function () {
         var content,
             json;
 
-        it('must exist', function () {
-            expect(fs.existsSync('./package.json')).to.be.ok();
+        it('must exist', function (done) {
+            fs.stat('./package.json', done);
         });
 
         it('must have readable content', function () {
@@ -40,33 +40,20 @@ describe('project repository', function () {
             });
         });
 
-        describe.skip('script definitions', function () {
-            var props = {};
-
+        describe('script definitions', function () {
             it('files must exist', function () {
+                var scriptRegex = /^node\snpm\/.+\.js$/;
+
                 expect(json.scripts).to.be.ok();
-
-                Object.keys(json.scripts).forEach(function (scriptName) {
-                    var base;
-
-                    props[scriptName] = {
-                        base: (base = scriptName.substr(0, scriptName.indexOf('-') > -1 ?
-                            scriptName.indexOf('-') : undefined)),
-                        path: 'npm/' + base + '/' + scriptName + '.js'
-                    };
-                    expect(fs.existsSync(props[scriptName].path)).to.be.ok();
-                });
-            });
-
-            it('must be defined as per standards `[script]: scripts/[name]/[name].sh`', function () {
-                Object.keys(json.scripts).forEach(function (scriptName) {
-                    expect(json.scripts[scriptName]).to.match(new RegExp(props[prop].path, 'g'));
+                json.scripts && Object.keys(json.scripts).forEach(function (scriptName) {
+                    expect(scriptRegex.test(json.scripts[scriptName])).to.be.ok();
+                    expect(fs.statSync('npm/' + scriptName + '.js')).to.be.ok();
                 });
             });
 
             it('must have the hashbang defined', function () {
-                Object.keys(json.scripts).forEach(function (scriptName) {
-                    var fileContent = fs.readFileSync(props[scriptName].path).toString();
+                json.scripts && Object.keys(json.scripts).forEach(function (scriptName) {
+                    var fileContent = fs.readFileSync('npm/' + scriptName + '.js').toString();
                     expect(/^#!\/(bin\/bash|usr\/bin\/env\snode)[\r\n][\W\w]*$/g.test(fileContent)).to.be.ok();
                 });
             });
@@ -112,16 +99,25 @@ describe('project repository', function () {
         });
 
         describe('main entry script', function () {
-            it('must point to a valid file', function () {
+            it('must point to a valid file', function (done) {
                 expect(json.main).to.equal('index.js');
-                expect(fs.existsSync(json.main)).to.be.ok();
+                fs.stat(json.main, done);
+            });
+        });
+
+        describe('greenkeeper', function () {
+            it('must ignore Lodash for non v4', function () {
+                var isIgnored = _.includes(_.get(json, 'greenkeeper.ignore'), 'lodash');
+
+                // @todo: Remove the GreenKeeper ignore from package.json along with this test, after Lodash v4
+                expect((isIgnored ? /^3/ : /^4/).test(json.dependencies.lodash)).to.be(true);
             });
         });
     });
 
     describe('README.md', function () {
-        it('must exist', function () {
-            expect(fs.existsSync('./README.md')).to.be.ok();
+        it('must exist', function (done) {
+            fs.stat('./README.md', done);
         });
 
         it('must have readable content', function () {
@@ -130,8 +126,8 @@ describe('project repository', function () {
     });
 
     describe('LICENSE.md', function () {
-        it('must exist', function () {
-            expect(fs.existsSync('./LICENSE.md')).to.be.ok();
+        it('must exist', function (done) {
+            fs.stat('./LICENSE.md', done);
         });
 
         it('must have readable content', function () {
@@ -140,8 +136,8 @@ describe('project repository', function () {
     });
 
     describe('.gitignore file', function () {
-        it('must exist', function () {
-            expect(fs.existsSync('./.gitignore')).to.be.ok();
+        it('must exist', function (done) {
+            fs.stat('./.gitignore', done);
         });
 
         it('must have readable content', function () {
@@ -150,8 +146,8 @@ describe('project repository', function () {
     });
 
     describe('.npmignore file', function () {
-        it('must exist', function () {
-            expect(fs.existsSync('./.npmignore')).to.be.ok();
+        it('must exist', function (done) {
+            fs.stat('./.npmignore', done);
         });
     });
 });
