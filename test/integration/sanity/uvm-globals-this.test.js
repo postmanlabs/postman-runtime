@@ -6,7 +6,7 @@ describe('UVM allowed globals', function () {
             'Uint16Array', 'Int8Array', 'Boolean', 'RangeError', 'isFinite', 'encodeURIComponent', 'encodeURI',
             'decodeURI', 'String', 'undefined', 'Symbol', 'Set', 'WeakMap', 'Math', 'DataView', 'Int32Array',
             'Function', 'Number', 'Infinity', 'Promise', 'Float64Array', 'Float32Array', 'Map', 'RegExp',
-            'decodeURIComponent', 'escape', 'Uint8Array', 'globals', 'environment', 'data',
+            'decodeURIComponent', 'escape', 'Uint8Array', 'globals', 'environment', 'data', 'moment',
             'iteration', 'request', 'responseCookies', 'responseBody', 'responseCode', 'responseHeaders',
             'responseTime', 'tests', '_', 'CryptoJS', 'tv4', 'cheerio', 'Backbone', 'xml2js', 'atob', 'btoa', 'Buffer',
             'xml2Json', 'postman', 'setTimeout', 'setInterval', 'XMLHttpRequest', 'console'];
