@@ -1,6 +1,9 @@
 # Postman Runtime Changelog
 
-#### 3.0.0
+#### 3.0.1 (October 13, 2016)
+* Ensure that the http reason phrase is bubbled up from the response 
+
+#### 3.0.0 (October 10, 2016) 
 * [Breaking] Changed the runtime API to receive a VariableScope instead of plain object for environments and globals
 * Restricted scopes of test and pre-request scripts
 
