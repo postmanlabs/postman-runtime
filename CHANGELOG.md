@@ -1,6 +1,13 @@
 # Postman Runtime Changelog
 
-#### 2.5.4
+#### 3.0.1 (October 13, 2016)
+* Ensure that the http reason phrase is bubbled up from the response 
+
+#### 3.0.0 (October 10, 2016) 
+* [Breaking] Changed the runtime API to receive a VariableScope instead of plain object for environments and globals
+* Restricted scopes of test and pre-request scripts
+
+#### 2.5.4 (September 28, 2016)
 * Fixed a bug with comma's not being escaped in query strings
 
 #### 2.5.3 (September 26, 2016)
@@ -59,7 +66,7 @@
 
 #### 2.2.5 (July 30, 2016)
 * Added support for exposing "responseCookies" array and "getResponseCookie" function in the sandbox
-* Fixed file handling behavior, now the runner will ignore files (with a warning) if no fileResolver is provided 
+* Fixed file handling behavior, now the runner will ignore files (with a warning) if no fileResolver is provided
 
 #### 2.2.4 (July 29, 2016)
 * Fixed a bug that caused non-file form data to be ignored

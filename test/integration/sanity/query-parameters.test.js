@@ -8,7 +8,9 @@ describe('query parameters', function () {
                     {request: 'http://httpbin.org/get?a=обязательный&c=d'}
                 ]
             },
-            environment: {testVar: 'test-var-value'}
+            environment: {
+                values: [{key: 'testVar', value: 'test-var-value'}]
+            }
         }, function (err, results) {
             testrun = results;
             done(err);
