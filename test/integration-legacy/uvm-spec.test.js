@@ -25,7 +25,7 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "try {\n    var jsonObject = xml2Json(responseBody);\n    console.log(jsonObject);\n    tests[\"xml2Json\"]=true;\n}\ncatch(e) {\n   console.log(\"xml2Json not supported\");\n    tests[\"xml2Json\"]=false;\n}\n\n\ntry {\n    console.log(postman.getResponseHeader(\"Content-Length\"));\n    tests[\"GetResponseHeader\"]=true;\n} catch(e) {\n    console.log(\"getResponseHeader not supported\");\n    tests[\"GetResponseHeader\"]=false;\n}\n\n\ntry {\n    var mykookie = postman.getResponseCookie(\"hi\");\n    tests[\"GetResponseCookie\"]=mykookie.value ==='hello';\n} catch(e) {\n    console.log(\"getResponseCookie not supported\");\n    tests[\"GetResponseCookie\"]=false;\n}\n\ntry {\n    console.log(\"RESCOOK: \" , responseCookies);\n} catch(e) {\n    console.log(\"responseCookies not supported\");\n}\n\ntests[\"Correct global\"] = globals.g1==\"0\";\n\nconsole.log(\"Request: \" + JSON.stringify(request));\nconsole.log(\"Environment: \" + JSON.stringify(environment));\nconsole.log(\"Globals: \" + JSON.stringify(globals));\nconsole.log(\"Response hedaers: \" + JSON.stringify(responseHeaders));\nconsole.log(\"Response body: \" + JSON.stringify(responseBody));\nconsole.log(\"Response time: \" + JSON.stringify(responseTime));\nconsole.log(\"Response code: \" + JSON.stringify(responseCode));\n\n\ntry {\n    console.log(postman.clearEnvironmentVariables());\n} catch(e) {\n    console.log(\"clearEnvironmentVariables not supported\");\n}\n\ntry {\n    console.log(postman.clearGlobalVariables());\n} catch(e) {\n    console.log(\"clearGlobalVariables not supported\");\n}\n\npostman.setGlobalVariable(\"g1\", \"0\");\npostman.setEnvironmentVariable(\"e1\", \"0\");\n\ntry {\n    _.each([1], function(v) {tests['Lodash working'] = true;});\n}\ncatch(e) {\n    tests['Lodash working'] = false;\n}\n\n\nvar newString=\"diabetes\";\ntests[\"SugarJS working\"]=newString.has(\"betes\");\n\ntests[\"tv4 present\"] = (typeof tv4.validate === \"function\");\n\ntests[\"CryptoJS md5\"] = (CryptoJS.MD5(\"jasonpurse\") == \"288d14f08b5ad40da43dbe06467729c9\");"
+                                        "exec": "try {\n    var jsonObject = xml2Json(responseBody);\n    console.log(jsonObject);\n    tests[\"xml2Json\"]=true;\n}\ncatch(e) {\n   console.log(\"xml2Json not supported\");\n    tests[\"xml2Json\"]=false;\n}\n\n\ntry {\n    console.log(postman.getResponseHeader(\"Content-Length\"));\n    tests[\"GetResponseHeader\"]=true;\n} catch(e) {\n    console.log(\"getResponseHeader not supported\");\n    tests[\"GetResponseHeader\"]=false;\n}\n\n\ntry {\n    var mykookie = postman.getResponseCookie(\"hi\");\n    tests[\"GetResponseCookie\"]=mykookie.value ==='hello';\n} catch(e) {\n    console.log(\"getResponseCookie not supported\");\n    tests[\"GetResponseCookie\"]=false;\n}\n\ntry {\n    console.log(\"RESCOOK: \" , responseCookies);\n} catch(e) {\n    console.log(\"responseCookies not supported\");\n}\n\ntests[\"Correct global\"] = globals.g1==\"0\";\n\nconsole.log(\"Request: \" + JSON.stringify(request));\nconsole.log(\"Environment: \" + JSON.stringify(environment));\nconsole.log(\"Globals: \" + JSON.stringify(globals));\nconsole.log(\"Response hedaers: \" + JSON.stringify(responseHeaders));\nconsole.log(\"Response body: \" + JSON.stringify(responseBody));\nconsole.log(\"Response time: \" + JSON.stringify(responseTime));\nconsole.log(\"Response code: \" + JSON.stringify(responseCode));\n\n\ntry {\n    console.log(postman.clearEnvironmentVariables());\n} catch(e) {\n    console.log(\"clearEnvironmentVariables not supported\");\n}\n\ntry {\n    console.log(postman.clearGlobalVariables());\n} catch(e) {\n    console.log(\"clearGlobalVariables not supported\");\n}\n\npostman.setGlobalVariable(\"g1\", \"0\");\npostman.setEnvironmentVariable(\"e1\", \"0\");\n\ntry {\n    _.each([1], function(v) {tests['Lodash working'] = true;});\n}\ncatch(e) {\n    tests['Lodash working'] = false;\n}\n\n\nvar newString=\"diabetes\";\ntests[\"SugarJS working\"]=newString.has(\"betes\");\n\ntests[\"tv4 present\"] = (typeof tv4.validate === \"function\");\n\ntests[\"CryptoJS md5\"] = (CryptoJS.MD5(\"jasonpurse\") == \"288d14f08b5ad40da43dbe06467729c9\");try {\n    console.log(moment());\n    tests[\"moment\"]=true;\n}\ncatch(e) {\n   console.log(\"momentjs not supported\");\n    tests[\"moment\"]=false;\n}"
                                     }
                                 },
                                 {
@@ -811,6 +811,234 @@ describe('UVM', function () {
                                     "formdata": []
                                 },
                                 "description": ""
+                            },
+                            "response": []
+                        }
+                    ]
+                },
+                collection = new sdk.Collection(rawCollection),
+                testables = {
+                    iterationsStarted: [],
+                    iterationsComplete: [],
+                    itemsStarted: {},
+                    itemsComplete: {}
+                },  // populate during the run, and then perform tests on it, at the end.
+
+                /**
+                 * Since each callback runs in a separate callstack, this helper function
+                 * ensures that any errors are forwarded to mocha
+                 *
+                 * @param func
+                 */
+                check = function (func) {
+                    try {
+                        func();
+                    }
+                    catch (e) {
+                        mochaDone(e);
+                    }
+                };
+
+            runner.run(collection, {
+                iterationCount: 1
+            }, function (err, run) {
+                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+
+                expect(err).to.be(null);
+                run.start({
+                    console: function (cursor, level) {
+                        expect(level).to.be('log');
+                        expect(cursor.iteration).to.be(runStore.iteration);
+                        expect(cursor.position).to.be(runStore.position);
+                    },
+                    exception: function (err) {
+                        check(function () {
+                            expect(err).to.not.be.ok();
+                        });
+                    },
+                    error: function (err) {
+                        check(function () {
+                            expect(err).to.not.be.ok();
+                        });
+                    },
+                    start: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor).to.have.property('position', 0);
+                            expect(cursor).to.have.property('iteration', 0);
+                            expect(cursor).to.have.property('length', 1);
+                            expect(cursor).to.have.property('cycles', 1);
+                            expect(cursor).to.have.property('eof', false);
+                            expect(cursor).to.have.property('empty', false);
+                            expect(cursor).to.have.property('bof', true);
+                            expect(cursor).to.have.property('cr', false);
+                            expect(cursor).to.have.property('ref');
+
+                            // Set this to true, and verify at the end, so that the test will fail even if this
+                            // callback is never called.
+                            testables.started = true;
+                        });
+                    },
+                    beforeIteration: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            testables.iterationsStarted.push(cursor.iteration);
+                            runStore.iteration = cursor.iteration;
+                        });
+                    },
+                    iteration: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+
+                            testables.iterationsComplete.push(cursor.iteration);
+                        });
+                    },
+                    beforeItem: function (err, cursor, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
+                            testables.itemsStarted[cursor.iteration].push(item);
+                            runStore.position = cursor.position;
+                            runStore.ref = cursor.ref;
+                        });
+                    },
+                    item: function (err, cursor, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
+                            testables.itemsComplete[cursor.iteration].push(item);
+                        });
+                    },
+                    beforePrerequest: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    prerequest: function (err, cursor) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    beforeTest: function (err, cursor, events) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            // This collection has no pre-request scripts
+                            expect(events.length).to.be(1);
+                        });
+                    },
+                    test: function (err, cursor, results) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            // This collection has no pre-request scripts
+                            expect(results.length).to.be(1);
+
+                            var scriptResult = results[0];
+                            expect(scriptResult.error).to.be(undefined);
+
+                            _.forOwn(scriptResult.result.globals.tests, function (result) {
+                                expect(result).to.be.ok();
+                            });
+
+                            expect(scriptResult.result.masked.scriptType).to.eql('test');
+                        });
+                    },
+                    beforeRequest: function (err, cursor, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+                        });
+                    },
+                    request: function (err, cursor, response, request, item) {
+                        check(function () {
+                            expect(err).to.be(null);
+
+                            expect(request.url.toString()).to.be.ok();
+
+                            // Sanity
+                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(cursor.position).to.eql(runStore.position);
+                            expect(cursor.ref).to.eql(runStore.ref);
+
+                            expect(response.code).to.be(200);
+                            expect(request).to.be.ok();
+                        });
+                    },
+                    done: function (err) {
+                        check(function () {
+                            err && console.log(err.stack);
+                            expect(err).to.be(null);
+                            mochaDone();
+                        });
+                    }
+                });
+            });
+        });
+    });
+
+    describe('Moment JS', function () {
+        it('should expose the full functionality', function (mochaDone) {
+            var runner = new runtime.Runner(),
+                rawCollection = {
+                    "variables": [],
+                    "info": {
+                        "name": "momentjs",
+                        "_postman_id": "36e9ee6b-af8b-db32-13ea-8697810021ad",
+                        "description": "",
+                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    },
+                    "item": [
+                        {
+                            "name": "Moment JS test",
+                            "event": [
+                                {
+                                    "listen": "test",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\n// tests[\"fake date\"] = moment(\"not a real date\").isValid() === false;\n\ntests[\"fake month\"] = moment(\"2010 13\", \"YYYY MM\").isValid() === false;\ntests[\"fake day\"] = moment(\"2010 11 31\", \"YYYY MM DD\").isValid() === false;\ntests[\"fake leap year\"] = moment(\"2010 2 29\", \"YYYY MM DD\").isValid() === false;\ntests[\"fake month name\"] = moment(\"2010 notamonth 29\", \"YYYY MMM DD\").isValid() === false;\n\ntests[\"year date\"] = moment('2016 is a date', 'YYYY-MM-DD').isValid();\n\ntests[\"loose match\"] = moment('It is 2012-05-25', 'YYYY-MM-DD').isValid();\ntests[\"loose match\"] = moment('It is 2012-05-25', 'YYYY-MM-DD', true).isValid() === false;\ntests[\"tight hyphen match\"] = moment('2012-05-25', 'YYYY-MM-DD', true).isValid();\ntests[\"tight dot match\"] = moment('2012.05.25', 'YYYY-MM-DD', true).isValid() === false;\n\ntests[\"glued minutes\"] = moment(\"123\", \"hmm\").format(\"HH:mm\") === \"01:23\";\ntests[\"glued hours\"] = moment(\"1234\", \"hmm\").format(\"HH:mm\") === \"12:34\";\n\ntests[\"unreal month\"] = moment([2010, 12]).isValid() === false;\ntests[\"unreal day\"] = moment([2010, 10, 31]).isValid() === false;\ntests[\"non-leap year\"] = moment([2010, 1, 29]).isValid() === false;\n\ntests[\"UTC seconds\"] = moment.utc().seconds() === new Date().getUTCSeconds();\ntests[\"UTC hours\"] = moment.utc([2011, 0, 1, 8]).hours() === 8;\n\ntests[\"Timezone offset\"] = moment.parseZone(\"2013-01-01T00:00:00-13:00\").utcOffset() === -780;\n\ntests[\"Invalidity check\"] = moment(\"2011-10-10T10:20:90\").invalidAt() === 5;\ntests[\"Weeks in year\"] = moment().weeksInYear() === 53;\ntests[\"Weeks in year\"] = moment().isoWeeksInYear() === 52;\n\ntests[\"Date diff\"] = moment([2007, 0, 29]).diff(moment([2007, 0, 28]), 'days') === 1;\ntests[\"Second diff\"] = moment().diff(moment().add(1, 'seconds')) === -1000;\n\ntests[\"isBefore comparison\"] = moment('2010-10-20').isBefore('2010-10-21');\ntests[\"isAfter comparison\"] = moment('2010-10-21').isAfter('2010-10-20');\ntests[\"isBetween comparison\"] = moment('2010-10-20').isBetween('2010-10-19', '2010-10-25');"
+                                    }
+                                }
+                            ],
+                            "request": {
+                                "url": "https://echo.getpostman.com/get",
+                                "method": "GET",
+                                "header": [],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": []
+                                },
+                                "description": "A simple `GET` request to Postman Echo to verify the correctness of `momentjs` within the Postman Sandbox."
                             },
                             "response": []
                         }
