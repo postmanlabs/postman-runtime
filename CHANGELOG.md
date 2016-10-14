@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 3.0.2 (October 14, 2016)
+* Updated the version of postman-collection, which contains a fix for Hawk authentication
+
 #### 3.0.1 (October 13, 2016)
 * Ensure that the http reason phrase is bubbled up from the response 
 
