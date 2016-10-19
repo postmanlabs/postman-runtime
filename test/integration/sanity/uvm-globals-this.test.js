@@ -27,7 +27,7 @@ describe('UVM allowed globals', function () {
                             exec: 'console.log(Object.keys(this));'
                         }
                     }],
-                    request: 'httpbin.org/get'
+                    request: 'echo.getpostman.com/get'
                 }
             }
         }, function (err, results) {
