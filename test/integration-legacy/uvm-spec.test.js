@@ -25,7 +25,7 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "try {\n    var jsonObject = xml2Json(responseBody);\n    console.log(jsonObject);\n    tests[\"xml2Json\"]=true;\n}\ncatch(e) {\n   console.log(\"xml2Json not supported\");\n    tests[\"xml2Json\"]=false;\n}\n\n\ntry {\n    console.log(postman.getResponseHeader(\"Content-Length\"));\n    tests[\"GetResponseHeader\"]=true;\n} catch(e) {\n    console.log(\"getResponseHeader not supported\");\n    tests[\"GetResponseHeader\"]=false;\n}\n\n\ntry {\n    var mykookie = postman.getResponseCookie(\"hi\");\n    tests[\"GetResponseCookie\"]=mykookie.value ==='hello';\n} catch(e) {\n    console.log(\"getResponseCookie not supported\");\n    tests[\"GetResponseCookie\"]=false;\n}\n\ntry {\n    console.log(\"RESCOOK: \" , responseCookies);\n} catch(e) {\n    console.log(\"responseCookies not supported\");\n}\n\ntests[\"Correct global\"] = globals.g1==\"0\";\n\nconsole.log(\"Request: \" + JSON.stringify(request));\nconsole.log(\"Environment: \" + JSON.stringify(environment));\nconsole.log(\"Globals: \" + JSON.stringify(globals));\nconsole.log(\"Response hedaers: \" + JSON.stringify(responseHeaders));\nconsole.log(\"Response body: \" + JSON.stringify(responseBody));\nconsole.log(\"Response time: \" + JSON.stringify(responseTime));\nconsole.log(\"Response code: \" + JSON.stringify(responseCode));\n\n\ntry {\n    console.log(postman.clearEnvironmentVariables());\n} catch(e) {\n    console.log(\"clearEnvironmentVariables not supported\");\n}\n\ntry {\n    console.log(postman.clearGlobalVariables());\n} catch(e) {\n    console.log(\"clearGlobalVariables not supported\");\n}\n\npostman.setGlobalVariable(\"g1\", \"0\");\npostman.setEnvironmentVariable(\"e1\", \"0\");\n\ntry {\n    _.each([1], function(v) {tests['Lodash working'] = true;});\n}\ncatch(e) {\n    tests['Lodash working'] = false;\n}\n\n\nvar newString=\"diabetes\";\ntests[\"SugarJS working\"]=newString.has(\"betes\");\n\ntests[\"tv4 present\"] = (typeof tv4.validate === \"function\");\n\ntests[\"CryptoJS md5\"] = (CryptoJS.MD5(\"jasonpurse\") == \"288d14f08b5ad40da43dbe06467729c9\");"
+                                        "exec": "try {\n    var jsonObject = xml2Json(responseBody);\n    console.log(jsonObject);\n    tests[\"xml2Json\"]=true;\n}\ncatch(e) {\n   console.log(\"xml2Json not supported\");\n    tests[\"xml2Json\"]=false;\n}\n\n\ntry {\n    console.log(postman.getResponseHeader(\"Content-Length\"));\n    tests[\"GetResponseHeader\"]=true;\n} catch(e) {\n    console.log(\"getResponseHeader not supported\");\n    tests[\"GetResponseHeader\"]=false;\n}\n\n\ntry {\n    var mykookie = postman.getResponseCookie(\"sails.sid\");\n    tests[\"GetResponseCookie\"]=mykookie.value;\n} catch(e) {\n    console.log(\"getResponseCookie not supported\");\n    tests[\"GetResponseCookie\"]=false;\n}\n\ntry {\n    console.log(\"RESCOOK: \" , responseCookies);\n} catch(e) {\n    console.log(\"responseCookies not supported\");\n}\n\ntests[\"Correct global\"] = globals.g1==\"0\";\n\nconsole.log(\"Request: \" + JSON.stringify(request));\nconsole.log(\"Environment: \" + JSON.stringify(environment));\nconsole.log(\"Globals: \" + JSON.stringify(globals));\nconsole.log(\"Response hedaers: \" + JSON.stringify(responseHeaders));\nconsole.log(\"Response body: \" + JSON.stringify(responseBody));\nconsole.log(\"Response time: \" + JSON.stringify(responseTime));\nconsole.log(\"Response code: \" + JSON.stringify(responseCode));\n\n\ntry {\n    console.log(postman.clearEnvironmentVariables());\n} catch(e) {\n    console.log(\"clearEnvironmentVariables not supported\");\n}\n\ntry {\n    console.log(postman.clearGlobalVariables());\n} catch(e) {\n    console.log(\"clearGlobalVariables not supported\");\n}\n\npostman.setGlobalVariable(\"g1\", \"0\");\npostman.setEnvironmentVariable(\"e1\", \"0\");\n\ntry {\n    _.each([1], function(v) {tests['Lodash working'] = true;});\n}\ncatch(e) {\n    tests['Lodash working'] = false;\n}\n\n\nvar newString=\"diabetes\";\ntests[\"SugarJS working\"]=newString.has(\"betes\");\n\ntests[\"tv4 present\"] = (typeof tv4.validate === \"function\");\n\ntests[\"CryptoJS md5\"] = (CryptoJS.MD5(\"jasonpurse\") == \"288d14f08b5ad40da43dbe06467729c9\");"
                                     }
                                 },
                                 {
@@ -37,7 +37,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/xml",
+                                "url": "https://echo.getpostman.com/type/xml",
                                 "method": "GET",
                                 "header": [],
                                 "body": {
@@ -60,7 +60,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/post",
+                                "url": "https://echo.getpostman.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -126,7 +126,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/put",
+                                "url": "https://echo.getpostman.com/put",
                                 "method": "PUT",
                                 "header": [],
                                 "body": {
@@ -149,7 +149,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/patch",
+                                "url": "https://echo.getpostman.com/patch",
                                 "method": "PATCH",
                                 "header": [],
                                 "body": {
@@ -172,7 +172,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/delete",
+                                "url": "https://echo.getpostman.com/delete",
                                 "method": "DELETE",
                                 "header": [],
                                 "body": {
@@ -195,7 +195,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/get",
+                                "url": "https://echo.getpostman.com/get",
                                 "method": "HEAD",
                                 "header": [],
                                 "body": {
@@ -213,12 +213,12 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\ntests[\"Body is correct\"] = responseBody === \"\";"
+                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\ntests[\"Body is correct\"] = !_.isEmpty(responseBody.split(\",\"));"
                                     }
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/get",
+                                "url": "https://echo.getpostman.com/get",
                                 "method": "OPTIONS",
                                 "header": [],
                                 "body": {
@@ -241,7 +241,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/post",
+                                "url": "https://echo.getpostman.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -259,7 +259,7 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "console.log(request.headers);\nvar jsonData = JSON.parse(responseBody);\ntests[\"Correct aath header\"] = jsonData.headers.Authorization.indexOf(\"YWJoaWppdDprYW5l\")>-1;"
+                                        "exec": "console.log(request.headers);\nvar jsonData = JSON.parse(responseBody);\ntests[\"Correct auth header\"] = jsonData.headers.authorization.indexOf(\"YWJoaWppdDprYW5l\")>-1;"
                                     }
                                 }
                             ],
@@ -273,7 +273,7 @@ describe('UVM', function () {
                                         "showPassword": false
                                     }
                                 },
-                                "url": "httpbin.org/post",
+                                "url": "https://echo.getpostman.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -291,7 +291,7 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Correct aath header\"] = jsonData.headers.Authorization.length>10;"
+                                        "exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Correct auth header\"] = jsonData.headers.authorization.length>10;"
                                     }
                                 }
                             ],
@@ -310,7 +310,7 @@ describe('UVM', function () {
                                         "qop": ""
                                     }
                                 },
-                                "url": "httpbin.org/post",
+                                "url": "https://echo.getpostman.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -340,7 +340,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "httpbin.org/get?a={{name{{i}}}}",
+                                "url": "https://echo.getpostman.com/get?a={{name{{i}}}}",
                                 "method": "GET",
                                 "header": [],
                                 "body": {
@@ -362,7 +362,7 @@ describe('UVM', function () {
                                         "exec": "console.log('running buffer and json tests'); tests['global JSON object'] = typeof JSON.stringify === 'function'; tests['global Buffer object'] = !!Buffer"
                                     }
                                 }
-                            ],
+                            ]
                         }
                     ]
                 },
@@ -388,7 +388,7 @@ describe('UVM', function () {
                 cookieJar = request.jar();
 
             // Add a cookie to the Jar
-            cookieJar.setCookie(request.cookie('hi=hello'), 'http://httpbin.org/xml');
+            cookieJar.setCookie(request.cookie('hi=hello'), 'https://echo.getpostman.com/type/xml');
             runner.run(collection, {
                 iterationCount: 1,
                 abortOnFailure: true,
@@ -589,7 +589,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "http://httpbin.org/redirect/1",
+                                "url": "https://echo.getpostman.com/redirect-to?url=https://echo.getpostman.com/get",
                                 "method": "GET"
                             }
                         }
