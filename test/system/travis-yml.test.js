@@ -11,9 +11,9 @@ describe('travis.yml', function () {
     try {
         travisYAML = yaml.safeLoad(fs.readFileSync('.travis.yml').toString());
     }
-  catch (e) {
-      travisYAMLError = e;
-  }
+    catch (e) {
+        travisYAMLError = e;
+    }
 
   // No try-catch here, any errors will be caught by the package.json tests.
     packageFile = JSON.parse(fs.readFileSync('package.json').toString());
@@ -32,8 +32,8 @@ describe('travis.yml', function () {
             expect(travisYAML.node_js).to.eql(['4', '6']);
         });
 
-        it.skip('node version must match rest of the tests', function () {
-            expect(travisYAML.node_js).to.eql([packageFile.engines.node.charAt(2)]);
+        it('node version must match rest of the tests', function () {
+            expect(travisYAML.node_js[0]).to.eql([packageFile.engines.node.charAt(2)]);
         });
     });
 });
