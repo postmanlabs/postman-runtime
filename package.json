@@ -15,7 +15,9 @@
     "test-unit": "node npm/test-unit.js",
     "test-integration": "node npm/test-integration.js",
     "build-docs": "node npm/build-docs.js",
-    "build-wiki": "node npm/build-wiki.js"
+    "build-wiki": "node npm/build-wiki.js",
+    "publish-docs": "node npm/build-docs.js",
+    "publish-wiki": "node npm/build-wiki.js"
   },
   "repository": {
     "type": "git",
