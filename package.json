@@ -4,8 +4,7 @@
   "description": "Underlyng library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
-    "example": "example",
-    "man": "man",
+    "lib": "lib",
     "test": "test"
   },
   "scripts": {
