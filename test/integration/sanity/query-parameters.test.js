@@ -5,7 +5,7 @@ describe('query parameters', function () {
         this.run({
             collection: {
                 item: [
-                    {request: 'http://httpbin.org/get?a=обязательный&c=d'}
+                    {request: 'http://echo.getpostman.com/get?a=обязательный&c=d'}
                 ]
             },
             environment: {

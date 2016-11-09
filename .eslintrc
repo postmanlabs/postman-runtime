@@ -256,9 +256,8 @@
     // Lodash
     "lodash/collection-method-value": "warn",
     "lodash/no-extra-args": "error",
-    "lodash/chain-style": "error",
     "lodash/path-style": "error",
-    "lodash/prefer-chain": "error",
+    "lodash/chaining": [2, "always", 3],
     "lodash/prefer-compact": "error",
     "lodash/prefer-filter": "error",
     "lodash/prefer-flat-map": "error",

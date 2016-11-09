@@ -19,7 +19,7 @@ describe('url sanity test', function () {
                 }
             },
             globals: {
-                values: [{key: 'url', value: 'http://httpbin.org'}]
+                values: [{key: 'url', value: 'http://echo.getpostman.com'}]
             }
         }, function (err, results) {
             testrun = results;
@@ -39,7 +39,7 @@ describe('url sanity test', function () {
         expect(testrun.beforeRequest.calledOnce).be.ok(); // one request
         expect(request).be.ok();
         expect(request.url.host).to.not.match(/^http:\/\/.*/);
-        expect(request.url.toString()).eql('http://httpbin.org/get');
+        expect(request.url.toString()).eql('http://echo.getpostman.com/get');
         expect(request.method).be('GET');
     });
 
