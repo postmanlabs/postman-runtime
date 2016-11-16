@@ -74,6 +74,11 @@ describe('project repository', function () {
                         '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));
                 });
             });
+
+            it('must not have lodash3 pointed at a non 3.x release', function () {
+                var sandboxLodashMajor = parseInt(json.dependencies.lodash3.split('.')[0], 10);
+                expect(sandboxLodashMajor).to.not.be.greaterThan(3);
+            });
         });
 
         describe('devDependencies', function () {
@@ -103,15 +108,6 @@ describe('project repository', function () {
             it('must point to a valid file', function (done) {
                 expect(json.main).to.equal('index.js');
                 fs.stat(json.main, done);
-            });
-        });
-
-        describe('greenkeeper', function () {
-            it('must ignore Lodash for non v4', function () {
-                var isIgnored = _.includes(_.get(json, 'greenkeeper.ignore'), 'lodash');
-
-                // @todo: Remove the GreenKeeper ignore from package.json along with this test, after Lodash v4
-                expect((isIgnored ? /^3/ : /^4/).test(json.dependencies.lodash)).to.be(true);
             });
         });
     });
