@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### 3.0.5 (November 17, 2016)
+* Updated `postman-collection` to v0.5.7 (contains a bugfix for handling disabled form parameters)
+* Ensure that the disabled parameters are not sent
+* Use [lodash3](https://www.npmjs.com/package/lodash3) instead of vanilla lodash
+
 #### 3.0.4 (November 17, 2016)
 * Updated the version of `postman-request` which now conforms to WHATWG's URL specification, and correctly encodes URL parameters
 
