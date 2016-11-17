@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 3.0.4 (November 17, 2016)
+* Updated the version of `postman-request` which now conforms to WHATWG's URL specification, and correctly encodes URL parameters
+
 #### 3.0.3 (November 09, 2016)
 * Updated the version of `postman-request`, which contains a fix for invalid URL param encoding
 
