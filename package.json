@@ -32,7 +32,7 @@
     "cheerio": "0.22.0",
     "crypto-js": "3.1.8",
     "http-reasons": "0.1.0",
-    "lodash": "3.10.1",
+    "lodash": "4.16.2",
     "node-uuid": "1.4.7",
     "postman-collection": "0.5.7",
     "postman-request": "2.78.1-postman.3",
