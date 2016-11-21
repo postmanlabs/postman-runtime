@@ -54,7 +54,7 @@
     "http-proxy": "1.15.2",
     "istanbul": "0.4.5",
     "js-yaml": "3.7.0",
-    "jsdoc": "3.4.1",
+    "jsdoc": "3.4.3",
     "jsdoc-to-markdown": "2.0.1",
     "mocha": "3.1.2",
     "nsp": "2.6.2",
