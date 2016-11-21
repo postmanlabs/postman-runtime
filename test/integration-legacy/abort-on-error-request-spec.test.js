@@ -7,7 +7,8 @@ var _ = require('lodash'),
 describe('Option', function () {
     describe('Abort On Error', function () {
         it('should be able to abort a run on HTTP errors', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -96,7 +97,7 @@ describe('Option', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -281,7 +282,7 @@ describe('Option', function () {
                         expect(runStore.iteration).to.be(0);
                         expect(runStore.position).to.be(1);
 
-                        mochaDone();
+                        !errored && mochaDone();
                     }
                 });
             });

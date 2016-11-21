@@ -7,7 +7,8 @@ var _ = require('lodash'),
 describe('Option', function () {
     describe('Delay', function () {
         it('should add a delay between item execution', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -96,7 +97,7 @@ describe('Option', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -275,7 +276,7 @@ describe('Option', function () {
                             'First Request', 'Second Request', 'Third Request'
                         ]);
 
-                        mochaDone();
+                        !errored && mochaDone();
                     }
                 });
             });
