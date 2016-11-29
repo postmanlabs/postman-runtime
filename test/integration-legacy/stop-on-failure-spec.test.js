@@ -7,7 +7,8 @@ var _ = require('lodash'),
 describe('Option', function () {
     describe('Stop On Failure', function () {
         it('should be able to stop a run when there are test failures', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -89,7 +90,7 @@ describe('Option', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -253,13 +254,14 @@ describe('Option', function () {
                         expect(runStore.iteration).to.be(0);
                         expect(runStore.position).to.be(0);
 
-                        mochaDone();
+                        !errored && mochaDone();
                     }
                 });
             });
         });
         it('should be able to stop a run when there are script errors', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -348,7 +350,7 @@ describe('Option', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -562,13 +564,14 @@ describe('Option', function () {
                         expect(testables.itemsStarted[2]).to.be(undefined);
                         expect(testables.itemsComplete[2]).to.be(undefined);
 
-                        mochaDone();
+                        !errored && mochaDone();
                     }
                 });
             });
         });
         it('should be able to stop a run when there are request errors', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -657,7 +660,7 @@ describe('Option', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -866,7 +869,7 @@ describe('Option', function () {
                         expect(testables.itemsStarted[2]).to.be(undefined);
                         expect(testables.itemsComplete[2]).to.be(undefined);
 
-                        mochaDone();
+                        !errored && mochaDone();
                     }
                 });
             });

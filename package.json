@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "Underlyng library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -54,7 +54,7 @@
     "http-proxy": "1.15.2",
     "istanbul": "0.4.5",
     "js-yaml": "3.7.0",
-    "jsdoc": "3.4.1",
+    "jsdoc": "3.4.3",
     "jsdoc-to-markdown": "2.0.1",
     "mocha": "3.1.2",
     "nsp": "2.6.2",
@@ -67,7 +67,8 @@
   "browser": {
     "./lib/uvm/script.js": "./lib/uvm/browser/script.js",
     "./lib/uvm/host.js": "./lib/uvm/browser/host.js",
-    "./lib/requester/request-wrapper.js": "./lib/requester/browser/request.js"
+    "./lib/requester/request-wrapper.js": "./lib/requester/browser/request.js",
+    "postman-request": "./lib/requester/browser/request.js"
   },
   "engines": {
     "node": ">=4"

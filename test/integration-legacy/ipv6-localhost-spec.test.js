@@ -28,7 +28,8 @@ describe('Localhost requests', function () {
         });
 
         it('should be able to connect', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -64,7 +65,7 @@ describe('Localhost requests', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -205,7 +206,7 @@ describe('Localhost requests', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -236,7 +237,8 @@ describe('Localhost requests', function () {
         });
 
         it('should be able to connect', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -272,7 +274,7 @@ describe('Localhost requests', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -413,7 +415,7 @@ describe('Localhost requests', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
