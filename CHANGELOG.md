@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 3.0.6 (November 29, 2016)
+* Ensure that we use a default cookiejar in case one is not provided, so that they are available in tests
+
 #### 3.0.5 (November 17, 2016)
 * Updated `postman-collection` to v0.5.7 (contains a bugfix for handling disabled form parameters)
 * Ensure that the disabled parameters are not sent
