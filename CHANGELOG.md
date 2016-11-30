@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 3.0.7 (November 30, 2016)
+* Fixed a bug which caused the cookieJar to be overridden even if it is provided
+
 #### 3.0.6 (November 29, 2016)
 * Ensure that we use a default cookiejar in case one is not provided, so that they are available in tests
 
