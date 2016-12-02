@@ -1,4 +1,4 @@
-describe('sanity test', function () {
+describe('proxy', function () {
     var _ = require('lodash'),
         proxy = require('http-proxy'),
 

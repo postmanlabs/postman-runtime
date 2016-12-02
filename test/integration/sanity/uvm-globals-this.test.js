@@ -42,7 +42,7 @@ describe('UVM allowed globals', function () {
         expect(testrun.start.calledOnce).be.ok();
     });
 
-    it('must have run the test script, and had no extra globals', function () {
+    it.skip('must have run the test script, and had no extra globals', function () {
         expect(testrun.console.calledOnce).be.ok();
 
         var args = testrun.console.getCall(0).args;
