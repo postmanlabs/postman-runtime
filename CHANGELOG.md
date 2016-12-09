@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 3.0.8 (December 09, 2016)
+* Fixed a bug which caused the `done` event callback to be called twice on timeouts
+
 #### 3.0.7 (November 30, 2016)
 * Fixed a bug which caused the cookieJar to be overridden even if it is provided
 
