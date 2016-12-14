@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+#### 3.0.9 (December 14, 2016)
+* Do not try to set Host and User-Agent headers when sending requests through Chrome
+* Ensure that we do not flood the console with warnings about unsupported options
+
 #### 3.0.8 (December 09, 2016)
 * Fixed a bug which caused the `done` event callback to be called twice on timeouts
 
