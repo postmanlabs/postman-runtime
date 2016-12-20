@@ -28,12 +28,12 @@
     "async": "2.1.1",
     "http-reasons": "0.1.0",
     "lodash": "3.10.1",
-    "uuid": "3.0.0",
     "postman-collection": "0.5.7",
     "postman-request": "2.78.1-postman.3",
+    "postman-sandbox": "0.0.1-beta.8",
     "resolve-from": "2.0.0",
     "serialised-error": "1.1.2",
-    "postman-sandbox": "0.0.1-beta.6"
+    "uuid": "3.0.0"
   },
   "devDependencies": {
     "colors": "1.1.2",
