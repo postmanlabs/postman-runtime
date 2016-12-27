@@ -15,7 +15,6 @@ describe('sanity test', function () {
                 'x-postman-proxy': 'true'
             }
         });
-        console.log(proxyList);
         server.listen(port);
 
         this.run({
