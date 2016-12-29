@@ -1,5 +1,6 @@
 describe('sanity test', function () {
-    var _ = require('lodash'),
+    var ProxyConfigList = require('postman-collection').ProxyConfigList,
+        _ = require('lodash'),
         proxy = require('http-proxy'),
 
         server,
@@ -7,7 +8,11 @@ describe('sanity test', function () {
 
     before(function (done) {
         var port = 9090,
-            proxyList = [{match: '*://*.getpostman.com/*', server: 'http://localhost:' + port, tunnel: false}];
+            proxyList = new ProxyConfigList({}, [{
+                match: '*://*.getpostman.com/*',
+                server: 'http://localhost:' + port,
+                tunnel: false
+            }]);
 
         server = new proxy.createProxyServer({
             target: 'http://echo.getpostman.com',
