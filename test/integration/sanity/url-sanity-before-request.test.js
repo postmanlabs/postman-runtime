@@ -1,4 +1,4 @@
-describe('url sanity test', function () {
+describe('url', function () {
     var testrun;
 
     before(function (done) {

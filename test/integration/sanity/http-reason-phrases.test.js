@@ -1,4 +1,4 @@
-describe('sanity test', function () {
+describe('http reasons', function () {
     var http = require('http'),
 
         server,

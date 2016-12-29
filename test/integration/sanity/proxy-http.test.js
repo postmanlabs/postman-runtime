@@ -1,6 +1,6 @@
-describe('sanity test', function () {
-    var ProxyConfigList = require('postman-collection').ProxyConfigList,
-        _ = require('lodash'),
+describe('proxy', function () {
+    var _ = require('lodash'),
+        ProxyConfigList = require('postman-collection').ProxyConfigList,
         proxy = require('http-proxy'),
 
         server,
