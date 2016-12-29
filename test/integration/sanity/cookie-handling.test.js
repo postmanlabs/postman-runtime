@@ -1,4 +1,4 @@
-describe('sanity test', function () {
+describe('cookies', function () {
     var _ = require('lodash'),
         testrun;
 
