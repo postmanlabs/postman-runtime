@@ -1,19 +1,24 @@
 describe('UVM allowed globals', function () {
     var testrun,
         globals = ['isNaN', 'SyntaxError', 'ArrayBuffer', 'JSON', 'unescape', 'URIError', 'TypeError', 'WeakSet',
-            'Array', 'parseFloat', 'EvalError', 'parseInt', 'Error', 'Object', 'Scope', 'Int16Array',
-            'NaN', 'Uint8ClampedArray', 'Uint32Array', 'Date', 'Intl', 'ReferenceError', 'PostmanApi',
+            'Array', 'parseFloat', 'EvalError', 'parseInt', 'Error', 'Object', 'Int16Array',
+            'NaN', 'Uint8ClampedArray', 'Uint32Array', 'Date', 'ReferenceError', 'Proxy', 'Reflect',
             'Uint16Array', 'Int8Array', 'Boolean', 'RangeError', 'isFinite', 'encodeURIComponent', 'encodeURI',
             'decodeURI', 'String', 'undefined', 'Symbol', 'Set', 'WeakMap', 'Math', 'DataView', 'Int32Array',
             'Function', 'Number', 'Infinity', 'Promise', 'Float64Array', 'Float32Array', 'Map', 'RegExp',
             'decodeURIComponent', 'escape', 'Uint8Array', 'globals', 'environment', 'data',
             'iteration', 'request', 'responseCookies', 'responseBody', 'responseCode', 'responseHeaders',
-            'responseTime', 'tests', '_', 'CryptoJS', 'tv4', 'cheerio', 'Backbone', 'xml2js', 'atob', 'btoa', 'Buffer',
-            'xml2Json', 'postman', 'setTimeout', 'setInterval', 'XMLHttpRequest', 'console'];
+            'responseTime', 'tests', '_', 'CryptoJS', 'tv4', 'cheerio', 'Backbone', 'atob', 'btoa', 'Buffer',
+            'xml2Json', 'postman', 'setTimeout', 'setInterval', 'setImmediate', 'clearTimeout', 'clearInterval',
+            'clearImmediate', 'console'];
 
-    // add `Proxy` and `Reflect` objects for Node v6, which has them globally available.
-    (typeof Proxy !== 'undefined') && globals.push('Proxy');
-    (typeof Reflect !== 'undefined') && globals.push('Reflect');
+    if (typeof window !== 'undefined') {
+        globals.push('XMLHttpRequest');
+        globals.push('window');
+        globals.push('document');
+        globals.push('$');
+        globals.push('jQuery');
+    }
 
     before(function (done) {
         this.run({
