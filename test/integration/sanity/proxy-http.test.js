@@ -1,20 +1,18 @@
 describe('proxy', function () {
     var _ = require('lodash'),
+        ProxyConfigList = require('postman-collection').ProxyConfigList,
         proxy = require('http-proxy'),
 
         server,
         testrun;
 
     before(function (done) {
-        var port = 9090, // @todo: configure port dynamically via random number generation
-            fakeProxyManager = {
-                getProxyConfiguration: function (url, callback) {
-                    callback(null, {
-                        proxy: 'http://localhost:' + port,
-                        tunnel: false
-                    });
-                }
-            };
+        var port = 9090,
+            proxyList = new ProxyConfigList({}, [{
+                match: '*://*.getpostman.com/*',
+                server: 'http://localhost:' + port,
+                tunnel: false
+            }]);
 
         server = new proxy.createProxyServer({
             target: 'http://echo.getpostman.com',
@@ -22,7 +20,6 @@ describe('proxy', function () {
                 'x-postman-proxy': 'true'
             }
         });
-
         server.listen(port);
 
         this.run({
@@ -32,7 +29,7 @@ describe('proxy', function () {
                 }
             },
             requester: {
-                proxyManager: fakeProxyManager
+                proxyList: proxyList
             }
         }, function (err, results) {
             testrun = results;
