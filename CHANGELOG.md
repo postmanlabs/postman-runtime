@@ -1,5 +1,12 @@
 # Postman Runtime Changelog
 
+#### 4.0.1 (Janurary 2, 2017)
+* Improved the proxy handling logic, it now relies on the SDK for correct resolution
+* Runtime no longer accepts a `proxyManager`, which is a breaking change
+
+#### 4.0.0 (December 29, 2016)
+* Removed the UVM, and started using `postman-sandbox` for script execution, which has memory and performance improvements
+
 #### 3.0.10 (December 15, 2016)
 * Fixed a bug which caused no headers to be set in the Browser requester
 
