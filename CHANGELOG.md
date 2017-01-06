@@ -1,6 +1,9 @@
 # Postman Runtime Changelog
 
-#### 4.0.1 (Janurary 2, 2017)
+#### 4.0.2 (January 06, 2017)
+* Updated postman-sandbox to v1.0.1 which fixes issue with runtime not initialising in early Node v4.x
+
+#### 4.0.1 (Janurary 02, 2017)
 * Improved the proxy handling logic, it now relies on the SDK for correct resolution
 * Runtime no longer accepts a `proxyManager`, which is a breaking change
 
@@ -38,9 +41,9 @@
 * Updated the version of `postman-collection`, which contains a fix for Hawk authentication
 
 #### 3.0.1 (October 13, 2016)
-* Ensure that the http reason phrase is bubbled up from the response 
+* Ensure that the http reason phrase is bubbled up from the response
 
-#### 3.0.0 (October 10, 2016) 
+#### 3.0.0 (October 10, 2016)
 * [Breaking] Changed the runtime API to receive a VariableScope instead of plain object for environments and globals
 * Restricted scopes of test and pre-request scripts
 
