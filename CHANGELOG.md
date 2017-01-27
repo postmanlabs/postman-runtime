@@ -1,5 +1,28 @@
 # Postman Runtime Changelog
 
+#### 4.0.2 (January 06, 2017)
+* Updated postman-sandbox to v1.0.1 which fixes issue with runtime not initialising in early Node v4.x
+
+#### 4.0.1 (Janurary 02, 2017)
+* Improved the proxy handling logic, it now relies on the SDK for correct resolution
+* Runtime no longer accepts a `proxyManager`, which is a breaking change
+
+#### 4.0.0 (December 29, 2016)
+* Removed the UVM, and started using `postman-sandbox` for script execution, which has memory and performance improvements
+
+#### 3.0.10 (December 15, 2016)
+* Fixed a bug which caused no headers to be set in the Browser requester
+
+#### 3.0.9 (December 14, 2016)
+* Do not try to set Host and User-Agent headers when sending requests through Chrome
+* Ensure that we do not flood the console with warnings about unsupported options
+
+#### 3.0.8 (December 09, 2016)
+* Fixed a bug which caused the `done` event callback to be called twice on timeouts
+
+#### 3.0.7 (November 30, 2016)
+* Fixed a bug which caused the cookieJar to be overridden even if it is provided
+
 #### 3.0.6 (November 29, 2016)
 * Ensure that we use a default cookiejar in case one is not provided, so that they are available in tests
 
@@ -18,9 +41,9 @@
 * Updated the version of `postman-collection`, which contains a fix for Hawk authentication
 
 #### 3.0.1 (October 13, 2016)
-* Ensure that the http reason phrase is bubbled up from the response 
+* Ensure that the http reason phrase is bubbled up from the response
 
-#### 3.0.0 (October 10, 2016) 
+#### 3.0.0 (October 10, 2016)
 * [Breaking] Changed the runtime API to receive a VariableScope instead of plain object for environments and globals
 * Restricted scopes of test and pre-request scripts
 

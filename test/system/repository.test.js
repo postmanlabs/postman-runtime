@@ -74,11 +74,6 @@ describe('project repository', function () {
                         '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));
                 });
             });
-
-            it('must not have lodash3 pointed at a non 3.x release', function () {
-                var sandboxLodashMajor = parseInt(json.dependencies.lodash3.split('.')[0], 10);
-                expect(sandboxLodashMajor).to.not.be.greaterThan(3);
-            });
         });
 
         describe('devDependencies', function () {
