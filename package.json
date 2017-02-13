@@ -35,7 +35,7 @@
     "lodash": "3.10.1",
     "lodash3": "3.10.1",
     "node-uuid": "1.4.7",
-    "postman-collection": "0.5.8",
+    "postman-collection": "0.5.11",
     "postman-request": "2.79.1-postman.4",
     "resolve-from": "2.0.0",
     "serialised-error": "1.1.2",
