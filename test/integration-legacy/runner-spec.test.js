@@ -7,7 +7,8 @@ var _ = require('lodash'),
 describe('Runner', function () {
     describe('Set Next Request', function () {
         it('should be able to jump to the middle of a collection', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -107,7 +108,7 @@ describe('Runner', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -285,7 +286,7 @@ describe('Runner', function () {
                             // Expect the end position to be correct
                             expect(runStore.iteration).to.be(1);
                             expect(runStore.position).to.be(2);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });

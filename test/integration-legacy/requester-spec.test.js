@@ -9,7 +9,8 @@ var _ = require('lodash'),
 describe('Requester', function () {
     describe('Option Redirect', function () {
         it('should be able to avoid redirects', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -54,7 +55,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -206,14 +207,16 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
             });
         });
+
         it('should follow redirects by default', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -258,7 +261,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -411,7 +414,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -421,7 +424,8 @@ describe('Requester', function () {
 
     describe('Empty Request body', function () {
         it('should not send the request body if it is empty in the raw mode', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -459,12 +463,8 @@ describe('Requester', function () {
                  * @param func
                  */
                 check = function (func) {
-                    try {
-                        func();
-                    }
-                    catch (e) {
-                        mochaDone(e);
-                    }
+                    try { func(); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -614,7 +614,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -622,7 +622,8 @@ describe('Requester', function () {
         });
 
         it('should not send the request body if it is empty in the urlencoded mode', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -660,12 +661,8 @@ describe('Requester', function () {
                  * @param func
                  */
                 check = function (func) {
-                    try {
-                        func();
-                    }
-                    catch (e) {
-                        mochaDone(e);
-                    }
+                    try { func(); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -815,14 +812,15 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
             });
         });
         it('should not send the request body if it is empty in the formdata mode', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -860,12 +858,8 @@ describe('Requester', function () {
                  * @param func
                  */
                 check = function (func) {
-                    try {
-                        func();
-                    }
-                    catch (e) {
-                        mochaDone(e);
-                    }
+                    try { func(); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -1015,7 +1009,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -1024,7 +1018,8 @@ describe('Requester', function () {
     });
 
     it('should support multiple headers with the same name', function (mochaDone) {
-        var runner = new runtime.Runner(),
+        var errored = false,
+            runner = new runtime.Runner(),
             rawCollection = {
                 "variables": [],
                 "info": {
@@ -1069,12 +1064,8 @@ describe('Requester', function () {
              * @param func
              */
             check = function (func) {
-                try {
-                    func();
-                }
-                catch (e) {
-                    mochaDone(e);
-                }
+                try { func(); }
+                catch (e) { (errored = true) && mochaDone(e); }
             };
 
         runner.run(collection, {
@@ -1219,7 +1210,7 @@ describe('Requester', function () {
                 done: function (err) {
                     check(function () {
                         expect(err).to.be(null);
-                        mochaDone();
+                        !errored && mochaDone();
                     });
                 }
             });
@@ -1227,7 +1218,8 @@ describe('Requester', function () {
     });
 
     it('should upload multiple formdata parameters with the same name', function (mochaDone) {
-        var runner = new runtime.Runner(),
+        var errored = false,
+            runner = new runtime.Runner(),
             rawCollection = {
                 "variables": [],
                 "info": {
@@ -1275,12 +1267,8 @@ describe('Requester', function () {
              * @param func
              */
             check = function (func) {
-                try {
-                    func();
-                }
-                catch (e) {
-                    mochaDone(e);
-                }
+                try { func(); }
+                catch (e) { (errored = true) && mochaDone(e); }
             };
 
         runner.run(collection, {
@@ -1425,7 +1413,7 @@ describe('Requester', function () {
                 done: function (err) {
                     check(function () {
                         expect(err).to.be(null);
-                        mochaDone();
+                        !errored && mochaDone();
                     });
                 }
             });
@@ -1434,7 +1422,8 @@ describe('Requester', function () {
 
     describe('File Handling', function () {
         it('should upload a file if a file resolver is provided', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 fakeFileResolver = {
                     createReadStream: function () {
                         return "fake-file-content"
@@ -1484,7 +1473,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -1635,7 +1624,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -1643,7 +1632,8 @@ describe('Requester', function () {
         });
 
         it('should not upload a file if no file resolver is provided', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -1688,7 +1678,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -1849,7 +1839,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -1857,7 +1847,8 @@ describe('Requester', function () {
         });
 
         it('should upload multiple files multiple if files are provided', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -1907,7 +1898,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2064,7 +2055,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -2072,7 +2063,8 @@ describe('Requester', function () {
         });
 
         it('should upload a mixture of file and string formdata parameters', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -2121,7 +2113,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2277,7 +2269,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -2285,7 +2277,8 @@ describe('Requester', function () {
         });
 
         it('should upload a binary data file', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 path = require('path'),
                 rawCollection = {
                     "variables": [],
@@ -2331,7 +2324,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2485,14 +2478,16 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
             });
         });
+
         it('should not upload a binary data file if path is absent', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 path = require('path'),
                 rawCollection = {
                     "variables": [],
@@ -2532,7 +2527,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2689,7 +2684,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -2699,7 +2694,8 @@ describe('Requester', function () {
 
     describe('Path Variables', function () {
         it('should be resolved before sending the request', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -2750,12 +2746,8 @@ describe('Requester', function () {
                  * @param func
                  */
                 check = function (func) {
-                    try {
-                        func();
-                    }
-                    catch (e) {
-                        mochaDone(e);
-                    }
+                    try { func(); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2899,7 +2891,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -2941,7 +2933,8 @@ describe('Requester', function () {
         });
 
         it('should send the client certificate when asked', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -2986,7 +2979,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 },
 
                 clientKeyPath = path.join(__dirname, 'data', 'client1-key.pem'),
@@ -3149,7 +3142,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -3157,7 +3150,8 @@ describe('Requester', function () {
         });
 
         it('should not send the client certificate if certificate manager is not provided', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -3202,7 +3196,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -3347,7 +3341,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -3357,7 +3351,8 @@ describe('Requester', function () {
 
     describe('Cookies', function () {
         it('should be available in the sandbox', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -3406,7 +3401,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -3562,7 +3557,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -3572,7 +3567,8 @@ describe('Requester', function () {
 
     describe('Sent headers', function () {
         it('should return all sent headers', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -3617,7 +3613,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 },
 
                 cookieJar = request.jar();
@@ -3780,7 +3776,7 @@ describe('Requester', function () {
                     done: function (err) {
                         check(function () {
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -3826,7 +3822,8 @@ describe('Requester', function () {
             });
 
             it('should handle raw deflate responses', function (mochaDone) {
-                var runner = new runtime.Runner(),
+                var errored = false,
+                    runner = new runtime.Runner(),
                     rawCollection = {
                         "variables": [],
                         "info": {
@@ -3861,12 +3858,8 @@ describe('Requester', function () {
                      * @param func
                      */
                     check = function (func) {
-                        try {
-                            func();
-                        }
-                        catch (e) {
-                            mochaDone(e);
-                        }
+                        try { func(); }
+                        catch (e) { (errored = true) && mochaDone(e); }
                     };
 
                 runner.run(collection, {
@@ -4008,7 +4001,7 @@ describe('Requester', function () {
                         done: function (err) {
                             check(function () {
                                 expect(err).to.be(null);
-                                mochaDone();
+                                !errored && mochaDone();
                             });
                         }
                     });
@@ -4053,7 +4046,8 @@ describe('Requester', function () {
             });
 
             it('should handle deflate responses', function (mochaDone) {
-                var runner = new runtime.Runner(),
+                var errored = false,
+                    runner = new runtime.Runner(),
                     rawCollection = {
                         "variables": [],
                         "info": {
@@ -4089,7 +4083,7 @@ describe('Requester', function () {
                      */
                     check = function (func) {
                         try { func(); }
-                        catch (e) { mochaDone(e); }
+                        catch (e) { (errored = true) && mochaDone(e); }
                     };
 
                 runner.run(collection, {
@@ -4231,7 +4225,7 @@ describe('Requester', function () {
                         done: function (err) {
                             check(function () {
                                 expect(err).to.be(null);
-                                mochaDone();
+                                !errored && mochaDone();
                             });
                         }
                     });
@@ -4276,7 +4270,8 @@ describe('Requester', function () {
             });
 
             it('should handle gzip responses', function (mochaDone) {
-                var runner = new runtime.Runner(),
+                var errored = false,
+                    runner = new runtime.Runner(),
                     rawCollection = {
                         "variables": [],
                         "info": {
@@ -4320,12 +4315,8 @@ describe('Requester', function () {
                      * @param func
                      */
                     check = function (func) {
-                        try {
-                            func();
-                        }
-                        catch (e) {
-                            mochaDone(e);
-                        }
+                        try { func(); }
+                        catch (e) { (errored = true) && mochaDone(e); }
                     };
 
                 runner.run(collection, {
@@ -4470,7 +4461,7 @@ describe('Requester', function () {
                         done: function (err) {
                             check(function () {
                                 expect(err).to.be(null);
-                                mochaDone();
+                                !errored && mochaDone();
                             });
                         }
                     });

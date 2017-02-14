@@ -8,7 +8,8 @@ var _ = require('lodash'),
 describe('UVM', function () {
     describe('Libraries and functions', function () {
         it('should be available', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -382,7 +383,7 @@ describe('UVM', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { mochaDone(e); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 },
 
                 cookieJar = request.jar();
@@ -549,7 +550,7 @@ describe('UVM', function () {
                             // Expect the end position to be correct
                             expect(runStore.iteration).to.be(0);
                             expect(runStore.position).to.be(11);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -559,7 +560,8 @@ describe('UVM', function () {
 
     describe('Sugar JS', function () {
         it('should expose the full functionality', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -610,12 +612,8 @@ describe('UVM', function () {
                  * @param func
                  */
                 check = function (func) {
-                    try {
-                        func();
-                    }
-                    catch (e) {
-                        mochaDone(e);
-                    }
+                    try { func(); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -773,7 +771,7 @@ describe('UVM', function () {
                         check(function () {
                             err && console.log(err.stack);
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
@@ -781,7 +779,8 @@ describe('UVM', function () {
         });
 
         it('should work correctly with extended object prototypes', function (mochaDone) {
-            var runner = new runtime.Runner(),
+            var errored = false,
+                runner = new runtime.Runner(),
                 rawCollection = {
                     "variables": [],
                     "info": {
@@ -831,12 +830,8 @@ describe('UVM', function () {
                  * @param func
                  */
                 check = function (func) {
-                    try {
-                        func();
-                    }
-                    catch (e) {
-                        mochaDone(e);
-                    }
+                    try { func(); }
+                    catch (e) { (errored = true) && mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -999,7 +994,7 @@ describe('UVM', function () {
                         check(function () {
                             err && console.log(err.stack);
                             expect(err).to.be(null);
-                            mochaDone();
+                            !errored && mochaDone();
                         });
                     }
                 });
