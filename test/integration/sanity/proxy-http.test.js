@@ -17,7 +17,7 @@ describe('sanity test', function () {
             };
 
         server = new proxy.createProxyServer({
-            target: 'http://echo.getpostman.com',
+            target: 'http://postman-echo.com',
             headers: {
                 'x-postman-proxy': 'true'
             }
@@ -28,7 +28,7 @@ describe('sanity test', function () {
         this.run({
             collection: {
                 item: {
-                    request: 'http://echo.getpostman.com/get'
+                    request: 'http://postman-echo.com/get'
                 }
             },
             requester: {

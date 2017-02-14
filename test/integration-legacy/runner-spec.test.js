@@ -30,7 +30,7 @@ describe('Runner', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/post",
+                                "url": "https://postman-echo.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -54,7 +54,7 @@ describe('Runner', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/type/html",
+                                "url": "https://postman-echo.com/type/html",
                                 "method": "GET",
                                 "header": [],
                                 "body": {
@@ -73,12 +73,12 @@ describe('Runner', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "var jsonData = JSON.parse(responseBody);\nvar count = _.parseInt(postman.getEnvironmentVariable('count'));\ncount++;\npostman.setEnvironmentVariable('count', String(count));\n\nif (jsonData.url === 'https://echo.getpostman.com/get') {\n    console.log('Setting next request to \"html\"');\n    postman.setNextRequest('html');\n}\nelse if (!jsonData.url && jsonData.headers) {\n    console.log('Ending here.'); tests['Success'] = _.parseInt(postman.getEnvironmentVariable('count')) === 4\n    postman.setNextRequest(null);\n}\nelse {\n    console.log('Not setting next request.. ', responseBody);\n}"
+                                        "exec": "var jsonData = JSON.parse(responseBody);\nvar count = _.parseInt(postman.getEnvironmentVariable('count'));\ncount++;\npostman.setEnvironmentVariable('count', String(count));\n\nif (jsonData.url === 'https://postman-echo.com/get') {\n    console.log('Setting next request to \"html\"');\n    postman.setNextRequest('html');\n}\nelse if (!jsonData.url && jsonData.headers) {\n    console.log('Ending here.'); tests['Success'] = _.parseInt(postman.getEnvironmentVariable('count')) === 4\n    postman.setNextRequest(null);\n}\nelse {\n    console.log('Not setting next request.. ', responseBody);\n}"
                                     }
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/{{method}}",
+                                "url": "https://postman-echo.com/{{method}}",
                                 "method": "GET",
                                 "header": [],
                                 "body": {
