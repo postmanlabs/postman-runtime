@@ -9,7 +9,7 @@ describe('proxy', function () {
     before(function (done) {
         var port = 9090,
             proxyList = new ProxyConfigList({}, [{
-                match: '*://*.getpostman.com/*',
+                match: '*://postman-echo.com/*',
                 server: 'http://localhost:' + port,
                 tunnel: false
             }]);
