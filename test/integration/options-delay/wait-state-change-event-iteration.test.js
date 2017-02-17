@@ -6,7 +6,7 @@ describe('waitStateChange event for iteration', function () {
             delay: {iteration: 200},
             iterationCount: 2,
             collection: {
-                item: {request: 'https://echo.getpostman.com/get'}
+                item: {request: 'https://postman-echo.com/get'}
             }
         }, function (err, results) {
             testrun = results;

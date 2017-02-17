@@ -9,13 +9,13 @@ describe('proxy', function () {
     before(function (done) {
         var port = 9090,
             proxyList = new ProxyConfigList({}, [{
-                match: '*://*.getpostman.com/*',
+                match: '*://postman-echo.com/*',
                 server: 'http://localhost:' + port,
                 tunnel: false
             }]);
 
         server = new proxy.createProxyServer({
-            target: 'http://echo.getpostman.com',
+            target: 'http://postman-echo.com',
             headers: {
                 'x-postman-proxy': 'true'
             }
@@ -25,7 +25,7 @@ describe('proxy', function () {
         this.run({
             collection: {
                 item: {
-                    request: 'http://echo.getpostman.com/get'
+                    request: 'http://postman-echo.com/get'
                 }
             },
             requester: {

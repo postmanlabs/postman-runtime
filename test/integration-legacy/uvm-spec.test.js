@@ -38,7 +38,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/type/xml",
+                                "url": "https://postman-echo.com/type/xml",
                                 "method": "GET",
                                 "header": [],
                                 "body": {
@@ -61,7 +61,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/post",
+                                "url": "https://postman-echo.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -127,7 +127,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/put",
+                                "url": "https://postman-echo.com/put",
                                 "method": "PUT",
                                 "header": [],
                                 "body": {
@@ -150,7 +150,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/patch",
+                                "url": "https://postman-echo.com/patch",
                                 "method": "PATCH",
                                 "header": [],
                                 "body": {
@@ -173,7 +173,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/delete",
+                                "url": "https://postman-echo.com/delete",
                                 "method": "DELETE",
                                 "header": [],
                                 "body": {
@@ -196,7 +196,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/get",
+                                "url": "https://postman-echo.com/get",
                                 "method": "HEAD",
                                 "header": [],
                                 "body": {
@@ -219,7 +219,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/get",
+                                "url": "https://postman-echo.com/get",
                                 "method": "OPTIONS",
                                 "header": [],
                                 "body": {
@@ -242,7 +242,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/post",
+                                "url": "https://postman-echo.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -274,7 +274,7 @@ describe('UVM', function () {
                                         "showPassword": false
                                     }
                                 },
-                                "url": "https://echo.getpostman.com/post",
+                                "url": "https://postman-echo.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -311,7 +311,7 @@ describe('UVM', function () {
                                         "qop": ""
                                     }
                                 },
-                                "url": "https://echo.getpostman.com/post",
+                                "url": "https://postman-echo.com/post",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -341,7 +341,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/get?a={{name{{i}}}}",
+                                "url": "https://postman-echo.com/get?a={{name{{i}}}}",
                                 "method": "GET",
                                 "header": [],
                                 "body": {
@@ -354,7 +354,7 @@ describe('UVM', function () {
                         },
                         {
                             "name": "Buffer and JSON",
-                            "request": "echo.getpostman.com/get",
+                            "request": "postman-echo.com/get",
                             "event": [
                                 {
                                     "listen": "test",
@@ -389,7 +389,7 @@ describe('UVM', function () {
                 cookieJar = request.jar();
 
             // Add a cookie to the Jar
-            cookieJar.setCookie(request.cookie('hi=hello'), 'https://echo.getpostman.com/type/xml');
+            cookieJar.setCookie(request.cookie('hi=hello'), 'https://postman-echo.com/type/xml');
             runner.run(collection, {
                 iterationCount: 1,
                 abortOnFailure: true,
@@ -591,7 +591,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/redirect-to?url=https://echo.getpostman.com/get",
+                                "url": "https://postman-echo.com/redirect-to?url=https://postman-echo.com/get",
                                 "method": "GET"
                             }
                         }
@@ -802,7 +802,7 @@ describe('UVM', function () {
                                 }
                             ],
                             "request": {
-                                "url": "echo.getpostman.com/get",
+                                "url": "postman-echo.com/get",
                                 "method": "GET",
                                 "header": [],
                                 "body": {

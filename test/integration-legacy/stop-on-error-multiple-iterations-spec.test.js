@@ -29,7 +29,7 @@ describe('Option', function () {
                                     }
                                 }
                             ],
-                            "request": "http://echo.getpostman.com/get"
+                            "request": "http://postman-echo.com/get"
                         },
                         {
                             "name": "Second Request",
@@ -43,7 +43,7 @@ describe('Option', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/get",
+                                "url": "https://postman-echo.com/get",
                                 "method": "GET"
                             }
                         }
