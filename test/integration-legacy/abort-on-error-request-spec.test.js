@@ -34,7 +34,7 @@ describe('Option', function () {
                                         }
                                     ],
                                     "request": {
-                                        "url": "https://echo.getpostman.com/get?test=123",
+                                        "url": "https://postman-echo.com/get?test=123",
                                         "method": "GET",
                                     }
                                 },
@@ -73,7 +73,7 @@ describe('Option', function () {
                                         }
                                     ],
                                     "request": {
-                                        "url": "https://echo.getpostman.com/get?test=123",
+                                        "url": "https://postman-echo.com/get?test=123",
                                         "method": "GET"
                                     }
                                 }

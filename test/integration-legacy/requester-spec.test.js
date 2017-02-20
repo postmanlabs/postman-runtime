@@ -33,7 +33,7 @@ describe('Requester', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/redirect-to?url=https://echo.getpostman.com/get",
+                                "url": "https://postman-echo.com/redirect-to?url=https://postman-echo.com/get",
                                 "method": "GET"
                             }
                         }
@@ -239,7 +239,7 @@ describe('Requester', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/redirect-to?url=https://echo.getpostman.com/get",
+                                "url": "https://postman-echo.com/redirect-to?url=https://postman-echo.com/get",
                                 "method": "GET"
                             }
                         }
@@ -438,7 +438,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "http://echo.getpostman.com/post",
+                                "url": "http://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "raw",
@@ -636,7 +636,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "http://echo.getpostman.com/post",
+                                "url": "http://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "urlencoded",
@@ -833,7 +833,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "http://echo.getpostman.com/post",
+                                "url": "http://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "formdata",
@@ -1033,7 +1033,7 @@ describe('Requester', function () {
                         "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                         "name": "First Request",
                         "request": {
-                            "url": "http://echo.getpostman.com/headers",
+                            "url": "http://postman-echo.com/headers",
                             "method": "GET",
                             "header": [
                                 {
@@ -1233,7 +1233,7 @@ describe('Requester', function () {
                         "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                         "name": "First Request",
                         "request": {
-                            "url": "https://echo.getpostman.com/post",
+                            "url": "https://postman-echo.com/post",
                             "method": "POST",
                             "body": {
                                 "mode": "formdata",
@@ -1441,7 +1441,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "http://echo.getpostman.com/post",
+                                "url": "http://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "formdata",
@@ -1646,7 +1646,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "http://echo.getpostman.com/post",
+                                "url": "http://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "formdata",
@@ -1861,7 +1861,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "http://echo.getpostman.com/post",
+                                "url": "http://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "formdata",
@@ -2077,7 +2077,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "http://echo.getpostman.com/post",
+                                "url": "http://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "formdata",
@@ -2292,7 +2292,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "https://echo.getpostman.com/post",
+                                "url": "https://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "formdata",
@@ -2501,7 +2501,7 @@ describe('Requester', function () {
                             "id": "bf0a6006-c987-253a-525d-9f6be7071210",
                             "name": "First Request",
                             "request": {
-                                "url": "https://echo.getpostman.com/post",
+                                "url": "https://postman-echo.com/post",
                                 "method": "POST",
                                 "body": {
                                     "mode": "file",
@@ -2709,7 +2709,7 @@ describe('Requester', function () {
                             "name": "First Request",
                             "request": {
                                 "url": {
-                                    "raw": "https://echo.getpostman.com/status/:code",
+                                    "raw": "https://postman-echo.com/status/:code",
                                     "host": [
                                         "echo",
                                         "getpostman",
@@ -3378,7 +3378,7 @@ describe('Requester', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/cookies/set?A=one&b=two",
+                                "url": "https://postman-echo.com/cookies/set?A=one&b=two",
                                 "method": "GET"
                             }
                         }
@@ -3591,7 +3591,7 @@ describe('Requester', function () {
                                 }
                             ],
                             "request": {
-                                "url": "https://echo.getpostman.com/cookies",
+                                "url": "https://postman-echo.com/cookies",
                                 "method": "GET"
                             }
                         }
@@ -3618,7 +3618,7 @@ describe('Requester', function () {
 
                 cookieJar = request.jar();
 
-            cookieJar.setCookie('yo=hello', 'https://echo.getpostman.com/cookies');
+            cookieJar.setCookie('yo=hello', 'https://postman-echo.com/cookies');
 
             runner.run(collection, {
                 iterationCount: 1,
@@ -3766,7 +3766,7 @@ describe('Requester', function () {
                             expect(request.headers.one('Accept')).to.have.property('key', 'Accept');
                             expect(request.headers.one('Accept')).to.have.property('value', '*/*');
                             expect(request.headers.one('Host')).to.have.property('key', 'Host');
-                            expect(request.headers.one('Host')).to.have.property('value', 'echo.getpostman.com');
+                            expect(request.headers.one('Host')).to.have.property('value', 'postman-echo.com');
                             expect(request.headers.one('Cookie')).to.have.property('key', 'cookie');
                             expect(request.headers.one('Cookie')).to.have.property('value', 'yo=hello');
                             expect(request.headers.one('Accept-Encoding')).to.have.property('key', 'accept-encoding');

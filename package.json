@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "Underlyng library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -30,7 +30,7 @@
     "http-reasons": "0.1.0",
     "lodash": "3.10.1",
     "lodash3": "3.10.1",
-    "postman-collection": "0.5.11",
+    "postman-collection": "0.5.12",
     "postman-request": "2.79.1-postman.4",
     "postman-sandbox": "1.0.1",
     "resolve-from": "2.0.0",

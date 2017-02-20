@@ -1,8 +1,12 @@
 # Postman Runtime Changelog
 
+#### 4.0.4 (February 20, 2017)
+* Support for multilevel folders
+* Updated `postman-collection` to v0.5.12 which contains minor improvements
+
 #### 4.0.3 (January 31, 2017)
-* Updated postman-collection to v0.5.11 which contains bugfixes for UTF-8 responses, and variables in URL host
-* Updated postman-request which contains a bugfix for URL parameter encoding
+* Updated `postman-collection` to v0.5.11 which contains bugfixes for UTF-8 responses, and variables in URL host
+* Updated `postman-request` which contains a bugfix for URL parameter encoding
 
 #### 4.0.2 (January 06, 2017)
 * Updated postman-sandbox to v1.0.1 which fixes issue with runtime not initialising in early Node v4.x
