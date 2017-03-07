@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### 4.1.0 (March 07, 2017)
+* Updated `lodash` to v4.x
+* Updated `postman-collection` to v1.0
+* Use `CertificateList` to resolve certificates if provided
+
 #### 4.0.4 (February 20, 2017)
 * Support for multilevel folders
 * Updated `postman-collection` to v0.5.12 which contains minor improvements
