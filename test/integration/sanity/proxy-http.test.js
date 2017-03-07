@@ -4,15 +4,16 @@ describe('proxy', function () {
         proxy = require('http-proxy'),
 
         server,
-        testrun;
+        testrun,
+        port = 9090,
+        proxyServer = 'http://localhost:' + port;
 
     before(function (done) {
-        var port = 9090,
-            proxyList = new ProxyConfigList({}, [{
-                match: '*://postman-echo.com/*',
-                server: 'http://localhost:' + port,
-                tunnel: false
-            }]);
+        var proxyList = new ProxyConfigList({}, [{
+            match: '*://postman-echo.com/*',
+            server: proxyServer,
+            tunnel: false
+        }]);
 
         server = new proxy.createProxyServer({
             target: 'http://postman-echo.com',
@@ -44,9 +45,12 @@ describe('proxy', function () {
     });
 
     it('must receive response from the proxy', function () {
-        var response = testrun.request.getCall(0).args[2].json();
+        var response = testrun.request.getCall(0).args[2].json(),
+            request = testrun.request.getCall(0).args[3];
 
         expect(testrun.request.calledOnce).be.ok(); // one request
+        // proxy info added back to request
+        expect(request.proxy.server.toString()).to.eql(proxyServer);
         expect(_.get(response, 'headers.x-postman-proxy')).to.be('true');
     });
 
