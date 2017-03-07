@@ -254,6 +254,17 @@
     //"jsdoc/require-returns-type": "warn",
 
     // Lodash
+    "lodash/callback-binding": "error",
+    "lodash/collection-return": "error",
+    "lodash/no-double-unwrap": "error",
+    "lodash/no-unbound-this": "error",
+    "lodash/chain-style": "error",
+    "lodash/consistent-compose": "error",
+    "lodash/identity-shorthand": "error",
+    "lodash/import-scope": "off",
+    "lodash/matches-prop-shorthand": "error",
+    "lodash/matches-shorthand": "error",
+    "lodash/no-commit": "error",
     "lodash/collection-method-value": "warn",
     "lodash/no-extra-args": "error",
     "lodash/path-style": "error",
