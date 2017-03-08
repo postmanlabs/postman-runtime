@@ -53,10 +53,10 @@ describe('certificates', function () {
                 }
             },
             requester: {
-                certificateList: certificateList,
                 fileResolver: fs,
                 strictSSL: false
-            }
+            },
+            certificates: certificateList
         }, function (err, results) {
             testrun = results;
             done(err);
