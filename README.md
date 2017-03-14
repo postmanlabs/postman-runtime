@@ -76,7 +76,7 @@ runner.run(collection, {
     proxies: new ProxyConfigList(),
     
     // A function that fetches the system proxy for a given URL.
-    systemProxy: function (url, callback) { return callback(null, {url: 'http://proxy:port', tunnel: true}) },
+    systemProxy: function (url, callback) { return callback(null, {/* ProxyConfig object */}) },
     
     // A CertificateList from the SDK
     certificates: new CertificateList(),
