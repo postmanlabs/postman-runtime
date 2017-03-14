@@ -5,7 +5,6 @@ describe('certificates', function () {
         https = require('https'),
 
         certificateId = 'test-certificate',
-        HTTPS_RESPONSE = 'hello world\n',
 
         server,
         testrun;
@@ -35,8 +34,14 @@ describe('certificates', function () {
         });
 
         server.on('request', function (req, res) {
-            res.writeHead(200, {'Content-Type': 'text/plain', 'x-postman-https': 'true'});
-            res.end(HTTPS_RESPONSE);
+            if (req.client.authorized) {
+                res.writeHead(200, {'Content-Type': 'text/plain'});
+                res.end('authorized\n');
+            }
+            else {
+                res.writeHead(401, {'Content-Type': 'text/plain'});
+                res.end('unauthorized\n');
+            }
         });
 
         server.listen(port, 'localhost');
@@ -67,7 +72,7 @@ describe('certificates', function () {
     it('must receive response from https server', function () {
         var response = testrun.request.getCall(0).args[2];
 
-        expect(response.text()).to.eql(HTTPS_RESPONSE);
+        expect(response.text()).to.eql('authorized\n');
     });
 
     it('must have certificate attached to request', function () {
