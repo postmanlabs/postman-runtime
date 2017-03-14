@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### 4.1.1 (March 14, 2017)
+* Fixed a bug which caused certificate resolution to return empty content
+* Ensure that proxy lookups return a falsey value by default
+* Updated the version of `postman-sandbox` to v1.0.2, which contains a bugfix for undefined values in `tests` object of the sandbox.
+
 #### 4.1.0 (March 07, 2017)
 * Updated `lodash` to v4.x
 * Updated `postman-collection` to v1.0
