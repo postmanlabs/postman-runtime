@@ -1,4 +1,63 @@
 # Postman Runtime Changelog
+#### 5.0.0 (March 16, 2017)
+* CertificateManager is no longer supported, in favor of certificate list:
+
+        // v4.x
+        var runner = new Runner();
+        
+        runner.run(collection, {
+           requester: {
+               certificateManager: myCertManager
+           }
+        });
+
+        // v5.x
+        var runner = new Runner();
+        
+        runner.run(collection, {
+            certificates: new sdk.CertificateList(/* list */)
+        });
+
+* Proxy handling
+
+        // v4.x
+        var runner = new Runner();
+        
+        runner.run(collection, {
+            requester: {
+                proxyManager: myProxyManager
+            }   
+        });
+
+        // v5.x
+        var runner = new Runner();
+        
+        runner.run(collection, {
+            // Resolves system proxy 
+            systemProxy: function (url, callback) {
+                return callback(null, new ProxyConfig());
+            },
+            // static list
+            proxies: new ProxyConfigList(/* list */)
+        });
+
+* File resolver (or reader)
+
+        // v4.x
+        var runner = new Runner();
+        
+        runner.run(collection, {
+            requester: {
+                fileResolver: require('fs')
+            }   
+        });
+
+        // v5.x
+        var runner = new Runner();
+        
+        runner.run(collection, {
+            fileResolver: require('fs')
+        });
 
 #### 4.1.1 (March 14, 2017)
 * Fixed a bug which caused certificate resolution to return empty content
