@@ -29,9 +29,7 @@ describe('proxy', function () {
                     request: 'http://postman-echo.com/get'
                 }
             },
-            requester: {
-                proxyList: proxyList
-            }
+            proxies: proxyList
         }, function (err, results) {
             testrun = results;
             done(err);
