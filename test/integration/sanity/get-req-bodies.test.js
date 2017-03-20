@@ -26,8 +26,8 @@ describe('GET request bodies', function () {
                 url = 'http://localhost:' + port + '/get';
                 this.run({
                     collection: {
-                        item: { request: { url: url, body: { raw: reqBody, mode: 'raw' } } }
-                    },
+                        item: {request: {url: url, body: {raw: reqBody, mode: 'raw'}}}
+                    }
 
                 }, function (err, results) {
                     testrun = results;
@@ -87,7 +87,7 @@ describe('GET request bodies', function () {
                 url = 'http://localhost:' + port + '/get';
                 this.run({
                     collection: {
-                        item: { request: { url: url, body: { raw: reqBody, mode: 'raw' } } }
+                        item: {request: {url: url, body: {raw: reqBody, mode: 'raw'}}}
                     },
                     requester: {
                         sendBodyWithGetRequests: true
