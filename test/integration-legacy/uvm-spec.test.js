@@ -304,7 +304,7 @@ describe('UVM', function () {
                                         "username": "aa",
                                         "realm": "aa",
                                         "password": "aa",
-                                        "nonce": "",
+                                        "nonce": "asdasd",
                                         "nonceCount": "",
                                         "clientNonce": "",
                                         "opaque": "",
