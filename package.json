@@ -30,7 +30,7 @@
     "http-reasons": "0.1.0",
     "lodash": "4.17.4",
     "lodash3": "3.10.1",
-    "postman-collection": "1.0.1",
+    "postman-collection": "1.0.2",
     "postman-request": "2.80.1-postman.1",
     "postman-sandbox": "1.0.2",
     "resolve-from": "2.0.0",
@@ -57,7 +57,7 @@
     "postman-jsdoc-theme": "0.0.2",
     "recursive-readdir": "2.1.1",
     "shelljs": "0.7.7",
-    "sinon": "1.17.7",
+    "sinon": "2.0.0",
     "tmp": "0.0.31"
   },
   "browser": {
