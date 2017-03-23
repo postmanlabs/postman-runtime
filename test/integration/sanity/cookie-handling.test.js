@@ -13,7 +13,7 @@ describe('cookies', function () {
                             exec: ['tests["working"] = postman.getResponseCookie("foo").value === "bar"']
                         }
                     }],
-                    request: 'http://echo.getpostman.com/cookies/set?foo=bar'
+                    request: 'http://postman-echo.com/cookies/set?foo=bar'
                 }]
             }
         }, function (err, results) {

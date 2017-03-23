@@ -70,6 +70,9 @@ runner.run(collection, {
 
         // Enable or disable certificate verification
         strictSSL: false,
+        
+        // Enable sending of bodies with GET requests
+        sendBodyWithGetRequests: true,
     },
 
     // A ProxyConfigList, from the SDK
