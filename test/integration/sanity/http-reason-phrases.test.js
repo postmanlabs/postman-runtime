@@ -38,13 +38,14 @@ describe('http reasons', function () {
     });
 
     it('must receive the correct reason phrase from the server', function () {
-        var responseCode = testrun.request.getCall(0).args[5].responseCode;
+        var response = testrun.request.getCall(0).args[2];
 
-        expect(responseCode).to.eql({
+        expect(response.code).be(400);
+        expect(response.status).be('Some Custom Reason');
+        expect(response.details()).to.eql({
             code: 400,
             name: 'Some Custom Reason',
-            detail: 'The request cannot be fulfilled due to bad syntax.',
-            fromServer: true
+            detail: 'The request cannot be fulfilled due to bad syntax.'
         });
     });
 
