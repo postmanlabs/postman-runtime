@@ -67,25 +67,35 @@ describe('Clear vars sandbox', function () {
         });
     });
 
-    it('must have run the test script successfully', function () {
-        expect(testrun).be.ok();
-        expect(testrun.test.calledThrice).be.ok();
+    describe('test scripts', function () {
+        it('should have run thrice', function () {
+            expect(testrun).be.ok();
+            expect(testrun.test.calledThrice).be.ok();
+        });
 
-        var first = testrun.test.getCall(0),
-            second = testrun.test.getCall(1),
-            third = testrun.test.getCall(2);
+        it('should correctly clear environments and globals in the test run 1', function () {
+            var first = testrun.test.getCall(0);
 
-        expect(first.args[0]).to.be(null);
-        expect(_.get(first.args[2], '0.result.globals.globals')).to.eql({});
-        expect(_.get(first.args[2], '0.result.globals.environment')).to.eql({});
+            expect(first.args[0]).to.be(null);
+            expect(_.get(first.args[2], '0.result.globals.globals')).to.eql({});
+            expect(_.get(first.args[2], '0.result.globals.environment')).to.eql({});
+        });
 
-        expect(second.args[0]).to.be(null);
-        expect(_.get(second.args[2], '0.result.globals.globals')).to.eql({});
-        expect(_.get(second.args[2], '0.result.globals.environment')).to.eql({});
+        it('should correctly clear environments and globals in the test run 2', function () {
+            var second = testrun.test.getCall(1);
 
-        expect(third.args[0]).to.be(null);
-        expect(_.get(third.args[2], '0.result.globals.globals')).to.eql({});
-        expect(_.get(third.args[2], '0.result.globals.environment')).to.eql({});
+            expect(second.args[0]).to.be(null);
+            expect(_.get(second.args[2], '0.result.globals.globals')).to.eql({});
+            expect(_.get(second.args[2], '0.result.globals.environment')).to.eql({});
+        });
+
+        it('should correctly clear environments and globals in the test run 3', function () {
+            var third = testrun.test.getCall(2);
+
+            expect(third.args[0]).to.be(null);
+            expect(_.get(third.args[2], '0.result.globals.globals')).to.eql({});
+            expect(_.get(third.args[2], '0.result.globals.environment')).to.eql({});
+        });
     });
 
     it('must have completed the run', function () {
