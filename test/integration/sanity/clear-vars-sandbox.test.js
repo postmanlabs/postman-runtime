@@ -4,73 +4,61 @@ describe('Clear vars sandbox', function () {
 
     before(function (done) {
         this.run({
+            environment: {values: [{key: 'e', value: '2'}]},
+            globals: {values: [{key: 'g', value: '3'}]},
             collection: {
                 item: [{
-                    name: 'Before clearing',
                     event: [{
                         listen: 'test',
                         script: {
-                            type: 'text/javascript',
-                            exec: 'console.log(environment);var data = JSON.parse(responseBody);\ntests[\'Variable substitution from env\'] = (data.args.a===\'2\');\ntests[\'Variable substitution from global\'] = (data.args.b===\'3\');\npostman.clearEnvironmentVariables();\npostman.clearGlobalVariables();'
-                        }
-                    }, {
-                        listen: 'prerequest',
-                        script: {
-                            type: 'text/javascript',
-                            exec: 'postman.setEnvironmentVariable(\'e\', \'2\');\npostman.setGlobalVariable(\'g\',\'3\');'
+                            exec: [
+                                'var data = JSON.parse(responseBody);',
+                                'tests[\'Variable substitution from env\'] = (data.args.a===\'2\');',
+                                'tests[\'Variable substitution from global\'] = (data.args.b===\'3\');',
+                                'postman.clearEnvironmentVariables();',
+                                'postman.clearGlobalVariables();'
+                            ]
                         }
                     }],
                     request: {
                         url: 'https://postman-echo.com/get?a={{e}}&b={{g}}',
-                        method: 'GET',
-                        header: [],
-                        body: {
-                            mode: 'formdata',
-                            formdata: []
-                        },
-                        description: 'rd'
-                    },
-                    response: []
+                        method: 'GET'
+                    }
                 }, {
-                    name: 'After clearing',
                     event: [{
                         listen: 'test',
                         script: {
-                            type: 'text/javascript',
-                            exec: 'var data = JSON.parse(responseBody);\ntests[\'Variable substitution from env not working after clearing\'] = (data.args.a===\'{{e}}\');\ntests[\'Variable substitution from global not working after clearing\'] = (data.args.b===\'{{g}}\');\npostman.setEnvironmentVariable(\'e\', \'2\');\npostman.setGlobalVariable(\'g\',\'3\');\ntests[\'Recreated vars\']=environment.e===\'2\' && globals.g===\'3\'\npostman.clearEnvironmentVariable(\'e\');\npostman.clearGlobalVariable(\'g\');'
+                            exec: [
+                                'var data = JSON.parse(responseBody);',
+                                'tests[\'Variable substitution from env not working after clearing\'] = (data.args.a===\'{{e}}\');',
+                                'tests[\'Variable substitution from global not working after clearing\'] = (data.args.b===\'{{g}}\');',
+                                'postman.setEnvironmentVariable(\'e\', \'2\');',
+                                'postman.setGlobalVariable(\'g\',\'3\');',
+                                'tests[\'Recreated vars\']=environment.e===\'2\' && globals.g===\'3\'',
+                                'postman.clearEnvironmentVariable(\'e\');',
+                                'postman.clearGlobalVariable(\'g\');'
+                            ]
                         }
                     }],
                     request: {
                         url: 'https://postman-echo.com/get?a={{e}}&b={{g}}',
-                        method: 'GET',
-                        header: [],
-                        body: {
-                            mode: 'formdata',
-                            formdata: []
-                        },
-                        description: 'rd'
-                    },
-                    response: []
+                        method: 'GET'
+                    }
                 }, {
-                    name: 'After clearing',
                     event: [{
                         listen: 'test',
                         script: {
-                            type: 'text/javascript',
-                            exec: 'console.log(environment);console.log(globals);var data = JSON.parse(responseBody);\ntests[\'Variable substitution from env not working after clearing invididually\'] = (data.args.a===\'{{e}}\');\ntests[\'Variable substitution from global not working after clearing invididually\'] = (data.args.b===\'{{g}}\');'
+                            exec: [
+                                'var data = JSON.parse(responseBody);',
+                                'tests[\'Variable substitution from env not working after clearing invididually\'] = (data.args.a===\'{{e}}\');',
+                                'tests[\'Variable substitution from global not working after clearing invididually\'] = (data.args.b===\'{{g}}\');'
+                            ]
                         }
                     }],
                     request: {
                         url: 'https://postman-echo.com/get?a={{e}}&b={{g}}',
-                        method: 'GET',
-                        header: [],
-                        body: {
-                            mode: 'formdata',
-                            formdata: []
-                        },
-                        description: 'rd'
-                    },
-                    response: []
+                        method: 'GET'
+                    }
                 }]
             }
         }, function (err, results) {
@@ -83,24 +71,21 @@ describe('Clear vars sandbox', function () {
         expect(testrun).be.ok();
         expect(testrun.test.calledThrice).be.ok();
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
-            'Variable substitution from env': true,
-            'Variable substitution from global': true
-        });
+        var first = testrun.test.getCall(0),
+            second = testrun.test.getCall(1),
+            third = testrun.test.getCall(2);
 
-        expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(1).args[2], '0.result.globals.tests')).to.eql({
-            'Recreated vars': true,
-            'Variable substitution from env not working after clearing': true,
-            'Variable substitution from global not working after clearing': true
-        });
+        expect(first.args[0]).to.be(null);
+        expect(_.get(first.args[2], '0.result.globals.globals')).to.eql({});
+        expect(_.get(first.args[2], '0.result.globals.environment')).to.eql({});
 
-        expect(testrun.test.getCall(2).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(2).args[2], '0.result.globals.tests')).to.eql({
-            'Variable substitution from env not working after clearing invididually': true,
-            'Variable substitution from global not working after clearing invididually': true
-        });
+        expect(second.args[0]).to.be(null);
+        expect(_.get(second.args[2], '0.result.globals.globals')).to.eql({});
+        expect(_.get(second.args[2], '0.result.globals.environment')).to.eql({});
+
+        expect(third.args[0]).to.be(null);
+        expect(_.get(third.args[2], '0.result.globals.globals')).to.eql({});
+        expect(_.get(third.args[2], '0.result.globals.environment')).to.eql({});
     });
 
     it('must have completed the run', function () {
