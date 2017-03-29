@@ -1,4 +1,4 @@
-describe('Request name scripts', function() {
+describe('request name scripts', function() {
     var _ = require('lodash'),
         testrun;
 
