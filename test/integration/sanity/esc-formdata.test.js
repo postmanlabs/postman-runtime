@@ -1,4 +1,4 @@
-describe('Escaped formdata', function() {
+describe('escaped formdata', function() {
     var _ = require('lodash'),
         testrun;
 
@@ -12,16 +12,6 @@ describe('Escaped formdata', function() {
             },
             collection: {
                 item: [{
-                    event: [{
-                        listen: 'test',
-                        script: {
-                            exec: [
-                                'var data=JSON.parse(responseBody);',
-                                'tests[\'Form Key Replaced\'] = data.form.hasOwnProperty(\'hello\');',
-                                'tests[\'Form val replaced from env\'] = data.form.hello === \'hello\\\\kworld\';'
-                            ]
-                        }
-                    }],
                     request: {
                         url: 'https://postman-echo.com/post?a={{msg}}',
                         method: 'POST',
@@ -39,15 +29,18 @@ describe('Escaped formdata', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
+    it('must have sent the request successfully', function() {
         expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
+        expect(testrun.request.calledOnce).be.ok();
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
-            'Form Key Replaced': true,
-            'Form val replaced from env': true
-        });
+        expect(testrun.request.getCall(0).args[0]).to.be(null);
+    });
+
+    it('must escaped the formdata correctly', function() {
+        var response = testrun.request.getCall(0).args[2],
+            body = JSON.parse(response.body);
+
+        expect(body.form).to.have.property('hello', 'hello\\kworld');
     });
 
     it('must have completed the run', function() {
