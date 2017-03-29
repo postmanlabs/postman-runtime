@@ -6,12 +6,6 @@ describe('HEAD requests', function () {
         this.run({
             collection: {
                 item: [{
-                    event: [{
-                        listen: 'test',
-                        script: {
-                            exec: 'tests["Status is 200 OK"] = responseCode.code === 200;'
-                        }
-                    }],
                     request: {
                         url: 'http://google.com',
                         method: 'HEAD',
@@ -21,12 +15,6 @@ describe('HEAD requests', function () {
                         }
                     }
                 }, {
-                    event: [{
-                        listen: 'test',
-                        script: {
-                            exec: 'tests["Status is 200 OK"] = responseCode.code === 200;'
-                        }
-                    }],
                     request: {
                         url: 'http://github.com',
                         method: 'HEAD',
@@ -43,15 +31,15 @@ describe('HEAD requests', function () {
         });
     });
 
-    it('must have run the test script successfully', function () {
+    it('must have completed the HEAD requests successfully', function () {
         expect(testrun).be.ok();
-        expect(testrun.test.calledTwice).be.ok();
+        expect(testrun.request.calledTwice).be.ok();
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests["Status is 200 OK"]')).to.be(true);
+        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(testrun.request.getCall(0).args[2].code).to.be(200);
 
-        expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(1).args[2], '0.result.globals.tests["Status is 200 OK"]')).to.be(true);
+        expect(testrun.request.getCall(1).args[0]).to.be(null);
+        expect(testrun.request.getCall(1).args[2].code).to.be(200);
     });
 
     it('must have completed the run', function () {
