@@ -1,6 +1,5 @@
 describe('Slashed variables', function() {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function(done) {
         this.run({
@@ -10,21 +9,7 @@ describe('Slashed variables', function() {
             },
             collection: {
                 item: [{
-                    event: [{
-                        listen: 'test',
-                        script: {
-                            exec: [
-                                'var args = JSON.parse(responseBody).args;',
-                                'tests[\'Status code is 200\'] = responseCode.code === 200;',
-                                'tests[\'Forward slash was handled correctly\'] = args[\'foo\'] === \'alpha\';',
-                                'tests[\'Backslash was handled correctly\'] = args[\'bar\'] === \'beta\';'
-                            ]
-                        }
-                    }],
-                    request: {
-                        url: 'https://postman-echo.com/get?foo={{fo/o}}&bar={{b\\ar}}',
-                        method: 'GET'
-                    }
+                    request: 'https://postman-echo.com/get?foo={{fo/o}}&bar={{b\\ar}}'
                 }]
             }
         }, function(err, results) {
@@ -33,16 +18,23 @@ describe('Slashed variables', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
+    it('must have sent the request successfully', function() {
         expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
+        expect(testrun.request.calledOnce).be.ok();
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
-            'Status code is 200': true,
-            'Forward slash was handled correctly': true,
-            'Backslash was handled correctly': true
-        });
+        expect(testrun.request.getCall(0).args[0]).to.be(null);
+    });
+
+    it('must have resolved the variables', function() {
+        var response = testrun.request.getCall(0).args[2],
+            query;
+
+        expect(response.code).to.eql(200);
+
+        query = JSON.parse(response.body).args;
+
+        expect(query).to.have.property('foo', 'alpha');
+        expect(query).to.have.property('bar', 'beta');
     });
 
     it('must have completed the run', function() {
