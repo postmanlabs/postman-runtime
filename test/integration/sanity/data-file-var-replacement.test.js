@@ -1,28 +1,12 @@
-describe('Data file variable replacement', function() {
-    var _ = require('lodash'),
-        testrun;
+describe('data variable replacement', function() {
+    var testrun;
 
     before(function(done) {
         this.run({
-            environment: {
-                values: [
-                    {key: 'envKey', value: 'abhijit3', type: 'text', name: 'envKey', enabled: true},
-                    {key: 'envFileUrl', value: 'postman-echo.com', type: 'text', name: 'envFileUrl', enabled: true}
-                ]
-            },
             data: [{dataVar: 'value1'}, {dataVar: 'value2'}],
             collection: {
                 item: [{
                     event: [{
-                        listen: 'test',
-                        script: {
-                            exec: [
-                                'var data = JSON.parse(responseBody);',
-                                'tests[\'form data populated through env file\'] = (data.form.envFileKey===\'abhijit3\');',
-                                'tests[\'form-data populated through prScript\'] = (data.form.prScriptTest==iteration);'
-                            ]
-                        }
-                    }, {
                         listen: 'prerequest',
                         script: {
                             exec: [
@@ -31,14 +15,14 @@ describe('Data file variable replacement', function() {
                         }
                     }],
                     request: {
-                        url: 'http://{{envFileUrl}}/post',
+                        url: 'http://postman-echo.com/post',
                         method: 'POST',
-                        header: [{key: 'h1', value: 'v1'}],
                         body: {
                             mode: 'formdata',
-                            formdata: [{key: 'dataFileKey', value: '{{dataVar}}', type: 'text'},
-                                {key: 'envFileKey', value: '{{envKey}}', type: 'text'},
-                                {key: 'prScriptTest', value: '{{dataVar2}}', type: 'text'}]
+                            formdata: [
+                                {key: 'a', value: '{{dataVar}}', type: 'text'},
+                                {key: 'b', value: '{{dataVar2}}', type: 'text'}
+                            ]
                         }
                     }
                 }]
@@ -49,15 +33,27 @@ describe('Data file variable replacement', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
+    it('must have run two iterations', function() {
         expect(testrun).be.ok();
-        expect(testrun.test.calledTwice).be.ok();
+        expect(testrun.iteration.calledTwice).be.ok();
+        expect(testrun.request.calledTwice).be.ok();
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
-            'form data populated through env file': true,
-            'form-data populated through prScript': true
-        });
+        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(testrun.request.getCall(1).args[0]).to.be(null);
+    });
+
+    it('must have substituted the data variables', function() {
+        expect(testrun).be.ok();
+
+        var firstResponse = testrun.request.getCall(0).args[2],
+            firstBody = JSON.parse(firstResponse.body),
+            secondResponse = testrun.request.getCall(1).args[2],
+            secondBody = JSON.parse(secondResponse.body);
+
+        expect(firstBody.form).to.have.property('a', 'value1');
+        expect(firstBody.form).to.have.property('b', '0');
+        expect(secondBody.form).to.have.property('a', 'value2');
+        expect(secondBody.form).to.have.property('b', '1');
     });
 
     it('must have completed the run', function() {
