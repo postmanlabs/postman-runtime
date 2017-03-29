@@ -1,6 +1,5 @@
 describe('Hawk authentication', function () {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function (done) {
         this.run({
@@ -23,7 +22,7 @@ describe('Hawk authentication', function () {
                             }
                         },
                         url: 'http://postman-echo.com/auth/hawk',
-                        method: 'GET',
+                        method: 'GET'
                     }
                 }]
             }
