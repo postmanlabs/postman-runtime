@@ -6,16 +6,7 @@ describe('GZIP encoding', function() {
         this.run({
             collection: {
                 item: [{
-                    event: [{
-                        listen: 'test',
-                        script: {
-                            exec: 'tests["working"] = JSON.parse(responseBody).gzipped;'
-                        }
-                    }],
-                    request: {
-                        url: 'http://postman-echo.com/gzip',
-                        method: 'GET'
-                    }
+                    request: 'http://postman-echo.com/gzip'
                 }]
             }
         }, function(err, results) {
@@ -26,10 +17,13 @@ describe('GZIP encoding', function() {
 
     it('must have run the test script successfully', function() {
         expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
+        expect(testrun.request.calledOnce).be.ok();
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests.working')).to.be(true);
+        expect(testrun.request.getCall(0).args[0]).to.be(null);
+
+        var response = testrun.request.getCall(0).args[2];
+        expect(response.code).to.eql(200);
+        expect(JSON.parse(response.body)).to.have.property('gzipped', true);
     });
 
     it('must have completed the run', function() {
