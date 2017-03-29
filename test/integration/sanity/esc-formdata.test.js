@@ -1,6 +1,5 @@
 describe('escaped formdata', function() {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function(done) {
         this.run({
