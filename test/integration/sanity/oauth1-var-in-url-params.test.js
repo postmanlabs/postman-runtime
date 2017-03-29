@@ -1,6 +1,5 @@
 describe('OAuth1 var in url params', function() {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function(done) {
         this.run({
@@ -10,14 +9,6 @@ describe('OAuth1 var in url params', function() {
                         listen: 'prerequest',
                         script: {
                             exec: 'postman.setEnvironmentVariable("vala", "omg");'
-                        }
-                    }, {
-                        listen: 'test',
-                        script: {
-                            exec: [
-                                'tests["Response code is 200"] = responseCode.code === 200;',
-                                'tests["Verification succeeded"] = JSON.parse(responseBody).status === "pass";'
-                            ]
                         }
                     }],
                     request: {
@@ -38,11 +29,7 @@ describe('OAuth1 var in url params', function() {
                             }
                         },
                         url: 'https://postman-echo.com/oauth1?a={{vala}}',
-                        method: 'GET',
-                        header: [{
-                            key: 'Authorization',
-                            value: 'OAuth oauth_consumer_key=\'RKCGzna7bv9YD57c\',oauth_signature_method=\'HMAC-SHA1\',oauth_timestamp=\'1461319769\',oauth_nonce=\'ik3oT5\',oauth_version=\'1.0\',oauth_signature=\'x0gnkYdST73FwY8oAqtV2O9MzGc%3D\''
-                        }]
+                        method: 'GET'
                     }
                 }]
             }
@@ -52,15 +39,15 @@ describe('OAuth1 var in url params', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
+    it('must have signed the oauth1 request successfully', function() {
         expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
+        expect(testrun.request.calledOnce).be.ok();
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
-            'Response code is 200': true,
-            'Verification succeeded': true
-        });
+        expect(testrun.request.getCall(0).args[0]).to.be(null);
+
+        var response = testrun.request.getCall(0).args[2];
+        expect(response.code).to.eql(200);
+        expect(JSON.parse(response.body)).to.have.property('status', 'pass');
     });
 
     it('must have completed the run', function() {
