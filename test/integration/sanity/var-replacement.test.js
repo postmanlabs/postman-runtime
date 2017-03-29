@@ -1,6 +1,5 @@
-describe('Variable replacement', function() {
-    var _ = require('lodash'),
-        testrun;
+describe('variable replacement', function() {
+    var testrun;
 
     before(function(done) {
         this.run({
@@ -32,16 +31,29 @@ describe('Variable replacement', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
+    it('must have sent the request successfully', function() {
         expect(testrun).be.ok();
         expect(testrun.test.calledOnce).be.ok();
         expect(testrun.prerequest.calledOnce).be.ok();
+        expect(testrun.request.calledOnce).be.ok();
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
-            'Variable substitution': true,
-            'No blank variable substitution': true
-        });
+        expect(testrun.request.getCall(0).args[0]).to.be(null);
+    });
+
+    it('must have substituted the available variable correctly', function () {
+        var response = testrun.request.getCall(0).args[2],
+            args = JSON.parse(response.body).args;
+
+        expect(args).to.be.ok();
+        expect(args.var).to.eql('replaced');
+    });
+
+    it('must have not substituted the variable whose value is not set', function () {
+        var response = testrun.request.getCall(0).args[2],
+            args = JSON.parse(response.body).args;
+
+        expect(args).to.be.ok();
+        expect(args.novar).to.eql('{{novar}}');
     });
 
     it('must have completed the run', function() {
