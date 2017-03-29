@@ -10,12 +10,19 @@ describe('Request name scripts', function() {
                     event: [{
                         listen: 'test',
                         script: {
-                            exec: 'tests[\'working\'] = (request.name===\'r1\' && request.description===\'testDesc\')'
+                            exec: [
+                                'var failed = postman.getEnvironmentVariable(\'fail\');',
+                                'tests[\'working\'] = !failed && (request.name===\'r1\' && request.description===\'testDesc\')'
+                            ]
                         }
                     }, {
                         listen: 'prerequest',
                         script: {
-                            exec: 'if(request.name!==\'r1\' || request.description!==\'testDesc\') {undefFunction()}'
+                            exec: [
+                                'if(request.name!==\'r1\' || request.description!==\'testDesc\') {',
+                                '    postman.setEnvironmentVariable(\'fail\', \'true\')',
+                                '}'
+                            ]
                         }
                     }],
                     request: {
