@@ -1,28 +1,35 @@
-describe('cookies', function () {
+describe('Multi value data', function() {
     var _ = require('lodash'),
         testrun;
 
-    before(function (done) {
+    before(function(done) {
         this.run({
             collection: {
                 item: [{
                     event: [{
                         listen: 'test',
                         script: {
-                            type: 'text/javascript',
-                            exec: ['tests["working"] = postman.getResponseCookie("foo").value === "bar"']
+                            exec: ['var data = request.data;',
+                                'tests["working"] = (_.isArray(data.name))']
                         }
                     }],
-                    request: 'http://postman-echo.com/cookies/set?foo=bar'
+                    request: {
+                        url: 'https://postman-echo.com/post',
+                        method: 'POST',
+                        body: {
+                            mode: 'formdata',
+                            formdata: [{key: 'name', value: 'abhijit'}, {key: 'name', value: 'kane'}]
+                        }
+                    }
                 }]
             }
-        }, function (err, results) {
+        }, function(err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('must have run the test script successfully', function () {
+    it('must have run the test script successfully', function() {
         expect(testrun).be.ok();
         expect(testrun.test.calledOnce).be.ok();
 
@@ -30,7 +37,7 @@ describe('cookies', function () {
         expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests.working')).to.be(true);
     });
 
-    it('must have completed the run', function () {
+    it('must have completed the run', function() {
         expect(testrun).be.ok();
         expect(testrun.done.calledOnce).be.ok();
         expect(testrun.done.getCall(0).args[0]).to.be(null);
