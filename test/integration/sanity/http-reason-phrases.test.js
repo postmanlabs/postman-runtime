@@ -42,11 +42,9 @@ describe('http reasons', function () {
 
         expect(response.code).be(400);
         expect(response.status).be('Some Custom Reason');
-        expect(response.details()).to.eql({
-            code: 400,
-            name: 'Some Custom Reason',
-            detail: 'The request cannot be fulfilled due to bad syntax.'
-        });
+        expect(response.details()).to.have.property('code', 400);
+        expect(response.details()).to.have.property('name', 'Some Custom Reason');
+        expect(response.details()).to.have.property('detail', 'The request cannot be fulfilled due to bad syntax.');
     });
 
     after(function () {

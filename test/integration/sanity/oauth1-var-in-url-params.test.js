@@ -47,7 +47,7 @@ describe('OAuth1 var in url params', function() {
 
         var response = testrun.request.getCall(0).args[2];
         expect(response.code).to.eql(200);
-        expect(JSON.parse(response.body)).to.have.property('status', 'pass');
+        expect(response.json()).to.have.property('status', 'pass');
     });
 
     it('must have completed the run', function() {

@@ -57,7 +57,7 @@ describe('GET request bodies', function () {
             var response = testrun.request.getCall(0).args[2];
 
             expect(testrun.request.calledOnce).be.ok(); // one request
-            expect(response.body).to.not.be.ok();
+            expect(response.text()).to.not.be.ok();
         });
     });
 
@@ -120,7 +120,7 @@ describe('GET request bodies', function () {
             var response = testrun.request.getCall(0).args[2];
 
             expect(testrun.request.calledOnce).be.ok(); // one request
-            expect(response.body).to.eql(reqBody);
+            expect(response.text()).to.eql(reqBody);
         });
     });
 });

@@ -21,10 +21,11 @@ describe('multiple values for query parameters', function () {
         expect(testrun).be.ok();
         expect(testrun.request.calledOnce).be.ok();
 
-        var response = testrun.request.getCall(0).args[2];
-        expect(JSON.parse(response.body)).to.have.property('args');
-        expect(JSON.parse(response.body).args).to.have.property('hi');
-        expect(JSON.parse(response.body).args.hi).to.eql(['hello', 'lolol']);
+        var response = testrun.request.getCall(0).args[2],
+            body = response.json();
+        expect(body).to.have.property('args');
+        expect(body.args).to.have.property('hi');
+        expect(body.args.hi).to.eql(['hello', 'lolol']);
     });
 
     it('must have completed the run', function() {
