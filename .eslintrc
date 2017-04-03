@@ -2,7 +2,6 @@
   "plugins": [
     "jsdoc",
     "lodash",
-    "mocha",
     "security"
   ],
   "env": {
@@ -284,29 +283,12 @@
     "lodash/prefer-includes": "error",
     "lodash/prefer-is-nil": "warn",
     "lodash/prefer-lodash-chain": "warn",
-    "lodash/prefer-lodash-method": "warn",
+    "lodash/prefer-lodash-method": "off",
     "lodash/prefer-lodash-typecheck": "warn",
     "lodash/prefer-matches": "error",
     "lodash/prefer-noop": "error",
     "lodash/prefer-over-quantifier": "error",
     "lodash/prefer-startswith": "error",
-    "lodash/prefer-times": "error",
-
-    // Mocha
-    "mocha/handle-done-callback": "error",
-    "mocha/no-exclusive-tests": "error",
-    "mocha/no-global-tests": "error",
-    "mocha/no-hooks-for-single-case": "warn",
-    "mocha/no-hooks": "warn",
-    "mocha/no-identical-title": "error",
-    "mocha/no-mocha-arrows": "error",
-    "mocha/no-pending-tests": "error",
-    "mocha/no-return-and-callback": "error",
-    "mocha/no-sibling-hooks": "error",
-    "mocha/no-skipped-tests": "warn",
-    "mocha/no-synchronous-tests": "off",
-    "mocha/no-top-level-hooks": "off",
-    "mocha/valid-suite-description": "error",
-    "mocha/valid-test-description": "warn",
+    "lodash/prefer-times": "error"
   }
 }
