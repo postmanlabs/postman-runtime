@@ -77,24 +77,24 @@ describe('Clear vars sandbox', function () {
             var first = testrun.test.getCall(0);
 
             expect(first.args[0]).to.be(null);
-            expect(_.get(first.args[2], '0.result.globals.globals.values')).to.eql([]);
-            expect(_.get(first.args[2], '0.result.globals.environment.values')).to.eql([]);
+            expect(_.get(first.args[2], '0.result.globals.values')).to.eql([]);
+            expect(_.get(first.args[2], '0.result.environment.values')).to.eql([]);
         });
 
         it('should correctly clear environments and globals in the test run 2', function () {
             var second = testrun.test.getCall(1);
 
             expect(second.args[0]).to.be(null);
-            expect(_.get(second.args[2], '0.result.globals.globals.values')).to.eql([]);
-            expect(_.get(second.args[2], '0.result.globals.environment.values')).to.eql([]);
+            expect(_.get(second.args[2], '0.result.globals.values')).to.eql([]);
+            expect(_.get(second.args[2], '0.result.environment.values')).to.eql([]);
         });
 
         it('should correctly clear environments and globals in the test run 3', function () {
             var third = testrun.test.getCall(2);
 
             expect(third.args[0]).to.be(null);
-            expect(_.get(third.args[2], '0.result.globals.globals.values')).to.eql([]);
-            expect(_.get(third.args[2], '0.result.globals.environment.values')).to.eql([]);
+            expect(_.get(third.args[2], '0.result.globals.values')).to.eql([]);
+            expect(_.get(third.args[2], '0.result.environment.values')).to.eql([]);
         });
     });
 
