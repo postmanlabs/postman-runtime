@@ -50,7 +50,7 @@ describe('Sugar.js', function() {
         expect(testrun.test.calledOnce).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
+        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests')).to.eql({
             'Array prototype none': true,
             'Array prototype any': true,
             'Array prototype average': true,

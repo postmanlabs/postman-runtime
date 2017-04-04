@@ -203,7 +203,7 @@ describe('Sandbox libraries', function() {
         expect(testrun.test.callCount).be(11);
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
+        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests')).to.eql({
             xml2Json: true,
             GetResponseHeader: true,
             GetResponseCookie: true,
@@ -215,7 +215,7 @@ describe('Sandbox libraries', function() {
         });
 
         expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(1).args[2], '0.result.globals.tests')).to.eql({
+        expect(_.get(testrun.test.getCall(1).args[2], '0.result.tests')).to.eql({
             'Status code is 200': true,
             'Correct GUID': true,
             'Correct Random': true,
@@ -228,17 +228,17 @@ describe('Sandbox libraries', function() {
 
         _.range(2, 8).forEach(function(index) { // generates a range [2, 7], and checks the tests on those indices
             expect(testrun.test.getCall(index).args[0]).to.be(null);
-            expect(_.get(testrun.test.getCall(index).args[2], '0.result.globals.tests["Status code is 200"]')).to.be(true);
+            expect(_.get(testrun.test.getCall(index).args[2], '0.result.tests["Status code is 200"]')).to.be(true);
         });
 
         expect(testrun.test.getCall(8).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(8).args[2], '0.result.globals.tests["Correct auth header"]')).to.be(true);
+        expect(_.get(testrun.test.getCall(8).args[2], '0.result.tests["Correct auth header"]')).to.be(true);
 
         expect(testrun.test.getCall(9).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(9).args[2], '0.result.globals.tests.Authenticated')).to.be(true);
+        expect(_.get(testrun.test.getCall(9).args[2], '0.result.tests.Authenticated')).to.be(true);
 
         expect(testrun.test.getCall(10).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(10).args[2], '0.result.globals.tests')).to.eql({});
+        expect(_.get(testrun.test.getCall(10).args[2], '0.result.tests')).to.eql({});
     });
 
     it('must have completed the run', function() {
