@@ -1,6 +1,5 @@
 describe('multi valued headers', function () {
     var _ = require('lodash'),
-        fs = require('fs'),
         http = require('http'),
 
         server,
@@ -44,10 +43,10 @@ describe('multi valued headers', function () {
     it('must receive duplicate headers from the http server', function () {
         var response = testrun.request.getCall(0).args[2];
 
-        // The "x-pm-test" header should occur twice
+        // eslint-disable-next-line lodash/prop-shorthand
         expect(_.countBy(response.headers.members, function (header) {
             return header.key;
-        })['x-pm-test']).to.eql(2);
+        })['x-pm-test']).to.eql(2);  // The "x-pm-test" header should occur twice
         expect(response.text()).to.eql('worked');
     });
 
