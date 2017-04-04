@@ -38,7 +38,7 @@ describe('File uploads', function() {
         expect(testrun.test.calledOnce).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests["File contents are valid"]')).to.be(true);
+        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests["File contents are valid"]')).to.be(true);
     });
 
     it('must have completed the run', function() {
