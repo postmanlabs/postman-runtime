@@ -31,7 +31,7 @@ describe('Slashed variables', function() {
 
         expect(response.code).to.eql(200);
 
-        query = JSON.parse(response.body).args;
+        query = response.json().args;
 
         expect(query).to.have.property('foo', 'alpha');
         expect(query).to.have.property('bar', 'beta');

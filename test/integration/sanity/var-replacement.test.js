@@ -42,7 +42,7 @@ describe('variable replacement', function() {
 
     it('must have substituted the available variable correctly', function () {
         var response = testrun.request.getCall(0).args[2],
-            args = JSON.parse(response.body).args;
+            args = response.json().args;
 
         expect(args).to.be.ok();
         expect(args.var).to.eql('replaced');
@@ -50,7 +50,7 @@ describe('variable replacement', function() {
 
     it('must have not substituted the variable whose value is not set', function () {
         var response = testrun.request.getCall(0).args[2],
-            args = JSON.parse(response.body).args;
+            args = response.json().args;
 
         expect(args).to.be.ok();
         expect(args.novar).to.eql('{{novar}}');

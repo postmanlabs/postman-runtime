@@ -41,8 +41,8 @@ describe('Set next request', function() {
         expect(testrun).be.ok();
         expect(testrun.request.calledTwice).be.ok();
 
-        expect(_.get(testrun.request.getCall(0).args[6], 'name')).to.be('one');
-        expect(_.get(testrun.request.getCall(1).args[6], 'name')).to.be('three');
+        expect(_.get(testrun.request.getCall(0).args[4], 'name')).to.be('one');
+        expect(_.get(testrun.request.getCall(1).args[4], 'name')).to.be('three');
     });
 
     it('must have completed the run', function() {

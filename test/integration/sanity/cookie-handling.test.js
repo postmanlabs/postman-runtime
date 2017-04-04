@@ -27,7 +27,7 @@ describe('cookies', function () {
         expect(testrun.test.calledOnce).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests.working')).to.be(true);
+        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests.working')).to.be(true);
     });
 
     it('must have completed the run', function () {
