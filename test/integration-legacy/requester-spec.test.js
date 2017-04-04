@@ -176,7 +176,7 @@ describe('Requester', function () {
                             expect(result.error).to.be(undefined);
 
                             var scriptResult = results[0];
-                            expect(scriptResult.result.masked.scriptType).to.eql('test');
+                            expect(scriptResult.result.target).to.eql('test');
                         });
                     },
                     beforeRequest: function (err, cursor, request, item) {
@@ -383,7 +383,7 @@ describe('Requester', function () {
                             expect(result.error).to.be(undefined);
 
                             var scriptResult = results[0];
-                            expect(scriptResult.result.masked.scriptType).to.eql('test');
+                            expect(scriptResult.result.target).to.eql('test');
                         });
                     },
                     beforeRequest: function (err, cursor, request, item) {
@@ -3303,7 +3303,7 @@ describe('Requester', function () {
 
                             var scriptResult = results[0];
                             expect(scriptResult.error).to.be(undefined);
-                            expect(scriptResult.result.masked.scriptType).to.eql('test');
+                            expect(scriptResult.result.target).to.eql('test');
 
                             expect(scriptResult.result.globals.tests).to.be.ok();
 
@@ -3521,7 +3521,7 @@ describe('Requester', function () {
                             expect(result.error).to.be(undefined);
 
                             var scriptResult = results[0];
-                            expect(scriptResult.result.masked.scriptType).to.eql('test');
+                            expect(scriptResult.result.target).to.eql('test');
                         });
                     },
                     beforeRequest: function (err, cursor, request, item) {
