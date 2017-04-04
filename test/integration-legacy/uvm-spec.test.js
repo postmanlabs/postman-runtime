@@ -26,7 +26,33 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "try {\n    var jsonObject = xml2Json(responseBody);\n    console.log(jsonObject);\n    tests[\"xml2Json\"]=true;\n}\ncatch(e) {\n   console.log(\"xml2Json not supported\");\n    tests[\"xml2Json\"]=false;\n}\n\n\ntry {\n    console.log(postman.getResponseHeader(\"Content-Length\"));\n    tests[\"GetResponseHeader\"]=true;\n} catch(e) {\n    console.log(\"getResponseHeader not supported\");\n    tests[\"GetResponseHeader\"]=false;\n}\n\n\ntry {\n    var mykookie = postman.getResponseCookie(\"sails.sid\");\n    tests[\"GetResponseCookie\"]=mykookie.value;\n} catch(e) {\n    console.log(\"getResponseCookie not supported\");\n    tests[\"GetResponseCookie\"]=false;\n}\n\ntry {\n    console.log(\"RESCOOK: \" , responseCookies);\n} catch(e) {\n    console.log(\"responseCookies not supported\");\n}\n\ntests[\"Correct global\"] = globals.g1==\"0\";\n\nconsole.log(\"Request: \" + JSON.stringify(request));\nconsole.log(\"Environment: \" + JSON.stringify(environment));\nconsole.log(\"Globals: \" + JSON.stringify(globals));\nconsole.log(\"Response hedaers: \" + JSON.stringify(responseHeaders));\nconsole.log(\"Response body: \" + JSON.stringify(responseBody));\nconsole.log(\"Response time: \" + JSON.stringify(responseTime));\nconsole.log(\"Response code: \" + JSON.stringify(responseCode));\n\n\ntry {\n    console.log(postman.clearEnvironmentVariables());\n} catch(e) {\n    console.log(\"clearEnvironmentVariables not supported\");\n}\n\ntry {\n    console.log(postman.clearGlobalVariables());\n} catch(e) {\n    console.log(\"clearGlobalVariables not supported\");\n}\n\npostman.setGlobalVariable(\"g1\", \"0\");\npostman.setEnvironmentVariable(\"e1\", \"0\");\n\ntry {\n    _.each([1], function(v) {tests['Lodash working'] = true;});\n}\ncatch(e) {\n    tests['Lodash working'] = false;\n}\n\n\nvar newString=\"diabetes\";\ntests[\"SugarJS working\"]=newString.has(\"betes\");\n\ntests[\"tv4 present\"] = (typeof tv4.validate === \"function\");\n\ntests[\"CryptoJS md5\"] = (CryptoJS.MD5(\"jasonpurse\") == \"288d14f08b5ad40da43dbe06467729c9\");"
+                                        "exec": [
+                                            'try {',
+                                            '    var jsonObject = xml2Json(responseBody);',
+                                            '    tests["xml2Json"]=true;',
+                                            '}',
+                                            'catch(e) { tests["xml2Json"]=false; }',
+                                            'try {',
+                                            '    console.log(postman.getResponseHeader("Content-Length"));',
+                                            '    tests["GetResponseHeader"]=true;',
+                                            '} catch(e) { tests["GetResponseHeader"]=false; }',
+                                            'try {',
+                                            '    var mykookie = postman.getResponseCookie("sails.sid");',
+                                            '    tests["GetResponseCookie"]=mykookie.value;',
+                                            '} catch(e) { tests["GetResponseCookie"]=false; }',
+                                            'try { console.log("RESCOOK: " , responseCookies); } catch(e) {}',
+                                            'tests["Correct global"] = globals.g1=="0";',
+                                            'try { console.log(postman.clearEnvironmentVariables()); } catch(e) {}',
+                                            'try { console.log(postman.clearGlobalVariables()); } catch(e) {}',
+                                            'postman.setGlobalVariable("g1", "0");',
+                                            'postman.setEnvironmentVariable("e1", "0");',
+                                            'try { _.each([1], function(v) {tests[\'Lodash working\'] = true;}); }',
+                                            'catch(e) { tests[\'Lodash working\'] = false; }',
+                                            'var newString="diabetes";',
+                                            'tests["SugarJS working"]=newString.has("betes");',
+                                            'tests["tv4 present"] = (typeof tv4.validate === "function");',
+                                            'tests["CryptoJS md5"] = (CryptoJS.MD5("jasonpurse") == "288d14f08b5ad40da43dbe06467729c9");'
+                                        ]
                                     }
                                 },
                                 {
@@ -56,7 +82,17 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nconsole.log(\"Request for Post: \" + JSON.stringify(request));\n\nvar jsonData = JSON.parse(responseBody);\ntests[\"Correct GUID: \" + jsonData.form.guid] = jsonData.form.guid.length === 36;\ntests[\"Correct Random: \" + jsonData.form.randomInt] = parseInt(jsonData.form.randomInt)>=0;\ntests[\"Correct Timestamp: \" + jsonData.form.timestamp] = parseInt(jsonData.form.timestamp)>1000\n\ntests[\"Correct global\"] = jsonData.form.global == \"0\";\ntests[\"Correct global2\"] = jsonData.form.global == globals.g1;\ntests[\"Correct envVar\"] = jsonData.form.envValue == \"0\";\ntests[\"Correct envVar2\"] = jsonData.form.envValue == environment.e1;"
+                                        "exec": [
+                                            'tests["Status code is 200"] = responseCode.code === 200;',
+                                            'var jsonData = JSON.parse(responseBody);',
+                                            'tests["Correct GUID: " + jsonData.form.guid] = jsonData.form.guid.length === 36;',
+                                            'tests["Correct Random: " + jsonData.form.randomInt] = parseInt(jsonData.form.randomInt)>=0;',
+                                            'tests["Correct Timestamp: " + jsonData.form.timestamp] = parseInt(jsonData.form.timestamp)>1000',
+                                            'tests["Correct global"] = jsonData.form.global == "0";',
+                                            'tests["Correct global2"] = jsonData.form.global == globals.g1;',
+                                            'tests["Correct envVar"] = jsonData.form.envValue == "0";',
+                                            'tests["Correct envVar2"] = jsonData.form.envValue == environment.e1;'
+                                        ]
                                     }
                                 }
                             ],
@@ -191,7 +227,10 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\ntests[\"Body is correct\"] = responseBody === \"\";"
+                                        "exec": [
+                                            'tests["Status code is 200"] = responseCode.code === 200;',
+                                            'tests["Body is correct"] = responseBody === "";'
+                                        ]
                                     }
                                 }
                             ],
@@ -214,7 +253,10 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\ntests[\"Body is correct\"] = !_.isEmpty(responseBody.split(\",\"));"
+                                        "exec": [
+                                            'tests["Status code is 200"] = responseCode.code === 200;',
+                                            'tests["Body is correct"] = !_.isEmpty(responseBody.split(","));'
+                                        ]
                                     }
                                 }
                             ],
@@ -237,7 +279,7 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nconsole.log(\"Request for RAW Post: \" + JSON.stringify(request));\n"
+                                        "exec": 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
@@ -260,7 +302,10 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "console.log(request.headers);\nvar jsonData = JSON.parse(responseBody);\ntests[\"Correct auth header\"] = jsonData.headers.authorization.indexOf(\"YWJoaWppdDprYW5l\")>-1;"
+                                        "exec": [
+                                            'var jsonData = JSON.parse(responseBody);',
+                                            'tests["Correct auth header"] = jsonData.headers.authorization.indexOf("YWJoaWppdDprYW5l")>-1;'
+                                        ]
                                     }
                                 }
                             ],
@@ -292,7 +337,10 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Correct auth header\"] = jsonData.headers.authorization.length>10;"
+                                        "exec": [
+                                            'var jsonData = JSON.parse(responseBody);',
+                                            'tests["Correct auth header"] = jsonData.headers.authorization.length>10;'
+                                        ]
                                     }
                                 }
                             ],
@@ -329,14 +377,20 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "var jsonData = JSON.parse(responseBody);\n//tests[\"Recur. res. working\"] = jsonData.args.a == \"kane\";"
+                                        "exec": [
+                                            'var jsonData = JSON.parse(responseBody);',
+                                            '//tests["Recur. res. working"] = jsonData.args.a == "kane";'
+                                        ]
                                     }
                                 },
                                 {
                                     "listen": "prerequest",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "postman.setGlobalVariable(\"name1\", \"kane\");\npostman.setGlobalVariable(\"i\", \"1\");"
+                                        "exec": [
+                                            'postman.setGlobalVariable("name1", "kane");',
+                                            'postman.setGlobalVariable("i", "1");'
+                                        ]
                                     }
                                 }
                             ],
@@ -360,7 +414,10 @@ describe('UVM', function () {
                                     "listen": "test",
                                     "script": {
                                         "type": "text/javascript",
-                                        "exec": "console.log('running buffer and json tests'); tests['global JSON object'] = typeof JSON.stringify === 'function'; tests['global Buffer object'] = !!Buffer"
+                                        "exec": [
+                                            'tests[\'global JSON object\'] = typeof JSON.stringify === \'function\';',
+                                            'tests[\'global Buffer object\'] = !!Buffer'
+                                        ]
                                     }
                                 }
                             ]
