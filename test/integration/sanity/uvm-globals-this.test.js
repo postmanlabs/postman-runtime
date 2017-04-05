@@ -10,7 +10,7 @@ describe('UVM allowed globals', function () {
             'iteration', 'request', 'responseCookies', 'responseBody', 'responseCode', 'responseHeaders',
             'responseTime', 'tests', '_', 'CryptoJS', 'tv4', 'cheerio', 'Backbone', 'atob', 'btoa', 'Buffer',
             'xml2Json', 'postman', 'setTimeout', 'setInterval', 'setImmediate', 'clearTimeout', 'clearInterval',
-            'clearImmediate', 'console'];
+            'clearImmediate', 'console', 'pm'];
 
     if (typeof window !== 'undefined') {
         globals.push('XMLHttpRequest');

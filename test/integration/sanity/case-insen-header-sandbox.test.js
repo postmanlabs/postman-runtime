@@ -1,4 +1,4 @@
-describe('cookies', function () {
+describe('Case insensitive sandbox headers', function () {
     var _ = require('lodash'),
         testrun;
 
@@ -9,11 +9,13 @@ describe('cookies', function () {
                     event: [{
                         listen: 'test',
                         script: {
-                            type: 'text/javascript',
-                            exec: ['tests["working"] = postman.getResponseCookie("foo").value === "bar"']
+                            exec: 'tests[\'Case-insensitive header checking\'] = postman.getResponseHeader(\'contenT-TypE\')===\'application/json; charset=utf-8\';'
                         }
                     }],
-                    request: 'http://postman-echo.com/cookies/set?foo=bar'
+                    request: {
+                        url: 'https://postman-echo.com/get',
+                        method: 'GET'
+                    }
                 }]
             }
         }, function (err, results) {
@@ -27,7 +29,8 @@ describe('cookies', function () {
         expect(testrun.test.calledOnce).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests.working')).to.be(true);
+        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests.["Case-insensitive header checking"]'))
+            .to.be(true);
     });
 
     it('must have completed the run', function () {

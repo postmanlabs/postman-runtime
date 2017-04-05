@@ -1,4 +1,68 @@
 # Postman Runtime Changelog
+
+#### 6.0.0 (April 05, 2017)
+* Updated `postman-collection` to v1.1.0, which contains a bugfix for handling multi-valued response headers
+* The structure of script run results has changed 
+
+        // v5.x
+        run.start({
+            prerequest: function (err, cursor, results, item) {
+                var result = results[0].result // changed
+                // 1. result.masked is removed
+                // 2. result.globals now actually holds postman Global VariableScope
+                // 3. result.globals.* have now been moved to result.*
+            },
+            test: function (err, cursor, results, item) {
+                var result = results[0].result // changed (see below for changes)
+                // 1. result.masked is removed
+                // 2. result.globals now actually holds postman Global VariableScope
+                // 3. result.globals.* have now been moved to result.*
+            }
+        });
+        
+        // v6.x
+        run.start({
+            prerequest: function (err, cursor, results, item) {
+                // results[0].result now has the following structure:
+                // {
+                //     target: 'prerequest'
+                //     environment: <VariableScope>
+                //     globals: <VariableScope>
+                //     data: <Object of data variables>
+                //     return: <contains set next request params, etc>
+                // }
+            },
+            test: function (err, cursor, results, item) {
+                // results[0].result now has the following structure:
+                // {
+                //     target: 'test'
+                //     environment: <VariableScope>
+                //     globals: <VariableScope>
+                //     response: <Response>
+                //     request: <Request>
+                //     data: <Object of data variables>
+                //     cookies: <Array of "Cookie">
+                //     tests: <Object>
+                //     return: <contains set next request params, etc>
+                // }
+            }
+        });
+* The deprecated parameters for `legacyRequest` & `legacyResponse` are no longer provided in the `request` event. Instead, the API now provides `cookies`
+
+        // v5.x
+        run.start({
+            request: function (err, cursor, response, request, item, legacyResponse, legacyRequest) {
+                // do something
+            }
+        });
+        
+        // v6.x
+        run.start({
+            request: function (err, cursor, response, request, item, cookies) {
+                // you now get Cookies as the last parameter!
+            }
+        });
+
 #### 5.0.0 (March 16, 2017)
 * CertificateManager is no longer supported, in favor of certificate list:
 

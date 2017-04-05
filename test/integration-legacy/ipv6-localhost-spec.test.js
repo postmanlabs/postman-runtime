@@ -199,7 +199,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
 
                             expect(response.code).to.be(200);
-                            expect(response.body).to.be('Hello World\n');
+                            expect(response.text()).to.be('Hello World\n');
                             expect(request).to.be.ok();
                         });
                     },
@@ -408,7 +408,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
 
                             expect(response.code).to.be(200);
-                            expect(response.body).to.be('Hello World\n');
+                            expect(response.text()).to.be('Hello World\n');
                             expect(request).to.be.ok();
                         });
                     },
