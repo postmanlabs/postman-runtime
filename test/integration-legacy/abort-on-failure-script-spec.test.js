@@ -202,7 +202,7 @@ describe('Option', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
 
                             var scriptResult = results[0];
-                            expect(scriptResult.result.masked.scriptType).to.eql('test');
+                            expect(scriptResult.result.target).to.eql('test');
                         });
                     },
                     beforeRequest: function (err, cursor, request, item) {

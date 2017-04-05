@@ -228,7 +228,7 @@ describe('Option', function () {
                             expect(result.error).to.be(undefined);
 
                             var scriptResult = results[0];
-                            expect(scriptResult.result.masked.scriptType).to.eql('test');
+                            expect(scriptResult.result.target).to.eql('test');
 
                             // Since pre-request throws an error in the second
                             // iteration, this should never be called for the

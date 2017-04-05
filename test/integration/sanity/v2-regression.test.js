@@ -60,16 +60,16 @@ describe('V2 regressions', function() {
         expect(testrun.test.calledThrice).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
+        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests')).to.eql({
             'Status code is 200': true,
             'foo1 cookie is present in the response body': true
         });
 
         expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(1).args[2], '0.result.globals.tests["Status code is 200"]')).to.be(true);
+        expect(_.get(testrun.test.getCall(1).args[2], '0.result.tests["Status code is 200"]')).to.be(true);
 
         expect(testrun.test.getCall(2).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(2).args[2], '0.result.globals.tests')).to.eql({
+        expect(_.get(testrun.test.getCall(2).args[2], '0.result.tests')).to.eql({
             'Status code is 200': true,
             'Disabled header is absent': true
         });

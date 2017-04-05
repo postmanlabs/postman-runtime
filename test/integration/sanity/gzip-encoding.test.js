@@ -22,7 +22,7 @@ describe('GZIP encoding', function() {
 
         var response = testrun.request.getCall(0).args[2];
         expect(response.code).to.eql(200);
-        expect(JSON.parse(response.body)).to.have.property('gzipped', true);
+        expect(response.json()).to.have.property('gzipped', true);
     });
 
     it('must have completed the run', function() {

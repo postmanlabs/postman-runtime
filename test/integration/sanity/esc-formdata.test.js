@@ -37,7 +37,7 @@ describe('escaped formdata', function() {
 
     it('must escaped the formdata correctly', function() {
         var response = testrun.request.getCall(0).args[2],
-            body = JSON.parse(response.body);
+            body = response.json();
 
         expect(body.form).to.have.property('hello', 'hello\\kworld');
     });

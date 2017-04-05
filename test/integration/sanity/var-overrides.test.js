@@ -92,7 +92,7 @@ describe('Variable overrides', function() {
         expect(testrun.test.calledTwice).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.globals.tests')).to.eql({
+        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests')).to.eql({
             'Content-Type is present': true,
             testGlobalSetFromPRScript: true,
             'Read global var correctly': true,
@@ -102,7 +102,7 @@ describe('Variable overrides', function() {
         });
 
         expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(1).args[2], '0.result.globals.tests')).to.eql({
+        expect(_.get(testrun.test.getCall(1).args[2], '0.result.tests')).to.eql({
             'Read global var correctly': true,
             'Read env var correctly': true,
             'Read data var correctly': true

@@ -46,9 +46,9 @@ describe('data variable replacement', function() {
         expect(testrun).be.ok();
 
         var firstResponse = testrun.request.getCall(0).args[2],
-            firstBody = JSON.parse(firstResponse.body),
+            firstBody = firstResponse.json(),
             secondResponse = testrun.request.getCall(1).args[2],
-            secondBody = JSON.parse(secondResponse.body);
+            secondBody = secondResponse.json();
 
         expect(firstBody.form).to.have.property('a', 'value1');
         expect(firstBody.form).to.have.property('b', '0');
