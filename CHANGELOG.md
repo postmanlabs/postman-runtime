@@ -1,6 +1,6 @@
 # Postman Runtime Changelog
 
-#### Unreleased (v6)
+#### 6.0.0 (April 05, 2017)
 * Updated `postman-collection` to v1.1.0, which contains a bugfix for handling multi-valued response headers
 * The structure of script run results has changed 
 
