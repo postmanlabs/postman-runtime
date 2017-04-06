@@ -8,10 +8,10 @@ describe('Script syntax error', function () {
                 item: [{
                     event: [{
                         listen: 'prerequest',
-                        script: { exec: ['console.log 1'] } // deliberate syntax error
+                        script: {exec: ['console.log 1']} // deliberate syntax error
                     }, {
                         listen: 'test',
-                        script: { exec: ['console.log 1'] } // deliberate syntax error
+                        script: {exec: ['console.log 1']} // deliberate syntax error
                     }],
                     request: {
                         url: 'https://postman-echo.com/get',
