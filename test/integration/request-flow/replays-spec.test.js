@@ -20,6 +20,10 @@ describe('replayed requests', function () {
             this.post = function (item, response, run, requester, done) {
                 done(null, false);
             };
+
+            this.sign = function (item, run, done) {
+                done(null);
+            };
         };
 
         Authorizer.add(FakeAuth, 'fake');
@@ -35,6 +39,9 @@ describe('replayed requests', function () {
                         }
                     }
                 }]
+            },
+            authorizer: {
+                interactive: true
             }
         }, function (err, results) {
             testrun = results;
