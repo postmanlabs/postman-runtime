@@ -26,8 +26,8 @@ describe('malformation', function () {
         expect(testrun).be.ok();
         var result = _.get(testrun.test.getCall(0).args[2], '0.result', {});
 
-        expect(_.get(result, 'globals.values')).to.eql([]);
-        expect(_.get(result, 'environment.values')).to.eql([]);
+        expect(_.invoke(result, 'globals.values.all')).to.eql([]);
+        expect(_.invoke(result, 'environment.values.all')).to.eql([]);
     });
 
     it('must have completed the run', function () {
