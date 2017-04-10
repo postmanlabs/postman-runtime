@@ -12,10 +12,10 @@ describe('script result format', function() {
                         // ensure that we run something for test and pre-req scripts
                         event: [{
                             listen: 'prerequest',
-                            script: { exec: ';' },
+                            script: {exec: ';'}
                         }, {
                             listen: 'test',
-                            script: { exec: 'tests.worked = true;' },
+                            script: {exec: 'tests.worked = true;'}
                         }],
                         request: 'https://postman-echo.com/get'
                     }
@@ -149,7 +149,7 @@ describe('script result format', function() {
                         // ensure that we run something for test and pre-req scripts
                         event: [{
                             listen: 'prerequest',
-                            script: { exec: 'postman.setNextRequest("some-req-name");' },
+                            script: {exec: 'postman.setNextRequest("some-req-name");'}
                         }],
                         request: 'https://postman-echo.com/get'
                     }
