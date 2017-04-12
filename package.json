@@ -30,7 +30,7 @@
     "http-reasons": "0.1.0",
     "lodash": "4.17.4",
     "lodash3": "3.10.1",
-    "postman-collection": "1.1.0",
+    "postman-collection": "1.1.1-beta.2",
     "postman-request": "2.80.1-postman.1",
     "postman-sandbox": "2.0.0",
     "resolve-from": "2.0.0",
