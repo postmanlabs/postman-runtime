@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 6.0.1 (April 10, 2017)
+* Fixed a bug that caused script run results to be sent as `POJO`s instead of `VariableScope` instances.
+
 #### 6.0.0 (April 05, 2017)
 * Updated `postman-collection` to v1.1.0, which contains a bugfix for handling multi-valued response headers
 * The structure of script run results has changed 
