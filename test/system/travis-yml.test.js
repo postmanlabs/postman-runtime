@@ -26,10 +26,15 @@ describe('travis.yml', function () {
         expect(travisYAMLError && travisYAMLError.message || travisYAMLError).to.not.be.ok();
     });
 
-    describe('strucure', function () {
+    describe('structure', function () {
         it('language must be set to node', function () {
             expect(travisYAML.language).to.be('node_js');
             expect(travisYAML.node_js).to.eql(['4', '6']);
+        });
+
+        it('must have a valid after_success hook', function () {
+            expect(travisYAML.after_success).to.be.an(Array);
+            expect(travisYAML.after_success[0]).to.be('eval "$(ssh-agent)"');
         });
 
         it.skip('node version must match rest of the tests', function () {
