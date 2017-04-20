@@ -1,3 +1,7 @@
+var _ = require('lodash'),
+    sdk = require('postman-collection');
+
+
 describe('replayed requests', function () {
     var testrun,
         Authorizer = require('../../../lib/authorizer').Authorizer;
@@ -8,25 +12,35 @@ describe('replayed requests', function () {
          *
          * @constructor
          */
-        var FakeAuth = function () {
-            this.init = function (item, run, requester, done) {
-                done(null);
+        var fakeHandler = {
+                init: function (item, run, requester, done) {
+                    done(null);
+                },
+
+                pre: function (item, run, requester, done) {
+                    done(null, true);
+                },
+
+                post: function (item, response, run, requester, done) {
+                    done(null, false);
+                },
+
+                sign: function (item, run, done) {
+                    done(null);
+                }
+            },
+            fakeSigner = {
+                update: function (params) {
+                    _.assign(this, params);
+                },
+
+                authorize: function (request) {
+                    return request;
+                }
             };
 
-            this.pre = function (item, run, requester, done) {
-                done(null, true);
-            };
-
-            this.post = function (item, response, run, requester, done) {
-                done(null, false);
-            };
-
-            this.sign = function (item, run, done) {
-                done(null);
-            };
-        };
-
-        Authorizer.add(FakeAuth, 'fake');
+        sdk.RequestAuth.addType(fakeSigner, 'fake');
+        Authorizer.addHandler(fakeHandler, 'fake');
 
         this.run({
             collection: {
