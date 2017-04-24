@@ -31,6 +31,7 @@ describe('digest auth', function () {
     it('must have completed the run', function () {
         expect(testrun).be.ok();
         expect(testrun.done.calledOnce).be.ok();
+        testrun.done.getCall(0).args[0] && console.log(testrun.done.getCall(0).args[0].stack);
         expect(testrun.done.getCall(0).args[0]).to.be(null);
         expect(testrun.start.calledOnce).be.ok();
     });
@@ -48,10 +49,10 @@ describe('digest auth', function () {
     it('must have sent two requests internally', function () {
         expect(testrun.http.calledTwice).be.ok();
 
-        var firstRequest = testrun.http.getCall(0).args[3],
-            firstResponse = testrun.http.getCall(0).args[2],
-            secondRequest = testrun.http.getCall(1).args[3],
-            secondResponse = testrun.http.getCall(1).args[2];
+        var firstRequest = testrun.http.getCall(0).args[4],
+            firstResponse = testrun.http.getCall(0).args[3],
+            secondRequest = testrun.http.getCall(1).args[4],
+            secondResponse = testrun.http.getCall(1).args[3];
 
         expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
         expect(firstResponse.code).to.eql(401);

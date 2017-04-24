@@ -13,20 +13,16 @@ describe('replayed requests', function () {
          * @constructor
          */
         var fakeHandler = {
-                init: function (item, run, requester, done) {
+                init: function (item, run, cursor, done) {
                     done(null);
                 },
 
-                pre: function (item, run, requester, done) {
+                pre: function (item, run, cursor, done) {
                     done(null, true);
                 },
 
-                post: function (item, response, run, requester, done) {
+                post: function (item, response, run, cursor, done) {
                     done(null, false);
-                },
-
-                sign: function (item, run, done) {
-                    done(null);
                 }
             },
             fakeSigner = {
@@ -83,10 +79,10 @@ describe('replayed requests', function () {
     it('must have sent two requests internally', function () {
         expect(testrun.http.calledTwice).be.ok();
 
-        var firstRequest = testrun.http.getCall(0).args[3],
-            firstResponse = testrun.http.getCall(0).args[2],
-            secondRequest = testrun.http.getCall(1).args[3],
-            secondResponse = testrun.http.getCall(1).args[2];
+        var firstRequest = testrun.http.getCall(0).args[4],
+            firstResponse = testrun.http.getCall(0).args[3],
+            secondRequest = testrun.http.getCall(1).args[4],
+            secondResponse = testrun.http.getCall(1).args[3];
 
         expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/get');
         expect(firstResponse.code).to.eql(200);
