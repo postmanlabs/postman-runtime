@@ -77,12 +77,12 @@ describe('replayed requests', function () {
     });
 
     it('must have sent two requests internally', function () {
-        expect(testrun.http.calledTwice).be.ok();
+        expect(testrun.io.calledTwice).be.ok();
 
-        var firstRequest = testrun.http.getCall(0).args[4],
-            firstResponse = testrun.http.getCall(0).args[3],
-            secondRequest = testrun.http.getCall(1).args[4],
-            secondResponse = testrun.http.getCall(1).args[3];
+        var firstRequest = testrun.io.getCall(0).args[4],
+            firstResponse = testrun.io.getCall(0).args[3],
+            secondRequest = testrun.io.getCall(1).args[4],
+            secondResponse = testrun.io.getCall(1).args[3];
 
         expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/get');
         expect(firstResponse.code).to.eql(200);
