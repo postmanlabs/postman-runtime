@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 6.1.0 (April 25, 2017)
+* Initial version of `pm` API in the sandbox
+
 #### 6.0.1 (April 10, 2017)
 * Fixed a bug that caused script run results to be sent as `POJO`s instead of `VariableScope` instances.
 
