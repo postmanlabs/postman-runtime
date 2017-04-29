@@ -26,7 +26,7 @@
   "author": "Postman Labs <help@getpostman.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "async": "2.1.5",
+    "async": "2.4.0",
     "http-reasons": "0.1.0",
     "lodash": "4.17.4",
     "lodash3": "3.10.1",
