@@ -23,8 +23,8 @@ describe('certificates', function () {
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: ['https://localhost:' + port + '/*'],
-                    key: { src: clientKeyPath },
-                    cert: { src: clientCertPath }
+                    key: {src: clientKeyPath},
+                    cert: {src: clientCertPath}
                 }]);
 
             server = https.createServer({
@@ -36,11 +36,11 @@ describe('certificates', function () {
 
             server.on('request', function (req, res) {
                 if (req.client.authorized) {
-                    res.writeHead(200, { 'Content-Type': 'text/plain' });
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
                     res.end('authorized\n');
                 }
                 else {
-                    res.writeHead(401, { 'Content-Type': 'text/plain' });
+                    res.writeHead(401, {'Content-Type': 'text/plain'});
                     res.end('unauthorized\n');
                 }
             });
@@ -87,7 +87,7 @@ describe('certificates', function () {
         });
     });
 
-    describe.skip('invalid', function () {
+    describe('invalid', function () {
         before(function (done) {
             var port = 9090,
                 certDataPath = path.join(__dirname, '..', '..', 'integration-legacy', 'data'),
@@ -101,8 +101,8 @@ describe('certificates', function () {
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: ['https://localhost:' + port + '/*'],
-                    key: { src: clientKeyPath },
-                    cert: { src: clientCertPath }
+                    key: {src: clientKeyPath},
+                    cert: {src: clientCertPath}
                 }]);
 
             server = https.createServer({
@@ -114,11 +114,11 @@ describe('certificates', function () {
 
             server.on('request', function (req, res) {
                 if (req.client.authorized) {
-                    res.writeHead(200, { 'Content-Type': 'text/plain' });
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
                     res.end('authorized\n');
                 }
                 else {
-                    res.writeHead(401, { 'Content-Type': 'text/plain' });
+                    res.writeHead(401, {'Content-Type': 'text/plain'});
                     res.end('unauthorized\n');
                 }
             });
@@ -148,16 +148,13 @@ describe('certificates', function () {
             expect(testrun.start.calledOnce).be.ok();
         });
 
-        it('must not throw an error', function () {
-            var response = testrun.request.getCall(0).args[2];
+        it('must throw an error', function () {
+            expect(testrun.request.calledOnce).be.ok();
 
-            expect(response.text()).to.eql('authorized\n');
-        });
+            var err = testrun.request.firstCall.args[0];
 
-        it('must have certificate attached to request', function () {
-            var request = testrun.request.getCall(0).args[3].toJSON();
-
-            expect(request.certificate.id).to.eql(certificateId);
+            expect(err).be.ok();
+            expect(err).to.have.property('code', 'ENOENT');
         });
 
         after(function () {
