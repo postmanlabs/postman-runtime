@@ -148,13 +148,24 @@ describe('certificates', function () {
             expect(testrun.start.calledOnce).be.ok();
         });
 
-        it('must throw an error', function () {
+        it('must not throw an error', function () {
             expect(testrun.request.calledOnce).be.ok();
 
-            var err = testrun.request.firstCall.args[0];
+            var err = testrun.request.firstCall.args[0],
+                request = testrun.request.firstCall.args[3];
 
-            expect(err).be.ok();
-            expect(err).to.have.property('code', 'ENOENT');
+            expect(err).to.not.be.ok();
+            expect(request).to.not.have.property('certificate');
+        });
+
+        it('must trigger a console warning', function () {
+            expect(testrun.console.calledOnce).to.be.ok();
+
+            var call = testrun.console.firstCall.args;
+
+            expect(call[0]).to.have.property('ref');
+            expect(call[1]).to.eql('warn');
+            expect(call[2]).to.match(/^certificate load error:/);
         });
 
         after(function () {
