@@ -45,9 +45,9 @@ describe('GET request bodies', function () {
         });
 
         it('must send the request', function () {
-            var request = testrun.beforeRequest.getCall(0).args[2];
-
             expect(testrun.beforeRequest.calledOnce).be.ok(); // one request
+
+            var request = testrun.beforeRequest.getCall(0).args[2];
             expect(request).be.ok();
             expect(request.url.toString()).eql(url);
             expect(request.method).be('GET');
