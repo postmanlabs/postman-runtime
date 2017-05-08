@@ -2711,8 +2711,7 @@ describe('Requester', function () {
                                 "url": {
                                     "raw": "https://postman-echo.com/status/:code",
                                     "host": [
-                                        "echo",
-                                        "getpostman",
+                                        "postman-echo",
                                         "com"
                                     ],
                                     "path": [
