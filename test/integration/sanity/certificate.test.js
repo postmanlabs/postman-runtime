@@ -155,7 +155,7 @@ describe('certificates', function () {
                 request = testrun.request.firstCall.args[3];
 
             expect(err).to.not.be.ok();
-            expect(request).to.not.have.property('certificate')
+            expect(request).to.not.have.property('certificate');
         });
 
         it('must trigger a console warning', function () {
@@ -165,7 +165,7 @@ describe('certificates', function () {
 
             expect(call[0]).to.have.property('ref');
             expect(call[1]).to.eql('warn');
-            expect(call[2]).to.match(/^certificate load error:/)
+            expect(call[2]).to.match(/^certificate load error:/);
         });
 
         after(function () {
