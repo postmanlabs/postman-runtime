@@ -32,7 +32,7 @@
     "lodash3": "3.10.1",
     "postman-collection": "1.2.3",
     "postman-request": "2.80.1-postman.1",
-    "postman-sandbox": "2.1.1",
+    "postman-sandbox": "2.1.2",
     "resolve-from": "2.0.0",
     "serialised-error": "1.1.2",
     "uuid": "3.0.1"
