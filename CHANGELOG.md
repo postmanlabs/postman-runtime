@@ -1,5 +1,11 @@
 # Postman Runtime Changelog
 
+#### 6.1.3 (May 09, 2017)
+* Updated `postman-collection` to v1.2.4, which contains a bugfix for response size calculation
+
+#### 6.1.2 (May 08, 2017)
+* Ensure that we do not stop the request from being sent if there are errors loading certificates or proxies
+
 #### 6.1.1 (May 08, 2017)
 * Fixed the behavior for `beforeRequest` and `request` triggers
 * Updated `postman-collection` to v1.2.3, which contains bugfixes for OAuth1, and addition of some helper methods
