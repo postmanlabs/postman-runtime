@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 6.1.3 (May 09, 2017)
+* Updated `postman-collection` to v1.2.4, which contains a bugfix for response size calculation
+
 #### 6.1.2 (May 08, 2017)
 * Ensure that we do not stop the request from being sent if there are errors loading certificates or proxies
 
