@@ -28,6 +28,7 @@
   "dependencies": {
     "async": "2.4.0",
     "http-reasons": "0.1.0",
+    "httpntlm": "1.7.5",
     "lodash": "4.17.4",
     "lodash3": "3.10.1",
     "postman-collection": "1.2.3",
