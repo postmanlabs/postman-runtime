@@ -12,7 +12,8 @@ describe('replayed requests', function () {
          *
          * @constructor
          */
-        var fakeHandler = {
+        var replayCount = 0,
+            fakeHandler = {
                 init: function (item, run, cursor, done) {
                     done(null);
                 },
@@ -22,7 +23,8 @@ describe('replayed requests', function () {
                 },
 
                 post: function (item, response, run, cursor, done) {
-                    done(null, false);
+                    replayCount++;
+                    done(null, replayCount === 2);
                 }
             },
             fakeSigner = {
