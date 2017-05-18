@@ -1,5 +1,14 @@
 # Postman Runtime Changelog
 
+#### 6.1.6 (May 16, 2017)
+* Updated `postman-sandbox` to `v2.1.5`.
+
+#### 6.1.5 (May 15, 2017)
+* Updated `postman-sandbox` to `v2.1.4`, which uses `postman-collection@1.2.5`
+
+#### 6.1.4 (May 12, 2017)
+* Updated `postman-sandbox` to v2.1.3 and `postman-collection` to v1.2.5, which introduce `pm.variables` in the scripts
+
 #### 6.1.3 (May 09, 2017)
 * Updated `postman-collection` to v1.2.4, which contains a bugfix for response size calculation
 
