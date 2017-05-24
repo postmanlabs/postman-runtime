@@ -32,7 +32,15 @@ describe('io event', function () {
 
             expect(testrun.io.firstCall.args[0]).to.not.be.ok();
             expect(testrun.io.firstCall.args[1]).to.be.ok();
-            expect(testrun.io.firstCall.args[2]).to.be('http');
+
+            var trace = testrun.io.firstCall.args[2];
+            expect(trace).to.eql({
+                history: [],
+                current: {
+                    type: 'http',
+                    source: 'runtime'
+                }
+            });
         });
 
         it('should have the correct request & response', function () {
