@@ -110,7 +110,6 @@ You can pass a series of callbacks for runtime to execute as a collection is bei
 runner.run(collection, { /* options */ }, function(err, run) {
     run.start({
         // Called any time we see a new assertion in the test scripts
-        // *note* Not used yet.
         assertion: function (name, result) {
             // name: string
             // result: Boolean
@@ -242,7 +241,19 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
         
         // Called any time a console.* function is called in test/pre-request scripts
-        console: function (cursor, level, ...logs) {}
+        console: function (cursor, level, ...logs) {},
+        
+        // Called when runtime performs any kind of IO operation.
+        io: function(err, cursor, type, ...args) {
+            // err, cursor: Same as arguments for "start"
+            
+            // type: String (currently implemented type is 'http', in the future, we will have separate IO events for
+            //               other types, such as TCP connections, file reading, input from user, etc.
+            // args: Variadic number of arguments, depending on the "type".
+            
+            // for type === 'http':
+            // ...args = response, request.
+        }
     });
 });
 ```
