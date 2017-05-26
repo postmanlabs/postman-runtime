@@ -26,12 +26,12 @@
   "author": "Postman Labs <help@getpostman.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "async": "2.4.0",
+    "async": "2.4.1",
     "http-reasons": "0.1.0",
     "lodash": "4.17.4",
     "lodash3": "3.10.1",
     "postman-collection": "1.2.5",
-    "postman-request": "2.80.1-postman.1",
+    "postman-request": "2.81.1-postman.1",
     "postman-sandbox": "2.1.5",
     "resolve-from": "2.0.0",
     "serialised-error": "1.1.2",
@@ -57,7 +57,7 @@
     "postman-jsdoc-theme": "0.0.2",
     "recursive-readdir": "2.2.1",
     "shelljs": "0.7.7",
-    "sinon": "2.2.0",
+    "sinon": "2.3.0",
     "tmp": "0.0.31"
   },
   "browser": {
