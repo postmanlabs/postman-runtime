@@ -27,6 +27,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "async": "2.4.1",
+    "eventemitter3": "2.0.3",
     "http-reasons": "0.1.0",
     "lodash": "4.17.4",
     "lodash3": "3.10.1",
