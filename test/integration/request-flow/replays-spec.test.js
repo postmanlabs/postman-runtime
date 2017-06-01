@@ -13,15 +13,15 @@ describe('replayed requests', function () {
          * @constructor
          */
         var fakeHandler = {
-                init: function (item, run, cursor, done) {
+                init: function (context, requester, done) {
                     done(null);
                 },
 
-                pre: function (item, run, cursor, done) {
+                pre: function (context, requester, done) {
                     done(null, true);
                 },
 
-                post: function (item, response, run, cursor, done) {
+                post: function (context, requester, done) {
                     done(null, false);
                 }
             },
