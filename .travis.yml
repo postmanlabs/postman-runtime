@@ -3,6 +3,7 @@ node_js:
 - '4'
 - '6'
 before_install:
+- echo "$TRAVIS_TAG" "$TRAVIS_PULL_REQUEST";
 - |
   if [ "$TRAVIS_TAG" != "" ] && [ "$TRAVIS_PULL_REQUEST" == false ]; then
     openssl aes-256-cbc -K $encrypted_6db7ca31bc82_key -iv $encrypted_6db7ca31bc82_iv -in ./.ci/deploy_key.enc -out ./.ci/deploy_key -d
