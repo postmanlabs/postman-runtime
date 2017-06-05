@@ -2,9 +2,6 @@ language: node_js
 node_js:
 - '4'
 - '6'
-notifications:
-  slack:
-    secure: nMXOLd5fdCNr7FClo3xaxfIPmK1l/iGe1Flc45bJfaUscv5VI0tXbGQg5AH0PnsV9zmxDdek2wG4tNY0g+blvo8Tj01pNkUVZlzGbovuIIKABR79/EIcCtnUYUsNaLakkNTJ1Rc4Xqx3t8YmbOCwKgrdBpUdlFrg3FTXa1SOtiVDhotWddIgdSIi6UuS7+R9vSIZUywjXiiXAsrYX0bdihYUEjA/O2IEidfv/PgVvvc0YGtJyMsWX36xDzIzfbti+oLd9Aw8+FHWyhvTdXJ/VzZoZa+iWfnexMagopIqr81SmM8CkJEhNulHt9feNYCV+S+kVnF74qlNuLUO1Yg2DcJtlmqDN1fKdc+l/4VdvkwhRvsW2564Le/tlLNMlHTBHIt4l/WeGl4QriAd/L1rAVh0omZl4848ptFsyl6kvN/19tjKKqqR/jGifo6OCo/O7JrcoGuM2kV141znan93+QxTz7ZTRMEndgqvpaPyP3GVCQkpoRlutNgYdkdmMSettvB65LEygbpVUWNxoKlvNBuiXynt5t8ieZr3Y/8nt8sm7+1qFfnmbBM1OvV2lZskOtIos+4434PL8oUN1HscLUYxiKEfzcusxPrgzve+Bfn22jRJlsyRQp024V0pmuAfiECodqBcEnYxgKmIrHTO6cfH2XBJMwntnZY9sk/EKnk=
 before_install:
 - |
   if [ "$TRAVIS_TAG" != "" ] && [ "$TRAVIS_PULL_REQUEST" == false ]; then
