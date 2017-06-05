@@ -1,4 +1,4 @@
-Omg.Postman Runtime has a queue-command based architecture, which allows a lot of flexibility
+Postman Runtime has a queue-command based architecture, which allows a lot of flexibility
 when adding new behavior. Each concept below is explained in detail in its own module documentation.
 
 ### Commands
