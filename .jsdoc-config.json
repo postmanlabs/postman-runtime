@@ -16,7 +16,13 @@
   "templates": {
     "cleverLinks": false,
     "monospaceLinks": false,
-    "highlightTutorialCode" : true
+    "highlightTutorialCode" : true,
+
+    "default": {
+      "staticFiles": {
+        "include": ["./docs/img"]
+      }
+    }
   },
 
   "opts": {

@@ -4,5 +4,8 @@
   },
   "components": {
     "title": "Postman Runtime Components"
+  },
+  "request-send-flow": {
+    "title": "Request Send Flow"
   }
 }
