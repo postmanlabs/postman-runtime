@@ -51,10 +51,10 @@ describe('digest auth', function () {
 
         var firstError = testrun.io.firstCall.args[0],
             secondError = testrun.io.secondCall.args[0],
-            firstRequest = testrun.io.firstCall.args[3],
-            firstResponse = testrun.io.firstCall.args[2],
-            secondRequest = testrun.io.secondCall.args[3],
-            secondResponse = testrun.io.secondCall.args[2];
+            firstRequest = testrun.io.firstCall.args[4],
+            firstResponse = testrun.io.firstCall.args[3],
+            secondRequest = testrun.io.secondCall.args[4],
+            secondResponse = testrun.io.secondCall.args[3];
 
         expect(firstError).to.be(null);
         expect(secondError).to.be(null);

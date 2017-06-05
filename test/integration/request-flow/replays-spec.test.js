@@ -12,7 +12,8 @@ describe('replayed requests', function () {
          *
          * @constructor
          */
-        var fakeHandler = {
+        var replayCount = 0,
+            fakeHandler = {
                 init: function (context, requester, done) {
                     done(null);
                 },
@@ -22,7 +23,8 @@ describe('replayed requests', function () {
                 },
 
                 post: function (context, requester, done) {
-                    done(null, false);
+                    replayCount++;
+                    done(null, replayCount === 2);
                 }
             },
             fakeSigner = {
@@ -79,10 +81,10 @@ describe('replayed requests', function () {
     it('must have sent two requests internally', function () {
         expect(testrun.io.calledTwice).be.ok();
 
-        var firstRequest = testrun.io.getCall(0).args[3],
-            firstResponse = testrun.io.getCall(0).args[2],
-            secondRequest = testrun.io.getCall(1).args[3],
-            secondResponse = testrun.io.getCall(1).args[2];
+        var firstRequest = testrun.io.getCall(0).args[4],
+            firstResponse = testrun.io.getCall(0).args[3],
+            secondRequest = testrun.io.getCall(1).args[4],
+            secondResponse = testrun.io.getCall(1).args[3];
 
         expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/get');
         expect(firstResponse.code).to.eql(200);
