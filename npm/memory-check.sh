@@ -63,7 +63,7 @@ function setup_version {
 			},
 			done: function (err) {
 				if (err) { console.error(err.stack || err); process.exit(1); }
-				console.error('done');
+				console.error('\ndone\n');
 			}
 		});
 	});
@@ -112,6 +112,14 @@ function plot_results {
 
 	if [ $(which gnuplot) ]; then
 		gnuplot ${TEST_DIR}/plot.gplot;
+		echo "";
+		echo "Output PNG created at: " ${TEST_DIR}/output.png;
+		echo "";
+		if [ $(which eog) ]; then
+		    eog ${TEST_DIR}/output.png;
+        elif [ "$(uname)" == "Darwin" ]; then
+            open ${TEST_DIR}/output.png;
+        fi
 	else
 		echo "gnuplot is not installed. no graphs can be plotted :(";
 		if [ "$(uname)" == "Darwin" ]; then
