@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set -e;
-set -x;
 
 _TRUE_="true";
 _FALSE_="false";
@@ -97,6 +96,8 @@ function plot_results {
 	set datafile separator ","
 	set terminal png size 1366,768 enhanced font "Helvetica,20"
 	set output '${TEST_DIR}/output.png'
+	set ylabel "Memory Usage (MB)"
+    set xlabel "# of Requests sent"
 	set key outside
 
 	f(x) = p*x + q
