@@ -18,18 +18,18 @@ function __debug {
 }
 
 function setup_version {
-    local VERSION=$1;
-    local VERSION_DIR=$2/${VERSION};
-    local ORIG_DIR=$3;
-    local NUM_ITERATIONS=$4;
-    local TEST_SCRIPT="memtest.js";
+	local VERSION=$1;
+	local VERSION_DIR=$2/${VERSION};
+	local ORIG_DIR=$3;
+	local NUM_ITERATIONS=$4;
+	local TEST_SCRIPT="memtest.js";
 
-    # Enter the version directory
-    cd ${VERSION_DIR};
+	# Enter the version directory
+	cd ${VERSION_DIR};
 
-    git checkout ${VERSION};
+	git checkout ${VERSION};
 
-    # Create the test script
+	# Create the test script
 	cat > ${VERSION_DIR}/${TEST_SCRIPT} <<-EOF
 	var sdk = require('postman-collection'),
 		runtime = require('./index.js'),
@@ -55,10 +55,11 @@ function setup_version {
 
 		run.start({
 			item: function (err, cursor) {
-				console.log((cursor.iteration * cursor.length + cursor.position) + ',' + process.memoryUsage().heapUsed / 10000);
+				console.log((cursor.iteration * cursor.length + cursor.position) + ',' + process.memoryUsage().heapUsed / 1048576); // mb
 			},
 			iteration: function (err, cursor) {
-                console.error('[${VERSION}] - completed iteration ' + cursor.iteration + ' of ' + cursor.cycles + '\r');
+				process.stderr.clearLine();
+				process.stderr.write('[${VERSION}] - completed iteration ' + cursor.iteration + ' of ' + cursor.cycles + '\r');
 			},
 			done: function (err) {
 				if (err) { console.error(err.stack || err); process.exit(1); }
@@ -68,50 +69,68 @@ function setup_version {
 	});
 	EOF
 
-    # Do an npm install.
-    npm install;
+	# Do an npm install.
+	npm install;
 
-    # Setup is complete, go back to the original directory.
-    cd ${ORIG_DIR};
+	# Setup is complete, go back to the original directory.
+	cd ${ORIG_DIR};
 }
 
 function record_results {
-    local VERSION=$1;
-    local TEST_DIR=$2;
-    local TEST_SCRIPT="memtest.js";
+	local VERSION=$1;
+	local TEST_DIR=$2;
+	local TEST_SCRIPT="memtest.js";
 
-    # errors are printed on stderr, so this is okay, and will always create a csv file.
-    node ${TEST_DIR}/${VERSION}/${TEST_SCRIPT} > ${TEST_DIR}/${VERSION}.csv;
+	# errors are printed on stderr, so this is okay, and will always create a csv file.
+	node ${TEST_DIR}/${VERSION}/${TEST_SCRIPT} > ${TEST_DIR}/${VERSION}.csv;
 }
 
 function plot_results {
-    local TEST_DIR=$1;
-    local CONTROL_VERSION=$2;
-    local TEST_VERSION=$3;
-    local CONTROL_RES_CSV=${TEST_DIR}/${CONTROL_VERSION}.csv;
-    local TEST_RES_CSV=${TEST_DIR}/${TEST_VERSION}.csv;
+	local TEST_DIR=$1;
+	local CONTROL_VERSION=$2;
+	local TEST_VERSION=$3;
+	local CONTROL_RES_CSV=${TEST_DIR}/${CONTROL_VERSION}.csv;
+	local TEST_RES_CSV=${TEST_DIR}/${TEST_VERSION}.csv;
 
-    # Create the plot script
+	# Create the plot script
 	cat > ${TEST_DIR}/plot.gplot <<-EOF
 	set datafile separator ","
-    set terminal png size 1366,768 enhanced font "Helvetica,20"
-    set output '${TEST_DIR}/output.png'
-    set key outside
+	set terminal png size 1366,768 enhanced font "Helvetica,20"
+	set output '${TEST_DIR}/output.png'
+	set key outside
 
-    f(x) = p*x + q
-    fit f(x) '${CONTROL_RES_CSV}' via p,q
+	f(x) = p*x + q
+	fit f(x) '${CONTROL_RES_CSV}' via p,q
 
-    h(x) = t*x + u
-    fit h(x) '${TEST_RES_CSV}' via t,u
+	h(x) = t*x + u
+	fit h(x) '${TEST_RES_CSV}' via t,u
 
 
-    plot '${CONTROL_RES_CSV}' with lines title "${CONTROL_VERSION}" lw 2, f(x) title "Avg - ${CONTROL_VERSION}" lw 4, \
-         '${TEST_RES_CSV}' with lines title "${TEST_VERSION}" lw 2, h(x) title "Avg - ${TEST_VERSION}" lw 4
+	plot '${CONTROL_RES_CSV}' with lines title "${CONTROL_VERSION}" lw 2, f(x) title "Avg - ${CONTROL_VERSION}" lw 4, \
+		 '${TEST_RES_CSV}' with lines title "${TEST_VERSION}" lw 2, h(x) title "Avg - ${TEST_VERSION}" lw 4
 	EOF
 
-	gnuplot ${TEST_DIR}/plot.gplot;
+	if [ $(which gnuplot) ]; then
+		gnuplot ${TEST_DIR}/plot.gplot;
+	else
+		echo "gnuplot is not installed. no graphs can be plotted :(";
+		if [ "$(uname)" == "Darwin" ]; then
+			echo "Install gnuplot using Homebrew:";
+			echo "    brew install gnuplot";
+		elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+			echo "Install gnuplot using your package manager. On Ubuntu:";
+			echo "    sudo apt-get install gnuplot";
+		else
+			echo "You are not on an Operating System we know of, install gnuplot yourself.";
+		fi
 
-	eog ${TEST_DIR}/output.png;
+		echo "After installing, run:";
+		echo "";
+		echo "    gnuplot ${TEST_DIR}/plot.gplot;";
+		echo "";
+		echo "The output will be available at ${TEST_DIR}/output.png";
+		echo "";
+	fi
 }
 
 function main {
@@ -138,14 +157,14 @@ function main {
 	git clone ${SOURCE_REPO} ${TEMP_DIRECTORY}/${CONTROL_VERSION};
 	git clone ${SOURCE_REPO} ${TEMP_DIRECTORY}/${TEST_VERSION};
 
-    # Clone, create a test file, etc in the temporary directory.
+	# Clone, create a test file, etc in the temporary directory.
 	setup_version ${CONTROL_VERSION} ${TEMP_DIRECTORY} ${SOURCE_REPO} ${N_ITERATIONS};
-    setup_version ${TEST_VERSION} ${TEMP_DIRECTORY} ${SOURCE_REPO} ${N_ITERATIONS};
+	setup_version ${TEST_VERSION} ${TEMP_DIRECTORY} ${SOURCE_REPO} ${N_ITERATIONS};
 
-    record_results ${CONTROL_VERSION} ${TEMP_DIRECTORY};
-    record_results ${TEST_VERSION} ${TEMP_DIRECTORY};
+	record_results ${CONTROL_VERSION} ${TEMP_DIRECTORY};
+	record_results ${TEST_VERSION} ${TEMP_DIRECTORY};
 
-    plot_results ${TEMP_DIRECTORY} ${CONTROL_VERSION} ${TEST_VERSION};
+	plot_results ${TEMP_DIRECTORY} ${CONTROL_VERSION} ${TEST_VERSION};
 }
 
 main $@;
