@@ -62,7 +62,7 @@ function setup_version {
 			},
 			done: function (err) {
 				if (err) { console.error(err.stack || err); process.exit(1); }
-				console.error('\ndone');
+				console.error('\ndone.');
 			}
 		});
 	});
@@ -93,6 +93,7 @@ function plot_results {
 
 	# Create the plot script
 	cat > ${TEST_DIR}/plot.gplot <<-EOF
+	set fit logfile '/dev/null'
 	set datafile separator ","
 	set terminal png size 1366,768 enhanced font "Helvetica,20"
 	set output '${TEST_DIR}/output.png'
