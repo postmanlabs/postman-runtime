@@ -26,7 +26,7 @@ function setup_version {
 	# Enter the version directory
 	cd ${VERSION_DIR};
 
-	git checkout ${VERSION};
+	git checkout ${VERSION} &> /dev/null;
 
 	# Create the test script
 	cat > ${VERSION_DIR}/${TEST_SCRIPT} <<-EOF
@@ -62,14 +62,14 @@ function setup_version {
 			},
 			done: function (err) {
 				if (err) { console.error(err.stack || err); process.exit(1); }
-				console.error('\ndone\n');
+				console.error('\ndone');
 			}
 		});
 	});
 	EOF
 
-	# Do an npm install.
-	npm install;
+	# Do an npm install. Suppress all output, especially those huge trees. There is no CLI flag to turn that off :/
+	npm install --silent &> /dev/null;
 
 	# Setup is complete, go back to the original directory.
 	cd ${ORIG_DIR};
