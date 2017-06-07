@@ -16,6 +16,7 @@
     "test-integration-newman": "node npm/test-integration-newman.js",
     "build-docs": "node npm/build-docs.js",
     "build-wiki": "node npm/build-wiki.js",
+    "memory-check": "npm/memory-check.sh",
     "publish-docs": "node npm/build-docs.js",
     "publish-wiki": "node npm/build-wiki.js"
   },
