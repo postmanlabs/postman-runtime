@@ -5,17 +5,48 @@ set -e;
 _TRUE_="true";
 _FALSE_="false";
 
+# Outputs usage instructions
 function usage {
 	echo "Usage:"
 	echo "    ${0}" "<control-version> <test-version>"
 }
 
+# A function to aid debugging of this script.
 function __debug {
 	if [[ ${RUNTIME_DEBUG} == "true" ]]; then
 		echo $@;
 	fi
 }
 
+# if the user does not have gnuplot installed, outputs instructions to install it.
+function gnuplot_instructions {
+    local TEST_DIR=$1;
+    local TEST_RES_CSV=$2;
+    local CONTROL_RES_CSV=$3;
+
+    echo "gnuplot is not installed. no graphs can be plotted :(";
+    if [ "$(uname)" == "Darwin" ]; then
+        echo "Install gnuplot using Homebrew:";
+        echo "    brew install gnuplot";
+    elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+        echo "Install gnuplot using your package manager. On Ubuntu:";
+        echo "    sudo apt-get install gnuplot";
+    else
+        echo "You are not on an Operating System we know of, install gnuplot yourself.";
+    fi
+
+    echo "After installing, run:";
+    echo "";
+    echo "    gnuplot ${TEST_DIR}/plot.gplot;";
+    echo "";
+    echo "The output will be available at ${TEST_DIR}/output.png";
+    echo "";
+    echo "You can also choose to skip gnuplot completely, and plot the results";
+    echo "in your favorite spreadsheet editor.";
+    echo "The results are available in ${TEST_RES_CSV} & ${CONTROL_RES_CSV}";
+}
+
+# Checks out the appropriate tag, creates a test script to periodically output memory usage.
 function setup_version {
 	local VERSION=$1;
 	local VERSION_DIR=$2/${VERSION};
@@ -75,6 +106,7 @@ function setup_version {
 	cd ${ORIG_DIR};
 }
 
+# Runs the test script, and stores the results in a CSV file.
 function record_results {
 	local VERSION=$1;
 	local TEST_DIR=$2;
@@ -84,6 +116,7 @@ function record_results {
 	node ${TEST_DIR}/${VERSION}/${TEST_SCRIPT} > ${TEST_DIR}/${VERSION}.csv;
 }
 
+# uses gnuplot to plot the results from the CSV file to a PNG.
 function plot_results {
 	local TEST_DIR=$1;
 	local CONTROL_VERSION=$2;
@@ -123,23 +156,7 @@ function plot_results {
             open ${TEST_DIR}/output.png;
         fi
 	else
-		echo "gnuplot is not installed. no graphs can be plotted :(";
-		if [ "$(uname)" == "Darwin" ]; then
-			echo "Install gnuplot using Homebrew:";
-			echo "    brew install gnuplot";
-		elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-			echo "Install gnuplot using your package manager. On Ubuntu:";
-			echo "    sudo apt-get install gnuplot";
-		else
-			echo "You are not on an Operating System we know of, install gnuplot yourself.";
-		fi
-
-		echo "After installing, run:";
-		echo "";
-		echo "    gnuplot ${TEST_DIR}/plot.gplot;";
-		echo "";
-		echo "The output will be available at ${TEST_DIR}/output.png";
-		echo "";
+	    gnuplot_instructions TEST_DIR TEST_RES_CSV CONTROL_RES_CSV;
 	fi
 }
 
