@@ -30,6 +30,7 @@
     "eventemitter3": "2.0.3",
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.5",
+    "inherits": "2.0.3",
     "lodash": "4.17.4",
     "lodash3": "3.10.1",
     "postman-collection": "1.2.8",
