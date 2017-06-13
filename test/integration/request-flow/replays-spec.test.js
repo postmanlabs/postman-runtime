@@ -14,8 +14,6 @@ describe('replayed requests', function () {
          */
         var replayCount = 0,
             fakeHandler = {
-                interactive: true,
-
                 init: function (context, requester, done) {
                     done(null);
                 },
@@ -27,6 +25,10 @@ describe('replayed requests', function () {
                 post: function (context, requester, done) {
                     replayCount++;
                     done(null, replayCount === 2);
+                },
+
+                _sign: function (request) {
+                    return request;
                 }
             },
             fakeSigner = {
@@ -53,7 +55,8 @@ describe('replayed requests', function () {
                         }
                     }
                 }]
-            }
+            },
+            authorizer: {interactive: true}
         }, function (err, results) {
             testrun = results;
             done(err);

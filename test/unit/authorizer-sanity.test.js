@@ -31,12 +31,32 @@ describe('authorizer sanity', function () {
         });
     });
 
-    it('should optionally accept options', function (done) {
+    it('should accept interactivity options as a boolean', function (done) {
         // eslint-disable-next-line no-new
         new Authorizer({interactive: true}, function (err, authorizer) {
             if (err) { return done(err); }
 
             expect(authorizer).to.be.an(Authorizer);
+
+            _.each(Authorizer.Handlers, function (handler, name) {
+                expect(authorizer.interactive).to.have.property(name, true);
+            });
+            done();
+        });
+    });
+
+    it('should accept interactivity options as an object', function (done) {
+        var interactivity = {ntlm: true};
+
+        // eslint-disable-next-line no-new
+        new Authorizer({
+            interactive: interactivity
+        }, function (err, authorizer) {
+            if (err) { return done(err); }
+
+            expect(authorizer).to.be.an(Authorizer);
+
+            expect(authorizer.interactive).to.eql(interactivity);
             done();
         });
     });
@@ -53,6 +73,10 @@ describe('authorizer sanity', function () {
 
                 post: function (context, requester, done) {
                     done(null, true);
+                },
+
+                _sign: function (request) {
+                    return request;
                 }
             },
             fakeSigner = {
@@ -122,7 +146,10 @@ describe('authorizer sanity', function () {
                     post: function (context, requester, done) {
                         done(null, true);
                     },
-                    interactive: true
+
+                    _sign: function (request) {
+                        return request;
+                    }
                 },
                 fakeSigner = {
                     update: function (params) {
@@ -136,7 +163,7 @@ describe('authorizer sanity', function () {
             sdk.RequestAuth.addType(fakeSigner, 'fake');
             Authorizer.addHandler(fakeHandler, 'fake');
 
-            Authorizer.create(function (err, a) {
+            Authorizer.create({interactive: true}, function (err, a) {
                 if (err) { return done(err); }
 
                 authorizer = a;
