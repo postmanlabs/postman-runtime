@@ -1,4 +1,4 @@
-/* global describe, it, before, beforeEach, afterEach */
+/* global describe, it, beforeEach, afterEach */
 
 var _ = require('lodash'),
     expect = require('expect.js'),
@@ -13,6 +13,7 @@ describe('authorizer sanity', function () {
     });
 
     it('should be an asynchronous constructor', function (done) {
+        // eslint-disable-next-line no-new
         new Authorizer(function (err, authorizer) {
             if (err) { return done(err); }
 
@@ -31,7 +32,8 @@ describe('authorizer sanity', function () {
     });
 
     it('should optionally accept options', function (done) {
-        new Authorizer({ interactive: true }, function (err, authorizer) {
+        // eslint-disable-next-line no-new
+        new Authorizer({interactive: true}, function (err, authorizer) {
             if (err) { return done(err); }
 
             expect(authorizer).to.be.an(Authorizer);
@@ -67,7 +69,7 @@ describe('authorizer sanity', function () {
             Authorizer.removeHandler('fake');
 
             // todo: add a function in the SDK to remove an auth type.
-            delete sdk.RequestAuth.types.fake
+            delete sdk.RequestAuth.types.fake;
         });
 
         it('should allow dynamically injecting new auth types', function () {

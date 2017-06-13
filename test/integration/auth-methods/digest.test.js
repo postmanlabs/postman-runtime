@@ -1,7 +1,14 @@
 describe('digest auth', function () {
-    var testrun;
+    var Authorizer = require('../../../lib/authorizer/index').Authorizer,
+        interactivity,
+        testrun;
 
     before(function (done) {
+        // turn on interactive mode for digest auth
+        interactivity = Authorizer.Handlers.digest.prototype.interactive;
+        Authorizer.Handlers.digest.prototype.interactive = true;
+
+        // perform the collection run
         this.run({
             collection: {
                 item: {
@@ -18,14 +25,16 @@ describe('digest auth', function () {
                         }
                     }
                 }
-            },
-            authorizer: {
-                interactive: true
             }
         }, function (err, results) {
             testrun = results;
             done(err);
         });
+    });
+
+    after(function () {
+        // restore the original state of interactivity
+        Authorizer.Handlers.digest.prototype.interactive = interactivity;
     });
 
     it('must have completed the run', function () {

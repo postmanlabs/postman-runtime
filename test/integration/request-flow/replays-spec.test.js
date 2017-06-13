@@ -14,6 +14,8 @@ describe('replayed requests', function () {
          */
         var replayCount = 0,
             fakeHandler = {
+                interactive: true,
+
                 init: function (context, requester, done) {
                     done(null);
                 },
@@ -51,9 +53,6 @@ describe('replayed requests', function () {
                         }
                     }
                 }]
-            },
-            authorizer: {
-                interactive: true
             }
         }, function (err, results) {
             testrun = results;
