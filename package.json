@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "6.1.6",
+  "version": "6.1.7-beta.7",
   "description": "Underlyng library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -16,7 +16,7 @@
     "test-integration-newman": "node npm/test-integration-newman.js",
     "build-docs": "node npm/build-docs.js",
     "build-wiki": "node npm/build-wiki.js",
-    "publish-docs": "node npm/build-docs.js",
+    "publish-docs": "node npm/publish-docs.js",
     "publish-wiki": "node npm/build-wiki.js"
   },
   "repository": {
