@@ -7,5 +7,8 @@
   },
   "request-send-flow": {
     "title": "Request Send Flow"
+  },
+  "new-auth-mechanisms": {
+    "title": "New Authentication Mechanisms"
   }
 }
