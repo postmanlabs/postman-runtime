@@ -100,6 +100,7 @@ function setup_version {
 	EOF
 
 	# Do an npm install. Suppress all output, especially those huge trees. There is no CLI flag to turn that off :/
+	echo "Performing an npm install in ${VERSION_DIR}, this might take time...";
 	npm install --silent &> /dev/null;
 
 	# Setup is complete, go back to the original directory.
@@ -170,10 +171,12 @@ function main {
 	# Validate inputs
 	if [[ -z "${CONTROL_VERSION// }" ]]; then
 		echo "Control version not provided";
+		usage;
 		exit 1;
 	fi
 	if [[ -z "${TEST_VERSION// }" ]]; then
 		echo "Test version not provided";
+		usage;
 		exit 1;
 	fi
 
