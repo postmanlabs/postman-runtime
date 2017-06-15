@@ -16,7 +16,7 @@
     "test-integration-newman": "node npm/test-integration-newman.js",
     "build-docs": "node npm/build-docs.js",
     "build-wiki": "node npm/build-wiki.js",
-    "publish-docs": "node npm/build-docs.js",
+    "publish-docs": "node npm/publish-docs.js",
     "publish-wiki": "node npm/build-wiki.js"
   },
   "repository": {
@@ -27,7 +27,10 @@
   "license": "Apache-2.0",
   "dependencies": {
     "async": "2.4.1",
+    "eventemitter3": "2.0.3",
     "http-reasons": "0.1.0",
+    "httpntlm": "1.7.5",
+    "inherits": "2.0.3",
     "lodash": "4.17.4",
     "postman-collection": "1.2.8",
     "postman-request": "2.81.1-postman.1",
