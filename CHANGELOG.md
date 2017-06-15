@@ -1,5 +1,11 @@
 # Postman Runtime Changelog
 
+#### 6.2.0 (June 15, 2017)
+* Updated dependencies, pruned lodash3
+* Added support for authorization mechanisms #233
+* Added suport for NTLM auth #266
+* Used updated Sandbox with momentjs included #281
+
 #### 6.1.6 (May 16, 2017)
 * Updated `postman-sandbox` to `v2.1.5`.
 
