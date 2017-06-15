@@ -2709,7 +2709,6 @@ describe('Requester', function () {
                             "name": "First Request",
                             "request": {
                                 "url": {
-                                    "raw": "https://postman-echo.com/status/:code",
                                     "host": [
                                         "postman-echo",
                                         "com"

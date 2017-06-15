@@ -10,6 +10,7 @@
 
 - `npm run test`: Runs lint, system, unit and integration tests of runtime
 - `npm run test-integration-newman`: This command runs tests of newman with the under-development variant of runtime
+- `npm/memory-check.sh`: This bash scripts performs first-level memory usage analysis, and plots a graph out of the results
 
 ## Options
 

@@ -18,7 +18,7 @@ module.exports = function (exit) {
          * @returns {*}
          */
         function (next) {
-            console.info(colors.yellow.bold('Generating and publishing documentation for newman'));
+            console.info(colors.yellow.bold('Generating and publishing documentation for postman-runtime'));
 
             try {
                 // go to the out directory and create a *new* Git repo
@@ -46,10 +46,14 @@ module.exports = function (exit) {
             // hide any sensitive credential data that might otherwise be exposed.
 
             config.silent = true; // this is apparently reset after exec
-            exec('git push --force "git@github.com:postmanlabs/postman-runtime.git" master:gh-pages', next);
+            exec('git push --force "git@github.com:postmanlabs/postman-runtime.git" master:gh-pages', function (code) {
+                console.log('pushed documents to gh-pages');
+                next(code);
+            });
         }
     ], function (code) {
-        console.info(code ? colors.red.bold('\ndocumentation publish failed.') :
+        console.log(code ?
+            colors.red.bold('\ndocumentation publish failed.') :
             colors.green('\ndocumentation published successfully.'));
         exit(code);
     });
