@@ -4,6 +4,23 @@
 * Updated dependencies, pruned lodash3
 * Added support for authorization mechanisms #233
 * Added suport for NTLM auth #266
+* Runtime now supports another event, `io`, which provides information about intermediate requests that may be sent
+  as part of authentication or other flows.
+  
+    ```javascript
+    io: function inputOutput (err, cursor, trace, ...otherArgs) {
+        // err, cursor: Same as arguments for "start"
+        // trace: An object which looks like this:
+        // {
+        //     -- Indicates the type of IO event, may be HTTP, File, etc. Any requests sent out as a part of
+        //     -- auth flows, replays, etc will show up here.
+        //     type: 'http', 
+        //
+        //     -- Indicates what this IO event originated from, (collection, auth flows, etc)
+        //     source: 'collection'
+        // }
+    }
+    ```
 * Used updated Sandbox with momentjs included #281
 
 #### 6.1.6 (May 16, 2017)
