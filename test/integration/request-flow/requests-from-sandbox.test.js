@@ -1,5 +1,3 @@
-var sdk = require('postman-collection');
-
 describe('requests from sandbox', function() {
     describe('sanity checks', function () {
         var testrun,
@@ -67,6 +65,16 @@ describe('requests from sandbox', function() {
 
             expect(trace).to.have.property('type', 'http');
             expect(trace).to.have.property('source', 'collection');
+        });
+
+        it('should have provided the response to the sandbox sendrequest function', function () {
+            var assertion = testrun.assertion.firstCall.args[1];
+
+            expect(assertion).to.have.property('name', 'request was sent from sandbox');
+            expect(assertion).to.have.property('skipped', false);
+            expect(assertion).to.have.property('passed', true);
+            expect(assertion).to.have.property('error', null);
+            expect(assertion).to.have.property('index', 0);
         });
 
         it('must have completed the run', function() {
