@@ -37,6 +37,17 @@ describe('requests from sandbox', function() {
             expect(testrun.io.calledTwice).to.be(true);
         });
 
+        it('should have called the request event once', function () {
+            expect(testrun.request.calledOnce).to.be(true);
+        });
+
+        it('should have the same cursor id for both the io events', function () {
+            var ref = testrun.beforeItem.firstCall.args[1].ref;
+
+            expect(testrun.io.firstCall.args[1].ref).to.eql(ref);
+            expect(testrun.io.secondCall.args[1].ref).to.eql(ref);
+        });
+
         it('should have sent the first request from inside the sandbox', function () {
             var error = testrun.io.firstCall.args[0],
                 request = testrun.io.firstCall.args[4],
@@ -75,6 +86,148 @@ describe('requests from sandbox', function() {
             expect(assertion).to.have.property('passed', true);
             expect(assertion).to.have.property('error', null);
             expect(assertion).to.have.property('index', 0);
+        });
+
+        it('must have completed the run', function() {
+            expect(testrun).be.ok();
+            expect(testrun.done.calledOnce).be.ok();
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.calledOnce).be.ok();
+        });
+    });
+
+    describe('multiple sends', function () {
+        var testrun,
+            sandboxRequestUrl1 = 'postman-echo.com/get?sandbox=true&n=1',
+            sandboxRequestUrl2 = 'postman-echo.com/get?sandbox=true&n=2',
+            testname1 = 'sending-1',
+            testname2 = 'sending-2';
+
+        before(function(done) {
+            this.run({
+                collection: {
+                    item: {
+                        // ensure that we run something for test and pre-req scripts
+                        event: [{
+                            listen: 'prerequest',
+                            script: {
+                                exec: `
+                                var sdk = require('postman-collection'),
+                                    myreq = new sdk.Request('${sandboxRequestUrl1}');
+                                
+                                pm.sendRequest(myreq, function(err, _response1) {
+                                    pm.test('${testname1}', function () {
+                                        pm.expect(_response1).to.have.property('code', 200);
+                                        pm.expect(_response1).to.have.property('status', 'OK');
+                                        
+                                        pm.expect(_response1.json().args).to.have.property('n', '1');
+                                    });
+                                    
+                                    var newreq = new sdk.Request('${sandboxRequestUrl2}');
+                                    pm.sendRequest(newreq, function (err, _response2) {
+                                        pm.test('${testname2}', function () {
+                                            pm.expect(_response2).to.have.property('code', 200);
+                                            pm.expect(_response2).to.have.property('status', 'OK');
+                                            
+                                            pm.expect(_response2.json().args).to.have.property('n', '2');
+                                        });
+                                    });
+                                });
+                                `
+                            }
+                        }],
+                        request: 'https://postman-echo.com/get'
+                    }
+                }
+            }, function(err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have called io event thrice', function () {
+            expect(testrun.io.calledThrice).to.be(true);
+        });
+
+        it('should have called the request event once', function () {
+            expect(testrun.request.calledOnce).to.be(true);
+        });
+
+        it('should have the same cursor id for all the io events', function () {
+            var ref = testrun.beforeItem.firstCall.args[1].ref;
+
+            expect(testrun.io.firstCall.args[1].ref).to.eql(ref);
+            expect(testrun.io.secondCall.args[1].ref).to.eql(ref);
+            expect(testrun.io.thirdCall.args[1].ref).to.eql(ref);
+        });
+
+        it('should have sent the first request from inside the sandbox', function () {
+            var error = testrun.io.firstCall.args[0],
+                request = testrun.io.firstCall.args[4],
+                response = testrun.io.firstCall.args[3],
+                trace = testrun.io.firstCall.args[2];
+
+            expect(error).to.be(null);
+
+            expect(request.url.toString()).to.eql(sandboxRequestUrl1);
+            expect(response.code).to.eql(200);
+
+            expect(trace).to.have.property('type', 'http');
+            expect(trace).to.have.property('source', 'script');
+        });
+
+        it('should have sent the second request from inside the sandbox too', function () {
+            var error = testrun.io.secondCall.args[0],
+                request = testrun.io.secondCall.args[4],
+                response = testrun.io.secondCall.args[3],
+                trace = testrun.io.secondCall.args[2];
+
+            expect(error).to.be(null);
+
+            expect(request.url.toString()).to.eql(sandboxRequestUrl2);
+            expect(response.code).to.eql(200);
+
+            expect(trace).to.have.property('type', 'http');
+            expect(trace).to.have.property('source', 'script');
+        });
+
+        it('should have sent the third request as a part of the collection run', function () {
+            var error = testrun.io.thirdCall.args[0],
+                request = testrun.io.thirdCall.args[4],
+                response = testrun.io.thirdCall.args[3],
+                trace = testrun.io.thirdCall.args[2];
+
+            expect(error).to.be(null);
+
+            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(response.code).to.eql(200);
+
+            expect(trace).to.have.property('type', 'http');
+            expect(trace).to.have.property('source', 'collection');
+        });
+
+        it('should have run two tests', function () {
+            expect(testrun.assertion.calledTwice).to.be(true);
+        });
+
+        it('should ensure that the first response was provided to the test script', function () {
+            var assertion = testrun.assertion.firstCall.args[1];
+
+            expect(assertion).to.have.property('name', testname1);
+            expect(assertion).to.have.property('skipped', false);
+            expect(assertion).to.have.property('passed', true);
+            expect(assertion).to.have.property('error', null);
+            expect(assertion).to.have.property('index', 0);
+        });
+
+        it('should ensure that the second response was provided to the test script', function () {
+            var assertion = testrun.assertion.secondCall.args[1];
+
+            expect(assertion).to.have.property('name', testname2);
+            expect(assertion).to.have.property('skipped', false);
+            expect(assertion).to.have.property('passed', true);
+            expect(assertion).to.have.property('error', null);
+            expect(assertion).to.have.property('index', 1);
         });
 
         it('must have completed the run', function() {
