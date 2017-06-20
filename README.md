@@ -10,6 +10,7 @@
 
 - `npm run test`: Runs lint, system, unit and integration tests of runtime
 - `npm run test-integration-newman`: This command runs tests of newman with the under-development variant of runtime
+- `npm/memory-check.sh`: This bash scripts performs first-level memory usage analysis, and plots a graph out of the results
 
 ## Options
 
@@ -80,6 +81,19 @@ runner.run(collection, {
         
         // Enable sending of bodies with GET requests (only supported on Node, ignored in the browser)
         sendBodyWithGetRequests: true,
+    },
+    
+    // authorizer
+    authorizer: {
+
+        // Enables advanced mode only in these auths
+        interactive: {
+            ntlm: true,
+            basic: true
+        },
+
+        // Enables advanced mode for all auths
+        interactive: true
     },
 
     // A ProxyConfigList, from the SDK
@@ -242,7 +256,26 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
         
         // Called any time a console.* function is called in test/pre-request scripts
-        console: function (cursor, level, ...logs) {}
+        console: function (cursor, level, ...logs) {},
+        
+        io: function (err, cursor, trace, ...otherArgs) {
+            // err, cursor: Same as arguments for "start"
+            // trace: An object which looks like this:
+            // {
+            //     -- Indicates the type of IO event, may be HTTP, File, etc. Any requests sent out as a part of
+            //     -- auth flows, replays, etc will show up here.
+            //     type: 'http', 
+            //
+            //     -- Indicates what this IO event originated from, (collection, auth flows, etc)
+            //     source: 'collection'
+            // }
+            // otherArgs: Variable number of arguments, specific to the type of the IO event.
+            
+            // For http type, the otherArgs are:
+            // response: sdk.Response()
+            // request: sdk.Request()
+            // cookies: Array of sdk.Cookie()
+        }
     });
 });
 ```
