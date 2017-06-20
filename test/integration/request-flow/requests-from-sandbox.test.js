@@ -113,23 +113,23 @@ describe('requests from sandbox', function() {
                             script: {
                                 exec: `
                                 var sdk = require('postman-collection'),
-                                    myreq = new sdk.Request('${sandboxRequestUrl1}');
+                                    req1 = new sdk.Request('${sandboxRequestUrl1}');
                                 
-                                pm.sendRequest(myreq, function(err, _response1) {
+                                pm.sendRequest(req1, function(err, response1) {
                                     pm.test('${testname1}', function () {
-                                        pm.expect(_response1).to.have.property('code', 200);
-                                        pm.expect(_response1).to.have.property('status', 'OK');
+                                        pm.expect(response1).to.have.property('code', 200);
+                                        pm.expect(response1).to.have.property('status', 'OK');
                                         
-                                        pm.expect(_response1.json().args).to.have.property('n', '1');
+                                        pm.expect(response1.json().args).to.have.property('n', '1');
                                     });
                                     
-                                    var newreq = new sdk.Request('${sandboxRequestUrl2}');
-                                    pm.sendRequest(newreq, function (err, _response2) {
+                                    var req2 = new sdk.Request('${sandboxRequestUrl2}');
+                                    pm.sendRequest(req2, function (err, response2) {
                                         pm.test('${testname2}', function () {
-                                            pm.expect(_response2).to.have.property('code', 200);
-                                            pm.expect(_response2).to.have.property('status', 'OK');
+                                            pm.expect(response2).to.have.property('code', 200);
+                                            pm.expect(response2).to.have.property('status', 'OK');
                                             
-                                            pm.expect(_response2.json().args).to.have.property('n', '2');
+                                            pm.expect(response2.json().args).to.have.property('n', '2');
                                         });
                                     });
                                 });
