@@ -8,6 +8,7 @@ require('shelljs/global');
 
 var path = require('path'),
     colors = require('colors/safe'),
+    pkg = require('../package.json'),
 
     IS_WINDOWS = (/^win/).test(process.platform),
     TARGET_DIR = path.join('out', 'docs');
@@ -25,7 +26,7 @@ module.exports = function (exit) {
     }
 
     exec(`${IS_WINDOWS ? '' : 'node'} ${path.join('node_modules', '.bin', 'jsdoc')}${IS_WINDOWS ? '.cmd' : ''}` +
-        ' -c .jsdoc-config.json -u docs lib', function (code) {
+        ` -c .jsdoc-config.json -u docs lib --query 'pkgVersion=${pkg.version}'`, function (code) {
         // output status
         console.log(code ?
             colors.red.bold('unable to genereate documentation') :
