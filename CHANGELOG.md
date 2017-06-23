@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 6.2.1 (June 23, 2017)
+* Fixed a bug which caused auth variables to not be resolved when sending requests
+
 #### 6.2.0 (June 15, 2017)
 * Updated dependencies, pruned lodash3
 * Added support for authorization mechanisms #233
