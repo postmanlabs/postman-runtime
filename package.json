@@ -27,7 +27,7 @@
   "author": "Postman Labs <help@getpostman.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "async": "2.4.1",
+    "async": "2.5.0",
     "eventemitter3": "2.0.3",
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.5",
