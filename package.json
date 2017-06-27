@@ -14,6 +14,7 @@
     "test-unit": "node npm/test-unit.js",
     "test-integration": "node npm/test-integration.js",
     "test-integration-newman": "node npm/test-integration-newman.js",
+    "test-coverage": "node npm/test-coverage.js",
     "build-docs": "node npm/build-docs.js",
     "build-wiki": "node npm/build-wiki.js",
     "publish-docs": "node npm/publish-docs.js",
