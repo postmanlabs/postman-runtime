@@ -15,7 +15,7 @@ describe('travis.yml', function () {
         travisYAMLError = e;
     }
 
-  // No try-catch here, any errors will be caught by the package.json tests.
+    // No try-catch here, any errors will be caught by the package.json tests.
     packageFile = JSON.parse(fs.readFileSync('package.json').toString());
 
     it('must exist', function (done) {
