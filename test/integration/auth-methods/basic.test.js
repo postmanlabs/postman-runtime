@@ -38,7 +38,7 @@ describe('basic auth', function () {
     it('must have completed the run', function () {
         expect(testrun).be.ok();
         expect(testrun.done.calledOnce).be.ok();
-        testrun.done.getCall(0).args[0] && console.log(testrun.done.getCall(0).args[0].stack);
+        testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
         expect(testrun.done.getCall(0).args[0]).to.be(null);
         expect(testrun.start.calledOnce).be.ok();
     });
