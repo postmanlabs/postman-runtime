@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### 6.2.2 (June 28, 2017)
+* Bumped Postman Sandbox to v2.3.0, which includes support for synchronous csv-parse #298
+* Bumped Postman Collection SDK to v1.2.9, with critical bugfixes. #297
+* Updated other dependencies
+
 #### 6.2.1 (June 23, 2017)
 * Fixed a bug which caused auth variables to not be resolved when sending requests
 
