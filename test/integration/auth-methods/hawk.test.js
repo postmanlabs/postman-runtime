@@ -1,4 +1,4 @@
-describe('digest auth', function () {
+describe('hawk auth', function () {
     var testrun;
 
     before(function (done) {
@@ -6,17 +6,24 @@ describe('digest auth', function () {
         this.run({
             collection: {
                 item: {
-                    name: 'DigestAuth',
                     request: {
-                        url: 'https://postman-echo.com/digest-auth',
                         auth: {
-                            type: 'digest',
-                            digest: {
-                                algorithm: 'MD5',
-                                username: 'postman',
-                                password: 'password'
+                            type: 'hawk',
+                            hawk: {
+                                authId: 'dh37fgj492je',
+                                authKey: 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
+                                algorithm: 'sha256',
+                                user: 'asda',
+                                saveHelperData: true,
+                                nonce: 'eFRP2o',
+                                extraData: 'skjdfklsjhdflkjhsdf',
+                                appId: '',
+                                delegation: '',
+                                timestamp: ''
                             }
-                        }
+                        },
+                        url: 'https://postman-echo.com/auth/hawk',
+                        method: 'GET'
                     }
                 }
             },
@@ -41,37 +48,29 @@ describe('digest auth', function () {
         var request = testrun.request.getCall(0).args[3],
             response = testrun.request.getCall(0).args[2];
 
-        expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+        expect(request.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
         expect(response.code).to.eql(200);
     });
 
-    it('must have sent two requests internally', function () {
-        expect(testrun.io.calledTwice).be.ok();
+    it('must have sent one request internally', function () {
+        expect(testrun.io.calledOnce).be.ok();
 
         var firstError = testrun.io.firstCall.args[0],
-            secondError = testrun.io.secondCall.args[0],
             firstRequest = testrun.io.firstCall.args[4],
-            firstResponse = testrun.io.firstCall.args[3],
-            secondRequest = testrun.io.secondCall.args[4],
-            secondResponse = testrun.io.secondCall.args[3];
+            firstResponse = testrun.io.firstCall.args[3];
 
         expect(firstError).to.be(null);
-        expect(secondError).to.be(null);
-
-        expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-        expect(firstResponse.code).to.eql(401);
-
-        expect(secondRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-        expect(secondResponse.code).to.eql(200);
+        expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
+        expect(firstResponse.code).to.eql(200);
     });
 
-    it('must have passed the digest authorization', function () {
+    it('must have passed the hawk authorization', function () {
         expect(testrun.request.calledOnce).be.ok();
 
         var request = testrun.request.getCall(0).args[3],
             response = testrun.request.getCall(0).args[2];
 
-        expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+        expect(request.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
         expect(response.code).to.eql(200);
     });
 });
