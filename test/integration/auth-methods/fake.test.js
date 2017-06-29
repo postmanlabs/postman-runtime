@@ -513,4 +513,57 @@ describe('fake auth', function () {
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
+
+    describe('error in init helper', function () {
+        var testrun,
+            fakeHandler = {
+                init: function (context, requester, done) { done(new Error('Init err!')); },
+                pre: function (context, requester, done) { done(null, true); },
+                post: function (context, requester, done) { done(null, true); },
+                _sign: function (request) { return request; }
+            },
+            handlerSpies = {
+                pre: sinon.spy(fakeHandler, 'pre'),
+                post: sinon.spy(fakeHandler, 'post'),
+                _sign: sinon.spy(fakeHandler, '_sign')
+            };
+
+        before(function (done) {
+            Authorizer.addHandler(fakeHandler, 'fake');
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        after(function () {
+            Authorizer.removeHandler('fake');
+            fakeSigner.update.reset();
+        });
+
+        it('must have completed the run', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.calledOnce).be.ok();
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.calledOnce).be.ok();
+
+            // Authorizer flow related assertions
+            expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.post.calledOnce).to.be.ok();
+            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(signerSpy.calledThrice).to.be.ok();
+        });
+
+        it('must have sent the request once', function () {
+            expect(testrun.request.calledOnce).be.ok();
+
+            var err = testrun.request.firstCall.args[0],
+                request = testrun.request.firstCall.args[3];
+
+            expect(err).to.be(null);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+        });
+    });
 });
