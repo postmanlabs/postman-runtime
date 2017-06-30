@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+## Unreleased
+* Support for updated proxyConfig
+* Custom proxies now have higher preference than system proxies 
+
 #### 6.2.2 (June 28, 2017)
 * Bumped Postman Sandbox to v2.3.0, which includes support for synchronous csv-parse #298
 * Bumped Postman Collection SDK to v1.2.9, with critical bugfixes. #297
