@@ -6,12 +6,17 @@ describe('proxy', function () {
         server,
         testrun,
         port = 9090,
-        proxyServer = 'http://localhost:' + port;
+        proxyHost = 'localhost',
+        sampleHttpUrl = 'http://google.com',
+        sampleHttpsUrl = 'https://google.com',
+        proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + port,
+        proxyUrlForHttpsRequest = 'https://' + proxyHost + ':' + port;
 
     before(function (done) {
         var proxyList = new ProxyConfigList({}, [{
             match: '*://postman-echo.com/*',
-            server: proxyServer,
+            host: proxyHost,
+            port: port,
             tunnel: false
         }]);
 
@@ -48,7 +53,9 @@ describe('proxy', function () {
 
         expect(testrun.request.calledOnce).be.ok(); // one request
         // proxy info added back to request
-        expect(request.proxy.server.toString()).to.eql(proxyServer);
+        expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
+        expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
+        expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpsRequest);
         expect(_.get(response, 'headers.x-postman-proxy')).to.be('true');
     });
 
