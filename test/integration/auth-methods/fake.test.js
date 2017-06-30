@@ -47,6 +47,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -71,9 +72,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledOnce).be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
             expect(handlerSpies._sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -100,6 +103,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -124,9 +128,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledOnce).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
             expect(handlerSpies._sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -143,16 +149,18 @@ describe('fake auth', function () {
         });
     });
 
-    describe.skip('false result in post helper', function () {
-        var testrun,
+    describe('false result in post helper', function () {
+        var count = 0,
+            testrun,
             fakeHandler = {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(null, true); },
-                post: function (context, requester, done) { done(null, false); },
+                post: function (context, requester, done) { done(null, count++ > 1); },
                 _sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -177,11 +185,13 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledThrice).be.ok();
 
             // Authorizer flow related assertions
-            expect(handlerSpies.pre.calledOnce).to.be.ok();
-            expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.pre.calledThrice).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
+            expect(handlerSpies.post.calledThrice).to.be.ok();
+            expect(handlerSpies._sign.calledThrice).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -206,6 +216,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -230,9 +241,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -244,7 +257,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Pre err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
@@ -259,6 +272,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -283,9 +297,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -297,7 +313,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Pre err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
@@ -312,6 +328,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -336,9 +353,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -350,7 +369,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Pre err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
@@ -365,6 +384,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -389,9 +409,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledOnce).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
             expect(handlerSpies._sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -418,6 +440,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -442,9 +465,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledOnce).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
             expect(handlerSpies._sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -461,16 +486,19 @@ describe('fake auth', function () {
         });
     });
 
-    describe.skip('false results in pre, post helpers', function () {
-        var testrun,
+    describe('false results in pre, post helpers', function () {
+        var preCount = 0,
+            postCount = 0,
+            testrun,
             fakeHandler = {
                 init: function (context, requester, done) { done(null); },
-                pre: function (context, requester, done) { done(null, false); },
-                post: function (context, requester, done) { done(null, false); },
+                pre: function (context, requester, done) { done(null, preCount++ > 1); },
+                post: function (context, requester, done) { done(null, postCount++ > 1); },
                 _sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -495,11 +523,13 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledThrice).be.ok();
 
             // Authorizer flow related assertions
-            expect(handlerSpies.pre.calledOnce).to.be.ok();
-            expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.pre.calledThrice).to.be.ok();
+            expect(handlerSpies.init.calledTwice).to.be.ok();
+            expect(handlerSpies.post.calledThrice).to.be.ok();
+            expect(handlerSpies._sign.calledThrice).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -524,6 +554,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -548,9 +579,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledOnce).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
             expect(handlerSpies._sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -577,6 +610,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -601,9 +635,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledOnce).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
             expect(handlerSpies._sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -620,16 +656,18 @@ describe('fake auth', function () {
         });
     });
 
-    describe.skip('error in init, false result in post helper', function () {
-        var testrun,
+    describe('error in init, false result in post helper', function () {
+        var count = 0,
+            testrun,
             fakeHandler = {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(null, true); },
-                post: function (context, requester, done) { done(null, false); },
+                post: function (context, requester, done) { done(null, count++ > 1); },
                 _sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -654,11 +692,13 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.calledThrice).be.ok();
 
             // Authorizer flow related assertions
-            expect(handlerSpies.pre.calledOnce).to.be.ok();
-            expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.pre.calledThrice).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
+            expect(handlerSpies.post.calledThrice).to.be.ok();
+            expect(handlerSpies._sign.calledThrice).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -683,6 +723,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -707,9 +748,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -721,7 +764,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Pre err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
@@ -736,6 +779,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -760,9 +804,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -774,7 +820,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Pre err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
@@ -789,6 +835,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -813,9 +860,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -827,7 +876,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Pre err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
@@ -842,6 +891,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -866,9 +916,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -880,7 +932,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Init err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
@@ -895,6 +947,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -919,9 +972,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -933,7 +988,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Init err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
@@ -948,6 +1003,7 @@ describe('fake auth', function () {
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
                 _sign: sinon.spy(fakeHandler, '_sign')
             };
@@ -972,9 +1028,11 @@ describe('fake auth', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.notCalled).to.be.ok();
 
             // Authorizer flow related assertions
             expect(handlerSpies.pre.calledOnce).to.be.ok();
+            expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
             expect(handlerSpies._sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
@@ -986,7 +1044,7 @@ describe('fake auth', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be.ok();
+            expect(err).to.have.property('message', 'Init err!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
     });
