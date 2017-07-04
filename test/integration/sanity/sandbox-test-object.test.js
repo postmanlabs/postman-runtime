@@ -41,7 +41,7 @@ describe('sandbox test for `undefined` test values', function () {
     it('must have run the test script, and replaced `undefined` with `false`', function () {
         var tests = _.get(testrun.test.getCall(0), 'args[2][0].result.tests');
         expect(tests).to.eql({
-            undefined: false,  // this was set to undefined in the test script, but should be changed to false here.
+            undefined: false, // this was set to undefined in the test script, but should be changed to false here.
             true: true,
             false: false
         });
