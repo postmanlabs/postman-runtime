@@ -13,6 +13,15 @@ describe('data variable replacement', function() {
                                 'postman.setEnvironmentVariable(\'dataVar2\',iteration);'
                             ]
                         }
+                    }, {
+                        listen: 'test',
+                        script: {
+                            exec: [
+                                'pm.test("should be ok", function () {',
+                                '    pm.response.to.be.success;',
+                                '});'
+                            ]
+                        }
                     }],
                     request: {
                         url: 'http://postman-echo.com/post',
@@ -40,6 +49,24 @@ describe('data variable replacement', function() {
 
         expect(testrun.request.getCall(0).args[0]).to.be(null);
         expect(testrun.request.getCall(1).args[0]).to.be(null);
+    });
+
+    it('must use a consistent format for request.data', function() {
+        expect(testrun).be.ok();
+
+        // prerequest script checks
+        expect(testrun.prerequest.calledTwice).be.ok();
+        expect(testrun.prerequest.getCall(0).args[0]).to.be(null);
+        expect(testrun.prerequest.getCall(1).args[0]).to.be(null);
+        expect(testrun.prerequest.getCall(0).args[2][0].result.data).to.eql({dataVar: 'value1'});
+        expect(testrun.prerequest.getCall(1).args[2][0].result.data).to.eql({dataVar: 'value2'});
+
+        // test script checks
+        expect(testrun.test.calledTwice).be.ok();
+        expect(testrun.test.getCall(0).args[0]).to.be(null);
+        expect(testrun.test.getCall(1).args[0]).to.be(null);
+        expect(testrun.test.getCall(0).args[2][0].result.data).to.eql({dataVar: 'value1'});
+        expect(testrun.test.getCall(1).args[2][0].result.data).to.eql({dataVar: 'value2'});
     });
 
     it('must have substituted the data variables', function() {
