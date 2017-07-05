@@ -57,7 +57,7 @@ describe('requester util', function () {
             expect(requesterUtil.getRequestOptions(request)).to.eql({
                 headers: {
                     alpha: 'foo',
-                    'User-Agent': 'PostmanRuntime/6.2.2',
+                    'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     Accept: '*/*',
                     Host: 'postman-echo.com'
                 },
