@@ -118,8 +118,8 @@ describe('script result format', function() {
             var prerequest = testrun.script.firstCall.args[2],
                 test = testrun.script.secondCall.args[2];
 
-            expect(prerequest.return).to.eql({});
-            expect(test.return).to.eql({});
+            expect(prerequest.return).to.eql({async: false});
+            expect(test.return).to.eql({async: false});
         });
 
         it('must have a response in the test script result', function () {
