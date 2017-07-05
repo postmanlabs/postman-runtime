@@ -33,7 +33,7 @@
     "httpntlm": "1.7.5",
     "inherits": "2.0.3",
     "lodash": "4.17.4",
-    "postman-collection": "1.2.9",
+    "postman-collection": "2.0.1",
     "postman-request": "2.81.1-postman.1",
     "postman-sandbox": "2.3.1-beta.1",
     "resolve-from": "3.0.0",
