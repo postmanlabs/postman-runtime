@@ -82,16 +82,35 @@ describe('replayed requests', function () {
 
     it('must have sent two requests internally', function () {
         expect(testrun.io.calledTwice).be.ok();
+    });
 
-        var firstRequest = testrun.io.getCall(0).args[4],
-            firstResponse = testrun.io.getCall(0).args[3],
-            secondRequest = testrun.io.getCall(1).args[4],
-            secondResponse = testrun.io.getCall(1).args[3];
+    it('should send first request as part of the collection', function () {
+        var error = testrun.io.firstCall.args[0],
+            request = testrun.io.firstCall.args[4],
+            response = testrun.io.firstCall.args[3],
+            trace = testrun.io.firstCall.args[2];
 
-        expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/get');
-        expect(firstResponse.code).to.eql(200);
+        expect(error).to.be(null);
 
-        expect(secondRequest.url.toString()).to.eql('https://postman-echo.com/get');
-        expect(secondResponse.code).to.eql(200);
+        expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+        expect(response.code).to.eql(200);
+
+        expect(trace).to.have.property('type', 'http');
+        expect(trace).to.have.property('source', 'collection');
+    });
+
+    it('should send second request as a replay', function () {
+        var error = testrun.io.secondCall.args[0],
+            request = testrun.io.secondCall.args[4],
+            response = testrun.io.secondCall.args[3],
+            trace = testrun.io.secondCall.args[2];
+
+        expect(error).to.be(null);
+
+        expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+        expect(response.code).to.eql(200);
+
+        expect(trace).to.have.property('type', 'http');
+        expect(trace).to.have.property('source', 'fake.auth');
     });
 });
