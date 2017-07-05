@@ -1,7 +1,7 @@
 # Postman Runtime Changelog
 
-## Unreleased
-* Support for updated proxyConfig
+#### 6.2.3 (July 5, 2017)
+* Support for updated `ProxyConfig` from Collection SDK v2.0.0
 * Custom proxies now have higher preference than system proxies 
 
 #### 6.2.2 (June 28, 2017)
