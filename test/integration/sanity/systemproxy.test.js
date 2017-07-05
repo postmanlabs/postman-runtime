@@ -1,5 +1,6 @@
 var _ = require('lodash'),
     proxy = require('http-proxy'),
+    sinon = require('sinon'),
     sdk = require('postman-collection');
 
 describe('systemProxy', function () {
@@ -7,13 +8,19 @@ describe('systemProxy', function () {
         var server,
             testrun,
             port = 9090,
-            proxyServer = 'http://localhost:' + port;
+            proxyHost = 'localhost',
+            systemProxySpy,
+            sampleHttpUrl = 'http://google.com',
+            sampleHttpsUrl = 'https://google.com',
+            proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + port,
+            proxyUrlForHttpsRequest = 'https://' + proxyHost + ':' + port;
 
         before(function (done) {
             var systemProxy = function (url, callback) {
                 return callback(null, {
                     match: '*://postman-echo.com/*',
-                    server: proxyServer,
+                    host: proxyHost,
+                    port: port,
                     tunnel: false
                 });
             };
@@ -25,6 +32,9 @@ describe('systemProxy', function () {
                 }
             });
             server.listen(port);
+
+            systemProxySpy = sinon.spy();
+            server.before('web', 'stream', systemProxySpy);
 
             this.run({
                 collection: {
@@ -51,7 +61,13 @@ describe('systemProxy', function () {
 
             expect(testrun.request.calledOnce).be.ok(); // one request
             // proxy info added back to request
-            expect(request.proxy.server.toString()).to.eql(proxyServer);
+            expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
+            expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
+            expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpsRequest);
+
+            // The above checks do not confirm that the correct proxy url was used.
+            // So confirming by testing that the correct proxy server was only called
+            sinon.assert.calledOnce(systemProxySpy);
             expect(_.get(response, 'headers.x-postman-proxy')).to.be('true');
         });
 
@@ -63,6 +79,7 @@ describe('systemProxy', function () {
     describe('no output config', function () {
         var server,
             testrun,
+            systemProxySpy,
             port = 9090;
 
         before(function (done) {
@@ -77,6 +94,8 @@ describe('systemProxy', function () {
                 }
             });
             server.listen(port);
+            systemProxySpy = sinon.spy();
+            server.before('web', 'stream', systemProxySpy);
 
             this.run({
                 collection: {
@@ -104,6 +123,7 @@ describe('systemProxy', function () {
             expect(testrun.request.calledOnce).be.ok(); // one request
             // proxy info added back to request
             expect(request.proxy).to.not.be.ok();
+            sinon.assert.notCalled(systemProxySpy);
             expect(_.get(response, 'headers.x-postman-proxy')).to.not.be.ok();
         });
 
@@ -112,24 +132,51 @@ describe('systemProxy', function () {
         });
     });
 
-    describe('static proxy list', function () {
-        var server,
+    describe('prefer custom proxies over system proxies', function () {
+        var systemProxyServer,
+            globalProxyServer,
             testrun,
-            port = 9090,
-            proxyServer = 'http://localhost:' + port;
+            globalProxyPort = 9090,
+            systemProxyPort = 9091,
+            globalProxySpy,
+            systemProxySpy,
+            proxyHost = 'localhost',
+            sampleHttpUrl = 'http://google.com',
+            sampleHttpsUrl = 'https://google.com',
+            proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + globalProxyPort,
+            proxyUrlForHttpsRequest = 'https://' + proxyHost + ':' + globalProxyPort;
 
         before(function (done) {
             var systemProxy = function (url, callback) {
-                return callback(null, undefined);
+                return callback(null, {
+                    match: '*://postman-echo.com/*',
+                    host: proxyHost,
+                    port: systemProxyPort,
+                    tunnel: false
+                });
             };
 
-            server = new proxy.createProxyServer({
+            systemProxyServer = new proxy.createProxyServer({
                 target: 'http://postman-echo.com',
                 headers: {
                     'x-postman-proxy': 'true'
                 }
             });
-            server.listen(port);
+            systemProxyServer.listen(systemProxyPort);
+
+            globalProxyServer = new proxy.createProxyServer({
+                target: 'http://postman-echo.com',
+                headers: {
+                    'x-postman-proxy': 'true'
+                }
+            });
+            globalProxyServer.listen(globalProxyPort);
+
+            globalProxySpy = sinon.spy();
+            systemProxySpy = sinon.spy();
+
+            globalProxyServer.before('web', 'stream', globalProxySpy);
+            systemProxyServer.before('web', 'stream', systemProxySpy);
 
             this.run({
                 collection: {
@@ -140,7 +187,8 @@ describe('systemProxy', function () {
                 systemProxy: systemProxy,
                 proxies: new sdk.ProxyConfigList({}, [{
                     match: '*://postman-echo.com/*',
-                    server: proxyServer,
+                    host: proxyHost,
+                    port: globalProxyPort,
                     tunnel: false
                 }])
 
@@ -162,12 +210,20 @@ describe('systemProxy', function () {
 
             expect(testrun.request.calledOnce).be.ok(); // one request
             // proxy info added back to request
-            expect(request.proxy.server.toString()).to.eql(proxyServer);
+            expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
+            expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
+            expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpsRequest);
+
+            // The above checks do not confirm that the correct proxy url was used.
+            // So confirming by testing that the correct proxy server was only called
+            sinon.assert.calledOnce(globalProxySpy);
+            sinon.assert.notCalled(systemProxySpy);
             expect(_.get(response, 'headers.x-postman-proxy')).to.be('true');
         });
 
         after(function () {
-            server.close();
+            systemProxyServer.close();
+            globalProxyServer.close();
         });
     });
 });
