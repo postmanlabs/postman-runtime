@@ -44,7 +44,7 @@ describe('File uploads', function() {
 
     it('must have run the test script successfully', function() {
         expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
+        expect(testrun.test.calledTwice).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
         expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests["File contents are valid"]')).to.be(true);
