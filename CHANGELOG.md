@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 6.2.4 (July 11, 2017)
+* Fixed a bug that prevented the `Content-Length` header from being set for file uploads in `binary` mode.
+
 #### 6.2.3 (July 5, 2017)
 * Support for updated `ProxyConfig` from Collection SDK v2.0.0
 * Custom proxies now have higher preference than system proxies 
