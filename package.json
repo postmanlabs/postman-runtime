@@ -60,7 +60,7 @@
     "postman-jsdoc-theme": "0.0.3",
     "recursive-readdir": "2.2.1",
     "shelljs": "0.7.8",
-    "sinon": "2.3.7",
+    "sinon": "2.3.8",
     "tmp": "0.0.31"
   },
   "browser": {
