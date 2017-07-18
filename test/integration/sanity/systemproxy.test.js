@@ -12,8 +12,7 @@ describe('systemProxy', function () {
             systemProxySpy,
             sampleHttpUrl = 'http://google.com',
             sampleHttpsUrl = 'https://google.com',
-            proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + port,
-            proxyUrlForHttpsRequest = 'https://' + proxyHost + ':' + port;
+            proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + port;
 
         before(function (done) {
             var systemProxy = function (url, callback) {
@@ -63,7 +62,7 @@ describe('systemProxy', function () {
             // proxy info added back to request
             expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
             expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
-            expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpsRequest);
+            expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpRequest);
 
             // The above checks do not confirm that the correct proxy url was used.
             // So confirming by testing that the correct proxy server was only called
@@ -143,8 +142,7 @@ describe('systemProxy', function () {
             proxyHost = 'localhost',
             sampleHttpUrl = 'http://google.com',
             sampleHttpsUrl = 'https://google.com',
-            proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + globalProxyPort,
-            proxyUrlForHttpsRequest = 'https://' + proxyHost + ':' + globalProxyPort;
+            proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + globalProxyPort;
 
         before(function (done) {
             var systemProxy = function (url, callback) {
@@ -212,7 +210,7 @@ describe('systemProxy', function () {
             // proxy info added back to request
             expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
             expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
-            expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpsRequest);
+            expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpRequest);
 
             // The above checks do not confirm that the correct proxy url was used.
             // So confirming by testing that the correct proxy server was only called
