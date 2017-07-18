@@ -17,6 +17,8 @@ module.exports = function (exit) {
     });
 
     fs.readdir(SPEC_SOURCE_DIR, function (err, files) {
+        if (err) { return next(err); }
+
         files.filter(function (file) {
             return (file.substr(-8) === '.test.js');
         }).forEach(function (file) {
