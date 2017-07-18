@@ -5,8 +5,7 @@ var _ = require('lodash'),
     sdk = require('postman-collection');
 
 describe('authorizer sanity', function () {
-    var Authorizer = require('../../lib/authorizer/index').Authorizer,
-        Run = require('../../lib/runner/run');
+    var Authorizer = require('../../lib/authorizer/index').Authorizer;
 
     it('should expose an constructor', function () {
         expect(Authorizer).to.be.a('function');
@@ -170,7 +169,9 @@ describe('authorizer sanity', function () {
                 context = {
                     auth: new sdk.RequestAuth.types.fake()
                 };
-                run = new Run();
+                run = {
+                    requester: new (require('../../lib/requester').RequesterPool)()
+                };
                 done();
             });
         });
