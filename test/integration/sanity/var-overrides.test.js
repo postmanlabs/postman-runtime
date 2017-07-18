@@ -7,7 +7,7 @@ describe('Variable overrides', function() {
             data: [{dataVar: 'dataValue', data: 'DATA'}],
             globals: {
                 values: [
-                    {key: 'full_global_url', value: 'https://postman-echo.com/get', name: 'full_global_url', enabled: true},
+                    {key: 'global_url', value: 'https://postman-echo.com/get', name: 'global_url', enabled: true},
                     {key: 'global_resource_get', 'value': '/get', 'name': 'global_resource_get', 'enabled': true},
                     {key: 'Global Foo', 'value': 'Global Bar', 'name': 'Global Foo', 'enabled': true},
                     {key: 'Global Phew', 'value': 'Global Works', 'name': 'Global Phew', 'enabled': true},
@@ -33,7 +33,7 @@ describe('Variable overrides', function() {
                         listen: 'test',
                         script: {
                             exec: [
-                                'tests[\'Content-Type is present\'] = responseHeaders.hasOwnProperty(\'Content-Type\');',
+                                'tests[\'Content-Type present\'] = responseHeaders.hasOwnProperty(\'Content-Type\');',
                                 'var data1 = JSON.parse(responseBody);',
                                 'tests[\'testGlobalSetFromPRScript\'] = data1.args.prsG === \'prsG\';',
                                 'tests[\'Read global var correctly\'] = globals.prsG === \'prsG\';',

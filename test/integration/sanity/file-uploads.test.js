@@ -13,6 +13,7 @@ describe('File uploads', function() {
                         script: {
                             exec: [
                                 'var file = JSON.parse(responseBody).files[\'upload-file.json\'];',
+                                // eslint-disable-next-line max-len
                                 'tests[\'File contents are valid\'] = _.startsWith(file, \'data:application/octet-stream;base64,\');'
                             ]
                         }

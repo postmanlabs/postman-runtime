@@ -20,6 +20,7 @@ describe('V2 regressions', function() {
                             exec: [
                                 'var cookies = JSON.parse(responseBody).cookies;',
                                 'tests[\'Status code is 200\'] = responseCode.code === 200;',
+                                // eslint-disable-next-line max-len
                                 'tests[\'foo1 cookie is present in the response body\'] = cookies[\'foo1\'] === postman.getEnvironmentVariable(\'envKey\');'
                             ]
                         }
