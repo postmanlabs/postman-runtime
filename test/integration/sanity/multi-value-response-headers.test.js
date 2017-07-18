@@ -11,7 +11,7 @@ describe('multi valued headers', function () {
         server = http.createServer();
 
         server.on('request', function (req, res) {
-            res.setHeader('x-pm-test', ['one', 'two']);  // adds a duplicate header to the response
+            res.setHeader('x-pm-test', ['one', 'two']); // adds a duplicate header to the response
             res.end('worked');
         });
 
@@ -46,7 +46,7 @@ describe('multi valued headers', function () {
         // eslint-disable-next-line lodash/prop-shorthand
         expect(_.countBy(response.headers.members, function (header) {
             return header.key;
-        })['x-pm-test']).to.eql(2);  // The "x-pm-test" header should occur twice
+        })['x-pm-test']).to.eql(2); // The "x-pm-test" header should occur twice
         expect(response.text()).to.eql('worked');
     });
 

@@ -1,13 +1,12 @@
 describe('Variable overrides', function() {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function(done) {
         this.run({
             data: [{dataVar: 'dataValue', data: 'DATA'}],
             globals: {
                 values: [
-                    {key: 'full_global_url', value: 'https://postman-echo.com/get', name: 'full_global_url', enabled: true},
+                    {key: 'global_url', value: 'https://postman-echo.com/get', name: 'global_url', enabled: true},
                     {key: 'global_resource_get', 'value': '/get', 'name': 'global_resource_get', 'enabled': true},
                     {key: 'Global Foo', 'value': 'Global Bar', 'name': 'Global Foo', 'enabled': true},
                     {key: 'Global Phew', 'value': 'Global Works', 'name': 'Global Phew', 'enabled': true},
@@ -33,7 +32,7 @@ describe('Variable overrides', function() {
                         listen: 'test',
                         script: {
                             exec: [
-                                'tests[\'Content-Type is present\'] = responseHeaders.hasOwnProperty(\'Content-Type\');',
+                                'tests[\'Content-Type present\'] = responseHeaders.hasOwnProperty(\'Content-Type\');',
                                 'var data1 = JSON.parse(responseBody);',
                                 'tests[\'testGlobalSetFromPRScript\'] = data1.args.prsG === \'prsG\';',
                                 'tests[\'Read global var correctly\'] = globals.prsG === \'prsG\';',
@@ -92,21 +91,7 @@ describe('Variable overrides', function() {
         expect(testrun.test.calledTwice).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests')).to.eql({
-            'Content-Type is present': true,
-            testGlobalSetFromPRScript: true,
-            'Read global var correctly': true,
-            testEnvSetFromPRScript: true,
-            'Read env var correctly': true,
-            'Read data var correctly': true
-        });
-
         expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(1).args[2], '0.result.tests')).to.eql({
-            'Read global var correctly': true,
-            'Read env var correctly': true,
-            'Read data var correctly': true
-        });
     });
 
     it('must have completed the run', function() {

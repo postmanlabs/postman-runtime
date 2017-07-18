@@ -13,7 +13,7 @@ runtime = function (spec, done) {
         callbacks = {};
 
     // add a spy for each callback
-    _.each(_.keys(Runner.Run.triggers), function (eventName) {
+    _.forEach(_.keys(Runner.Run.triggers), function (eventName) {
         callbacks[eventName] = sinon.spy();
     });
 
@@ -22,6 +22,7 @@ runtime = function (spec, done) {
         done(null, callbacks, spec);
     });
 
+    // eslint-disable-next-line handle-callback-err
     runner.run(new Collection(spec.collection), _.omit(spec, ['collection', 'options']), function (err, run) {
         run.start(callbacks);
     });
