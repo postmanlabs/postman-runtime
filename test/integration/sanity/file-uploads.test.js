@@ -26,6 +26,15 @@ describe('File uploads', function() {
                             formdata: [{key: 'file', src: 'test/fixtures/upload-file.json', type: 'file'}]
                         }
                     }
+                }, {
+                    request: {
+                        url: 'https://postman-echo.com/post',
+                        method: 'POST',
+                        body: {
+                            mode: 'file',
+                            file: {src: 'test/fixtures/upload-file.json'}
+                        }
+                    }
                 }]
             }
         }, function(err, results) {
@@ -36,7 +45,7 @@ describe('File uploads', function() {
 
     it('must have run the test script successfully', function() {
         expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
+        expect(testrun.test.calledTwice).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
         expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests["File contents are valid"]')).to.be(true);
@@ -47,5 +56,18 @@ describe('File uploads', function() {
         expect(testrun.done.calledOnce).be.ok();
         expect(testrun.done.getCall(0).args[0]).to.be(null);
         expect(testrun.start.calledOnce).be.ok();
+    });
+
+    it('must have uploaded the files in binary and formdata mode correctly', function() {
+        expect(testrun).be.ok();
+        expect(testrun.request.calledTwice).to.be.ok();
+
+        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(_.find(testrun.request.getCall(0).args[3].headers.members, {key: 'content-length'})).to.have
+            .property('value', 253);
+
+        expect(testrun.request.getCall(1).args[0]).to.be(null);
+        expect(_.find(testrun.request.getCall(1).args[3].headers.members, {key: 'content-length'})).to.have
+            .property('value', 33);
     });
 });
