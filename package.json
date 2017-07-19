@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "6.2.4",
+  "version": "6.2.5",
   "description": "Underlyng library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -33,7 +33,7 @@
     "httpntlm": "1.7.5",
     "inherits": "2.0.3",
     "lodash": "4.17.4",
-    "postman-collection": "2.0.2",
+    "postman-collection": "2.1.0",
     "postman-request": "2.81.1-postman.2",
     "postman-sandbox": "2.3.1-beta.1",
     "resolve-from": "3.0.0",
@@ -43,16 +43,16 @@
   "devDependencies": {
     "colors": "1.1.2",
     "editorconfig": "0.13.2",
-    "eslint": "3.17.1",
+    "eslint": "4.2.0",
     "eslint-plugin-jsdoc": "3.1.1",
-    "eslint-plugin-lodash": "2.4.3",
+    "eslint-plugin-lodash": "2.4.4",
     "eslint-plugin-mocha": "4.11.0",
     "eslint-plugin-security": "1.4.0",
     "expect.js": "0.3.1",
     "http-proxy": "1.16.2",
     "istanbul": "0.4.5",
     "js-yaml": "3.9.0",
-    "jsdoc": "3.5.1",
+    "jsdoc": "3.5.3",
     "jsdoc-to-markdown": "3.0.0",
     "mocha": "3.4.2",
     "nsp": "2.6.3",
@@ -60,7 +60,7 @@
     "postman-jsdoc-theme": "0.0.3",
     "recursive-readdir": "2.2.1",
     "shelljs": "0.7.8",
-    "sinon": "2.3.7",
+    "sinon": "2.3.8",
     "tmp": "0.0.31"
   },
   "browser": {

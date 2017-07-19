@@ -5,8 +5,7 @@ var _ = require('lodash'),
     sdk = require('postman-collection');
 
 describe('authorizer sanity', function () {
-    var Authorizer = require('../../lib/authorizer/index').Authorizer,
-        Run = require('../../lib/runner/run');
+    var Authorizer = require('../../lib/authorizer/index').Authorizer;
 
     it('should expose an constructor', function () {
         expect(Authorizer).to.be.a('function');
@@ -38,7 +37,7 @@ describe('authorizer sanity', function () {
 
             expect(authorizer).to.be.an(Authorizer);
 
-            _.each(Authorizer.Handlers, function (handler, name) {
+            _.forEach(Authorizer.Handlers, function (handler, name) {
                 expect(authorizer.interactive).to.have.property(name, true);
             });
             done();
@@ -105,10 +104,10 @@ describe('authorizer sanity', function () {
             expect(sdk.RequestAuth.addType.bind(sdk.RequestAuth)).withArgs(fakeSigner, 'fake').to.not.throwException();
 
             expect(Authorizer.addHandler.bind(Authorizer))
-            .withArgs(_.omit(fakeHandler, 'pre'), 'fake')  // do not provide the "pre" callback
-            .to.throwException(function (e) {
-                expect(e.message).to.match(/"pre"/);
-            });
+                .withArgs(_.omit(fakeHandler, 'pre'), 'fake') // do not provide the "pre" callback
+                .to.throwException(function (e) {
+                    expect(e.message).to.match(/"pre"/);
+                });
         });
 
         // @todo - we can remove this later
@@ -170,14 +169,16 @@ describe('authorizer sanity', function () {
                 context = {
                     auth: new sdk.RequestAuth.types.fake()
                 };
-                run = new Run();
+                run = {
+                    requester: new (require('../../lib/requester').RequesterPool)()
+                };
                 done();
             });
         });
 
         afterEach(function () {
             Authorizer.removeHandler('fake');
-            delete sdk.RequestAuth.types.fake;  // todo: add a function in the SDK to remove an auth type.
+            delete sdk.RequestAuth.types.fake; // todo: add a function in the SDK to remove an auth type.
 
             authorizer = undefined;
             context = undefined;
