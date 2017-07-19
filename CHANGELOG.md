@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### 6.2.5 (July 19, 2017)
+* :bug: Fixed a regression that prevented cookies from being passed across requests. #323
+
 #### 6.2.4 (July 11, 2017)
 * Fixed a bug that prevented the `Content-Length` header from being set for file uploads in `binary` mode.
 
