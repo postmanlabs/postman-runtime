@@ -3,7 +3,8 @@
 var _ = require('lodash'),
     sinon = require('sinon'),
     sdk = require('postman-collection'),
-    Authorizer = require('../../../lib/authorizer/index').Authorizer;
+    Authorizer = require('../../../lib/authorizer/index').Authorizer,
+    GLOBAL_MAX_REPLAY_COUNT = Authorizer.GLOBAL_MAX_REPLAY_COUNT;
 
 describe('fake auth', function () {
     var fakeSigner = {
@@ -90,6 +91,140 @@ describe('fake auth', function () {
 
             expect(err).to.be(null);
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+        });
+    });
+
+    describe('global limit on replay', function () {
+        var testrun,
+            fakeHandler = {
+                init: function (context, requester, done) { done(null); },
+                pre: function (context, requester, done) { done(null, false); },
+                post: function (context, requester, done) { done(null, false); },
+                _sign: function (request) { return request; }
+            },
+            handlerSpies = {
+                pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
+                post: sinon.spy(fakeHandler, 'post'),
+                _sign: sinon.spy(fakeHandler, '_sign')
+            };
+
+        before(function (done) {
+            Authorizer.addHandler(fakeHandler, 'fake');
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        after(function () {
+            Authorizer.removeHandler('fake');
+            fakeSigner.update.reset();
+        });
+
+        it('must take the global default limit for replaying request', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.calledOnce).be.ok();
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
+
+            // Authorizer flow related assertions
+            expect(handlerSpies.init.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
+            expect(handlerSpies.pre.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
+            expect(handlerSpies.post.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
+            expect(handlerSpies._sign.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
+            expect(signerSpy.calledThrice).to.be.ok();
+        });
+
+        it('must have sent the request once', function () {
+            expect(testrun.request.calledOnce).be.ok();
+
+            var err = testrun.request.firstCall.args[0],
+                request = testrun.request.firstCall.args[3];
+
+            expect(err).to.be(null);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+        });
+    });
+
+    describe('explicit limit on replay', function () {
+        var testrun,
+            fakeHandler = {
+                maxReplayCount: 3,
+                init: function (context, requester, done) { done(null); },
+                pre: function (context, requester, done) { done(null, false); },
+                post: function (context, requester, done) { done(null, false); },
+                _sign: function (request) { return request; }
+            },
+            handlerSpies = {
+                pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
+                post: sinon.spy(fakeHandler, 'post'),
+                _sign: sinon.spy(fakeHandler, '_sign')
+            };
+
+        before(function (done) {
+            Authorizer.addHandler(fakeHandler, 'fake');
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        after(function () {
+            Authorizer.removeHandler('fake');
+            fakeSigner.update.reset();
+        });
+
+        it('must take the limit set in the handler for replaying request', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.calledOnce).be.ok();
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.calledOnce).be.ok();
+            expect(testrun.io.callCount).be.eql(fakeHandler.maxReplayCount + 2);
+
+            // Authorizer flow related assertions
+            expect(handlerSpies.init.callCount).be.eql(fakeHandler.maxReplayCount + 2);
+            expect(handlerSpies.pre.callCount).be.eql(fakeHandler.maxReplayCount + 2);
+            expect(handlerSpies.post.callCount).be.eql(fakeHandler.maxReplayCount + 2);
+            expect(handlerSpies._sign.callCount).be.eql(fakeHandler.maxReplayCount + 2);
+            expect(signerSpy.calledThrice).to.be.ok();
+        });
+
+        it('must have sent the request once', function () {
+            expect(testrun.request.calledOnce).be.ok();
+
+            var err = testrun.request.firstCall.args[0],
+                request = testrun.request.firstCall.args[3];
+
+            expect(err).to.be(null);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+        });
+    });
+
+    describe('invalid explicit limit on replay', function () {
+        var fakeHandler = {
+            maxReplayCount: 100,
+            init: function (context, requester, done) { done(null); },
+            pre: function (context, requester, done) { done(null, false); },
+            post: function (context, requester, done) { done(null, false); },
+            _sign: function (request) { return request; }
+        };
+
+        it('must throw error', function () {
+            expect(Authorizer.addHandler.bind(this, fakeHandler, 'fake')).to.throwError(
+                function (err) {
+                    expect(err.toString()).to.eql(
+                        new Error('The handler for "fake" has an invalid "maxReplayCount" value.' +
+                        ' Value must be between 0-' + GLOBAL_MAX_REPLAY_COUNT + ' inclusive.').toString()
+                    );
+                }
+            );
         });
     });
 
