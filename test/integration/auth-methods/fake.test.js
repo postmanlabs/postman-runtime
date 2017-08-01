@@ -4,7 +4,8 @@ var _ = require('lodash'),
     sinon = require('sinon'),
     sdk = require('postman-collection'),
     Authorizer = require('../../../lib/authorizer/index').Authorizer,
-    GLOBAL_MAX_REPLAY_COUNT = Authorizer.GLOBAL_MAX_REPLAY_COUNT;
+    GLOBAL_MAX_REPLAY_COUNT = Authorizer.GLOBAL_MAX_REPLAY_COUNT,
+    DEFAULT_MAX_REPLAY_COUNT = Authorizer.DEFAULT_MAX_REPLAY_COUNT;
 
 describe('fake auth', function () {
     var fakeSigner = {
@@ -94,7 +95,7 @@ describe('fake auth', function () {
         });
     });
 
-    describe('global limit on replay', function () {
+    describe('default limit on replay', function () {
         var testrun,
             fakeHandler = {
                 init: function (context, requester, done) { done(null); },
@@ -123,19 +124,19 @@ describe('fake auth', function () {
             fakeSigner.update.reset();
         });
 
-        it('must take the global default limit for replaying request', function () {
+        it('must take the default limit for replaying request', function () {
             expect(testrun).be.ok();
             expect(testrun.done.calledOnce).be.ok();
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
-            expect(testrun.io.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
+            expect(testrun.io.callCount).be.eql(DEFAULT_MAX_REPLAY_COUNT + 2);
 
             // Authorizer flow related assertions
-            expect(handlerSpies.init.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
-            expect(handlerSpies.pre.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
-            expect(handlerSpies.post.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
-            expect(handlerSpies._sign.callCount).be.eql(GLOBAL_MAX_REPLAY_COUNT + 2);
+            expect(handlerSpies.init.callCount).be.eql(DEFAULT_MAX_REPLAY_COUNT + 2);
+            expect(handlerSpies.pre.callCount).be.eql(DEFAULT_MAX_REPLAY_COUNT + 2);
+            expect(handlerSpies.post.callCount).be.eql(DEFAULT_MAX_REPLAY_COUNT + 2);
+            expect(handlerSpies._sign.callCount).be.eql(DEFAULT_MAX_REPLAY_COUNT + 2);
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
