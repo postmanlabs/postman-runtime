@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 describe('requests from sandbox', function() {
     describe('sanity checks', function () {
         var testrun,
@@ -61,6 +63,7 @@ describe('requests from sandbox', function() {
 
             expect(trace).to.have.property('type', 'http');
             expect(trace).to.have.property('source', 'script');
+            expect(trace).to.have.property('_request_id');
         });
 
         it('should have sent the second request as a part of the collection run', function () {
@@ -228,6 +231,17 @@ describe('requests from sandbox', function() {
             expect(assertion).to.have.property('passed', true);
             expect(assertion).to.have.property('error', null);
             expect(assertion).to.have.property('index', 1);
+        });
+
+        it('should propagate unique request id in `_request_id`', function () {
+            var i = 0,
+                requestIds = [];
+
+            for (i = 0; i < testrun.io.callCount; i++) {
+                requestIds.push(testrun.io.getCall(i).args[2]._request_id);
+            }
+
+            expect(_.uniq(requestIds)).to.have.length(testrun.io.callCount);
         });
 
         it('must have completed the run', function() {
