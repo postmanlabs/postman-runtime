@@ -37,8 +37,8 @@ describe('requests from sandbox', function() {
             expect(testrun.io.calledTwice).to.be(true);
         });
 
-        it('should have called the request event once', function () {
-            expect(testrun.request.calledOnce).to.be(true);
+        it('should have called the request event twice', function () {
+            expect(testrun.request.calledTwice).to.be(true);
         });
 
         it('should have the same cursor id for both the io events', function () {
@@ -149,8 +149,8 @@ describe('requests from sandbox', function() {
             expect(testrun.io.calledThrice).to.be(true);
         });
 
-        it('should have called the request event once', function () {
-            expect(testrun.request.calledOnce).to.be(true);
+        it('should have called the request event thrice', function () {
+            expect(testrun.request.calledThrice).to.be(true);
         });
 
         it('should have the same cursor id for all the io events', function () {
@@ -276,8 +276,8 @@ describe('requests from sandbox', function() {
             expect(testrun.io.calledTwice).to.be(true);
         });
 
-        it('should have called the request event once', function () {
-            expect(testrun.request.calledOnce).to.be(true);
+        it('should have called the request event twice', function () {
+            expect(testrun.request.calledTwice).to.be(true);
         });
 
         it('should have the same cursor id for both the io events', function () {
