@@ -1,5 +1,5 @@
 describe('requests from sandbox', function() {
-    describe('sanity checks', function () {
+    describe('single .sendRequest', function () {
         var testrun,
             sandboxRequestUrl = 'postman-echo.com/get?sandbox=true';
 
@@ -14,7 +14,7 @@ describe('requests from sandbox', function() {
                                 exec: `
                                 var sdk = require('postman-collection'),
                                     myreq = new sdk.Request('${sandboxRequestUrl}');
-                                
+
                                 pm.sendRequest(myreq, function(err, _response) {
                                     pm.test('request was sent from sandbox', function () {
                                         pm.expect(_response).to.have.property('code', 200);
@@ -114,21 +114,21 @@ describe('requests from sandbox', function() {
                                 exec: `
                                 var sdk = require('postman-collection'),
                                     req1 = new sdk.Request('${sandboxRequestUrl1}');
-                                
+
                                 pm.sendRequest(req1, function(err, response1) {
                                     pm.test('${testname1}', function () {
                                         pm.expect(response1).to.have.property('code', 200);
                                         pm.expect(response1).to.have.property('status', 'OK');
-                                        
+
                                         pm.expect(response1.json().args).to.have.property('n', '1');
                                     });
-                                    
+
                                     var req2 = new sdk.Request('${sandboxRequestUrl2}');
                                     pm.sendRequest(req2, function (err, response2) {
                                         pm.test('${testname2}', function () {
                                             pm.expect(response2).to.have.property('code', 200);
                                             pm.expect(response2).to.have.property('status', 'OK');
-                                            
+
                                             pm.expect(response2.json().args).to.have.property('n', '2');
                                         });
                                     });
@@ -253,7 +253,7 @@ describe('requests from sandbox', function() {
                                 exec: `
                                 var sdk = require('postman-collection'),
                                     myreq = new sdk.Request('${sandboxRequestUrl}');
-                                
+
                                 pm.sendRequest(myreq, function(err, _response) {
                                     pm.test('request did not complete', function () {
                                         pm.expect(err).to.have.property('code', 'ENOTFOUND');
