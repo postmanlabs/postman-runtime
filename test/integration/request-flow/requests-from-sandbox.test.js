@@ -335,4 +335,124 @@ describe('requests from sandbox', function() {
             expect(testrun.start.calledOnce).be.ok();
         });
     });
+
+    describe('with files', function () {
+        var testrun;
+        describe('in binary mode', function () {
+            before(function (done) {
+                this.run({
+                    collection: {
+                        item: {
+                            // ensure that we run something for test and pre-req scripts
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                    var sdk = require('postman-collection'),
+                                        myreq = new sdk.Request({
+                                            url: 'https://postman-echo.com/post',
+                                            method: 'POST',
+                                            body: {
+                                                mode: 'file',
+                                                file: {src: 'test/fixtures/upload-file.json'}
+                                            }
+                                        });
+
+                                    pm.sendRequest(myreq, function(err, _response) {
+                                        pm.test('request was sent from sandbox', function () {
+                                            pm.expect(_response).to.be.ok();
+                                        });
+                                    });
+                                    `
+                                }
+                            }],
+                            request: {
+                                url: 'https://postman-echo.com/get'
+                            }
+                        }
+                    }
+                }, function(err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should send a warning', function () {
+                var warning = testrun.console.firstCall;
+
+                expect(testrun).to.be.ok();
+                expect(warning.args[1]).to.eql('warn');
+                expect(warning.args[2]).to.eql('uploading files from scripts is not allowed');
+            });
+
+            it('should not send file in body', function () {
+                var response = testrun.io.firstCall.args[3];
+
+                expect(response.json().data).to.be.empty();
+            });
+        });
+
+        describe('in formdata', function () {
+            before(function (done) {
+                this.run({
+                    collection: {
+                        item: {
+                            // ensure that we run something for test and pre-req scripts
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                    var sdk = require('postman-collection'),
+                                        myreq = new sdk.Request({
+                                            url: 'https://postman-echo.com/post',
+                                            method: 'POST',
+                                            body: {
+                                                mode: 'formdata',
+                                                formdata: [{
+                                                    type: 'file',
+                                                    key: 'foo',
+                                                    src: 'test/fixtures/upload-file.json'
+                                                }, {
+                                                    type: 'text',
+                                                    key: 'bar',
+                                                    value: 'baz'
+                                                }]
+                                            }
+                                        });
+
+                                    pm.sendRequest(myreq, function(err, _response) {
+                                        pm.test('request was sent from sandbox', function () {
+                                            pm.expect(_response).to.be.ok();
+                                        });
+                                    });
+                                    `
+                                }
+                            }],
+                            request: {
+                                url: 'https://postman-echo.com/get'
+                            }
+                        }
+                    }
+                }, function(err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should send a warning', function () {
+                var warning = testrun.console.firstCall;
+
+                expect(testrun).to.be.ok();
+                expect(warning.args[1]).to.eql('warn');
+                expect(warning.args[2]).to.eql('uploading files from scripts is not allowed');
+            });
+
+            it('should remove only file type params from formdata', function () {
+                var response = testrun.io.firstCall.args[3];
+
+                expect(response.json().files).to.be.empty();
+                expect(response.json().form).to.eql({bar: 'baz'});
+            });
+        });
+    });
 });
