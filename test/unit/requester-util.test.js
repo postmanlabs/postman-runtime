@@ -107,7 +107,8 @@ describe('requester util', function () {
                         {key: 'beta', value: 'bar', disabled: true},
                         {key: 'gamma', value: 'baz'},
                         {key: 'alpha', value: 'next'},
-                        {key: 'alpha', value: 'other'}
+                        {key: 'alpha', value: 'other'},
+                        {key: '', value: 'random'}
                     ]
                 }),
                 headers = requesterUtil.getRequestHeaders(request);
