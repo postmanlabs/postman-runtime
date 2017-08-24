@@ -27,7 +27,7 @@ describe('replayed requests', function () {
                     done(null, replayCount === 2);
                 },
 
-                _sign: function (request) {
+                sign: function (request) {
                     return request;
                 }
             },

@@ -43,13 +43,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(null, true); },
                 post: function (context, requester, done) { done(null, true); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -78,7 +78,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -99,13 +99,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(null, true); },
                 post: function (context, requester, done) { done(new Error('Post err!')); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -134,7 +134,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -156,13 +156,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(null, true); },
                 post: function (context, requester, done) { done(null, count++ > 1); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -191,7 +191,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledThrice).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledThrice).to.be.ok();
-            expect(handlerSpies._sign.calledThrice).to.be.ok();
+            expect(handlerSpies.sign.calledThrice).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -212,13 +212,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(new Error('Pre err!')); },
                 post: function (context, requester, done) { done(null, true); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -247,7 +247,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -268,13 +268,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(new Error('Pre err!')); },
                 post: function (context, requester, done) { done(new Error('Post err!')); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -303,7 +303,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -324,13 +324,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(new Error('Pre err!')); },
                 post: function (context, requester, done) { done(null, false); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -359,7 +359,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -380,13 +380,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(null, false); },
                 post: function (context, requester, done) { done(null, true); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -415,7 +415,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -436,13 +436,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(null, false); },
                 post: function (context, requester, done) { done(new Error('Post err!')); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -471,7 +471,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -494,13 +494,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(null); },
                 pre: function (context, requester, done) { done(null, preCount++ > 1); },
                 post: function (context, requester, done) { done(null, postCount++ > 1); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -529,7 +529,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledThrice).to.be.ok();
             expect(handlerSpies.init.calledTwice).to.be.ok();
             expect(handlerSpies.post.calledThrice).to.be.ok();
-            expect(handlerSpies._sign.calledThrice).to.be.ok();
+            expect(handlerSpies.sign.calledThrice).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -550,13 +550,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(null, true); },
                 post: function (context, requester, done) { done(null, true); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -585,7 +585,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -606,13 +606,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(null, true); },
                 post: function (context, requester, done) { done(new Error('Post err!')); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -641,7 +641,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledOnce).to.be.ok();
-            expect(handlerSpies._sign.calledOnce).to.be.ok();
+            expect(handlerSpies.sign.calledOnce).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -663,13 +663,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(null, true); },
                 post: function (context, requester, done) { done(null, count++ > 1); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -698,7 +698,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledThrice).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.calledThrice).to.be.ok();
-            expect(handlerSpies._sign.calledThrice).to.be.ok();
+            expect(handlerSpies.sign.calledThrice).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -719,13 +719,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(new Error('Pre err!')); },
                 post: function (context, requester, done) { done(null, true); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -754,7 +754,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -775,13 +775,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(new Error('Pre err!')); },
                 post: function (context, requester, done) { done(new Error('Post err!')); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -810,7 +810,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -831,13 +831,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(new Error('Pre err!')); },
                 post: function (context, requester, done) { done(null, false); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -866,7 +866,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.notCalled).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -887,13 +887,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(null, false); },
                 post: function (context, requester, done) { done(null, true); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -922,7 +922,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -943,13 +943,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(null, false); },
                 post: function (context, requester, done) { done(new Error('Post err!')); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -978,7 +978,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 
@@ -999,13 +999,13 @@ describe('fake auth', function () {
                 init: function (context, requester, done) { done(new Error('Init err!')); },
                 pre: function (context, requester, done) { done(null, false); },
                 post: function (context, requester, done) { done(null, false); },
-                _sign: function (request) { return request; }
+                sign: function (request) { return request; }
             },
             handlerSpies = {
                 pre: sinon.spy(fakeHandler, 'pre'),
                 init: sinon.spy(fakeHandler, 'init'),
                 post: sinon.spy(fakeHandler, 'post'),
-                _sign: sinon.spy(fakeHandler, '_sign')
+                sign: sinon.spy(fakeHandler, 'sign')
             };
 
         before(function (done) {
@@ -1034,7 +1034,7 @@ describe('fake auth', function () {
             expect(handlerSpies.pre.calledOnce).to.be.ok();
             expect(handlerSpies.init.calledOnce).to.be.ok();
             expect(handlerSpies.post.notCalled).to.be.ok();
-            expect(handlerSpies._sign.notCalled).to.be.ok();
+            expect(handlerSpies.sign.notCalled).to.be.ok();
             expect(signerSpy.calledThrice).to.be.ok();
         });
 

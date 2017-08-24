@@ -74,7 +74,7 @@ describe('authorizer sanity', function () {
                     done(null, true);
                 },
 
-                _sign: function (request) {
+                sign: function (request) {
                     return request;
                 }
             },
@@ -146,7 +146,7 @@ describe('authorizer sanity', function () {
                         done(null, true);
                     },
 
-                    _sign: function (request) {
+                    sign: function (request) {
                         return request;
                     }
                 },

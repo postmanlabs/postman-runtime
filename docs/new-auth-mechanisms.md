@@ -27,7 +27,7 @@ Update `lib/collection/request-auth.js` to require your new auth method.
 
 Create a new file `demo.js` in `postman-runtime/lib/authorizer/`
 
-Every auth method needs to expose four different functionalities, `pre`, `post`, `init` and `_sign`. These
+Every auth method needs to expose four different functionalities, `pre`, `post`, `init` and `sign`. These
 are called in the {@tutorial request-send-flow}.
 
 ```javascript
@@ -44,8 +44,8 @@ module.exports = {
         done(null, true);
     },
 
-    _sign: function (request) {
-        return this.authorize(request);
+    sign: function (request) {
+        return request;
     }
 };
 ```
@@ -102,13 +102,18 @@ post: function demoAuthPost (context, requester, done) {
 }
 ```
 
-### `_sign`
+### `sign`
 
-This function is in charge of calling the SDK's signing method. Eventually, it will become independent by itself.
+This function is in charge of signing the request
 
 e.g:
 ```javascript
-    _sign: function demoSign (request) {
-        return this.authorize(request);
+    sign: function demoSign (request) {
+        request.addHeader({
+            key: 'Authorization',
+            value: 'Basic ' + btoa('username:password'),
+            system: true
+        });
+        return request;
     }
 ```
