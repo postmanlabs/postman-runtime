@@ -1,16 +1,15 @@
+var _ = require('lodash');
+
 describe('cookie sandbox request interaction', function () {
     var cookieUrl = 'https://postman-echo.com/cookies';
 
-    describe('from sandbox', function () {
+    describe('intra-sandbox', function () {
         describe('explicit', function () {
             describe('clear', function () {
                 var testrun;
 
                 before(function(done) {
                     this.run({
-                        requester: {
-                            followRedirects: false
-                        },
                         collection: {
                             item: {
                                 // ensure that we run something for test and pre-req scripts
@@ -42,7 +41,7 @@ describe('cookie sandbox request interaction', function () {
                     });
                 });
 
-                it('must have completed the run', function () {
+                it('should have completed the run', function () {
                     expect(testrun).be.ok();
                     expect(testrun.done.calledOnce).be.ok();
                     expect(testrun.done.getCall(0).args[0]).to.be(null);
@@ -51,11 +50,12 @@ describe('cookie sandbox request interaction', function () {
                     expect(testrun.request.calledOnce).to.be(true);
                 });
 
-                it('should handle cookies correctly', function () {
+                it('should clear cookies outside the sandbox as well', function () {
                     var reqOne = testrun.request.firstCall.args[3],
                         resOne = testrun.request.firstCall.args[2];
 
                     expect(reqOne.headers.reference.cookie).to.have.property('value', 'foo=bar;');
+                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
                     expect(resOne.cookies.reference).to.be.empty();
                 });
             });
@@ -65,9 +65,6 @@ describe('cookie sandbox request interaction', function () {
 
                 before(function(done) {
                     this.run({
-                        requester: {
-                            followRedirects: false
-                        },
                         collection: {
                             item: {
                                 // ensure that we run something for test and pre-req scripts
@@ -102,7 +99,7 @@ describe('cookie sandbox request interaction', function () {
                     });
                 });
 
-                it('must have completed the run', function () {
+                it('should have completed the run', function () {
                     expect(testrun).be.ok();
                     expect(testrun.done.calledOnce).be.ok();
                     expect(testrun.done.getCall(0).args[0]).to.be(null);
@@ -112,7 +109,7 @@ describe('cookie sandbox request interaction', function () {
                 });
 
                 // @todo: Unskip this when the corresponding behaviour is fixed
-                it.skip('should handle cookies correctly', function () {
+                it.skip('should make the set cookies usable outside the sandbox as well', function () {
                     var reqOne = testrun.request.firstCall.args[3],
                         resOne = testrun.request.firstCall.args[2];
 
@@ -128,9 +125,6 @@ describe('cookie sandbox request interaction', function () {
 
                 before(function(done) {
                     this.run({
-                        requester: {
-                            followRedirects: false
-                        },
                         collection: {
                             item: {
                                 // ensure that we run something for test and pre-req scripts
@@ -174,7 +168,7 @@ describe('cookie sandbox request interaction', function () {
                     });
                 });
 
-                it('must have completed the run', function () {
+                it('should have completed the run', function () {
                     expect(testrun).be.ok();
                     expect(testrun.done.calledOnce).be.ok();
                     expect(testrun.done.getCall(0).args[0]).to.be(null);
@@ -183,16 +177,18 @@ describe('cookie sandbox request interaction', function () {
                     expect(testrun.request.calledTwice).to.be(true);
                 });
 
-                it('should handle cookies correctly', function () {
+                it('should clear the cookies outside the sandbox as well', function () {
                     var reqOne = testrun.io.firstCall.args[4],
                         reqTwo = testrun.request.firstCall.args[3],
                         resOne = testrun.io.firstCall.args[3];
 
-                    expect(reqOne.headers.reference).to.not.have.property('cookie');
-                    expect(reqTwo.headers.reference).to.not.have.property('cookie');
+                    expect(reqOne.headers.reference.cookie.value).to.not.contain('foo=bar');
+                    expect(reqTwo.headers.reference.cookie.value).to.not.contain('foo=bar');
 
-                    expect(resOne.headers.reference['set-cookie'][0]).to.have.property('value',
-                        'foo=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT');
+                    expect(resOne.json()).to.eql({cookies: {}});
+                    expect(testrun.request.secondCall.args[2].json()).to.eql({cookies: {foo: 'bar'}});
+
+                    expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', 'foo=bar;'))).to.be(true);
                 });
             });
 
@@ -201,9 +197,6 @@ describe('cookie sandbox request interaction', function () {
 
                 before(function(done) {
                     this.run({
-                        requester: {
-                            followRedirects: false
-                        },
                         collection: {
                             item: {
                                 // ensure that we run something for test and pre-req scripts
@@ -244,7 +237,7 @@ describe('cookie sandbox request interaction', function () {
                     });
                 });
 
-                it('must have completed the run', function () {
+                it('should have completed the run', function () {
                     expect(testrun).be.ok();
                     expect(testrun.done.calledOnce).be.ok();
                     expect(testrun.done.getCall(0).args[0]).to.be(null);
@@ -253,30 +246,31 @@ describe('cookie sandbox request interaction', function () {
                     expect(testrun.request.calledTwice).to.be(true);
                 });
 
-                it('should handle cookies correctly', function () {
+                it('should expose the cookies outside the sandbox as well', function () {
                     var reqOne = testrun.io.firstCall.args[4],
                         reqTwo = testrun.request.secondCall.args[3],
                         resOne = testrun.io.firstCall.args[3];
 
-                    expect(reqOne.headers.reference).to.not.have.property('cookie');
+                    expect(reqOne.headers.reference.cookie.value).to.contain('foo=bar');
                     expect(reqTwo.headers.reference.cookie.value).to.contain('foo=bar');
 
-                    expect(resOne.headers.reference['set-cookie'][0]).to.have.property('value', 'foo=bar; Path=/');
+                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
+                    expect(testrun.request.secondCall.args[2].json()).to.eql({cookies: {foo: 'bar'}});
+
+                    expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
+                        .be(true);
                 });
             });
         });
     });
 
-    describe('to sandbox', function () {
+    describe('outside sandbox', function () {
         describe('explicit', function () {
             describe('clear', function () {
                 var testrun;
 
                 before(function(done) {
                     this.run({
-                        requester: {
-                            followRedirects: false
-                        },
                         collection: {
                             item: {
                                 // ensure that we run something for test and pre-req scripts
@@ -317,7 +311,7 @@ describe('cookie sandbox request interaction', function () {
                     });
                 });
 
-                it('must have completed the run', function () {
+                it('should have completed the run', function () {
                     expect(testrun).be.ok();
                     expect(testrun.done.calledOnce).be.ok();
                     expect(testrun.done.getCall(0).args[0]).to.be(null);
@@ -326,7 +320,7 @@ describe('cookie sandbox request interaction', function () {
                     expect(testrun.request.calledTwice).to.be(true);
                 });
 
-                it('should handle cookies correctly', function () {
+                it('should clear cookies outside the sandbox as well', function () {
                     var reqOne = testrun.request.firstCall.args[3],
                         reqTwo = testrun.io.secondCall.args[4],
                         resOne = testrun.request.firstCall.args[2],
@@ -336,6 +330,8 @@ describe('cookie sandbox request interaction', function () {
                     expect(reqTwo.headers.reference.cookie.value).to.not.contain('foo=bar');
 
                     expect(resOne.headers.reference['set-cookie'].value).to.not.contain('foo=bar');
+
+                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
 
                     expect(resOne.cookies.reference).to.be.empty();
                     expect(resTwo.cookies.reference).to.be.empty();
@@ -349,9 +345,6 @@ describe('cookie sandbox request interaction', function () {
 
                 before(function(done) {
                     this.run({
-                        requester: {
-                            followRedirects: false
-                        },
                         collection: {
                             item: {
                                 // ensure that we run something for test and pre-req scripts
@@ -380,7 +373,7 @@ describe('cookie sandbox request interaction', function () {
                                 }],
                                 request: {
                                     url: cookieUrl + '/delete?foo',
-                                    header: [{key: 'Cookie', value: 'foo=bar;'}]
+                                    header: [{key: 'Cookie', value: 'foo=bar'}]
                                 }
                             }
                         }
@@ -390,7 +383,7 @@ describe('cookie sandbox request interaction', function () {
                     });
                 });
 
-                it('must have completed the run', function () {
+                it('should have completed the run', function () {
                     expect(testrun).be.ok();
                     expect(testrun.done.calledOnce).be.ok();
                     expect(testrun.done.getCall(0).args[0]).to.be(null);
@@ -399,17 +392,19 @@ describe('cookie sandbox request interaction', function () {
                     expect(testrun.request.calledTwice).to.be(true);
                 });
 
-                it('should handle cookies correctly', function () {
+                it('should clear cookies outside the sandbox as well', function () {
                     var reqOne = testrun.request.firstCall.args[3],
                         reqTwo = testrun.io.secondCall.args[4],
                         resOne = testrun.request.firstCall.args[2],
                         resTwo = testrun.io.secondCall.args[3];
 
-                    expect(reqOne.headers.reference.cookie).to.have.property('value', 'foo=bar;');
+                    expect(reqOne.headers.reference.cookie.value).to.contain('foo=bar;');
                     expect(reqTwo.headers.reference.cookie.value).to.not.contain('foo=bar');
+                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
+                    expect(resTwo.json()).to.eql({cookies: {}});
 
-                    expect(resOne.headers.reference['set-cookie'][0]).to.have.property('value',
-                        'foo=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT');
+                    expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', '')), 'foo=bar;').to
+                        .be(true);
 
                     expect(resOne.cookies.reference).to.be.empty();
                     expect(resTwo.cookies.reference).to.be.empty();
@@ -421,9 +416,6 @@ describe('cookie sandbox request interaction', function () {
 
                 before(function(done) {
                     this.run({
-                        requester: {
-                            followRedirects: false
-                        },
                         collection: {
                             item: {
                                 // ensure that we run something for test and pre-req scripts
@@ -459,7 +451,7 @@ describe('cookie sandbox request interaction', function () {
                     });
                 });
 
-                it('must have completed the run', function () {
+                it('should have completed the run', function () {
                     expect(testrun).be.ok();
                     expect(testrun.done.calledOnce).be.ok();
                     expect(testrun.done.getCall(0).args[0]).to.be(null);
@@ -468,19 +460,22 @@ describe('cookie sandbox request interaction', function () {
                     expect(testrun.request.calledTwice).to.be(true);
                 });
 
-                it('should handle cookies correctly', function () {
+                it('should expose cookies outside the sandbox as well', function () {
                     var reqOne = testrun.request.firstCall.args[3],
                         resOne = testrun.request.firstCall.args[2],
                         reqTwo = testrun.io.secondCall.args[4],
-                        resTwo = testrun.io.secondCall.args[4];
+                        resTwo = testrun.io.secondCall.args[3];
 
-                    expect(reqOne.headers.reference).to.not.have.property('cookie');
-                    expect(resOne.headers.reference['set-cookie'][0]).to.have.property('value', 'foo=bar; Path=/');
+                    expect(reqOne.headers.reference.cookie.value).to.contain('foo=bar;');
+                    expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
+                        .be(true);
 
-                    expect(resTwo.headers.reference).to.not.have.property('set-cookie');
+                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
+                    expect(resTwo.json()).to.eql({cookies: {foo: 'bar'}});
 
                     expect(reqTwo.headers.reference.cookie.value).to.contain('foo=bar;');
-                    expect(resTwo.headers.reference.cookie.value).to.contain('foo=bar;');
+                    expect(!_.includes(_.get(resTwo, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
+                        .be(true);
                 });
             });
         });
