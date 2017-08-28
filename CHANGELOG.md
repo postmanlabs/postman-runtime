@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### v6.3.1 (August 28, 2017)
+* :bug: Prevented empty/missing request urls from crashing `pm.sendRequest` #361
+
 #### v6.3.0 (August 21, 2017)
 * :arrow_up: Updated `postman-sandbox` to `v2.3.2`, which contains a header assertion bugfix. #358
 
