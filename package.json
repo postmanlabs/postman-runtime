@@ -37,7 +37,7 @@
     "httpntlm": "1.7.5",
     "inherits": "2.0.3",
     "lodash": "4.17.4",
-    "postman-collection": "2.1.2",
+    "postman-collection": "git+https://github.com/postmanlabs/postman-collection.git#feature/auth-separation",
     "postman-request": "2.81.1-postman.2",
     "postman-sandbox": "2.3.2",
     "resolve-from": "3.0.0",
