@@ -238,6 +238,77 @@ describe('requests from sandbox', function() {
         });
     });
 
+    describe('with invalid urls', function () {
+        var testrun;
+
+        before(function(done) {
+            this.run({
+                collection: {
+                    item: {
+                        // ensure that we run something for test and pre-req scripts
+                        event: [{
+                            listen: 'prerequest',
+                            script: {
+                                exec: `
+                                pm.sendRequest({}, function(err, _response) {
+                                    pm.test('request did not complete', function () {
+                                        pm.expect(err).to.not.eql(null);
+                                        pm.expect(_response).to.not.be.ok;
+                                    });
+                                });
+                                `
+                            }
+                        }],
+                        request: 'https://postman-echo.com/get'
+                    }
+                }
+            }, function(err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have called io event twice', function () {
+            expect(testrun.io.callCount).to.eql(2);
+        });
+
+        it('should have called request event twice', function () {
+            expect(testrun.request.callCount).to.eql(2);
+        });
+
+        it('should have provided the error to the sandbox sendrequest function', function () {
+            var assertion = testrun.assertion.firstCall.args[1];
+
+            expect(assertion).to.have.property('name', 'request did not complete');
+            expect(assertion).to.have.property('skipped', false);
+            expect(assertion).to.have.property('passed', true);
+            expect(assertion).to.have.property('error', null);
+            expect(assertion).to.have.property('index', 0);
+        });
+
+        it('should have sent the second request as a part of the collection run', function () {
+            var error = testrun.io.secondCall.args[0],
+                request = testrun.io.secondCall.args[4],
+                response = testrun.io.secondCall.args[3],
+                trace = testrun.io.secondCall.args[2];
+
+            expect(error).to.be(null);
+
+            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(response.code).to.eql(200);
+
+            expect(trace).to.have.property('type', 'http');
+            expect(trace).to.have.property('source', 'collection');
+        });
+
+        it('must have completed the run', function() {
+            expect(testrun).be.ok();
+            expect(testrun.done.calledOnce).be.ok();
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.calledOnce).be.ok();
+        });
+    });
+
     describe('sending errors', function () {
         var testrun,
             sandboxRequestUrl = 'somenonexistentweirddomain.com/get?sandbox=true';
