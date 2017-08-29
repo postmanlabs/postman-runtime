@@ -62,7 +62,50 @@ describe('authorizer sanity', function () {
 
     describe('inject new auth types dynamically', function () {
         var fakeHandler = {
+            init: function (context, requester, done) {
+                done(null);
+            },
+
+            pre: function (context, requester, done) {
+                done(null, true);
+            },
+
+            post: function (context, requester, done) {
+                done(null, true);
+            },
+
+            sign: function (params, request) {
+                return request;
+            }
+        };
+
+        afterEach(function () {
+            Authorizer.removeHandler('fake');
+        });
+
+        it('should allow dynamically injecting new auth types', function () {
+            expect(Authorizer.addHandler.bind(Authorizer)).withArgs(fakeHandler, 'fake').to.not.throwException();
+        });
+
+        it('should perform validations when injecting new auth types', function () {
+            expect(Authorizer.addHandler.bind(Authorizer))
+                .withArgs(_.omit(fakeHandler, 'pre'), 'fake') // do not provide the "pre" callback
+                .to.throwException(function (e) {
+                    expect(e.message).to.match(/"pre"/);
+                });
+        });
+    });
+
+    describe('functionality', function () {
+        var authorizer,
+            context,
+            run;
+
+        beforeEach(function (done) {
+            var fakeHandler = {
                 init: function (context, requester, done) {
+                    var authVarList = context.auth[context.auth.type];
+                    authVarList.syncFromObject({teststring: 'teststring'}, false, false);
                     done(null);
                 },
 
@@ -74,92 +117,10 @@ describe('authorizer sanity', function () {
                     done(null, true);
                 },
 
-                sign: function (request) {
-                    return request;
-                }
-            },
-            fakeSigner = {
-                update: function (params) {
-                    _.assign(this, params);
-                },
-
-                authorize: function (request) {
+                sign: function (params, request) {
                     return request;
                 }
             };
-
-        afterEach(function () {
-            Authorizer.removeHandler('fake');
-
-            // todo: add a function in the SDK to remove an auth type.
-            delete sdk.RequestAuth.types.fake;
-        });
-
-        it('should allow dynamically injecting new auth types', function () {
-            expect(sdk.RequestAuth.addType.bind(sdk.RequestAuth)).withArgs(fakeSigner, 'fake').to.not.throwException();
-            expect(Authorizer.addHandler.bind(Authorizer)).withArgs(fakeHandler, 'fake').to.not.throwException();
-        });
-
-        it('should perform validations when injecting new auth types', function () {
-            expect(sdk.RequestAuth.addType.bind(sdk.RequestAuth)).withArgs(fakeSigner, 'fake').to.not.throwException();
-
-            expect(Authorizer.addHandler.bind(Authorizer))
-                .withArgs(_.omit(fakeHandler, 'pre'), 'fake') // do not provide the "pre" callback
-                .to.throwException(function (e) {
-                    expect(e.message).to.match(/"pre"/);
-                });
-        });
-
-        // @todo - we can remove this later
-        it('should add a hidden type to each handler', function () {
-            var faked;
-
-            sdk.RequestAuth.addType(fakeSigner, 'fake');
-            Authorizer.addHandler(fakeHandler, 'fake');
-
-            faked = new sdk.RequestAuth.types.fake();
-
-            expect(faked).to.have.property('__auth_type', 'fake');
-
-            // ensure that the property is hidden, and not accidentally serialized
-            expect(faked.toJSON()).to.not.have.property('__auth_type');
-        });
-    });
-
-    describe('functionality', function () {
-        var authorizer,
-            context,
-            run;
-
-        beforeEach(function (done) {
-            var fakeHandler = {
-                    init: function (context, requester, done) {
-                        this.teststring = 'teststring';
-                        done(null);
-                    },
-
-                    pre: function (context, requester, done) {
-                        done(null, true);
-                    },
-
-                    post: function (context, requester, done) {
-                        done(null, true);
-                    },
-
-                    sign: function (request) {
-                        return request;
-                    }
-                },
-                fakeSigner = {
-                    update: function (params) {
-                        _.assign(this, params);
-                    },
-
-                    authorize: function (request) {
-                        return request;
-                    }
-                };
-            sdk.RequestAuth.addType(fakeSigner, 'fake');
             Authorizer.addHandler(fakeHandler, 'fake');
 
             Authorizer.create({interactive: true}, function (err, a) {
@@ -167,7 +128,7 @@ describe('authorizer sanity', function () {
 
                 authorizer = a;
                 context = {
-                    auth: new sdk.RequestAuth.types.fake()
+                    auth: new sdk.RequestAuth({type: 'fake'})
                 };
                 run = {
                     requester: new (require('../../lib/requester').RequesterPool)()
@@ -178,7 +139,6 @@ describe('authorizer sanity', function () {
 
         afterEach(function () {
             Authorizer.removeHandler('fake');
-            delete sdk.RequestAuth.types.fake; // todo: add a function in the SDK to remove an auth type.
 
             authorizer = undefined;
             context = undefined;
@@ -198,7 +158,11 @@ describe('authorizer sanity', function () {
             authorizer.init(context, run, function (err) {
                 if (err) { return done(err); }
 
-                expect(context.auth).to.have.property('teststring', 'teststring');
+                console.log({
+                    auth: context.auth
+                });
+
+                expect(context.auth.parameters().toObject()).to.have.property('teststring', 'teststring');
                 done();
             });
         });
