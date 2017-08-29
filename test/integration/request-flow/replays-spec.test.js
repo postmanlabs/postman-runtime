@@ -1,7 +1,3 @@
-var _ = require('lodash'),
-    sdk = require('postman-collection');
-
-
 describe('replayed requests', function () {
     var testrun,
         Authorizer = require('../../../lib/authorizer').Authorizer;
@@ -27,21 +23,11 @@ describe('replayed requests', function () {
                     done(null, replayCount === 2);
                 },
 
-                sign: function (request) {
-                    return request;
-                }
-            },
-            fakeSigner = {
-                update: function (params) {
-                    _.assign(this, params);
-                },
-
-                authorize: function (request) {
+                sign: function (params, request) {
                     return request;
                 }
             };
 
-        sdk.RequestAuth.addType(fakeSigner, 'fake');
         Authorizer.addHandler(fakeHandler, 'fake');
 
         this.run({
