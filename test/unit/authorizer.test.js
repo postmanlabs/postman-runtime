@@ -10,7 +10,7 @@ var _ = require('lodash'),
     rawRequests = require('../fixtures/auth-requests');
 
 /* global describe, it */
-describe.only('Authorizers', function () {
+describe('Authorizers', function () {
     describe('noauth', function () {
         it('should work correctly', function () {
             var request = new Request({auth: {noauth: {}, type: 'noauth'}}),
@@ -367,7 +367,7 @@ describe.only('Authorizers', function () {
         });
     });
 
-    describe.skip('oauth2', function () {
+    describe('oauth2', function () {
         it('should work correctly', function () {
             var request = new Request(rawRequests.oauth2),
                 auth = request.auth,
@@ -375,41 +375,19 @@ describe.only('Authorizers', function () {
                 authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
             expect(authorizedReq.headers.all()).to.be.empty();
-            expect(request.auth.oauth2.authorize(request).toJSON()).to.eql({
-                auth: {
-                    type: 'oauth2',
-                    oauth2: {
-                        addTokenTo: 'RKCGzna7bv9YD57c',
-                        callBackUrl: 'D+EdQ-gs$-%@2Nu7',
-                        authUrl: '',
-                        accessTokenUrl: '',
-                        clientId: 'HMAC-SHA1',
-                        clientSecret: '1453890475',
-                        scope: 'yly1UR',
-                        requestAccessTokenLocally: '1.0'
-                    }
-                },
-                body: undefined,
-                certificate: undefined,
-                description: undefined,
-                header: undefined,
-                proxy: undefined,
-                url: 'https://postman-echo.com/oauth2?hi=hello&yo=true',
-                method: 'POST'
-            });
         });
     });
 
     // querystring.unescape is not available in browserify's querystring module, so this goes to hell
     // TODO: fix this
-    (typeof window === 'undefined' ? describe.skip : describe.skip)('awsv4', function () {
+    (typeof window === 'undefined' ? describe : describe.skip)('awsv4', function () {
         it('should add the required headers', function () {
             var awsv4Data = rawRequests.awsv4,
-                auth = awsv4Data.auth.awsv4,
                 request = new Request(rawRequests.awsv4),
                 auth = request.auth,
+                authParams = auth.parameters().toObject(),
                 handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), request),
+                authorizedReq = handler.sign(authParams, request),
                 parsedUrl = new Url(awsv4Data.url),
                 headers = authorizedReq.getHeaders({ignoreCase: true}),
                 expectedSignedReq = aws4.sign({
@@ -419,18 +397,19 @@ describe.only('Authorizers', function () {
                     },
                     host: parsedUrl.getRemote(),
                     path: parsedUrl.getPathWithQuery(),
-                    service: auth.serviceName,
-                    region: auth.region,
+                    service: authParams.serviceName,
+                    region: authParams.region,
                     method: awsv4Data.method,
                     body: undefined
                 }, {
-                    accessKeyId: auth.accessKey,
-                    secretAccessKey: auth.secretKey,
-                    sessionToken: auth.sessionToken
+                    accessKeyId: authParams.accessKey,
+                    secretAccessKey: authParams.secretKey,
+                    sessionToken: authParams.sessionToken
                 });
 
             // Ensure that the required headers have been added.
             // todo stricter tests?
+
             expect(headers).to.have.property('authorization', expectedSignedReq.headers.Authorization);
             expect(headers).to.have.property('content-type', request.getHeaders({ignoreCase: true})['content-type']);
             expect(headers).to.have.property('x-amz-date');
@@ -439,14 +418,11 @@ describe.only('Authorizers', function () {
 
         it('should use sensible defaults where applicable', function () {
             var headers,
-                authorizedReq,
                 rawReq = _.defaults(rawRequests.awsv4, {body: {foo: 'bar'}}),
-                request = new Request(_.omit(rawReq, ['header.0', 'auth.awsv4.sessionToken', 'region']));
+                request = new Request(_.omit(rawReq, ['header.0', 'auth.awsv4.sessionToken', 'region'])),
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), request),
-
-            delete request.auth.awsv4.region;
+                authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
             request.headers.add({key: 'postman-token', value: 'random-token'});
             headers = authorizedReq.getHeaders({ignoreCase: true});
@@ -454,25 +430,16 @@ describe.only('Authorizers', function () {
             expect(headers).to.have.property('authorization');
             expect(headers).to.have.property('content-type', request.getHeaders({ignoreCase: true})['content-type']);
             expect(headers).to.have.property('x-amz-date');
-            expect(_.omit(authorizedReq.toJSON(), ['header', 'auth.awsv4.time'])).to.eql({
-                auth: {
-                    type: 'awsv4',
-                    awsv4: {
-                        // Fake Credentials
-                        service: '',
-                        accessKey: 'AKIAI53QRL',
-                        secretKey: 'cr2RAfsY4IIVweutTBoBzR'
-                    }
-                },
-                certificate: undefined,
-                proxy: undefined,
-                body: {},
-                url: 'https://the2yl2ege.execute-api.eu-west-1.amazonaws.com/{{stagename}}/item',
-                method: 'POST',
-                description: {
-                    content: '',
-                    type: 'text/plain'
-                }
+            expect(authorizedReq.auth.parameters().toObject()).to.eql({
+                auto: true,
+                id: 'awsSigV4',
+                region: 'eu-west-1',
+                saveHelper: true,
+                service: '',
+                serviceName: 'execute-api',
+                accessKey: 'AKIAI53QRL',
+                secretKey: 'cr2RAfsY4IIVweutTBoBzR',
+                time: 1452673288848
             });
         });
 
@@ -487,29 +454,17 @@ describe.only('Authorizers', function () {
             expect(headers).to.have.property('authorization');
             expect(headers).to.have.property('content-type', request.getHeaders({ignoreCase: true})['content-type']);
             expect(headers).to.have.property('x-amz-date');
-            expect(_.omit(authorizedReq.toJSON(), ['header', 'auth.awsv4.time', 'auth.awsv4.sessionToken'])).to.eql({
-                auth: {
-                    type: 'awsv4',
-                    awsv4: {
-                        // Fake Credentials
-                        service: '',
-                        region: 'eu-west-1',
-                        accessKey: 'AKIAI53QRL',
-                        secretKey: 'cr2RAfsY4IIVweutTBoBzR'
-                    }
-                },
-                certificate: undefined,
-                proxy: undefined,
-                body: {
-                    mode: 'formdata',
-                    formdata: []
-                },
-                url: 'https://the2yl2ege.execute-api.eu-west-1.amazonaws.com/{{stagename}}/item',
-                method: 'POST',
-                description: {
-                    content: '',
-                    type: 'text/plain'
-                }
+            expect(authorizedReq.auth.parameters().toObject()).to.eql({
+                auto: true,
+                id: 'awsSigV4',
+                region: 'eu-west-1',
+                saveHelper: true,
+                service: '',
+                serviceName: 'execute-api',
+                accessKey: 'AKIAI53QRL',
+                sessionToken: '33Dhtnwf0RVHCFttmMPYt3dxx9zi8I07CBwTXaqupHQ=',
+                secretKey: 'cr2RAfsY4IIVweutTBoBzR',
+                time: 1452673288848
             });
         });
     });
@@ -576,10 +531,10 @@ describe.only('Authorizers', function () {
                 handler = Authorizer.Handlers[auth.type],
                 authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
-            expect(ntlmRequest.auth).to.have.property('type', 'ntlm');
-            expect(ntlmRequest.auth.ntlm).to.be.a(RequestAuth.types.ntlm);
-            expect(ntlmRequest.auth.toJSON()).to.eql(data.auth);
-            expect(ntlmRequest.auth.ntlm.authorize(ntlmRequest)).to.eql(ntlmRequest);
+            expect(authorizedReq.auth).to.have.property('type', 'ntlm');
+            expect(authorizedReq.auth.ntlm).to.be.a(RequestAuth.types.ntlm);
+            expect(authorizedReq.auth.toJSON()).to.eql(data.auth);
+            expect(authorizedReq.auth.ntlm.authorize(ntlmRequest)).to.eql(ntlmRequest);
         });
     });
 
