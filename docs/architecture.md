@@ -100,6 +100,8 @@ Runtime supports the following auths
 6. Hawk
 7. NTLM
 
+To know how to add a new auth, see this doc {@tutorial new-auth-mechanisms}.
+
 Each auth has four hooks
 - pre
 - init
