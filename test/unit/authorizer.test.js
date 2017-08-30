@@ -469,7 +469,7 @@ describe('Authorizers', function () {
         });
     });
 
-    describe.skip('hawk', function () {
+    describe('hawk', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.hawk),
                 auth = request.auth,
@@ -485,15 +485,18 @@ describe('Authorizers', function () {
             var request = new Request(rawRequests.hawk),
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), request);
+                authorizedReq = handler.sign(auth.parameters().toObject(), new Request(request)),
+                headerBefore = request.headers.all()[0].value,
+                headerAfter = authorizedReq.headers.all()[0].value,
+                nonceMatch = headerAfter.match(/nonce="([^"]*)"/),
+                tsMatch = headerAfter.match(/ts="([^"]*)"/);
 
             // Original request should not have the timestamp and nonce
-            expect(_.get(rawRequests.hawk, 'auth.hawk.nonce')).to.not.be.ok();
-            expect(_.get(rawRequests.hawk, 'auth.hawk.timestamp')).to.not.be.ok();
+            expect(headerBefore).to.be.eql('');
 
             expect(authorizedReq.auth).to.be.ok();
-            expect(_.get(authorizedReq, 'auth.hawk.nonce')).to.be.a('string');
-            expect(_.get(authorizedReq, 'auth.hawk.timestamp')).to.be.a('number');
+            expect(_.get(nonceMatch, 1)).to.be.a('string');
+            expect(_.parseInt(_.get(tsMatch, 1))).to.be.a('number');
         });
 
         it('should bail out the original request if auth key is missing', function () {
