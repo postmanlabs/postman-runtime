@@ -5,7 +5,6 @@ var _ = require('lodash'),
     Authorizer = require('../../lib').Authorizer,
 
     Request = sdk.Request,
-    RequestAuth = sdk.RequestAuth,
     Url = sdk.Url,
     rawRequests = require('../fixtures/auth-requests');
 
@@ -515,7 +514,7 @@ describe('Authorizers', function () {
         });
     });
 
-    describe.skip('ntlm', function () {
+    describe('ntlm', function () {
         it('should be able to load all parameters from a request', function () {
             var data = {
                     auth: {
@@ -529,15 +528,17 @@ describe('Authorizers', function () {
                     },
                     url: 'httpbin.org/get'
                 },
-                ntlmRequest = new Request(data),
+                request = new Request(data),
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
                 authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
-            expect(authorizedReq.auth).to.have.property('type', 'ntlm');
-            expect(authorizedReq.auth.ntlm).to.be.a(RequestAuth.types.ntlm);
-            expect(authorizedReq.auth.toJSON()).to.eql(data.auth);
-            expect(authorizedReq.auth.ntlm.authorize(ntlmRequest)).to.eql(ntlmRequest);
+            expect(authorizedReq.auth.ntlm.toObject()).to.eql({
+                username: 'testuser',
+                password: 'testpass',
+                domain: 'testdomain',
+                workstation: 'sample.work'
+            });
         });
     });
 
