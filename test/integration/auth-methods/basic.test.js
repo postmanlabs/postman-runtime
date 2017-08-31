@@ -37,14 +37,14 @@ describe('basic auth', function () {
 
     it('must have completed the run', function () {
         expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
+        expect(testrun.done.callCount).to.be(1);
         testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
         expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+        expect(testrun.start.callCount).to.be(1);
     });
 
     it('must have sent the request once', function () {
-        expect(testrun.request.calledOnce).be.ok();
+        expect(testrun.request.callCount).to.be(1);
 
         var err = testrun.request.firstCall.args[0],
             request = testrun.request.firstCall.args[3],
