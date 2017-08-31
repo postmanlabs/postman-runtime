@@ -39,41 +39,46 @@ describe('Authorizers', function () {
             expect(authHeader.system).to.be(true);
         });
 
-        it('should bail out if username is missing', function () {
-            var sansUserReq = _.omit(rawRequests.basic, 'auth.basic.username'),
-                request = new Request(sansUserReq),
-                auth = request.auth,
-                handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), request);
+        it('should bail out when username or password is not present', function () {
+            var rawBasicReq = _.cloneDeep(rawRequests.basic),
+                request,
+                auth,
+                handler,
+                authorizedReq;
 
-            expect(authorizedReq.headers.all()).to.be.empty();
-            expect(authorizedReq.toJSON()).to.eql({
-                auth: {
-                    basic: [
-                        {
-                            'key': 'password',
-                            'type': 'any',
-                            'value': 'kane'
-                        },
-                        {
-                            'key': 'showPassword',
-                            'type': 'any',
-                            'value': false
-                        }
-                    ],
-                    type: 'basic'
-                },
-                body: undefined,
-                certificate: undefined,
-                description: {
-                    content: '',
-                    type: 'text/plain'
-                },
-                header: undefined,
-                method: 'GET',
-                proxy: undefined,
-                url: 'httpbin.org/get'
-            });
+            rawBasicReq.auth.basic = {username: 'foo'}; // no password present
+            request = new Request(rawBasicReq);
+            auth = request.auth;
+            handler = Authorizer.Handlers[auth.type];
+            authorizedReq = handler.sign(auth.parameters().toObject(), request);
+
+            expect(authorizedReq.headers.all()).to.eql([]);
+
+            rawBasicReq.auth.basic = {password: 'foo'}; // no username present
+            request = new Request(rawBasicReq);
+            auth = request.auth;
+            handler = Authorizer.Handlers[auth.type];
+            authorizedReq = handler.sign(auth.parameters().toObject(), request);
+
+            expect(authorizedReq.headers.all()).to.eql([]);
+        });
+
+        it('should work with empty username and password', function () {
+            var rawBasicReq = _.cloneDeep(rawRequests.basic),
+                request,
+                auth,
+                handler,
+                authorizedReq;
+
+            rawBasicReq.auth.basic = {username: '', password: ''};
+            request = new Request(rawBasicReq);
+            auth = request.auth;
+            handler = Authorizer.Handlers[auth.type];
+            authorizedReq = handler.sign(auth.parameters().toObject(), request);
+
+            expect(authorizedReq.headers.all()).to.eql([
+                {key: 'Authorization', value: 'Basic Og==', system: true}
+            ]);
         });
     });
 
