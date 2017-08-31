@@ -63,6 +63,30 @@ describe('Authorizers', function () {
             expect(authorizedReq.headers.all()).to.eql([]);
         });
 
+        it('should bail out when username or password are not string', function () {
+            var rawBasicReq = _.cloneDeep(rawRequests.basic),
+                request,
+                auth,
+                handler,
+                authorizedReq;
+
+            rawBasicReq.auth.basic = {username: ['foo'], password: 'pass'}; // invalid username
+            request = new Request(rawBasicReq);
+            auth = request.auth;
+            handler = Authorizer.Handlers[auth.type];
+            authorizedReq = handler.sign(auth.parameters().toObject(), request);
+
+            expect(authorizedReq.headers.all()).to.eql([]);
+
+            rawBasicReq.auth.basic = {username: 'user', password: {pass: 123}}; // invalid password
+            request = new Request(rawBasicReq);
+            auth = request.auth;
+            handler = Authorizer.Handlers[auth.type];
+            authorizedReq = handler.sign(auth.parameters().toObject(), request);
+
+            expect(authorizedReq.headers.all()).to.eql([]);
+        });
+
         it('should work with empty username and password', function () {
             var rawBasicReq = _.cloneDeep(rawRequests.basic),
                 request,
