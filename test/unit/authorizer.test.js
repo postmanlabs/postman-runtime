@@ -10,7 +10,7 @@ var _ = require('lodash'),
     rawRequests = require('../fixtures/auth-requests');
 
 /* global describe, it */
-describe.only('Authorizers', function () {
+describe('Authorizers', function () {
     describe('noauth', function () {
         it('should work correctly', function () {
             var request = new Request({auth: {noauth: {}, type: 'noauth'}}),
