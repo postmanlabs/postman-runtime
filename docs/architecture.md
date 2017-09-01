@@ -91,5 +91,44 @@ Runtime supports a complicated request control flow, and performs multiple tasks
 A big part of the flow above is controlled by the Authorizer, which ultimately takes the call on
 whether a request was successfully signed, and decides whether it should be replayed.
 
-The authorizer extends the base functionality provided by the 
-[Postman Collection SDK](https://github.com/postmanlabs/postman-collection).
+Runtime supports the following auths
+1. Basic
+2. Digest
+3. AWS Signature
+4. OAuth-1
+5. Oauth-2
+6. Hawk
+7. NTLM
+
+To know how to add a new auth, see this doc {@tutorial new-auth-mechanisms}.
+
+Each auth has four hooks
+- pre
+- init
+- sign
+- post
+
+#### pre
+This hook decides whether all the required paramaters are present in the auth
+for the Authorizer to be able to _sign_ the request.
+If all the conditions are met, then the flow will move to the _sign_ hook.
+Also it may decide to queue an external request, the response of which will be paseed to the _init_ hook.
+
+#### init
+As mentioned above, if the necessary conditions are not met in the _pre_ hook, the flow moves to the _init_ hook.
+Here the auth may initialize some properties which do not require any external request like timestamp or a random nonce.
+<!-- @TODO should we do this in the pre hook? -->
+
+After the _init_ hook, the flow will move to the _pre_ hook to verify the conditions again.
+There's a limit on the number of times the flow can move back and forth between _pre_ and _init_.
+<!-- @TODO doc link to know the limit -->
+
+#### sign
+When all the conditions are met in the _pre_ hook, the flow moves to the _sign_ hook.
+Here the auth parameters (username, password, nonce, realm, etc) are used to sign the request.
+After this _post_ hook is invoked.
+
+#### post
+This hook verifies whether the authentication was successful or not.
+If not, it may update the current auth using the response and ask to replay the request again.
+

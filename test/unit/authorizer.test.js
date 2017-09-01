@@ -5,7 +5,6 @@ var _ = require('lodash'),
     Authorizer = require('../../lib').Authorizer,
 
     Request = sdk.Request,
-    RequestAuth = sdk.RequestAuth,
     Url = sdk.Url,
     rawRequests = require('../fixtures/auth-requests');
 
@@ -225,12 +224,25 @@ describe('Authorizers', function () {
                 handler = Authorizer.Handlers[auth.type],
                 authorizedReq = handler.sign(auth.parameters().toObject(), request),
                 headers = authorizedReq.headers.all(),
-                authHeader;
+                authHeader,
+                authHeaderValueKeys;
 
             expect(headers.length).to.eql(1);
             authHeader = headers[0];
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
-            expect(authHeader.toString()).to.match(/Authorization: OAuth/);
+            expect(authHeader.key).to.be('Authorization');
+            authHeaderValueKeys = authHeader.value.split(',').map((val) => {
+                return val.split('=')[0];
+            });
+            expect(authHeaderValueKeys).to.eql([
+                'OAuth realm',
+                'oauth_consumer_key',
+                'oauth_signature_method',
+                'oauth_timestamp',
+                'oauth_nonce',
+                'oauth_version',
+                'oauth_signature'
+            ]);
             expect(authHeader.system).to.be(true);
         });
 
@@ -258,25 +270,12 @@ describe('Authorizers', function () {
         });
 
         it('should bail out if the auth params are invalid', function () {
-            var request = new Request(_.omit(rawRequests.oauth1, 'auth.oauth1.consumerKey')),
+            var request = new Request(_.omit(rawRequests.oauth1, ['header', 'auth.oauth1.consumerKey'])),
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
                 authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
-            expect(authorizedReq.headers.all()).to.have.length(1);
-            expect(authorizedReq.auth.parameters().toObject()).to.eql({
-                consumerSecret: 'D+EdQ-gs$-%@2Nu7',
-                token: '',
-                tokenSecret: '',
-                signatureMethod: 'HMAC-SHA1',
-                timestamp: '1453890475',
-                nonce: 'yly1UR',
-                version: '1.0',
-                realm: 'oauthrealm',
-                addParamsToHeader: true,
-                autoAddParam: true,
-                addEmptyParamsToSign: false
-            });
+            expect(authorizedReq.headers.all()).to.have.length(0);
         });
 
         it('should apply sensible defaults where applicable', function () {
@@ -344,30 +343,9 @@ describe('Authorizers', function () {
                     addEmptyParamsToSign: true
                 });
         });
-
-        it.skip('should handle edge signature generation cases correctly', function () {
-            var request = new Request(rawRequests.oauth1),
-                auth = request.auth,
-                handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), {
-                    url: 'https://postman-echo.com/auth/oauth1',
-                    method: 'POST',
-                    queryParams: [],
-                    bodyParams: [],
-                    signatureParams: [],
-                    helperParams: {
-                        encodeOAuthSign: true,
-                        tokenSecret: 'tokenSecret'
-                    }
-                });
-
-            expect(authorizedReq.auth.parameters().toObject()).to.eql([
-                {key: 'oauth_signature', value: 'LwEFfTAx85Verq05JF5b%2FpVjTOo%3D'}
-            ]);
-        });
     });
 
-    describe.skip('oauth2', function () {
+    describe('oauth2', function () {
         it('should work correctly', function () {
             var request = new Request(rawRequests.oauth2),
                 auth = request.auth,
@@ -375,41 +353,19 @@ describe('Authorizers', function () {
                 authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
             expect(authorizedReq.headers.all()).to.be.empty();
-            expect(request.auth.oauth2.authorize(request).toJSON()).to.eql({
-                auth: {
-                    type: 'oauth2',
-                    oauth2: {
-                        addTokenTo: 'RKCGzna7bv9YD57c',
-                        callBackUrl: 'D+EdQ-gs$-%@2Nu7',
-                        authUrl: '',
-                        accessTokenUrl: '',
-                        clientId: 'HMAC-SHA1',
-                        clientSecret: '1453890475',
-                        scope: 'yly1UR',
-                        requestAccessTokenLocally: '1.0'
-                    }
-                },
-                body: undefined,
-                certificate: undefined,
-                description: undefined,
-                header: undefined,
-                proxy: undefined,
-                url: 'https://postman-echo.com/oauth2?hi=hello&yo=true',
-                method: 'POST'
-            });
         });
     });
 
     // querystring.unescape is not available in browserify's querystring module, so this goes to hell
     // TODO: fix this
-    (typeof window === 'undefined' ? describe.skip : describe.skip)('awsv4', function () {
+    (typeof window === 'undefined' ? describe : describe.skip)('awsv4', function () {
         it('should add the required headers', function () {
             var awsv4Data = rawRequests.awsv4,
-                auth = awsv4Data.auth.awsv4,
                 request = new Request(rawRequests.awsv4),
                 auth = request.auth,
+                authParams = auth.parameters().toObject(),
                 handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), request),
+                authorizedReq = handler.sign(authParams, request),
                 parsedUrl = new Url(awsv4Data.url),
                 headers = authorizedReq.getHeaders({ignoreCase: true}),
                 expectedSignedReq = aws4.sign({
@@ -419,18 +375,19 @@ describe('Authorizers', function () {
                     },
                     host: parsedUrl.getRemote(),
                     path: parsedUrl.getPathWithQuery(),
-                    service: auth.serviceName,
-                    region: auth.region,
+                    service: authParams.serviceName,
+                    region: authParams.region,
                     method: awsv4Data.method,
                     body: undefined
                 }, {
-                    accessKeyId: auth.accessKey,
-                    secretAccessKey: auth.secretKey,
-                    sessionToken: auth.sessionToken
+                    accessKeyId: authParams.accessKey,
+                    secretAccessKey: authParams.secretKey,
+                    sessionToken: authParams.sessionToken
                 });
 
             // Ensure that the required headers have been added.
             // todo stricter tests?
+
             expect(headers).to.have.property('authorization', expectedSignedReq.headers.Authorization);
             expect(headers).to.have.property('content-type', request.getHeaders({ignoreCase: true})['content-type']);
             expect(headers).to.have.property('x-amz-date');
@@ -439,14 +396,11 @@ describe('Authorizers', function () {
 
         it('should use sensible defaults where applicable', function () {
             var headers,
-                authorizedReq,
                 rawReq = _.defaults(rawRequests.awsv4, {body: {foo: 'bar'}}),
-                request = new Request(_.omit(rawReq, ['header.0', 'auth.awsv4.sessionToken', 'region']));
+                request = new Request(_.omit(rawReq, ['header.0', 'auth.awsv4.sessionToken', 'region'])),
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), request),
-
-            delete request.auth.awsv4.region;
+                authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
             request.headers.add({key: 'postman-token', value: 'random-token'});
             headers = authorizedReq.getHeaders({ignoreCase: true});
@@ -454,25 +408,16 @@ describe('Authorizers', function () {
             expect(headers).to.have.property('authorization');
             expect(headers).to.have.property('content-type', request.getHeaders({ignoreCase: true})['content-type']);
             expect(headers).to.have.property('x-amz-date');
-            expect(_.omit(authorizedReq.toJSON(), ['header', 'auth.awsv4.time'])).to.eql({
-                auth: {
-                    type: 'awsv4',
-                    awsv4: {
-                        // Fake Credentials
-                        service: '',
-                        accessKey: 'AKIAI53QRL',
-                        secretKey: 'cr2RAfsY4IIVweutTBoBzR'
-                    }
-                },
-                certificate: undefined,
-                proxy: undefined,
-                body: {},
-                url: 'https://the2yl2ege.execute-api.eu-west-1.amazonaws.com/{{stagename}}/item',
-                method: 'POST',
-                description: {
-                    content: '',
-                    type: 'text/plain'
-                }
+            expect(authorizedReq.auth.parameters().toObject()).to.eql({
+                auto: true,
+                id: 'awsSigV4',
+                region: 'eu-west-1',
+                saveHelper: true,
+                service: '',
+                serviceName: 'execute-api',
+                accessKey: 'AKIAI53QRL',
+                secretKey: 'cr2RAfsY4IIVweutTBoBzR',
+                time: 1452673288848
             });
         });
 
@@ -487,34 +432,22 @@ describe('Authorizers', function () {
             expect(headers).to.have.property('authorization');
             expect(headers).to.have.property('content-type', request.getHeaders({ignoreCase: true})['content-type']);
             expect(headers).to.have.property('x-amz-date');
-            expect(_.omit(authorizedReq.toJSON(), ['header', 'auth.awsv4.time', 'auth.awsv4.sessionToken'])).to.eql({
-                auth: {
-                    type: 'awsv4',
-                    awsv4: {
-                        // Fake Credentials
-                        service: '',
-                        region: 'eu-west-1',
-                        accessKey: 'AKIAI53QRL',
-                        secretKey: 'cr2RAfsY4IIVweutTBoBzR'
-                    }
-                },
-                certificate: undefined,
-                proxy: undefined,
-                body: {
-                    mode: 'formdata',
-                    formdata: []
-                },
-                url: 'https://the2yl2ege.execute-api.eu-west-1.amazonaws.com/{{stagename}}/item',
-                method: 'POST',
-                description: {
-                    content: '',
-                    type: 'text/plain'
-                }
+            expect(authorizedReq.auth.parameters().toObject()).to.eql({
+                auto: true,
+                id: 'awsSigV4',
+                region: 'eu-west-1',
+                saveHelper: true,
+                service: '',
+                serviceName: 'execute-api',
+                accessKey: 'AKIAI53QRL',
+                sessionToken: '33Dhtnwf0RVHCFttmMPYt3dxx9zi8I07CBwTXaqupHQ=',
+                secretKey: 'cr2RAfsY4IIVweutTBoBzR',
+                time: 1452673288848
             });
         });
     });
 
-    describe.skip('hawk', function () {
+    describe('hawk', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.hawk),
                 auth = request.auth,
@@ -530,15 +463,18 @@ describe('Authorizers', function () {
             var request = new Request(rawRequests.hawk),
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), request);
+                authorizedReq = handler.sign(auth.parameters().toObject(), new Request(request)),
+                headerBefore = request.headers.all()[0].value,
+                headerAfter = authorizedReq.headers.all()[0].value,
+                nonceMatch = headerAfter.match(/nonce="([^"]*)"/),
+                tsMatch = headerAfter.match(/ts="([^"]*)"/);
 
             // Original request should not have the timestamp and nonce
-            expect(_.get(rawRequests.hawk, 'auth.hawk.nonce')).to.not.be.ok();
-            expect(_.get(rawRequests.hawk, 'auth.hawk.timestamp')).to.not.be.ok();
+            expect(headerBefore).to.be.eql('');
 
             expect(authorizedReq.auth).to.be.ok();
-            expect(_.get(authorizedReq, 'auth.hawk.nonce')).to.be.a('string');
-            expect(_.get(authorizedReq, 'auth.hawk.timestamp')).to.be.a('number');
+            expect(_.get(nonceMatch, 1)).to.be.a('string');
+            expect(_.parseInt(_.get(tsMatch, 1))).to.be.a('number');
         });
 
         it('should bail out the original request if auth key is missing', function () {
@@ -557,7 +493,7 @@ describe('Authorizers', function () {
         });
     });
 
-    describe.skip('ntlm', function () {
+    describe('ntlm', function () {
         it('should be able to load all parameters from a request', function () {
             var data = {
                     auth: {
@@ -571,15 +507,17 @@ describe('Authorizers', function () {
                     },
                     url: 'httpbin.org/get'
                 },
-                ntlmRequest = new Request(data),
+                request = new Request(data),
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
                 authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
-            expect(ntlmRequest.auth).to.have.property('type', 'ntlm');
-            expect(ntlmRequest.auth.ntlm).to.be.a(RequestAuth.types.ntlm);
-            expect(ntlmRequest.auth.toJSON()).to.eql(data.auth);
-            expect(ntlmRequest.auth.ntlm.authorize(ntlmRequest)).to.eql(ntlmRequest);
+            expect(authorizedReq.auth.ntlm.toObject()).to.eql({
+                username: 'testuser',
+                password: 'testpass',
+                domain: 'testdomain',
+                workstation: 'sample.work'
+            });
         });
     });
 

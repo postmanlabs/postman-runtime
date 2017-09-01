@@ -177,7 +177,7 @@
         "header": [
             {
                 "key": "Authorization",
-                "value": "Hawk id='dh37fgj492je', ts='1448888081', nonce='HoH6Ay', ext='skjdfklsjhdflkjhsdf', mac='moWleO5f/8QbvIiy7oo2zj1bmezhrYwrCkz4BsXg0M4='",
+                "value": "",
                 "description": ""
             }
         ],

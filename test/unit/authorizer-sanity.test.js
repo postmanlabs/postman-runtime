@@ -158,10 +158,6 @@ describe('authorizer sanity', function () {
             authorizer.init(context, run, function (err) {
                 if (err) { return done(err); }
 
-                console.log({
-                    auth: context.auth
-                });
-
                 expect(context.auth.parameters().toObject()).to.have.property('teststring', 'teststring');
                 done();
             });
