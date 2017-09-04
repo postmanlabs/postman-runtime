@@ -1,8 +1,7 @@
 /* global describe, it, beforeEach, afterEach */
 
 var _ = require('lodash'),
-    expect = require('expect.js'),
-    sdk = require('postman-collection');
+    expect = require('expect.js');
 
 describe('authorizer sanity', function () {
     var Authorizer = require('../../lib/authorizer/index').Authorizer;
@@ -93,87 +92,6 @@ describe('authorizer sanity', function () {
                 .to.throwException(function (e) {
                     expect(e.message).to.match(/"pre"/);
                 });
-        });
-    });
-
-    describe('functionality', function () {
-        var authorizer,
-            context,
-            run;
-
-        beforeEach(function (done) {
-            var fakeHandler = {
-                init: function (context, requester, done) {
-                    var authVarList = context.auth[context.auth.type];
-                    authVarList.syncFromObject({teststring: 'teststring'}, false, false);
-                    done(null);
-                },
-
-                pre: function (context, requester, done) {
-                    done(null, true);
-                },
-
-                post: function (context, requester, done) {
-                    done(null, true);
-                },
-
-                sign: function (params, request) {
-                    return request;
-                }
-            };
-            Authorizer.addHandler(fakeHandler, 'fake');
-
-            Authorizer.create({interactive: true}, function (err, a) {
-                if (err) { return done(err); }
-
-                authorizer = a;
-                context = {
-                    auth: new sdk.RequestAuth({type: 'fake'})
-                };
-                run = {
-                    requester: new (require('../../lib/requester').RequesterPool)()
-                };
-                done();
-            });
-        });
-
-        afterEach(function () {
-            Authorizer.removeHandler('fake');
-
-            authorizer = undefined;
-            context = undefined;
-            run = undefined;
-        });
-
-        it('should correctly pre-verify', function (done) {
-            authorizer.preVerify(context, run, function (err, result) {
-                if (err) { return done(err); }
-
-                expect(result).to.be(true);
-                done();
-            });
-        });
-
-        it('should correctly initialize', function (done) {
-            authorizer.init(context, run, function (err) {
-                if (err) { return done(err); }
-
-                console.log({
-                    auth: context.auth
-                });
-
-                expect(context.auth.parameters().toObject()).to.have.property('teststring', 'teststring');
-                done();
-            });
-        });
-
-        it('should correctly post-verify', function (done) {
-            authorizer.postVerify(context, run, function (err, result) {
-                if (err) { return done(err); }
-
-                expect(result).to.be(true);
-                done();
-            });
         });
     });
 });
