@@ -503,6 +503,7 @@ describe('Authorizers', function () {
 
         it('Authorized request must contain the generated timestamp and nonce', function () {
             var request = new Request(rawRequests.hawk),
+                clonedRequest = new Request(request.toJSON()), // cloning it so we can assert comparing the two
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
                 headerBefore,
@@ -510,10 +511,10 @@ describe('Authorizers', function () {
                 nonceMatch,
                 tsMatch;
 
-            handler.sign(auth, new Request(request), _.noop);
+            handler.sign(auth, clonedRequest, _.noop);
 
             headerBefore = request.headers.all()[0].value;
-            headerAfter = request.headers.all()[0].value;
+            headerAfter = clonedRequest.headers.all()[0].value;
             nonceMatch = headerAfter.match(/nonce="([^"]*)"/);
             tsMatch = headerAfter.match(/ts="([^"]*)"/);
 
