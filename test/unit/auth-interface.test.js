@@ -2,17 +2,17 @@ var sdk = require('postman-collection'),
     expect = require('expect.js'),
     createAuthInterface = require('../../lib/authorizer/auth-interface');
 
-describe('AuthInterface', function () {
-    const USER = 'batman',
-        PASS = 'christian bale',
-        NONCE = 'abcd',
-        CREDENTIALS = [
-            {key: 'nonce', value: NONCE},
-            {key: 'user', value: USER, system: true},
-            {key: 'pass', value: PASS, system: true}
-        ];
-    var fakeAuthObj = {type: 'fake', 'fake': CREDENTIALS};
+const USER = 'batman',
+    PASS = 'christian bale',
+    NONCE = 'abcd',
+    CREDENTIALS = [
+        {key: 'nonce', value: NONCE},
+        {key: 'user', value: USER, system: true},
+        {key: 'pass', value: PASS, system: true}
+    ],
+    fakeAuthObj = {type: 'fake', 'fake': CREDENTIALS};
 
+describe('AuthInterface', function () {
     it('get with single key should return single value', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
