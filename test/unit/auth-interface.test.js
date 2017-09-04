@@ -5,7 +5,12 @@ var sdk = require('postman-collection'),
 describe('AuthInterface', function () {
     const USER = 'batman',
         PASS = 'christian bale',
-        CREDENTIALS = {user: USER, pass: PASS};
+        NONCE = 'abcd',
+        CREDENTIALS = [
+            {key: 'nonce', value: NONCE},
+            {key: 'user', value: USER, system: true},
+            {key: 'pass', value: PASS, system: true}
+        ];
     var fakeAuthObj = {type: 'fake', 'fake': CREDENTIALS};
 
     it('get with single key should return single value', function () {
@@ -19,7 +24,9 @@ describe('AuthInterface', function () {
     it('get with multiple keys should return object', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
-        expect(authInterface.get(['user', 'pass', 'joker'])).to.eql(CREDENTIALS);
+        expect(authInterface.get(['user', 'pass', 'nonce', 'joker'])).to.eql(
+            new sdk.VariableList(null, CREDENTIALS).toObject()
+        );
     });
 
     it('set with key and value should update the auth', function () {
@@ -38,12 +45,40 @@ describe('AuthInterface', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             newUsername = 'bane',
-            newPassword = 'tom hardy',
-            newCreds = {user: newUsername};
+            newCreds = {user: newUsername}; // only partial update, password & nonce shoudn't change
 
         authInterface.set(newCreds);
         expect(authInterface.get('user')).to.be(newUsername);
         expect(authInterface.get('pass')).to.be(PASS);
+        expect(authInterface.get('nonce')).to.be(NONCE);
+    });
+
+    it('non system parameters should not be able to be updated', function () {
+        var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
+            authInterface = createAuthInterface(fakeAuth),
+            newNonce = 'xyz';
+
+        authInterface.set('nonce', newNonce);
+        expect(authInterface.get('nonce')).not.to.be(newNonce);
+        expect(authInterface.get('nonce')).to.be(NONCE);
+
+        authInterface.set({'nonce': newNonce});
+        expect(authInterface.get('nonce')).not.to.be(newNonce);
+        expect(authInterface.get('nonce')).to.be(NONCE);
+    });
+
+    it('new params should be able to be added to auth with system:true property', function () {
+        var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
+            authInterface = createAuthInterface(fakeAuth),
+            joker = 'heath ledger',
+            gordon = 'gary oldman';
+
+        authInterface.set('joker', joker);
+        authInterface.set({'gordon': gordon});
+        expect(authInterface.get('joker')).to.be(joker);
+        expect(authInterface.get('gordon')).to.be(gordon);
+        expect(fakeAuth.parameters().one('joker')).to.have.property('system', true);
+        expect(fakeAuth.parameters().one('gordon')).to.have.property('system', true);
     });
 
     it('set with invalid params should return the auth unchanged', function () {
