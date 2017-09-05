@@ -1,5 +1,5 @@
 var sinon = require('sinon'),
-    Authorizer = require('../../../lib/authorizer/index').Authorizer;
+    AuthLoader = require('../../../lib/authorizer/index').AuthLoader;
 
 describe('intermediate requests from auth', function () {
     var runOptions = {
@@ -49,7 +49,7 @@ describe('intermediate requests from auth', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -58,7 +58,7 @@ describe('intermediate requests from auth', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -126,7 +126,7 @@ describe('intermediate requests from auth', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -135,7 +135,7 @@ describe('intermediate requests from auth', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -203,7 +203,7 @@ describe('intermediate requests from auth', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -212,7 +212,7 @@ describe('intermediate requests from auth', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -272,7 +272,7 @@ describe('intermediate requests from auth', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -281,7 +281,7 @@ describe('intermediate requests from auth', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {

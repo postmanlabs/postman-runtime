@@ -1,4 +1,4 @@
-var Authorizer = require('../../../lib/authorizer').Authorizer;
+var AuthLoader = require('../../../lib/authorizer').AuthLoader;
 
 describe('requests replayed', function () {
     var testrun,
@@ -46,7 +46,7 @@ describe('requests replayed', function () {
                     }
                 };
 
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
 
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -132,7 +132,7 @@ describe('requests replayed', function () {
                 }
             };
 
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
 
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -182,7 +182,7 @@ describe('requests replayed', function () {
                 }
             };
 
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
 
             this.run(runOptions, function (err, results) {
                 testrun = results;
