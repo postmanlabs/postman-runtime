@@ -12,7 +12,15 @@ const USER = 'batman',
     ],
     fakeAuthObj = {type: 'fake', 'fake': CREDENTIALS};
 
-describe('AuthInterface', function () {
+describe.only('AuthInterface', function () {
+    it('should return undefined on invalid input', function () {
+        var authInterface = createAuthInterface();
+        expect(authInterface).to.be(undefined);
+
+        authInterface = createAuthInterface({type: 'basic', basic: {}});
+        expect(authInterface).to.be(undefined);
+    });
+
     it('get with single key should return single value', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
