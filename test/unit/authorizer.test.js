@@ -1,5 +1,6 @@
 var _ = require('lodash'),
     expect = require('expect.js'),
+    btoa = require('btoa'),
     aws4 = require('aws4'),
     sdk = require('postman-collection'),
     Authorizer = require('../../lib').Authorizer,
@@ -28,6 +29,9 @@ describe('Authorizers', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.basic),
                 auth = request.auth,
+                username = rawRequests.basic.auth.basic.username,
+                password = rawRequests.basic.auth.basic.password,
+                expectedAuthHeader = 'Authorization: Basic ' + btoa(username + ':' + password),
                 handler = Authorizer.Handlers[auth.type],
                 authorizedReq = handler.sign(auth.parameters().toObject(), request),
                 headers = authorizedReq.headers.all(),
@@ -35,11 +39,11 @@ describe('Authorizers', function () {
             expect(headers.length).to.eql(1);
 
             authHeader = headers[0];
-            expect(authHeader.toString()).to.eql('Authorization: Basic YWJoaWppdDprYW5l');
+            expect(authHeader.toString()).to.eql(expectedAuthHeader);
             expect(authHeader.system).to.be(true);
         });
 
-        it('should bail out when username or password is not present', function () {
+        it('should use default values for the missing parameters', function () {
             var rawBasicReq = _.cloneDeep(rawRequests.basic),
                 request,
                 auth,
@@ -52,7 +56,9 @@ describe('Authorizers', function () {
             handler = Authorizer.Handlers[auth.type];
             authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
-            expect(authorizedReq.headers.all()).to.eql([]);
+            expect(authorizedReq.headers.all()).to.eql([
+                {key: 'Authorization', value: 'Basic ' + btoa('foo:'), system: true}
+            ]);
 
             rawBasicReq.auth.basic = {password: 'foo'}; // no username present
             request = new Request(rawBasicReq);
@@ -60,48 +66,18 @@ describe('Authorizers', function () {
             handler = Authorizer.Handlers[auth.type];
             authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
-            expect(authorizedReq.headers.all()).to.eql([]);
-        });
+            expect(authorizedReq.headers.all()).to.eql([
+                {key: 'Authorization', value: 'Basic ' + btoa(':foo'), system: true}
+            ]);
 
-        it('should bail out when username or password are not string', function () {
-            var rawBasicReq = _.cloneDeep(rawRequests.basic),
-                request,
-                auth,
-                handler,
-                authorizedReq;
-
-            rawBasicReq.auth.basic = {username: ['foo'], password: 'pass'}; // invalid username
-            request = new Request(rawBasicReq);
-            auth = request.auth;
-            handler = Authorizer.Handlers[auth.type];
-            authorizedReq = handler.sign(auth.parameters().toObject(), request);
-
-            expect(authorizedReq.headers.all()).to.eql([]);
-
-            rawBasicReq.auth.basic = {username: 'user', password: {pass: 123}}; // invalid password
-            request = new Request(rawBasicReq);
-            auth = request.auth;
-            handler = Authorizer.Handlers[auth.type];
-            authorizedReq = handler.sign(auth.parameters().toObject(), request);
-
-            expect(authorizedReq.headers.all()).to.eql([]);
-        });
-
-        it('should work with empty username and password', function () {
-            var rawBasicReq = _.cloneDeep(rawRequests.basic),
-                request,
-                auth,
-                handler,
-                authorizedReq;
-
-            rawBasicReq.auth.basic = {username: '', password: ''};
+            rawBasicReq.auth.basic = {}; // no username and no password present
             request = new Request(rawBasicReq);
             auth = request.auth;
             handler = Authorizer.Handlers[auth.type];
             authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
             expect(authorizedReq.headers.all()).to.eql([
-                {key: 'Authorization', value: 'Basic Og==', system: true}
+                {key: 'Authorization', value: 'Basic ' + btoa(':'), system: true}
             ]);
         });
     });
