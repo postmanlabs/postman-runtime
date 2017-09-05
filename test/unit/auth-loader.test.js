@@ -4,8 +4,8 @@ var _ = require('lodash'),
 
 /* global describe, it */
 describe('Auth Loader', function () {
-    beforeEach(function () {
-        AuthLoader.handlers = {};
+    afterEach(function () {
+        AuthLoader.removeHandler('fake');
     });
 
     describe('.addHandler', function () {
@@ -80,7 +80,7 @@ describe('Auth Loader', function () {
             AuthLoader.addHandler(FakeAuth, authType);
             AuthLoader.removeHandler(authType);
 
-            expect(AuthLoader.handlers).to.be.empty();
+            expect(AuthLoader.handlers).to.not.have.property(authType);
         });
 
         it('should not throw for missing handler', function () {
