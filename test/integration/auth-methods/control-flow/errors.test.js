@@ -1,5 +1,5 @@
 var sinon = require('sinon'),
-    Authorizer = require('../../../../lib/authorizer/index').Authorizer;
+    AuthLoader = require('../../../../lib/authorizer/index').AuthLoader;
 
 describe('auth control flow', function () {
     var runOptions = {
@@ -47,7 +47,7 @@ describe('auth control flow', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -56,7 +56,7 @@ describe('auth control flow', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -110,7 +110,7 @@ describe('auth control flow', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -119,7 +119,7 @@ describe('auth control flow', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -174,7 +174,7 @@ describe('auth control flow', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -183,7 +183,7 @@ describe('auth control flow', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -239,7 +239,7 @@ describe('auth control flow', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -248,7 +248,7 @@ describe('auth control flow', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -305,7 +305,7 @@ describe('auth control flow', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -314,7 +314,7 @@ describe('auth control flow', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -372,7 +372,7 @@ describe('auth control flow', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -381,7 +381,7 @@ describe('auth control flow', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {

@@ -1,6 +1,5 @@
 var sinon = require('sinon'),
-    Authorizer = require('../../../lib/authorizer/index').Authorizer,
-    sdk = require('postman-collection');
+    AuthLoader = require('../../../lib/authorizer/index').AuthLoader;
 
 describe('intermediate requests from auth', function () {
     var runOptions = {
@@ -50,7 +49,7 @@ describe('intermediate requests from auth', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -59,7 +58,7 @@ describe('intermediate requests from auth', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -101,7 +100,7 @@ describe('intermediate requests from auth', function () {
         });
     });
 
-    describe('with intermediate request as sdk Request', function () {
+    describe('with intermediate request as Request json', function () {
         var testrun,
             fin = false,
             fakeHandler = {
@@ -110,7 +109,7 @@ describe('intermediate requests from auth', function () {
                     done(null);
                 },
                 pre: function (auth, done) {
-                    done(null, fin, new sdk.Request('https://postman-echo.com/get'));
+                    done(null, fin, {url: 'https://postman-echo.com/get'});
                 },
                 post: function (auth, response, done) {
                     done(null, true);
@@ -127,7 +126,7 @@ describe('intermediate requests from auth', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -136,7 +135,7 @@ describe('intermediate requests from auth', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -187,7 +186,7 @@ describe('intermediate requests from auth', function () {
                     done(null);
                 },
                 pre: function (auth, done) {
-                    done(null, fin, new sdk.Request('https://bla/blabla'));
+                    done(null, fin, 'https://bla/blabla');
                 },
                 post: function (auth, response, done) {
                     done(null, true);
@@ -204,7 +203,7 @@ describe('intermediate requests from auth', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -213,7 +212,7 @@ describe('intermediate requests from auth', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
@@ -262,7 +261,7 @@ describe('intermediate requests from auth', function () {
                     done(null);
                 },
                 pre: function (auth, done) {
-                    done(null, false, new sdk.Request('https://postman-echo.com/get'));
+                    done(null, false, 'https://postman-echo.com/get');
                 },
                 post: function (auth, response, done) {
                     done(null, true);
@@ -273,7 +272,7 @@ describe('intermediate requests from auth', function () {
             };
 
         before(function (done) {
-            Authorizer.addHandler(fakeHandler, 'fake');
+            AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -282,7 +281,7 @@ describe('intermediate requests from auth', function () {
         });
 
         after(function () {
-            Authorizer.removeHandler('fake');
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
