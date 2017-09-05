@@ -625,15 +625,4 @@ describe('Auth Handler:', function () {
             });
         });
     });
-
-    describe.skip('.authorize (Static function)', function () {
-        it('must authorize a request statically', function () {
-            var request = new Request(rawRequests.basic),
-                authorizedReq = Authorizer.authorize(request),
-                headers = authorizedReq.headers.all(),
-                authHeader = headers[0];
-
-            expect(authHeader.toString()).to.eql('Authorization: Basic YWJoaWppdDprYW5l');
-        });
-    });
 });
