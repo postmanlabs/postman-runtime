@@ -77,15 +77,11 @@ describe('Auth Handler:', function () {
                     ],
                     type: 'basic'
                 },
-                body: undefined,
-                certificate: undefined,
                 description: {
                     content: '',
                     type: 'text/plain'
                 },
-                header: undefined,
                 method: 'GET',
-                proxy: undefined,
                 url: 'httpbin.org/get'
             });
         });
@@ -193,11 +189,6 @@ describe('Auth Handler:', function () {
             expect(request.toJSON()).to.eql({
                 url: 'https://postman-echo.com/digest-auth',
                 method: 'GET',
-                header: undefined,
-                certificate: undefined,
-                proxy: undefined,
-                body: undefined,
-                description: undefined,
                 auth: {
                     type: 'digest',
                     digest: [{
@@ -444,8 +435,7 @@ describe('Auth Handler:', function () {
                 path: parsedUrl.getPathWithQuery(),
                 service: authParams.serviceName,
                 region: authParams.region,
-                method: awsv4Data.method,
-                body: undefined
+                method: awsv4Data.method
             }, {
                 accessKeyId: authParams.accessKey,
                 secretAccessKey: authParams.secretKey,
@@ -623,17 +613,6 @@ describe('Auth Handler:', function () {
                 domain: 'testdomain',
                 workstation: 'sample.work'
             });
-        });
-    });
-
-    describe.skip('.authorize (Static function)', function () {
-        it('must authorize a request statically', function () {
-            var request = new Request(rawRequests.basic),
-                authorizedReq = Authorizer.authorize(request),
-                headers = authorizedReq.headers.all(),
-                authHeader = headers[0];
-
-            expect(authHeader.toString()).to.eql('Authorization: Basic YWJoaWppdDprYW5l');
         });
     });
 });

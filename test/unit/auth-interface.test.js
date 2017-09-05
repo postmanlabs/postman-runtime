@@ -12,7 +12,7 @@ const USER = 'batman',
     ],
     fakeAuthObj = {type: 'fake', 'fake': CREDENTIALS};
 
-describe.only('AuthInterface', function () {
+describe('AuthInterface', function () {
     it('should return undefined on invalid input', function () {
         var authInterface = createAuthInterface();
         expect(authInterface).to.be(undefined);
