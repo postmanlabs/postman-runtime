@@ -229,12 +229,25 @@ describe('Authorizers', function () {
                 handler = Authorizer.Handlers[auth.type],
                 authorizedReq = handler.sign(auth.parameters().toObject(), request),
                 headers = authorizedReq.headers.all(),
-                authHeader;
+                authHeader,
+                authHeaderValueKeys;
 
             expect(headers.length).to.eql(1);
             authHeader = headers[0];
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
-            expect(authHeader.toString()).to.match(/Authorization: OAuth/);
+            expect(authHeader.key).to.be('Authorization');
+            authHeaderValueKeys = authHeader.value.split(',').map((val) => {
+                return val.split('=')[0];
+            });
+            expect(authHeaderValueKeys).to.eql([
+                'OAuth realm',
+                'oauth_consumer_key',
+                'oauth_signature_method',
+                'oauth_timestamp',
+                'oauth_nonce',
+                'oauth_version',
+                'oauth_signature'
+            ]);
             expect(authHeader.system).to.be(true);
         });
 
@@ -262,25 +275,12 @@ describe('Authorizers', function () {
         });
 
         it('should bail out if the auth params are invalid', function () {
-            var request = new Request(_.omit(rawRequests.oauth1, 'auth.oauth1.consumerKey')),
+            var request = new Request(_.omit(rawRequests.oauth1, ['header', 'auth.oauth1.consumerKey'])),
                 auth = request.auth,
                 handler = Authorizer.Handlers[auth.type],
                 authorizedReq = handler.sign(auth.parameters().toObject(), request);
 
-            expect(authorizedReq.headers.all()).to.have.length(1);
-            expect(authorizedReq.auth.parameters().toObject()).to.eql({
-                consumerSecret: 'D+EdQ-gs$-%@2Nu7',
-                token: '',
-                tokenSecret: '',
-                signatureMethod: 'HMAC-SHA1',
-                timestamp: '1453890475',
-                nonce: 'yly1UR',
-                version: '1.0',
-                realm: 'oauthrealm',
-                addParamsToHeader: true,
-                autoAddParam: true,
-                addEmptyParamsToSign: false
-            });
+            expect(authorizedReq.headers.all()).to.have.length(0);
         });
 
         it('should apply sensible defaults where applicable', function () {
@@ -347,27 +347,6 @@ describe('Authorizers', function () {
                     autoAddParam: true,
                     addEmptyParamsToSign: true
                 });
-        });
-
-        it.skip('should handle edge signature generation cases correctly', function () {
-            var request = new Request(rawRequests.oauth1),
-                auth = request.auth,
-                handler = Authorizer.Handlers[auth.type],
-                authorizedReq = handler.sign(auth.parameters().toObject(), {
-                    url: 'https://postman-echo.com/auth/oauth1',
-                    method: 'POST',
-                    queryParams: [],
-                    bodyParams: [],
-                    signatureParams: [],
-                    helperParams: {
-                        encodeOAuthSign: true,
-                        tokenSecret: 'tokenSecret'
-                    }
-                });
-
-            expect(authorizedReq.auth.parameters().toObject()).to.eql([
-                {key: 'oauth_signature', value: 'LwEFfTAx85Verq05JF5b%2FpVjTOo%3D'}
-            ]);
         });
     });
 
