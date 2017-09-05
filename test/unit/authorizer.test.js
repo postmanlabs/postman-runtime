@@ -168,11 +168,6 @@ describe('Authorizers', function () {
             expect(authorizedReq.toJSON()).to.eql({
                 url: 'https://postman-echo.com/digest-auth',
                 method: 'GET',
-                header: undefined,
-                certificate: undefined,
-                proxy: undefined,
-                body: undefined,
-                description: undefined,
                 auth: {
                     type: 'digest',
                     digest: [
