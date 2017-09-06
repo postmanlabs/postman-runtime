@@ -112,6 +112,7 @@ describe('Auth Handler:', function () {
 
         it('should throw an error if qop is auth-int', function () {
             var request = new Request(rawRequests.digest),
+                digestAuthObject = _.cloneDeep(rawRequests.digest),
                 auth = request.auth,
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
@@ -131,12 +132,12 @@ describe('Auth Handler:', function () {
             expect(authHeader.toString()).to.eql(expectedHeader);
             expect(authHeader.system).to.be(true);
 
-            expect(function () {
-                request.auth.digest.sign({
-                    algorithm: 'MD5-sess',
-                    qop: 'auth-int'
-                });
-            }).to.throwError('Digest Auth with "qop": "auth-int" is not supported.');
+            digestAuthObject.auth.digest.algorithm = 'MD5-sess';
+            digestAuthObject.auth.digest.qop = 'auth-int';
+            request = new Request(digestAuthObject);
+
+            expect(handler.sign.bind(handler)).withArgs(request.auth, request, _.noop)
+                .to.throwError(/Digest Auth with "qop": "auth-int" is not supported./);
         });
 
         it('should sign requests correctly', function () {
