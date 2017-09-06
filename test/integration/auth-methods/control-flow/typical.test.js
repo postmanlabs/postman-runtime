@@ -148,4 +148,79 @@ describe('auth control flow', function () {
             expect(handlerSpies.post.callCount).to.be(1);
         });
     });
+
+    describe('on non interactive mode', function () {
+        var runOptions = {
+                collection: {
+                    item: {
+                        name: 'Fake Auth',
+                        request: {
+                            url: 'https://postman-echo.com/basic-auth',
+                            auth: {
+                                type: 'fake',
+                                fake: {
+                                    username: 'postman',
+                                    password: 'password'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            testrun,
+            fakeHandler = {
+                init: function (auth, response, done) {
+                    done(null);
+                },
+                pre: function (auth, done) {
+                    done(null, true);
+                },
+                post: function (auth, response, done) {
+                    done(null, true);
+                },
+                sign: function (auth, request, done) {
+                    done();
+                }
+            },
+            handlerSpies = {
+                pre: sinon.spy(fakeHandler, 'pre'),
+                init: sinon.spy(fakeHandler, 'init'),
+                post: sinon.spy(fakeHandler, 'post'),
+                sign: sinon.spy(fakeHandler, 'sign')
+            };
+
+        before(function (done) {
+            AuthLoader.addHandler(fakeHandler, 'fake');
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        after(function () {
+            AuthLoader.removeHandler('fake');
+        });
+
+        it('must have completed the run', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.callCount).to.be(1);
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.callCount).to.be(1);
+        });
+
+        it('should not have called interactive hooks', function () {
+            expect(handlerSpies.pre.callCount).to.be(0);
+            expect(handlerSpies.init.callCount).to.be(0);
+            expect(handlerSpies.post.callCount).to.be(0);
+        });
+
+        it('should have signed the request though', function () {
+            var err = testrun.request.getCall(0).args[0];
+
+            expect(handlerSpies.sign.callCount).to.be(1);
+            expect(err).to.be(null);
+        });
+    });
 });

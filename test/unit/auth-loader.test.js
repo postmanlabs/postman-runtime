@@ -4,8 +4,8 @@ var _ = require('lodash'),
 
 /* global describe, it */
 describe('Auth Loader', function () {
-    beforeEach(function () {
-        AuthLoader.handlers = {};
+    afterEach(function () {
+        AuthLoader.removeHandler('fake');
     });
 
     describe('.addHandler', function () {
@@ -25,18 +25,20 @@ describe('Auth Loader', function () {
 
         it('should throw if pre, init, sign or post is not implemented', function () {
             var FakeAuth = {
-                init: _.noop,
-                sign: _.noop,
-                post: _.noop
-            };
-            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'pre'))
-                .to.throwError('The handler for "fake" does not have an "pre" function, which is necessary');
-            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'init'))
-                .to.throwError('The handler for "fake" does not have an "init" function, which is necessary');
-            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'sign'))
-                .to.throwError('The handler for "fake" does not have an "sign" function, which is necessary');
-            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'post'))
-                .to.throwError('The handler for "fake" does not have an "post" function, which is necessary');
+                    pre: _.noop,
+                    init: _.noop,
+                    sign: _.noop,
+                    post: _.noop
+                },
+                authType = 'fake';
+            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'pre'), authType)
+                .to.throwError(/does not have a "pre" function/);
+            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'init'), authType)
+                .to.throwError(/does not have an "init" function/);
+            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'sign'), authType)
+                .to.throwError(/does not have a "sign" function/);
+            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'post'), authType)
+                .to.throwError(/does not have a "post" function/);
         });
     });
 
@@ -80,7 +82,7 @@ describe('Auth Loader', function () {
             AuthLoader.addHandler(FakeAuth, authType);
             AuthLoader.removeHandler(authType);
 
-            expect(AuthLoader.handlers).to.be.empty();
+            expect(AuthLoader.handlers).to.not.have.property(authType);
         });
 
         it('should not throw for missing handler', function () {
