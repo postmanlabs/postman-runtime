@@ -46,6 +46,24 @@ describe('AuthInterface', function () {
         expect(authInterface.get('pass')).to.be(newPassword);
     });
 
+    it('set should retain the data type of value', function () {
+        var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
+            authInterface = createAuthInterface(fakeAuth);
+
+        // test for Number
+        authInterface.set('pass', 123);
+        expect(authInterface.get('pass')).to.be(123);
+        // test for Object
+        authInterface.set('pass', {foo: 123});
+        expect(authInterface.get('pass')).to.eql({foo: 123});
+        // test for Array
+        authInterface.set('pass', [1, 2, 3]);
+        expect(authInterface.get('pass')).to.eql([1, 2, 3]);
+        // test for Function
+        authInterface.set('pass', function () { return 123; });
+        expect(authInterface.get('pass')).to.be(123);
+    });
+
     it('set with an object should update the auth', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
@@ -58,7 +76,7 @@ describe('AuthInterface', function () {
         expect(authInterface.get('nonce')).to.be(NONCE);
     });
 
-    it('non system parameters should not be able to be updated', function () {
+    it('should not update user parameters', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             newNonce = 'xyz';
@@ -72,7 +90,7 @@ describe('AuthInterface', function () {
         expect(authInterface.get('nonce')).to.be(NONCE);
     });
 
-    it('new params should be able to be added to auth with system:true property', function () {
+    it('new params should be added with system:true', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             joker = 'heath ledger',
@@ -86,12 +104,12 @@ describe('AuthInterface', function () {
         expect(fakeAuth.parameters().one('gordon')).to.have.property('system', true);
     });
 
-    it('set with invalid params should return the auth unchanged', function () {
+    it('set with invalid params should throw', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             newPassword = 'tom hardy';
 
-        authInterface.set(['user', 'pass'], newPassword);
-        expect(authInterface.get('user')).to.be(USER);
+        expect(authInterface.set).withArgs(true, newPassword)
+            .to.throwError(/runtime~AuthInterface: set should be called with `key` as a string or object/);
     });
 });
