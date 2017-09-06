@@ -1,5 +1,6 @@
 var _ = require('lodash'),
     expect = require('expect.js'),
+    btoa = require('btoa'),
     aws4 = require('aws4'),
     sdk = require('postman-collection'),
     AuthLoader = require('../../lib/authorizer').AuthLoader,
@@ -39,6 +40,9 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.basic),
                 auth = request.auth,
+                username = rawRequests.basic.auth.basic.username,
+                password = rawRequests.basic.auth.basic.password,
+                expectedAuthHeader = 'Authorization: Basic ' + btoa(username + ':' + password),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 authHeader;
@@ -49,41 +53,45 @@ describe('Auth Handler:', function () {
             expect(headers.length).to.eql(1);
 
             authHeader = headers[0];
-            expect(authHeader.toString()).to.eql('Authorization: Basic YWJoaWppdDprYW5l');
+            expect(authHeader.toString()).to.eql(expectedAuthHeader);
             expect(authHeader.system).to.be(true);
         });
 
-        it('should bail out if username is missing', function () {
-            var sansUserReq = _.omit(rawRequests.basic, 'auth.basic.username'),
-                request = new Request(sansUserReq),
-                auth = request.auth,
-                handler = AuthLoader.getHandler(auth.type);
+        it('should use default values for the missing parameters', function () {
+            var rawBasicReq = _.cloneDeep(rawRequests.basic),
+                request,
+                auth,
+                handler;
 
+            rawBasicReq.auth.basic = {username: 'foo'}; // no password present
+            request = new Request(rawBasicReq);
+            auth = request.auth;
+            handler = AuthLoader.getHandler(auth.type);
             handler.sign(auth, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty();
-            expect(request.toJSON()).to.eql({
-                auth: {
-                    basic: [{
-                        'key': 'password',
-                        'type': 'any',
-                        'value': 'kane'
-                    },
-                    {
-                        'key': 'showPassword',
-                        'type': 'any',
-                        'value': false
-                    }
-                    ],
-                    type: 'basic'
-                },
-                description: {
-                    content: '',
-                    type: 'text/plain'
-                },
-                method: 'GET',
-                url: 'httpbin.org/get'
-            });
+            expect(request.headers.all()).to.eql([
+                {key: 'Authorization', value: 'Basic ' + btoa('foo:'), system: true}
+            ]);
+
+            rawBasicReq.auth.basic = {password: 'foo'}; // no username present
+            request = new Request(rawBasicReq);
+            auth = request.auth;
+            handler = AuthLoader.getHandler(auth.type);
+            handler.sign(auth, request, _.noop);
+
+            expect(request.headers.all()).to.eql([
+                {key: 'Authorization', value: 'Basic ' + btoa(':foo'), system: true}
+            ]);
+
+            rawBasicReq.auth.basic = {}; // no username and no password present
+            request = new Request(rawBasicReq);
+            auth = request.auth;
+            handler = AuthLoader.getHandler(auth.type);
+            handler.sign(auth, request, _.noop);
+
+            expect(request.headers.all()).to.eql([
+                {key: 'Authorization', value: 'Basic ' + btoa(':'), system: true}
+            ]);
         });
     });
 
