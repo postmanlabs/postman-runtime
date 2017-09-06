@@ -13,12 +13,9 @@ const USER = 'batman',
     fakeAuthObj = {type: 'fake', 'fake': CREDENTIALS};
 
 describe('AuthInterface', function () {
-    it('should return undefined on invalid input', function () {
-        var authInterface = createAuthInterface();
-        expect(authInterface).to.be(undefined);
-
-        authInterface = createAuthInterface({type: 'basic', basic: {}});
-        expect(authInterface).to.be(undefined);
+    it('should throw an error on invalid input', function () {
+        expect(createAuthInterface).withArgs({type: 'basic', basic: {}})
+            .to.throwError(/runtime~createAuthInterface: invalid auth/);
     });
 
     it('get with single key should return single value', function () {
