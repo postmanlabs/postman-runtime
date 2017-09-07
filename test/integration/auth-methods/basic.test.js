@@ -1,4 +1,4 @@
-describe.only('basic auth', function () {
+describe('basic auth', function () {
     var testrun,
         runOptions = {
             collection: {
