@@ -553,10 +553,11 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.hawk),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.getHeaders({
                 ignoreCase: true
             });
@@ -569,13 +570,14 @@ describe('Auth Handler:', function () {
             var request = new Request(rawRequests.hawk),
                 clonedRequest = new Request(request.toJSON()), // cloning it so we can assert comparing the two
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headerBefore,
                 headerAfter,
                 nonceMatch,
                 tsMatch;
 
-            handler.sign(auth, clonedRequest, _.noop);
+            handler.sign(authInterface, clonedRequest, _.noop);
 
             headerBefore = request.headers.all()[0].value;
             headerAfter = clonedRequest.headers.all()[0].value;
@@ -593,9 +595,10 @@ describe('Auth Handler:', function () {
         it('should bail out the original request if auth key is missing', function () {
             var request = new Request(_.omit(rawRequests.hawk, 'auth.hawk.authKey')),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             // Original request should not have the timestamp and nonce
             expect(_.get(rawRequests.hawk, 'auth.hawk.nonce')).to.not.be.ok();
