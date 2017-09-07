@@ -21,16 +21,15 @@ describe('Auth Handler:', function () {
                     }
                 }),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request).to.eql(request);
-            auth.update({
-                foo: 'bar'
-            });
+            authInterface.set({foo: 'bar'});
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             expect(request.auth.parameters().toObject()).to.eql({
                 foo: 'bar'
             });
