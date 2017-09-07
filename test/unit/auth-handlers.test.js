@@ -260,12 +260,13 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.oauth1),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 authHeader,
                 authHeaderValueKeys;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             authHeader;
             authHeaderValueKeys;
@@ -299,11 +300,12 @@ describe('Auth Handler:', function () {
                     }
                 }).value()),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             authHeader;
 
@@ -318,9 +320,10 @@ describe('Auth Handler:', function () {
         it('should bail out if the auth params are invalid', function () {
             var request = new Request(_.omit(rawRequests.oauth1, ['header', 'auth.oauth1.consumerKey'])),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.have.length(0);
         });
@@ -347,9 +350,10 @@ describe('Auth Handler:', function () {
                 }).value(),
                 request = new Request(rawReq),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.be.empty();
 
@@ -391,9 +395,10 @@ describe('Auth Handler:', function () {
                 }).value(),
                 request = new Request(rawReq),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.be.empty();
             expect(request.url.query.reference).to.have.keys([
