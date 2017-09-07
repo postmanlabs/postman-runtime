@@ -9,21 +9,6 @@
         "node": true,
         "es6": true
     },
-    "globals": {
-        "cd": true,
-        "colors": true,
-        "config": true,
-        "context": true,
-        "exec": true,
-        "exit": true,
-        "expect": true,
-        "mkdir": true,
-        "next": true,
-        "popd": true,
-        "pushd": true,
-        "rm": true,
-        "test": true
-    },
     "rules": {
         // Possible Errors
         "for-direction": "error",
@@ -144,7 +129,7 @@
         "no-restricted-globals": "error",
         "no-shadow": "off",
         "no-shadow-restricted-names": "error",
-        "no-undef": 2,
+        "no-undef": "off",
         "no-undef-init": "error",
         "no-undefined": "off",
         "no-unused-vars": "error",
