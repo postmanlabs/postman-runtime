@@ -4,6 +4,7 @@ var _ = require('lodash'),
     aws4 = require('aws4'),
     sdk = require('postman-collection'),
     AuthLoader = require('../../lib/authorizer').AuthLoader,
+    createAuthInterface = require('../../lib/authorizer/auth-interface'),
 
     Request = sdk.Request,
     Url = sdk.Url,
@@ -99,12 +100,13 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 expectedHeader,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
@@ -122,12 +124,13 @@ describe('Auth Handler:', function () {
             var request = new Request(rawRequests.digest),
                 digestAuthObject = _.cloneDeep(rawRequests.digest),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 expectedHeader,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
@@ -143,20 +146,22 @@ describe('Auth Handler:', function () {
             digestAuthObject.auth.digest.algorithm = 'MD5-sess';
             digestAuthObject.auth.digest.qop = 'auth-int';
             request = new Request(digestAuthObject);
+            authInterface = createAuthInterface(request.auth);
 
-            expect(handler.sign.bind(handler)).withArgs(request.auth, request, _.noop)
+            expect(handler.sign.bind(handler)).withArgs(authInterface, request, _.noop)
                 .to.throwError(/Digest Auth with "qop": "auth-int" is not supported./);
         });
 
         it('should sign requests correctly', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 expectedHeader,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
@@ -173,11 +178,12 @@ describe('Auth Handler:', function () {
         it('Auth header must have uri with query params in case of request with the same', function () {
             var request = new Request(rawRequests.digestWithQueryParams),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 authHeader,
                 expectedHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             authHeader = request.headers.one('Authorization');
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth?key=value", ' +
@@ -189,9 +195,10 @@ describe('Auth Handler:', function () {
         it('should bail out for invalid requests', function () {
             var request = new Request(_.omit(rawRequests.digest, 'auth.digest.username')),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.be.empty();
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
