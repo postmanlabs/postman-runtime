@@ -30,7 +30,7 @@ describe('project repository', function () {
             it('must have valid name, description and author', function () {
                 expect(json.name).to.equal('postman-runtime');
                 expect(json.description)
-                    .to.equal('Underlyng library of executing Postman Collections (used by Newman)');
+                    .to.equal('Underlying library of executing Postman Collections (used by Newman)');
                 expect(json.author).to.equal('Postman Labs <help@getpostman.com>');
                 expect(json.license).to.equal('Apache-2.0');
             });
