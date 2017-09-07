@@ -441,13 +441,14 @@ describe('Auth Handler:', function () {
             var awsv4Data = rawRequests.awsv4,
                 request = new Request(rawRequests.awsv4),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 authParams = auth.parameters().toObject(),
                 handler = AuthLoader.getHandler(auth.type),
                 parsedUrl,
                 headers,
                 expectedSignedReq;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             parsedUrl = new Url(awsv4Data.url);
             headers = request.getHeaders({
                 ignoreCase: true
@@ -488,9 +489,10 @@ describe('Auth Handler:', function () {
                 }),
                 request = new Request(_.omit(rawReq, ['header.0', 'auth.awsv4.sessionToken', 'region'])),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             request.headers.add({
                 key: 'postman-token',
@@ -527,10 +529,11 @@ describe('Auth Handler:', function () {
                 }),
                 request = new Request(_.omit(rawReq, 'header')),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.getHeaders({
                 ignoreCase: true
             });
