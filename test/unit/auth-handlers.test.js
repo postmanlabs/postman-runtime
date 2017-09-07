@@ -61,15 +61,13 @@ describe('Auth Handler:', function () {
         it('should use default values for the missing parameters', function () {
             var rawBasicReq = _.cloneDeep(rawRequests.basic),
                 request,
-                auth,
                 authInterface,
                 handler;
 
             rawBasicReq.auth.basic = {username: 'foo'}; // no password present
             request = new Request(rawBasicReq);
-            auth = request.auth;
-            authInterface = createAuthInterface(auth);
-            handler = AuthLoader.getHandler(auth.type);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
@@ -78,9 +76,8 @@ describe('Auth Handler:', function () {
 
             rawBasicReq.auth.basic = {password: 'foo'}; // no username present
             request = new Request(rawBasicReq);
-            auth = request.auth;
-            authInterface = createAuthInterface(auth);
-            handler = AuthLoader.getHandler(auth.type);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
@@ -89,9 +86,8 @@ describe('Auth Handler:', function () {
 
             rawBasicReq.auth.basic = {}; // no username and no password present
             request = new Request(rawBasicReq);
-            auth = request.auth;
-            authInterface = createAuthInterface(auth);
-            handler = AuthLoader.getHandler(auth.type);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
