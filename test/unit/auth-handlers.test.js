@@ -425,9 +425,10 @@ describe('Auth Handler:', function () {
         it('should work correctly', function () {
             var request = new Request(rawRequests.oauth2),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.be.empty();
         });
