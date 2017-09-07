@@ -41,6 +41,7 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.basic),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 username = rawRequests.basic.auth.basic.username,
                 password = rawRequests.basic.auth.basic.password,
                 expectedAuthHeader = 'Authorization: Basic ' + btoa(username + ':' + password),
@@ -48,7 +49,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
 
             expect(headers.length).to.eql(1);
@@ -62,13 +63,15 @@ describe('Auth Handler:', function () {
             var rawBasicReq = _.cloneDeep(rawRequests.basic),
                 request,
                 auth,
+                authInterface,
                 handler;
 
             rawBasicReq.auth.basic = {username: 'foo'}; // no password present
             request = new Request(rawBasicReq);
             auth = request.auth;
+            authInterface = createAuthInterface(auth);
             handler = AuthLoader.getHandler(auth.type);
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa('foo:'), system: true}
@@ -77,8 +80,9 @@ describe('Auth Handler:', function () {
             rawBasicReq.auth.basic = {password: 'foo'}; // no username present
             request = new Request(rawBasicReq);
             auth = request.auth;
+            authInterface = createAuthInterface(auth);
             handler = AuthLoader.getHandler(auth.type);
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa(':foo'), system: true}
@@ -87,8 +91,9 @@ describe('Auth Handler:', function () {
             rawBasicReq.auth.basic = {}; // no username and no password present
             request = new Request(rawBasicReq);
             auth = request.auth;
+            authInterface = createAuthInterface(auth);
             handler = AuthLoader.getHandler(auth.type);
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa(':'), system: true}
