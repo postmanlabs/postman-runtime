@@ -4,6 +4,7 @@ var _ = require('lodash'),
     aws4 = require('aws4'),
     sdk = require('postman-collection'),
     AuthLoader = require('../../lib/authorizer').AuthLoader,
+    createAuthInterface = require('../../lib/authorizer/auth-interface'),
 
     Request = sdk.Request,
     Url = sdk.Url,
@@ -20,16 +21,15 @@ describe('Auth Handler:', function () {
                     }
                 }),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request).to.eql(request);
-            auth.update({
-                foo: 'bar'
-            });
+            authInterface.set({foo: 'bar'});
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             expect(request.auth.parameters().toObject()).to.eql({
                 foo: 'bar'
             });
@@ -40,6 +40,7 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.basic),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 username = rawRequests.basic.auth.basic.username,
                 password = rawRequests.basic.auth.basic.password,
                 expectedAuthHeader = 'Authorization: Basic ' + btoa(username + ':' + password),
@@ -47,7 +48,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
 
             expect(headers.length).to.eql(1);
@@ -60,14 +61,14 @@ describe('Auth Handler:', function () {
         it('should use default values for the missing parameters', function () {
             var rawBasicReq = _.cloneDeep(rawRequests.basic),
                 request,
-                auth,
+                authInterface,
                 handler;
 
             rawBasicReq.auth.basic = {username: 'foo'}; // no password present
             request = new Request(rawBasicReq);
-            auth = request.auth;
-            handler = AuthLoader.getHandler(auth.type);
-            handler.sign(auth, request, _.noop);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa('foo:'), system: true}
@@ -75,9 +76,9 @@ describe('Auth Handler:', function () {
 
             rawBasicReq.auth.basic = {password: 'foo'}; // no username present
             request = new Request(rawBasicReq);
-            auth = request.auth;
-            handler = AuthLoader.getHandler(auth.type);
-            handler.sign(auth, request, _.noop);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa(':foo'), system: true}
@@ -85,9 +86,9 @@ describe('Auth Handler:', function () {
 
             rawBasicReq.auth.basic = {}; // no username and no password present
             request = new Request(rawBasicReq);
-            auth = request.auth;
-            handler = AuthLoader.getHandler(auth.type);
-            handler.sign(auth, request, _.noop);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa(':'), system: true}
@@ -99,12 +100,13 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 expectedHeader,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
@@ -122,12 +124,13 @@ describe('Auth Handler:', function () {
             var request = new Request(rawRequests.digest),
                 digestAuthObject = _.cloneDeep(rawRequests.digest),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 expectedHeader,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
@@ -143,20 +146,22 @@ describe('Auth Handler:', function () {
             digestAuthObject.auth.digest.algorithm = 'MD5-sess';
             digestAuthObject.auth.digest.qop = 'auth-int';
             request = new Request(digestAuthObject);
+            authInterface = createAuthInterface(request.auth);
 
-            expect(handler.sign.bind(handler)).withArgs(request.auth, request, _.noop)
+            expect(handler.sign.bind(handler)).withArgs(authInterface, request, _.noop)
                 .to.throwError(/Digest Auth with "qop": "auth-int" is not supported./);
         });
 
         it('should sign requests correctly', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 expectedHeader,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
@@ -173,11 +178,12 @@ describe('Auth Handler:', function () {
         it('Auth header must have uri with query params in case of request with the same', function () {
             var request = new Request(rawRequests.digestWithQueryParams),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 authHeader,
                 expectedHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             authHeader = request.headers.one('Authorization');
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth?key=value", ' +
@@ -189,9 +195,10 @@ describe('Auth Handler:', function () {
         it('should bail out for invalid requests', function () {
             var request = new Request(_.omit(rawRequests.digest, 'auth.digest.username')),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.be.empty();
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
@@ -249,12 +256,13 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.oauth1),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 authHeader,
                 authHeaderValueKeys;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             authHeader;
             authHeaderValueKeys;
@@ -288,11 +296,12 @@ describe('Auth Handler:', function () {
                     }
                 }).value()),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 authHeader;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
             authHeader;
 
@@ -307,9 +316,10 @@ describe('Auth Handler:', function () {
         it('should bail out if the auth params are invalid', function () {
             var request = new Request(_.omit(rawRequests.oauth1, ['header', 'auth.oauth1.consumerKey'])),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.have.length(0);
         });
@@ -336,9 +346,10 @@ describe('Auth Handler:', function () {
                 }).value(),
                 request = new Request(rawReq),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.be.empty();
 
@@ -380,9 +391,10 @@ describe('Auth Handler:', function () {
                 }).value(),
                 request = new Request(rawReq),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.be.empty();
             expect(request.url.query.reference).to.have.keys([
@@ -409,9 +421,10 @@ describe('Auth Handler:', function () {
         it('should work correctly', function () {
             var request = new Request(rawRequests.oauth2),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.all()).to.be.empty();
         });
@@ -424,13 +437,14 @@ describe('Auth Handler:', function () {
             var awsv4Data = rawRequests.awsv4,
                 request = new Request(rawRequests.awsv4),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 authParams = auth.parameters().toObject(),
                 handler = AuthLoader.getHandler(auth.type),
                 parsedUrl,
                 headers,
                 expectedSignedReq;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             parsedUrl = new Url(awsv4Data.url);
             headers = request.getHeaders({
                 ignoreCase: true
@@ -471,9 +485,10 @@ describe('Auth Handler:', function () {
                 }),
                 request = new Request(_.omit(rawReq, ['header.0', 'auth.awsv4.sessionToken', 'region'])),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             request.headers.add({
                 key: 'postman-token',
@@ -510,10 +525,11 @@ describe('Auth Handler:', function () {
                 }),
                 request = new Request(_.omit(rawReq, 'header')),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.getHeaders({
                 ignoreCase: true
             });
@@ -542,10 +558,11 @@ describe('Auth Handler:', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.hawk),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers;
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
             headers = request.getHeaders({
                 ignoreCase: true
             });
@@ -558,13 +575,14 @@ describe('Auth Handler:', function () {
             var request = new Request(rawRequests.hawk),
                 clonedRequest = new Request(request.toJSON()), // cloning it so we can assert comparing the two
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headerBefore,
                 headerAfter,
                 nonceMatch,
                 tsMatch;
 
-            handler.sign(auth, clonedRequest, _.noop);
+            handler.sign(authInterface, clonedRequest, _.noop);
 
             headerBefore = request.headers.all()[0].value;
             headerAfter = clonedRequest.headers.all()[0].value;
@@ -582,9 +600,10 @@ describe('Auth Handler:', function () {
         it('should bail out the original request if auth key is missing', function () {
             var request = new Request(_.omit(rawRequests.hawk, 'auth.hawk.authKey')),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             // Original request should not have the timestamp and nonce
             expect(_.get(rawRequests.hawk, 'auth.hawk.nonce')).to.not.be.ok();
@@ -612,9 +631,10 @@ describe('Auth Handler:', function () {
                 },
                 request = new Request(data),
                 auth = request.auth,
+                authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
 
-            handler.sign(auth, request, _.noop);
+            handler.sign(authInterface, request, _.noop);
 
             expect(request.auth.ntlm.toObject()).to.eql({
                 username: 'testuser',
