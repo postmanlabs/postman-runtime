@@ -38,7 +38,7 @@ describe('.authorizeRequest (Static function)', function () {
                     pass: 'pass'
                 }
             },
-            request = new Request(_.assign(rawRequests.basic, {auth: fakeAuth}));
+            request = new Request(_.assign({}, rawRequests.basic, {auth: fakeAuth}));
 
         authorizeRequest(request, function (err, signedRequest) {
             expect(err).not.to.be(undefined);
