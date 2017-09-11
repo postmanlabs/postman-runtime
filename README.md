@@ -1,7 +1,5 @@
 # postman-runtime
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/postmanlabs/postman-runtime.svg)](https://greenkeeper.io/)
-
 > This is a low-level library used as the backbone for all Collection running & Request sending functionality, in 
 > the Postman App, and allied systems ([Postman Monitoring](https://www.getpostman.com/docs/schedule_cloud_runs), 
 [Newman](https://github.com/postmanlabs/newman))
