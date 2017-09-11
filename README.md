@@ -261,7 +261,13 @@ runner.run(collection, { /* options */ }, function(err, run) {
             // response: sdk.Response
             // request: sdk.request
         },
-        
+
+        exception: function (cursor, err) {
+             // Called when an exception occurs
+             // @param {Object} cursor - A representation of the current run state.
+             // @param {Error} err - An Error instance with name, message, and type properties.            
+        },
+
         // Called at the end of a run
         done: function (err) {
             // err: null or Error
