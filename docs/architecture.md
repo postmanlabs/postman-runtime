@@ -102,10 +102,8 @@ Runtime supports the following auths
 
 To know how to add a new auth, see this doc {@tutorial new-auth-mechanisms}.
 
-Each auth implements the 4 hooks in {@link AuthHandlerInterface}
+Each auth implements the {@link AuthHandlerInterface} which has the following 4 hooks:
 - pre
 - init
 - sign
 - post
-
-
