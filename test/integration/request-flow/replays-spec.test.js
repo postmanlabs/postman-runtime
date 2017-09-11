@@ -54,6 +54,10 @@ describe('requests replayed', function () {
             });
         });
 
+        after(function () {
+            AuthLoader.removeHandler('fake');
+        });
+
         it('must have completed the run', function () {
             expect(testrun).be.ok();
             expect(testrun.done.calledOnce).be.ok();
@@ -141,6 +145,10 @@ describe('requests replayed', function () {
             });
         });
 
+        after(function () {
+            AuthLoader.removeHandler('fake');
+        });
+
         it('must have completed the run', function () {
             expect(testrun).be.ok();
             expect(testrun.done.callCount).to.be(1);
@@ -188,6 +196,10 @@ describe('requests replayed', function () {
                 testrun = results;
                 done(err);
             });
+        });
+
+        after(function () {
+            AuthLoader.removeHandler('fake');
         });
 
         it('must have completed the run', function () {
