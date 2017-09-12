@@ -7,6 +7,7 @@ const USER = 'batman',
     NONCE = 'abcd',
     CREDENTIALS = [
         {key: 'nonce', value: NONCE},
+        {key: 'realm', value: ''},
         {key: 'user', value: USER, system: true},
         {key: 'pass', value: PASS, system: true}
     ],
@@ -29,7 +30,7 @@ describe('AuthInterface', function () {
     it('get with multiple keys should return object', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
-        expect(authInterface.get(['user', 'pass', 'nonce', 'joker'])).to.eql(
+        expect(authInterface.get(['user', 'pass', 'realm', 'nonce', 'joker'])).to.eql(
             new sdk.VariableList(null, CREDENTIALS).toObject()
         );
     });
@@ -76,7 +77,7 @@ describe('AuthInterface', function () {
         expect(authInterface.get('nonce')).to.be(NONCE);
     });
 
-    it('should not update user parameters', function () {
+    it('should not update non-empty user parameters', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             newNonce = 'xyz';
@@ -88,6 +89,19 @@ describe('AuthInterface', function () {
         authInterface.set({'nonce': newNonce});
         expect(authInterface.get('nonce')).not.to.be(newNonce);
         expect(authInterface.get('nonce')).to.be(NONCE);
+    });
+
+    it('should update user parameters if they are empty', function () {
+        var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
+            authInterface = createAuthInterface(fakeAuth),
+            newRealm = 'xyz';
+
+        authInterface.set('realm', newRealm);
+        expect(authInterface.get('realm')).to.be(newRealm);
+
+        newRealm = 'abc';
+        authInterface.set({'realm': newRealm});
+        expect(authInterface.get('realm')).to.be(newRealm);
     });
 
     it('new params should be added with system:true', function () {
