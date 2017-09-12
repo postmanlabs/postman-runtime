@@ -1,5 +1,6 @@
 var sdk = require('postman-collection'),
     expect = require('expect.js'),
+    _ = require('lodash'),
     createAuthInterface = require('../../lib/authorizer/auth-interface');
 
 const USER = 'batman',
@@ -7,7 +8,6 @@ const USER = 'batman',
     NONCE = 'abcd',
     CREDENTIALS = [
         {key: 'nonce', value: NONCE},
-        {key: 'realm', value: ''},
         {key: 'user', value: USER, system: true},
         {key: 'pass', value: PASS, system: true}
     ],
@@ -30,7 +30,7 @@ describe('AuthInterface', function () {
     it('get with multiple keys should return object', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
-        expect(authInterface.get(['user', 'pass', 'realm', 'nonce', 'joker'])).to.eql(
+        expect(authInterface.get(['user', 'pass', 'nonce', 'joker'])).to.eql(
             new sdk.VariableList(null, CREDENTIALS).toObject()
         );
     });
@@ -91,17 +91,21 @@ describe('AuthInterface', function () {
         expect(authInterface.get('nonce')).to.be(NONCE);
     });
 
-    it('should update user parameters if they are empty', function () {
-        var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
-            authInterface = createAuthInterface(fakeAuth),
-            newRealm = 'xyz';
+    it('should update user parameters with falsy value', function () {
+        var fakeAuthObj,
+            fakeAuth,
+            authInterface,
+            valuesToTestWith = ['', null, undefined, false, 0];
 
-        authInterface.set('realm', newRealm);
-        expect(authInterface.get('realm')).to.be(newRealm);
-
-        newRealm = 'abc';
-        authInterface.set({'realm': newRealm});
-        expect(authInterface.get('realm')).to.be(newRealm);
+        _.forEach(valuesToTestWith, function (value) {
+            fakeAuthObj = {type: 'fake', 'fake': [{key: 'something', value: value}]};
+            fakeAuth = new sdk.RequestAuth(fakeAuthObj);
+            authInterface = createAuthInterface(fakeAuth);
+            authInterface.set('something', 'xyz');
+            expect(authInterface.get('something')).to.be('xyz');
+            authInterface.set({'something': 'abc'});
+            expect(authInterface.get('something')).to.be('abc');
+        });
     });
 
     it('new params should be added with system:true', function () {
