@@ -102,7 +102,7 @@ Runtime supports the following auths
 
 To know how to add a new auth, see this doc {@tutorial new-auth-mechanisms}.
 
-Each auth implements the {@link AuthHandlerInterface} which has the following 4 hooks:
+Each auth implements the {@link AuthHandlerInterface} which has the following hooks:
 - pre
 - init
 - sign
