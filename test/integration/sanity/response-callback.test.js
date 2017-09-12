@@ -65,10 +65,13 @@ describe('response callback', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: 'https://postman-echo.com/digest-auth',
                                 auth: {
-                                    type: 'fake',
-                                    fake: {}
+                                    type: 'digest',
+                                    digest: {
+                                        username: 'postman',
+                                        password: 'password'
+                                    }
                                 }
                             }
                         }]
@@ -118,18 +121,19 @@ describe('response callback', function () {
             // response callback is called only once for replays
             expect(testrun.response.callCount).to.be(1);
             expect(testrun.request.callCount).to.be(2);
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
             expect(response.code).to.eql(200);
+            expect(response.json()).to.have.property('authenticated', true);
 
             // ensure parameters in response callback are same as request callback
             // cookies
-            expect(testrun.request.firstCall.args[5]).to.eql(testrun.response.firstCall.args[5]);
+            expect(testrun.request.secondCall.args[5]).to.eql(testrun.response.firstCall.args[5]);
             // item
-            expect(testrun.request.firstCall.args[4].toJSON()).to.eql(testrun.response.firstCall.args[4].toJSON());
+            expect(testrun.request.secondCall.args[4].toJSON()).to.eql(testrun.response.firstCall.args[4].toJSON());
             // request
-            expect(testrun.request.firstCall.args[3].toJSON()).to.eql(testrun.response.firstCall.args[3].toJSON());
+            expect(testrun.request.secondCall.args[3].toJSON()).to.eql(testrun.response.firstCall.args[3].toJSON());
             // response
-            expect(testrun.request.firstCall.args[2].toJSON()).to.eql(testrun.response.firstCall.args[2].toJSON());
+            expect(testrun.request.secondCall.args[2].toJSON()).to.eql(testrun.response.firstCall.args[2].toJSON());
         });
     });
 });
