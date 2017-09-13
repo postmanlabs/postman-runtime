@@ -31,7 +31,7 @@ describe('ReplayController', function () {
         it('should not send request and invoke failure callback', function () {
             var replayController = new ReplayController({count: 10}, {});
 
-            replayController.requestReplay({}, {}, function () {
+            replayController.requestReplay({}, {}, {}, function () {
                 // we shouldn't be here
                 expect(false).to.be(true);
             }, function () {
