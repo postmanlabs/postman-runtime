@@ -1,38 +1,39 @@
 describe('digest auth', function () {
-    var testrun,
-        runOptions = {
-            collection: {
-                item: {
-                    name: 'DigestAuth',
-                    request: {
-                        url: 'https://postman-echo.com/digest-auth',
-                        auth: {
-                            type: 'digest',
-                            digest: {
-                                algorithm: 'MD5',
-                                username: '{{uname}}',
-                                password: '{{pass}}'
-                            }
-                        }
-                    }
-                }
-            },
-            authorizer: {
-                interactive: true
-            }
-        };
+    var testrun;
 
     describe('with correct details', function () {
         before(function (done) {
-            runOptions.environment = {
-                values: [{
-                    key: 'uname',
-                    value: 'postman'
-                }, {
-                    key: 'pass',
-                    value: 'password'
-                }]
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: 'https://postman-echo.com/digest-auth',
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: '{{uname}}',
+                                    password: '{{pass}}'
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: 'postman'
+                    }, {
+                        key: 'pass',
+                        value: 'password'
+                    }]
+                },
+                authorizer: {
+                    interactive: true
+                }
             };
+
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -88,15 +89,37 @@ describe('digest auth', function () {
 
     describe('with incorrect details', function () {
         before(function (done) {
-            runOptions.environment = {
-                values: [{
-                    key: 'uname',
-                    value: 'notpostman'
-                }, {
-                    key: 'pass',
-                    value: 'password'
-                }]
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: 'https://postman-echo.com/digest-auth',
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: '{{uname}}',
+                                    password: '{{pass}}'
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: 'notpostman'
+                    }, {
+                        key: 'pass',
+                        value: 'password'
+                    }]
+                },
+                authorizer: {
+                    interactive: true
+                }
             };
+
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -113,12 +136,57 @@ describe('digest auth', function () {
         });
 
         it('must have ended with max replay count exceeded', function () {
-            var err = testrun.request.lastCall.args[0],
-                response = testrun.request.lastCall.args[2];
+            var err = testrun.response.lastCall.args[0],
+                response = testrun.response.lastCall.args[2];
 
-            // @todo: post helpers don't bubble the errors yet
-            expect(err).to.be(null);
+            expect(err).to.have.property('message', 'runtime: maximum intermediate request limit exceeded');
             expect(response.code).to.be(401);
+        });
+    });
+
+    describe('with unsupported qop', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: 'https://postman-echo.com/digest-auth',
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: 'postman',
+                                    password: 'password',
+                                    qop: 'auth-int'
+                                }
+                            }
+                        }
+                    }
+                },
+                authorizer: {
+                    interactive: true
+                }
+            };
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('must have completed the run', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.callCount).to.be(1);
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.callCount).to.be(1);
+        });
+
+        it('must have bubbled the error to callback', function () {
+            var err = testrun.request.lastCall.args[0];
+
+            expect(err).to.have.property('message', 'Digest Auth with "qop": "auth-int" is not supported.');
         });
     });
 });

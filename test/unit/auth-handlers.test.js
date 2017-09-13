@@ -148,8 +148,9 @@ describe('Auth Handler:', function () {
             request = new Request(digestAuthObject);
             authInterface = createAuthInterface(request.auth);
 
-            expect(handler.sign.bind(handler)).withArgs(authInterface, request, _.noop)
-                .to.throwError(/Digest Auth with "qop": "auth-int" is not supported./);
+            handler.sign(authInterface, request, function (err) {
+                expect(err).to.have.property('message', 'Digest Auth with "qop": "auth-int" is not supported.');
+            });
         });
 
         it('should sign requests correctly', function () {
