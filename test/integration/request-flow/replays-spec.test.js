@@ -37,8 +37,7 @@ describe('requests replayed', function () {
                     },
 
                     post: function (auth, response, done) {
-                        replayCount++;
-                        done(null, replayCount === 2);
+                        done(null, replayCount++ === 1);
                     },
 
                     sign: function (auth, request, done) {
@@ -94,12 +93,116 @@ describe('requests replayed', function () {
             expect(trace).to.have.property('source', 'collection');
         });
 
-        // @todo: enable after adding trace to cursor for replace
-        it.skip('should send second request as a replay', function () {
+        it('should send second request as a replay', function () {
             var error = testrun.io.secondCall.args[0],
                 request = testrun.io.secondCall.args[4],
                 response = testrun.io.secondCall.args[3],
                 trace = testrun.io.secondCall.args[2];
+
+            expect(error).to.be(null);
+
+            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(response.code).to.eql(200);
+
+            expect(trace).to.have.property('type', 'http');
+            expect(trace).to.have.property('source', 'fake.auth');
+        });
+    });
+
+    describe('finite times with intermediate requests', function () {
+
+        before(function (done) {
+            /**
+             * A fake auth method which always forces a request to be replayed.
+             *
+             * @constructor
+             */
+            var replayCount = 0,
+                intermediateReqCount = 0,
+                fakeHandler = {
+                    init: function (auth, response, done) {
+                        done(null);
+                    },
+
+                    pre: function (auth, done) {
+                        done(null, intermediateReqCount++ >= 1, 'https://postman-echo.com/fake/url');
+                    },
+
+                    post: function (auth, response, done) {
+                        done(null, replayCount++ === 1);
+                    },
+
+                    sign: function (auth, request, done) {
+                        done();
+                    }
+                };
+
+            AuthLoader.addHandler(fakeHandler, 'fake');
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        after(function () {
+            AuthLoader.removeHandler('fake');
+        });
+
+        it('must have completed the run', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.calledOnce).be.ok();
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.calledOnce).be.ok();
+        });
+
+        it('must have sent three requests internally', function () {
+            expect(testrun.io.callCount).to.be(3);
+            expect(testrun.request.callCount).to.be(3);
+        });
+
+        it('must have sent the original request', function () {
+            var request = testrun.response.firstCall.args[3],
+                response = testrun.response.firstCall.args[2];
+
+            expect(testrun.response.callCount).to.be(1);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(response.code).to.eql(200);
+        });
+
+        it('should send first request as intermediate request', function () {
+            var error = testrun.io.firstCall.args[0],
+                request = testrun.io.firstCall.args[4],
+                trace = testrun.io.firstCall.args[2];
+
+            expect(error).to.be(null);
+
+            expect(request.url.toString()).to.eql('https://postman-echo.com/fake/url');
+
+            expect(trace).to.have.property('type', 'http');
+            expect(trace).to.have.property('source', 'fake.auth');
+        });
+
+        it('should send second request as part of the collection', function () {
+            var error = testrun.io.secondCall.args[0],
+                request = testrun.io.secondCall.args[4],
+                response = testrun.io.secondCall.args[3],
+                trace = testrun.io.secondCall.args[2];
+
+            expect(error).to.be(null);
+
+            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(response.code).to.eql(200);
+
+            expect(trace).to.have.property('type', 'http');
+            expect(trace).to.have.property('source', 'collection');
+        });
+
+        it('should send third request as a relay', function () {
+            var error = testrun.io.thirdCall.args[0],
+                request = testrun.io.thirdCall.args[4],
+                response = testrun.io.thirdCall.args[3],
+                trace = testrun.io.thirdCall.args[2];
 
             expect(error).to.be(null);
 
