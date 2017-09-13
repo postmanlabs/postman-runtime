@@ -54,6 +54,10 @@ describe('requests replayed', function () {
             });
         });
 
+        after(function () {
+            AuthLoader.removeHandler('fake');
+        });
+
         it('must have completed the run', function () {
             expect(testrun).be.ok();
             expect(testrun.done.calledOnce).be.ok();
@@ -67,9 +71,10 @@ describe('requests replayed', function () {
         });
 
         it('must have sent the original request', function () {
-            var request = testrun.request.getCall(1).args[3],
-                response = testrun.request.getCall(1).args[2];
+            var request = testrun.response.getCall(0).args[3],
+                response = testrun.response.getCall(0).args[2];
 
+            expect(testrun.response.callCount).to.be(1);
             expect(request.url.toString()).to.eql('https://postman-echo.com/get');
             expect(response.code).to.eql(200);
         });
@@ -140,6 +145,10 @@ describe('requests replayed', function () {
             });
         });
 
+        after(function () {
+            AuthLoader.removeHandler('fake');
+        });
+
         it('must have completed the run', function () {
             expect(testrun).be.ok();
             expect(testrun.done.callCount).to.be(1);
@@ -148,9 +157,8 @@ describe('requests replayed', function () {
             expect(testrun.start.callCount).to.be(1);
         });
 
-        // @todo: post helpers do not bubble errors yet
-        it.skip('must have ended with max count error', function () {
-            var err = testrun.request.lastCall.args[0];
+        it('must have ended with max count error', function () {
+            var err = testrun.response.lastCall.args[0];
 
             expect(err).to.have.property('message', 'runtime: maximum intermediate request limit exceeded');
         });
@@ -190,6 +198,10 @@ describe('requests replayed', function () {
             });
         });
 
+        after(function () {
+            AuthLoader.removeHandler('fake');
+        });
+
         it('must have completed the run', function () {
             expect(testrun).be.ok();
             expect(testrun.done.callCount).to.be(1);
@@ -198,9 +210,8 @@ describe('requests replayed', function () {
             expect(testrun.start.callCount).to.be(1);
         });
 
-        // @todo: post helpers do not bubble errors yet
-        it.skip('must have ended with max count error', function () {
-            var err = testrun.request.lastCall.args[0];
+        it('must have ended with max count error', function () {
+            var err = testrun.response.lastCall.args[0];
 
             expect(err).to.have.property('message', 'runtime: maximum intermediate request limit exceeded');
         });

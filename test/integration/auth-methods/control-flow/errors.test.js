@@ -138,7 +138,7 @@ describe('auth control flow', function () {
                 request = testrun.request.firstCall.args[3];
 
             // @todo: handle error
-            expect(err).to.be(null);
+            expect(err).to.have.property('message', 'Post Error!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
@@ -202,7 +202,7 @@ describe('auth control flow', function () {
                 request = testrun.request.firstCall.args[3];
 
             // @todo: handle error
-            expect(err).to.be(null);
+            expect(err).to.have.property('message', 'Post Error!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
