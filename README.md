@@ -30,6 +30,7 @@ runner.run(collection, {
     // Timeouts (in ms)
     timeout: {
         request: 30000,
+        script: 5000
     },
 
     // Number of iterations
