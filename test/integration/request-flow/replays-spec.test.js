@@ -198,7 +198,7 @@ describe('requests replayed', function () {
             expect(trace).to.have.property('source', 'collection');
         });
 
-        it('should send third request as a relay', function () {
+        it('should send third request as a replay', function () {
             var error = testrun.io.thirdCall.args[0],
                 request = testrun.io.thirdCall.args[4],
                 response = testrun.io.thirdCall.args[3],
