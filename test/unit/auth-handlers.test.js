@@ -418,15 +418,98 @@ describe('Auth Handler:', function () {
     });
 
     describe('oauth2', function () {
-        it('should work correctly', function () {
-            var request = new Request(rawRequests.oauth2),
-                auth = request.auth,
-                authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type);
+        var requestObj = {
+            auth: {
+                type: 'oauth2',
+                oauth2: {
+                    accessToken: '123456789abcdefghi',
+                    addTokenTo: 'header',
+                    tokenType: 'bearer'
+                }
+            },
+            url: 'https://api.github.com/user/orgs',
+            method: 'GET'
+        };
+
+        it('should sign the request by adding the token to the header', function () {
+            var request = new Request(requestObj),
+                authInterface = createAuthInterface(request.auth),
+                handler = AuthLoader.getHandler(request.auth.type);
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty();
+            expect(request.headers.all().length).to.be(1);
+            expect(request.headers.all()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken
+            });
+        });
+
+        it('should sign the request by adding the token to the URL', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.addTokenTo = 'url';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(0);
+            expect(request.url.query.all().length).to.be(1);
+            expect(request.url.query.all()[0]).to.eql({
+                key: 'access_token',
+                value: requestObj.auth.oauth2.accessToken
+            });
+        });
+
+        it('should return when token is not present', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            delete clonedRequestObj.auth.oauth2.accessToken;
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(0);
+            expect(request.url.query.all().length).to.be(0);
+        });
+
+        it('should return when token type is not known', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.tokenType = 'unknown type';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(0);
+            expect(request.url.query.all().length).to.be(0);
         });
     });
 
