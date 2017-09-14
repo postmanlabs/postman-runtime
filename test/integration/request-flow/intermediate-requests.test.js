@@ -88,8 +88,11 @@ describe('intermediate requests from auth', function () {
 
             expect(err).to.be(null);
             expect(request.url.toString()).to.be('https://postman-echo.com/get');
-            // @todo: add trace to cursor and enable this test
-            // expect(cursor.trace.source).to.be('fake.auth');
+        });
+
+        it('must have the right trace', function () {
+            expect(testrun.io.firstCall.args[2]).to.have.property('source', 'fake.auth');
+            expect(testrun.io.secondCall.args[2]).to.have.property('source', 'collection');
         });
 
         it('must have followed auth control flow', function () {
