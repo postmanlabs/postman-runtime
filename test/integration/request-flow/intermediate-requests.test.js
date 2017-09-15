@@ -76,9 +76,11 @@ describe('intermediate requests from auth', function () {
 
         it('must have sent the original request', function () {
             var err = testrun.response.firstCall.args[0],
+                cursor = testrun.response.firstCall.args[1],
                 request = testrun.response.firstCall.args[3];
 
             expect(err).to.be(null);
+            expect(cursor).to.not.be(null);
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
