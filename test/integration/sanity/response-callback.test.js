@@ -49,6 +49,8 @@ describe('response callback', function () {
             expect(testrun.request.firstCall.args[3].toJSON()).to.eql(testrun.response.firstCall.args[3].toJSON());
             // response
             expect(testrun.request.firstCall.args[2].toJSON()).to.eql(testrun.response.firstCall.args[2].toJSON());
+            // cursor
+            expect(testrun.response.firstCall.args[1]).to.have.property('ref');
         });
     });
 
@@ -134,6 +136,8 @@ describe('response callback', function () {
             expect(testrun.request.secondCall.args[3].toJSON()).to.eql(testrun.response.firstCall.args[3].toJSON());
             // response
             expect(testrun.request.secondCall.args[2].toJSON()).to.eql(testrun.response.firstCall.args[2].toJSON());
+            // cursor
+            expect(testrun.response.firstCall.args[1]).to.have.property('ref');
         });
     });
 });
