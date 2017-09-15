@@ -80,7 +80,7 @@ describe('intermediate requests from auth', function () {
                 request = testrun.response.firstCall.args[3];
 
             expect(err).to.be(null);
-            expect(cursor).to.not.be(null);
+            expect(cursor).to.have.keys('ref', 'httpRequestId');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
