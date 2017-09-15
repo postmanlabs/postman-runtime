@@ -1,4 +1,4 @@
-describe.only('bearer token', function () {
+describe('bearer token', function () {
     var testrun,
         TOKEN = 'abcd1234',
         runOptions = {
