@@ -134,10 +134,10 @@ describe('auth control flow', function () {
         it('must have sent the request once', function () {
             expect(testrun.request.callCount).to.be(1);
 
-            var err = testrun.request.firstCall.args[0],
-                request = testrun.request.firstCall.args[3];
+            var request = testrun.request.firstCall.args[3],
+                err = testrun.console.firstCall.args[3];
 
-            // @todo: handle error
+            expect(testrun.console.callCount).to.eql(1);
             expect(err).to.have.property('message', 'Post Error!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
@@ -197,11 +197,11 @@ describe('auth control flow', function () {
 
         it('must have sent the request once', function () {
             expect(testrun.request.callCount).to.be(1);
+            expect(testrun.console.callCount).to.be(1);
 
-            var err = testrun.request.firstCall.args[0],
+            var err = testrun.console.firstCall.args[3],
                 request = testrun.request.firstCall.args[3];
 
-            // @todo: handle error
             expect(err).to.have.property('message', 'Post Error!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
