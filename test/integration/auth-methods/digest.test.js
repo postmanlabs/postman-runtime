@@ -184,7 +184,7 @@ describe('digest auth', function () {
         });
 
         it('must have bubbled the error to callback', function () {
-            var err = testrun.request.lastCall.args[0];
+            var err = testrun.console.firstCall.args[3];
 
             expect(err).to.have.property('message', 'Digest Auth with "qop": "auth-int" is not supported.');
         });
