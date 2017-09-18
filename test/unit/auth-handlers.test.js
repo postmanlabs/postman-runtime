@@ -36,6 +36,55 @@ describe('Auth Handler:', function () {
         });
     });
 
+    describe('bearer token', function () {
+        var requestObj = {
+            auth: {
+                type: 'bearer',
+                bearer: {
+                    token: '123456789abcdefghi'
+                }
+            },
+            method: 'GET'
+        };
+
+        it('should add the auth header', function () {
+            var request = new Request(requestObj),
+                authInterface = createAuthInterface(request.auth),
+                expectedAuthHeader = 'Authorization: Bearer ' + requestObj.auth.bearer.token,
+                handler = AuthLoader.getHandler(request.auth.type),
+                headers,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+
+            expect(headers.length).to.eql(1);
+
+            authHeader = headers[0];
+            expect(authHeader.toString()).to.eql(expectedAuthHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('should return without signing the request when token is missing', function () {
+            var clonedRequestObj = _.clone(requestObj),
+                request,
+                authInterface,
+                handler,
+                valuesToCheck = [null, undefined, NaN];
+
+            _.forEach(valuesToCheck, function (value) {
+                clonedRequestObj.auth.bearer.token = value;
+                request = new Request(clonedRequestObj);
+                authInterface = createAuthInterface(request.auth);
+                handler = AuthLoader.getHandler(request.auth.type);
+
+                handler.sign(authInterface, request, _.noop);
+
+                expect(request.headers.all().length).to.eql(0);
+            });
+        });
+    });
+
     describe('basic', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.basic),
