@@ -257,6 +257,7 @@ describe('requests replayed', function () {
             expect(testrun.done.callCount).to.be(1);
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.response.firstCall.args[1]).to.have.keys('ref', 'httpRequestId');
             expect(testrun.start.callCount).to.be(1);
         });
 
@@ -310,6 +311,7 @@ describe('requests replayed', function () {
             expect(testrun.done.callCount).to.be(1);
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.response.firstCall.args[1]).to.have.keys('ref', 'httpRequestId');
             expect(testrun.start.callCount).to.be(1);
         });
 
