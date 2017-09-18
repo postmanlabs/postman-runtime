@@ -39,8 +39,8 @@ describe('Auth Handler:', function () {
     describe('bearer token', function () {
         var requestObj = {
             auth: {
-                type: 'bearerToken',
-                bearerToken: {
+                type: 'bearer',
+                bearer: {
                     token: '123456789abcdefghi'
                 }
             },
@@ -50,7 +50,7 @@ describe('Auth Handler:', function () {
         it('should add the auth header', function () {
             var request = new Request(requestObj),
                 authInterface = createAuthInterface(request.auth),
-                expectedAuthHeader = 'Authorization: Bearer ' + requestObj.auth.bearerToken.token,
+                expectedAuthHeader = 'Authorization: Bearer ' + requestObj.auth.bearer.token,
                 handler = AuthLoader.getHandler(request.auth.type),
                 headers,
                 authHeader;
@@ -73,7 +73,7 @@ describe('Auth Handler:', function () {
                 valuesToCheck = [null, undefined, NaN];
 
             _.forEach(valuesToCheck, function (value) {
-                clonedRequestObj.auth.bearerToken.token = value;
+                clonedRequestObj.auth.bearer.token = value;
                 request = new Request(clonedRequestObj);
                 authInterface = createAuthInterface(request.auth);
                 handler = AuthLoader.getHandler(request.auth.type);

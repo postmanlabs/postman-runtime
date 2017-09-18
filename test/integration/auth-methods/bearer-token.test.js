@@ -1,4 +1,4 @@
-describe('bearer token', function () {
+describe.only('bearer token', function () {
     var testrun,
         TOKEN = 'abcd1234',
         runOptions = {
@@ -8,8 +8,8 @@ describe('bearer token', function () {
                     request: {
                         url: 'https://postman-echo.com/headers',
                         auth: {
-                            type: 'bearerToken',
-                            bearerToken: {
+                            type: 'bearer',
+                            bearer: {
                                 token: '{{token}}'
                             }
                         }
