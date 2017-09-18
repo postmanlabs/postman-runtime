@@ -58,7 +58,8 @@ describe('NTLM', function () {
             var authHeader = req.headers.authorization,
                 header;
 
-            // Extended security is turned on, so only first 160 chars will match
+            // The last 8 chars always differs, even with same type2message and crendentials.
+            // The source code reveals that it's appending randomly generated string.
             if (authHeader && authHeader.slice(0, 160) === type3message.slice(0, 160)) {
                 res.writeHead(200);
                 return res.end('authorized');
