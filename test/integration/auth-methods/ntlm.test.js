@@ -3,6 +3,10 @@ var expect = require('expect.js');
 describe('NTLM', function () {
     // @todo Add '/ntlm' endpoint in echo server
     var ntlmServerIP = '34.214.154.175',
+        USERNAME = 'postman',
+        PASSWORD = 'NTLM@123',
+        DOMAIN = '',
+        WORKSTATION = '',
         testrun,
         runOptions = {
             collection: {
@@ -38,10 +42,10 @@ describe('NTLM', function () {
                     value: 'baz'
                 }, {
                     key: 'domain',
-                    value: ''
+                    value: DOMAIN
                 }, {
                     key: 'workstation',
-                    value: ''
+                    value: WORKSTATION
                 }]
             };
             // perform the collection run
@@ -75,16 +79,16 @@ describe('NTLM', function () {
             runOptions.environment = {
                 values: [{
                     key: 'uname',
-                    value: 'postman'
+                    value: USERNAME
                 }, {
                     key: 'pass',
-                    value: 'NTLM@123'
+                    value: PASSWORD
                 }, {
                     key: 'domain',
-                    value: ''
+                    value: DOMAIN
                 }, {
                     key: 'workstation',
-                    value: ''
+                    value: WORKSTATION
                 }]
             };
             // perform the collection run
