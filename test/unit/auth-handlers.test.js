@@ -495,7 +495,7 @@ describe('Auth Handler:', function () {
             });
         });
 
-        it('should sign the request by adding the token to the URL', function () {
+        it('should sign the request by adding the token to the query params', function () {
             var clonedRequestObj,
                 request,
                 auth,
@@ -503,7 +503,7 @@ describe('Auth Handler:', function () {
                 handler;
 
             clonedRequestObj = _.cloneDeep(requestObj);
-            clonedRequestObj.auth.oauth2.addTokenTo = 'url';
+            clonedRequestObj.auth.oauth2.addTokenTo = 'queryParams';
 
             request = new Request(clonedRequestObj);
             auth = request.auth;
