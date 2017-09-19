@@ -32,26 +32,34 @@ describe('NTLM', function () {
             }
         };
 
-    describe('with in-correct endpoint', function () {
+    describe('with request server not supporting NTLM', function () {
         before(function (done) {
-            var clonedRunOptions = _.cloneDeep(runOptions);
+            var clonedRunOptions = _.defaults({}, {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'http://postman-echo.com/digest'
+                        }
+                    }
+                }
+            }, {
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: USERNAME
+                    }, {
+                        key: 'pass',
+                        value: PASSWORD
+                    }, {
+                        key: 'domain',
+                        value: DOMAIN
+                    }, {
+                        key: 'workstation',
+                        value: WORKSTATION
+                    }]
+                }
+            }, runOptions);
 
-            clonedRunOptions.environment = {
-                values: [{
-                    key: 'uname',
-                    value: USERNAME
-                }, {
-                    key: 'pass',
-                    value: PASSWORD
-                }, {
-                    key: 'domain',
-                    value: DOMAIN
-                }, {
-                    key: 'workstation',
-                    value: WORKSTATION
-                }]
-            };
-            clonedRunOptions.collection.item.request.url = 'http://postman-echo.com/get';
             // perform the collection run
             this.run(clonedRunOptions, function (err, results) {
                 testrun = results;
@@ -78,23 +86,26 @@ describe('NTLM', function () {
 
     describe('with in-correct details', function () {
         before(function (done) {
-            runOptions.environment = {
-                values: [{
-                    key: 'uname',
-                    value: 'foo'
-                }, {
-                    key: 'pass',
-                    value: 'baz'
-                }, {
-                    key: 'domain',
-                    value: DOMAIN
-                }, {
-                    key: 'workstation',
-                    value: WORKSTATION
-                }]
-            };
+            var clonedRunOptions = _.defaults({}, {
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: 'foo'
+                    }, {
+                        key: 'pass',
+                        value: 'bar'
+                    }, {
+                        key: 'domain',
+                        value: DOMAIN
+                    }, {
+                        key: 'workstation',
+                        value: WORKSTATION
+                    }]
+                }
+            }, runOptions);
+
             // perform the collection run
-            this.run(runOptions, function (err, results) {
+            this.run(clonedRunOptions, function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -121,23 +132,26 @@ describe('NTLM', function () {
 
     describe('with correct details', function () {
         before(function (done) {
-            runOptions.environment = {
-                values: [{
-                    key: 'uname',
-                    value: USERNAME
-                }, {
-                    key: 'pass',
-                    value: PASSWORD
-                }, {
-                    key: 'domain',
-                    value: DOMAIN
-                }, {
-                    key: 'workstation',
-                    value: WORKSTATION
-                }]
-            };
+            var clonedRunOptions = _.defaults({}, {
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: USERNAME
+                    }, {
+                        key: 'pass',
+                        value: PASSWORD
+                    }, {
+                        key: 'domain',
+                        value: DOMAIN
+                    }, {
+                        key: 'workstation',
+                        value: WORKSTATION
+                    }]
+                }
+            }, runOptions);
+
             // perform the collection run
-            this.run(runOptions, function (err, results) {
+            this.run(clonedRunOptions, function (err, results) {
                 testrun = results;
                 done(err);
             });
