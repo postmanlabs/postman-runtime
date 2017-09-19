@@ -1,17 +1,15 @@
-var expect = require('expect.js'),
-    http = require('http'),
-    ntlmUtil = require('httpntlm').ntlm;
+var expect = require('expect.js');
 
 describe('NTLM', function () {
-    var ntlmServer,
-        ntlmServerPort = 3456,
+    // @todo Add '/ntlm' endpoint in echo server
+    var ntlmServerIP = '34.214.154.175',
         testrun,
         runOptions = {
             collection: {
                 item: {
                     name: 'NTLM Sample Request',
                     request: {
-                        url: 'http://localhost:' + ntlmServerPort,
+                        url: ntlmServerIP,
                         auth: {
                             type: 'ntlm',
                             ntlm: {
@@ -29,62 +27,6 @@ describe('NTLM', function () {
             }
         };
 
-    before(function () {
-        var username = 'postman',
-            password = 'ntlm',
-            domain = 'domain',
-            workstation = 'workstation',
-            type1message = ntlmUtil.createType1Message({domain: domain, workstation: workstation}),
-            // sample taken from a real IIS server
-            type2message = 'NTLM TlRMTVNTUAACAAAAHgAeADgAAAAFgoqi3ZUAgGmJcLAAAAAAAAAAAJgAmABWAAAABgOAJQAAAA93AGkAbgAt' +
-                'AHMAZQByAHYAZQByAC0AMgAwADEAMgACAB4AdwBpAG4ALQBzAGUAcgB2AGUAcgAtADIAMAAxADIAAQAeAHcAaQBuAC0AcwBlAHIA' +
-                'dgBlAHIALQAyADAAMQAyAAQAHgB3AGkAbgAtAHMAZQByAHYAZQByAC0AMgAwADEAMgADAB4AdwBpAG4ALQBzAGUAcgB2AGUAcgAt' +
-                'ADIAMAAxADIABwAIAD3f8WFvMNMBAAAAAA==',
-            type3message = ntlmUtil.createType3Message(ntlmUtil.parseType2Message(type2message),
-                {
-                    username: username,
-                    password: password,
-                    domain: domain,
-                    workstation: workstation
-                }
-            ),
-            headers = {
-                initialized: {'www-authenticate': 'NTLM'},
-                type2message: {'www-authenticate': type2message}
-            };
-
-        ntlmServer = new http.Server();
-        ntlmServer.on('request', function (req, res) {
-            var authHeader = req.headers.authorization,
-                header;
-
-            // The last 8 chars always differs, even with same type2message and crendentials.
-            // The source code reveals that it's appending randomly generated string.
-            if (authHeader && authHeader.slice(0, 160) === type3message.slice(0, 160)) {
-                res.writeHead(200);
-                return res.end('authorized');
-            }
-
-            if (authHeader === type1message) {
-                header = headers.type2message;
-            }
-            else {
-                header = headers.initialized;
-            }
-
-            res.writeHead(401, header);
-            res.end('unauthorized');
-        });
-
-        ntlmServer.listen(ntlmServerPort, function () {
-            console.log('NTLM server listening on port ' + ntlmServerPort);
-        });
-    });
-
-    after(function () {
-        ntlmServer.close();
-    });
-
     describe('with in-correct details', function () {
         before(function (done) {
             runOptions.environment = {
@@ -96,10 +38,10 @@ describe('NTLM', function () {
                     value: 'baz'
                 }, {
                     key: 'domain',
-                    value: 'domain'
+                    value: ''
                 }, {
                     key: 'workstation',
-                    value: 'workstation'
+                    value: ''
                 }]
             };
             // perform the collection run
@@ -136,13 +78,13 @@ describe('NTLM', function () {
                     value: 'postman'
                 }, {
                     key: 'pass',
-                    value: 'password'
+                    value: 'NTLM@123'
                 }, {
                     key: 'domain',
-                    value: 'domain'
+                    value: ''
                 }, {
                     key: 'workstation',
-                    value: 'workstation'
+                    value: ''
                 }]
             };
             // perform the collection run
