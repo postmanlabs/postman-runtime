@@ -34,7 +34,7 @@ describe('NTLM', function () {
 
     describe('with request server not supporting NTLM', function () {
         before(function (done) {
-            var clonedRunOptions = _.defaults({}, {
+            var clonedRunOptions = _.defaults({
                 collection: {
                     item: {
                         request: {
@@ -86,7 +86,7 @@ describe('NTLM', function () {
 
     describe('with in-correct details', function () {
         before(function (done) {
-            var clonedRunOptions = _.defaults({}, {
+            var clonedRunOptions = _.defaults({
                 environment: {
                     values: [{
                         key: 'uname',
@@ -132,7 +132,7 @@ describe('NTLM', function () {
 
     describe('with correct details', function () {
         before(function (done) {
-            var clonedRunOptions = _.defaults({}, {
+            var clonedRunOptions = _.defaults({
                 environment: {
                     values: [{
                         key: 'uname',
