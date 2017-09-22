@@ -159,7 +159,7 @@ describe('Auth Handler:', function () {
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
+                'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
             authHeader;
 
             expect(headers.length).to.eql(1);
@@ -183,7 +183,7 @@ describe('Auth Handler:', function () {
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
+                'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
             authHeader;
 
             expect(headers.length).to.eql(1);
@@ -215,7 +215,7 @@ describe('Auth Handler:', function () {
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
+                'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
             authHeader;
 
             expect(headers.length).to.eql(1);
@@ -237,7 +237,7 @@ describe('Auth Handler:', function () {
             authHeader = request.headers.one('Authorization');
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth?key=value", ' +
-                'response="24dfb8851ee27e4b00252a13b1fd8ec3", opaque=""';
+                'algorithm="MD5", response="24dfb8851ee27e4b00252a13b1fd8ec3", opaque=""';
 
             expect(authHeader.toString()).to.eql(expectedHeader);
         });
