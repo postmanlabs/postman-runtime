@@ -541,6 +541,30 @@ describe('Auth Handler:', function () {
             expect(request.url.query.all().length).to.be(0);
         });
 
+        it('should default the token type to "Bearer"', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.tokenType = '';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(1);
+            expect(request.headers.all()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken
+            });
+        });
+
         it('should return when token type is not known', function () {
             var clonedRequestObj,
                 request,
