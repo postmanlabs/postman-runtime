@@ -491,7 +491,8 @@ describe('Auth Handler:', function () {
             expect(request.headers.all().length).to.be(1);
             expect(request.headers.all()[0]).to.eql({
                 key: 'Authorization',
-                value: 'Bearer ' + requestObj.auth.oauth2.accessToken
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
             });
         });
 
