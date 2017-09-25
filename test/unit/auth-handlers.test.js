@@ -336,33 +336,6 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be(true);
         });
 
-        it('should support the camelCased timeStamp option as well', function () {
-            var request = new Request(_(rawRequests.oauth1).omit('auth.oauth1.timestamp').merge({
-                    auth: {
-                        type: 'oauth1',
-                        oauth1: {
-                            timeStamp: 1234
-                        }
-                    }
-                }).value()),
-                auth = request.auth,
-                authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type),
-                headers,
-                authHeader;
-
-            handler.sign(authInterface, request, _.noop);
-            headers = request.headers.all();
-            authHeader;
-
-            expect(headers.length).to.eql(1);
-            authHeader = headers[0];
-            // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
-            expect(authHeader.toString()).to.match(/Authorization: OAuth/);
-            expect(authHeader.system).to.be(true);
-            expect(request.auth.oauth1.toObject().timeStamp).to.be(1234);
-        });
-
         it('should bail out if the auth params are invalid', function () {
             var request = new Request(_.omit(rawRequests.oauth1, ['header', 'auth.oauth1.consumerKey'])),
                 auth = request.auth,
