@@ -43,7 +43,7 @@ describe('runner', function () {
                         entrypoint: 'random',
                         abortOnError: true
                     }, function (err, run) {
-                        expect(err.message).to.be('A valid folder id/name is required');
+                        expect(err.message).to.be('Unable to find a folder or request: random');
                         expect(run).to.not.be.ok();
 
                         done();
