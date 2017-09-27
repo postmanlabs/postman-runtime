@@ -338,8 +338,7 @@
         "jsdoc/require-description-complete-sentence": "off",
         "jsdoc/require-example": "off",
         "jsdoc/require-hyphen-before-param-description": "off",
-        // @todo: temporarily disabled, re enable after fix goes in `eslint-jsdoc-plugin`
-        "jsdoc/require-param": "off",
+        "jsdoc/require-param": "error",
         "jsdoc/require-param-description": "off",
         "jsdoc/require-param-type": "off",
         "jsdoc/require-returns-description": "off",
