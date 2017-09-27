@@ -103,7 +103,7 @@ describe('digest auth', function () {
                                     algorithm: 'MD5',
                                     username: '{{uname}}',
                                     password: '{{pass}}',
-                                    nonInteractive: true
+                                    disableRetryRequest: true
                                 }
                             }
                         }

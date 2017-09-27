@@ -138,7 +138,7 @@ describe('NTLM', function () {
                         request: {
                             auth: {
                                 ntlm: {
-                                    nonInteractive: true
+                                    disableRetryRequest: true
                                 }
                             }
                         }
