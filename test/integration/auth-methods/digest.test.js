@@ -222,10 +222,10 @@ describe('digest auth', function () {
         });
 
         it('must have ended with max replay count exceeded', function () {
-            var err = testrun.response.lastCall.args[0],
+            var err = testrun.console.lastCall.args[2],
                 response = testrun.response.lastCall.args[2];
 
-            expect(err).to.have.property('message', 'runtime: maximum intermediate request limit exceeded');
+            expect(err).to.contain('runtime: maximum intermediate request limit exceeded');
             expect(response.code).to.be(401);
         });
     });
