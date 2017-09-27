@@ -75,10 +75,12 @@ describe('intermediate requests from auth', function () {
         });
 
         it('must have sent the original request', function () {
-            var err = testrun.request.secondCall.args[0],
-                request = testrun.request.secondCall.args[3];
+            var err = testrun.response.firstCall.args[0],
+                cursor = testrun.response.firstCall.args[1],
+                request = testrun.response.firstCall.args[3];
 
             expect(err).to.be(null);
+            expect(cursor).to.have.keys('ref', 'httpRequestId');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
@@ -88,8 +90,11 @@ describe('intermediate requests from auth', function () {
 
             expect(err).to.be(null);
             expect(request.url.toString()).to.be('https://postman-echo.com/get');
-            // @todo: add trace to cursor and enable this test
-            // expect(cursor.trace.source).to.be('fake.auth');
+        });
+
+        it('must have the right trace', function () {
+            expect(testrun.io.firstCall.args[2]).to.have.property('source', 'fake.auth');
+            expect(testrun.io.secondCall.args[2]).to.have.property('source', 'collection');
         });
 
         it('must have followed auth control flow', function () {
@@ -152,8 +157,8 @@ describe('intermediate requests from auth', function () {
         });
 
         it('must have sent the original request', function () {
-            var err = testrun.request.secondCall.args[0],
-                request = testrun.request.secondCall.args[3];
+            var err = testrun.response.firstCall.args[0],
+                request = testrun.response.firstCall.args[3];
 
             expect(err).to.be(null);
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
@@ -229,8 +234,8 @@ describe('intermediate requests from auth', function () {
         });
 
         it('must have sent the original request', function () {
-            var err = testrun.request.secondCall.args[0],
-                request = testrun.request.secondCall.args[3];
+            var err = testrun.response.firstCall.args[0],
+                request = testrun.response.firstCall.args[3];
 
             expect(err).to.be(null);
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');

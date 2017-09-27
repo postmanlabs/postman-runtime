@@ -36,6 +36,55 @@ describe('Auth Handler:', function () {
         });
     });
 
+    describe('bearer token', function () {
+        var requestObj = {
+            auth: {
+                type: 'bearer',
+                bearer: {
+                    token: '123456789abcdefghi'
+                }
+            },
+            method: 'GET'
+        };
+
+        it('should add the auth header', function () {
+            var request = new Request(requestObj),
+                authInterface = createAuthInterface(request.auth),
+                expectedAuthHeader = 'Authorization: Bearer ' + requestObj.auth.bearer.token,
+                handler = AuthLoader.getHandler(request.auth.type),
+                headers,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+
+            expect(headers.length).to.eql(1);
+
+            authHeader = headers[0];
+            expect(authHeader.toString()).to.eql(expectedAuthHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('should return without signing the request when token is missing', function () {
+            var clonedRequestObj = _.clone(requestObj),
+                request,
+                authInterface,
+                handler,
+                valuesToCheck = [null, undefined, NaN];
+
+            _.forEach(valuesToCheck, function (value) {
+                clonedRequestObj.auth.bearer.token = value;
+                request = new Request(clonedRequestObj);
+                authInterface = createAuthInterface(request.auth);
+                handler = AuthLoader.getHandler(request.auth.type);
+
+                handler.sign(authInterface, request, _.noop);
+
+                expect(request.headers.all().length).to.eql(0);
+            });
+        });
+    });
+
     describe('basic', function () {
         it('Auth header must be added', function () {
             var request = new Request(rawRequests.basic),
@@ -97,7 +146,7 @@ describe('Auth Handler:', function () {
     });
 
     describe('digest', function () {
-        it('Auth header must be added', function () {
+        it('Auth header must be added (qop="", algorithm="MD5', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -110,7 +159,101 @@ describe('Auth Handler:', function () {
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
+                'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+            authHeader;
+
+            expect(headers.length).to.eql(1);
+            authHeader = headers[0];
+
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('Auth header must be added (qop="auth", algorithm="MD5")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            qop: 'auth'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                expectedHeader,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
+                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
+                'algorithm="MD5", qop=auth, nc=00000001, cnonce="0a4f113b", ' +
+                'response="f83809617b00766c6f9840256eb1199e", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+            authHeader;
+
+            expect(headers.length).to.eql(1);
+            authHeader = headers[0];
+
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('Auth header must be added (qop="", algorithm="MD5-sess")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'MD5-sess'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                expectedHeader,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
+                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
+                'algorithm="MD5-sess", nc=00000001, cnonce="0a4f113b", ' +
+                'response="3bf3901b3461fe15de194fa866154c21", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+            authHeader;
+
+            expect(headers.length).to.eql(1);
+            authHeader = headers[0];
+
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('Auth header must be added (qop="auth", algorithm="MD5-sess")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            qop: 'auth',
+                            algorithm: 'MD5-sess'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                expectedHeader,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
+                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
+                'algorithm="MD5-sess", qop=auth, nc=00000001, cnonce="0a4f113b", ' +
+                'response="52aa69a8b63d81b51e2d02ecebaa705e", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
             expect(headers.length).to.eql(1);
@@ -134,7 +277,7 @@ describe('Auth Handler:', function () {
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
+                'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
             expect(headers.length).to.eql(1);
@@ -148,31 +291,9 @@ describe('Auth Handler:', function () {
             request = new Request(digestAuthObject);
             authInterface = createAuthInterface(request.auth);
 
-            expect(handler.sign.bind(handler)).withArgs(authInterface, request, _.noop)
-                .to.throwError(/Digest Auth with "qop": "auth-int" is not supported./);
-        });
-
-        it('should sign requests correctly', function () {
-            var request = new Request(rawRequests.digest),
-                auth = request.auth,
-                authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type),
-                headers,
-                expectedHeader,
-                authHeader;
-
-            handler.sign(authInterface, request, _.noop);
-            headers = request.headers.all();
-            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
-                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
-            authHeader;
-
-            expect(headers.length).to.eql(1);
-            authHeader = headers[0];
-
-            expect(authHeader.toString()).to.eql(expectedHeader);
-            expect(authHeader.system).to.be(true);
+            handler.sign(authInterface, request, function (err) {
+                expect(err).to.have.property('message', 'Digest Auth with "qop": "auth-int" is not supported.');
+            });
         });
 
         it('Auth header must have uri with query params in case of request with the same', function () {
@@ -187,7 +308,7 @@ describe('Auth Handler:', function () {
             authHeader = request.headers.one('Authorization');
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth?key=value", ' +
-                'response="24dfb8851ee27e4b00252a13b1fd8ec3", opaque=""';
+                'algorithm="MD5", response="24dfb8851ee27e4b00252a13b1fd8ec3", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             expect(authHeader.toString()).to.eql(expectedHeader);
         });
@@ -225,7 +346,7 @@ describe('Auth Handler:', function () {
                     {
                         'key': 'nonceCount',
                         'type': 'any',
-                        'value': ''
+                        'value': '00000001'
                     },
                     {
                         'key': 'algorithm',
@@ -240,12 +361,12 @@ describe('Auth Handler:', function () {
                     {
                         'key': 'clientNonce',
                         'type': 'any',
-                        'value': ''
+                        'value': '0a4f113b'
                     },
                     {
                         'key': 'opaque',
                         'type': 'any',
-                        'value': ''
+                        'value': '5ccc069c403ebaf9f0171e9517f40e'
                     }]
                 }
             });
@@ -284,33 +405,6 @@ describe('Auth Handler:', function () {
                 'oauth_signature'
             ]);
             expect(authHeader.system).to.be(true);
-        });
-
-        it('should support the camelCased timeStamp option as well', function () {
-            var request = new Request(_(rawRequests.oauth1).omit('auth.oauth1.timestamp').merge({
-                    auth: {
-                        type: 'oauth1',
-                        oauth1: {
-                            timeStamp: 1234
-                        }
-                    }
-                }).value()),
-                auth = request.auth,
-                authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type),
-                headers,
-                authHeader;
-
-            handler.sign(authInterface, request, _.noop);
-            headers = request.headers.all();
-            authHeader;
-
-            expect(headers.length).to.eql(1);
-            authHeader = headers[0];
-            // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
-            expect(authHeader.toString()).to.match(/Authorization: OAuth/);
-            expect(authHeader.system).to.be(true);
-            expect(request.auth.oauth1.toObject().timeStamp).to.be(1234);
         });
 
         it('should bail out if the auth params are invalid', function () {
@@ -418,15 +512,124 @@ describe('Auth Handler:', function () {
     });
 
     describe('oauth2', function () {
-        it('should work correctly', function () {
-            var request = new Request(rawRequests.oauth2),
-                auth = request.auth,
-                authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type);
+        var requestObj = {
+            auth: {
+                type: 'oauth2',
+                oauth2: {
+                    accessToken: '123456789abcdefghi',
+                    addTokenTo: 'header',
+                    tokenType: 'bearer'
+                }
+            },
+            url: 'https://api.github.com/user/orgs',
+            method: 'GET'
+        };
+
+        it('should sign the request by adding the token to the header', function () {
+            var request = new Request(requestObj),
+                authInterface = createAuthInterface(request.auth),
+                handler = AuthLoader.getHandler(request.auth.type);
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty();
+            expect(request.headers.all().length).to.be(1);
+            expect(request.headers.all()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
+        it('should sign the request by adding the token to the query params', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.addTokenTo = 'queryParams';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(0);
+            expect(request.url.query.all().length).to.be(1);
+            expect(request.url.query.all()[0]).to.eql({
+                key: 'access_token',
+                value: requestObj.auth.oauth2.accessToken
+            });
+        });
+
+        it('should return when token is not present', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            delete clonedRequestObj.auth.oauth2.accessToken;
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(0);
+            expect(request.url.query.all().length).to.be(0);
+        });
+
+        it('should default the token type to "Bearer"', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.tokenType = '';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(1);
+            expect(request.headers.all()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
+        it('should return when token type is not known', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.tokenType = 'unknown type';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(0);
+            expect(request.url.query.all().length).to.be(0);
         });
     });
 
