@@ -146,7 +146,7 @@ describe('Auth Handler:', function () {
     });
 
     describe('digest', function () {
-        it('Auth header must be added', function () {
+        it('Auth header must be added (qop="", algorithm="MD5', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -159,7 +159,101 @@ describe('Auth Handler:', function () {
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
+                'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+            authHeader;
+
+            expect(headers.length).to.eql(1);
+            authHeader = headers[0];
+
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('Auth header must be added (qop="auth", algorithm="MD5")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            qop: 'auth'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                expectedHeader,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
+                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
+                'algorithm="MD5", qop=auth, nc=00000001, cnonce="0a4f113b", ' +
+                'response="f83809617b00766c6f9840256eb1199e", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+            authHeader;
+
+            expect(headers.length).to.eql(1);
+            authHeader = headers[0];
+
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('Auth header must be added (qop="", algorithm="MD5-sess")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'MD5-sess'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                expectedHeader,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
+                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
+                'algorithm="MD5-sess", nc=00000001, cnonce="0a4f113b", ' +
+                'response="3bf3901b3461fe15de194fa866154c21", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+            authHeader;
+
+            expect(headers.length).to.eql(1);
+            authHeader = headers[0];
+
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('Auth header must be added (qop="auth", algorithm="MD5-sess")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            qop: 'auth',
+                            algorithm: 'MD5-sess'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                expectedHeader,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
+                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
+                'algorithm="MD5-sess", qop=auth, nc=00000001, cnonce="0a4f113b", ' +
+                'response="52aa69a8b63d81b51e2d02ecebaa705e", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
             expect(headers.length).to.eql(1);
@@ -183,7 +277,7 @@ describe('Auth Handler:', function () {
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
+                'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
             expect(headers.length).to.eql(1);
@@ -202,29 +296,6 @@ describe('Auth Handler:', function () {
             });
         });
 
-        it('should sign requests correctly', function () {
-            var request = new Request(rawRequests.digest),
-                auth = request.auth,
-                authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type),
-                headers,
-                expectedHeader,
-                authHeader;
-
-            handler.sign(authInterface, request, _.noop);
-            headers = request.headers.all();
-            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
-                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'response="63db383a0f03744cfd45fe15de8dbe9d", opaque=""';
-            authHeader;
-
-            expect(headers.length).to.eql(1);
-            authHeader = headers[0];
-
-            expect(authHeader.toString()).to.eql(expectedHeader);
-            expect(authHeader.system).to.be(true);
-        });
-
         it('Auth header must have uri with query params in case of request with the same', function () {
             var request = new Request(rawRequests.digestWithQueryParams),
                 auth = request.auth,
@@ -237,7 +308,7 @@ describe('Auth Handler:', function () {
             authHeader = request.headers.one('Authorization');
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth?key=value", ' +
-                'response="24dfb8851ee27e4b00252a13b1fd8ec3", opaque=""';
+                'algorithm="MD5", response="24dfb8851ee27e4b00252a13b1fd8ec3", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             expect(authHeader.toString()).to.eql(expectedHeader);
         });
@@ -275,7 +346,7 @@ describe('Auth Handler:', function () {
                     {
                         'key': 'nonceCount',
                         'type': 'any',
-                        'value': ''
+                        'value': '00000001'
                     },
                     {
                         'key': 'algorithm',
@@ -290,12 +361,12 @@ describe('Auth Handler:', function () {
                     {
                         'key': 'clientNonce',
                         'type': 'any',
-                        'value': ''
+                        'value': '0a4f113b'
                     },
                     {
                         'key': 'opaque',
                         'type': 'any',
-                        'value': ''
+                        'value': '5ccc069c403ebaf9f0171e9517f40e'
                     }]
                 }
             });
