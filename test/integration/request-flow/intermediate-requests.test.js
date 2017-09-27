@@ -297,10 +297,21 @@ describe('intermediate requests from auth', function () {
             expect(testrun.start.callCount).to.be(1);
         });
 
-        it('must have ended with max count error', function () {
-            var err = testrun.request.lastCall.args[0];
+        it('must have bubbled with max count error', function () {
+            var err = testrun.console.lastCall.args[2];
 
-            expect(err).to.have.property('message', 'runtime: maximum intermediate request limit exceeded');
+            expect(err).to.contain('runtime: maximum intermediate request limit exceeded');
+        });
+
+        it('must complete the request with the last response', function () {
+            var reqErr = testrun.request.lastCall.args[0],
+                resErr = testrun.response.lastCall.args[0],
+                response = testrun.response.lastCall.args[2];
+
+            expect(reqErr).to.be(null);
+            expect(resErr).to.be(null);
+            expect(response.code).to.be(401);
+            expect(response.text()).to.contain('Unauthorized');
         });
     });
 });
