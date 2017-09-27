@@ -32,11 +32,11 @@
                 "realm": "Users",
                 "password": "password",
                 "nonce": "bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp",
-                "nonceCount": "",
+                "nonceCount": "00000001",
                 "algorithm": "MD5",
                 "qop": "",
-                "clientNonce": "",
-                "opaque": ""
+                "clientNonce": "0a4f113b",
+                "opaque": "5ccc069c403ebaf9f0171e9517f40e"
             }
         }
     },
@@ -55,11 +55,11 @@
                 "realm": "Users",
                 "password": "password",
                 "nonce": "bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp",
-                "nonceCount": "",
+                "nonceCount": "00000001",
                 "algorithm": "MD5",
                 "qop": "",
-                "clientNonce": "",
-                "opaque": ""
+                "clientNonce": "0a4f113b",
+                "opaque": "5ccc069c403ebaf9f0171e9517f40e"
             }
         }
     },
