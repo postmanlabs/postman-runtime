@@ -1,3 +1,5 @@
+var expect = require('expect.js');
+
 describe('digest auth', function () {
     var testrun;
 
@@ -170,6 +172,69 @@ describe('digest auth', function () {
 
             expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
             expect(response.code).to.eql(200);
+        });
+    });
+
+    describe('with interactive mode turned off', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: 'https://postman-echo.com/digest-auth',
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: '{{uname}}',
+                                    password: '{{pass}}',
+                                    disableRetryRequest: true
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: 'postman'
+                    }, {
+                        key: 'pass',
+                        value: 'password'
+                    }]
+                },
+                authorizer: {
+                    interactive: true
+                }
+            };
+
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('must have completed the run', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.callCount).to.be(1);
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.callCount).to.be(1);
+        });
+
+        it('must have sent only one request', function () {
+            expect(testrun.io.callCount).to.be(1);
+            expect(testrun.request.callCount).to.be(1);
+
+            var err = testrun.io.firstCall.args[0],
+                request = testrun.io.firstCall.args[4],
+                response = testrun.io.firstCall.args[3];
+
+            expect(err).to.be(null);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(response.code).to.eql(401);
         });
     });
 

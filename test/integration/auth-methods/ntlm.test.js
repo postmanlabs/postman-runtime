@@ -34,7 +34,7 @@ describe('NTLM', function () {
 
     describe('with request server not supporting NTLM', function () {
         before(function (done) {
-            var clonedRunOptions = _.defaults({
+            var clonedRunOptions = _.merge({}, runOptions, {
                 collection: {
                     item: {
                         request: {
@@ -58,7 +58,7 @@ describe('NTLM', function () {
                         value: WORKSTATION
                     }]
                 }
-            }, runOptions);
+            });
 
             // perform the collection run
             this.run(clonedRunOptions, function (err, results) {
@@ -86,7 +86,7 @@ describe('NTLM', function () {
 
     describe('with in-correct details', function () {
         before(function (done) {
-            var clonedRunOptions = _.defaults({
+            var clonedRunOptions = _.merge({}, runOptions, {
                 environment: {
                     values: [{
                         key: 'uname',
@@ -102,7 +102,7 @@ describe('NTLM', function () {
                         value: WORKSTATION
                     }]
                 }
-            }, runOptions);
+            });
 
             // perform the collection run
             this.run(clonedRunOptions, function (err, results) {
@@ -130,9 +130,66 @@ describe('NTLM', function () {
         });
     });
 
+    describe('with interactive mode turned off', function () {
+        before(function (done) {
+            var clonedRunOptions = _.merge({}, runOptions, {
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                ntlm: {
+                                    disableRetryRequest: true
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: 'foo'
+                    }, {
+                        key: 'pass',
+                        value: 'bar'
+                    }, {
+                        key: 'domain',
+                        value: DOMAIN
+                    }, {
+                        key: 'workstation',
+                        value: WORKSTATION
+                    }]
+                }
+            });
+
+            // perform the collection run
+            this.run(clonedRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('must have completed the run', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.callCount).to.be(1);
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.callCount).to.be(1);
+        });
+
+        it('must have sent the request only once', function () {
+            expect(testrun.request.callCount).to.be(1);
+
+            var err = testrun.request.firstCall.args[0],
+                response = testrun.request.firstCall.args[2];
+
+            expect(err).to.be(null);
+            expect(response.code).to.eql(401);
+        });
+    });
+
     describe('with correct details', function () {
         before(function (done) {
-            var clonedRunOptions = _.defaults({
+            var clonedRunOptions = _.merge({}, runOptions, {
                 environment: {
                     values: [{
                         key: 'uname',
