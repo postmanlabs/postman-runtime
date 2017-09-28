@@ -1,0 +1,190 @@
+{
+    "basic": {
+        "auth": {
+            "type": "basic",
+            "basic": {
+                "username": "abhijit",
+                "password": "kane",
+                "showPassword": false
+            }
+        },
+        "url": "httpbin.org/get",
+        "method": "GET",
+        "header": [],
+        "data": {
+            "mode": "formdata",
+            "content": []
+        },
+        "description": ""
+    },
+    "digest": {
+        "url": "https://postman-echo.com/digest-auth",
+        "method": "GET",
+        "header": [],
+        "data": {
+            "mode": "formdata",
+            "content": []
+        },
+        "auth": {
+            "type": "digest",
+            "digest": {
+                "username": "postman",
+                "realm": "Users",
+                "password": "password",
+                "nonce": "bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp",
+                "nonceCount": "00000001",
+                "algorithm": "MD5",
+                "qop": "",
+                "clientNonce": "0a4f113b",
+                "opaque": "5ccc069c403ebaf9f0171e9517f40e"
+            }
+        }
+    },
+    "digestWithQueryParams": {
+        "url": "https://postman-echo.com/digest-auth?key=value",
+        "method": "GET",
+        "header": [],
+        "data": {
+            "mode": "formdata",
+            "content": []
+        },
+        "auth": {
+            "type": "digest",
+            "digest": {
+                "username": "postman",
+                "realm": "Users",
+                "password": "password",
+                "nonce": "bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp",
+                "nonceCount": "00000001",
+                "algorithm": "MD5",
+                "qop": "",
+                "clientNonce": "0a4f113b",
+                "opaque": "5ccc069c403ebaf9f0171e9517f40e"
+            }
+        }
+    },
+    "oauth1": {
+        "auth": {
+            "type": "oauth1",
+            "oauth1": {
+                "consumerKey": "RKCGzna7bv9YD57c",
+                "consumerSecret": "D+EdQ-gs$-%@2Nu7",
+                "token": "",
+                "tokenSecret": "",
+                "signatureMethod": "HMAC-SHA1",
+                "timestamp": "1453890475",
+                "nonce": "yly1UR",
+                "version": "1.0",
+                "realm": "oauthrealm",
+                "addParamsToHeader": true,
+                "autoAddParam": true,
+                "addEmptyParamsToSign": false
+            }
+        },
+        "url": "https://postman-echo.com/oauth1?hi=hello&yo=true",
+        "method": "POST",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "OAuth oauth_consumer_key='RKCGzna7bv9YD57c',oauth_signature_method='HMAC-SHA1',oauth_timestamp='1453890449',oauth_nonce='aT8kIM',oauth_version='1.0',oauth_signature='Ng8eD0bKh6LO5V0A9O6Z%2BY6D0tU%3D'",
+                "description": ""
+            }
+        ],
+        "data": {
+            "mode": "urlencoded",
+            "content": [{
+                "key": "haha",
+                "value": "somevalue"
+            }]
+        }
+    },
+    "oauth2": {
+        "auth": {
+            "type": "oauth2",
+            "oauth2": {
+                "addTokenTo": "RKCGzna7bv9YD57c",
+                "callBackUrl": "D+EdQ-gs$-%@2Nu7",
+                "authUrl": "",
+                "accessTokenUrl": "",
+                "clientId": "HMAC-SHA1",
+                "clientSecret": "1453890475",
+                "scope": "yly1UR",
+                "requestAccessTokenLocally": "1.0"
+            }
+        },
+        "url": "https://postman-echo.com/oauth2?hi=hello&yo=true",
+        "method": "POST",
+        "data": {
+            "mode": "urlencoded",
+            "content": [{
+                "key": "haha",
+                "value": "somevalue"
+            }]
+        }
+    },
+    "awsv4": {
+        "auth": {
+            "type": "awsv4",
+            "awsv4": {
+                "id": "awsSigV4",
+                "time": 1452673288848,
+                "accessKey": "AKIAI53QRL",
+                "secretKey": "cr2RAfsY4IIVweutTBoBzR",
+                "sessionToken": "33Dhtnwf0RVHCFttmMPYt3dxx9zi8I07CBwTXaqupHQ=",
+                "region": "eu-west-1",
+                "service": "",
+                "auto": true,
+                "saveHelper": true,
+                "serviceName": "execute-api"
+            }
+        },
+        "url": "https://the2yl2ege.execute-api.eu-west-1.amazonaws.com/{{stagename}}/item",
+        "method": "POST",
+        "header": [
+            {
+                "key": "content-type",
+                "value": "application/json",
+                "description": ""
+            },
+            {
+                "key": "X-Amz-Date",
+                "value": "20160128T095051Z",
+                "description": ""
+            }
+        ],
+        "data": {
+            "mode": "raw",
+            "content": "{'what': 'isthis'}"
+        },
+        "description": ""
+    },
+    "hawk": {
+        "auth": {
+            "type": "hawk",
+            "hawk": {
+                "authId": "dh37fgj492je",
+                "authKey": "werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn",
+                "algorithm": "sha256",
+                "user": "asda",
+                "saveHelperData": true,
+                "extraData": "skjdfklsjhdflkjhsdf",
+                "appId": "",
+                "delegation": ""
+            }
+        },
+        "url": "http://postman-echo.com/auth/hawk",
+        "method": "GET",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "",
+                "description": ""
+            }
+        ],
+        "body": {
+            "mode": "formdata",
+            "formdata": []
+        },
+        "description": ""
+    }
+}

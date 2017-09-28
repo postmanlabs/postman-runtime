@@ -30,7 +30,7 @@ describe('project repository', function () {
             it('must have valid name, description and author', function () {
                 expect(json.name).to.equal('postman-runtime');
                 expect(json.description)
-                    .to.equal('Underlyng library of executing Postman Collections (used by Newman)');
+                    .to.equal('Underlying library of executing Postman Collections (used by Newman)');
                 expect(json.author).to.equal('Postman Labs <help@getpostman.com>');
                 expect(json.license).to.equal('Apache-2.0');
             });
@@ -64,6 +64,11 @@ describe('project repository', function () {
         describe('dependencies', function () {
             it('must exist', function () {
                 expect(json.dependencies).to.be.a('object');
+            });
+
+            // Hawk library v3.1.2+ uses ES6 and is not compatible with the browser.
+            it('hawk version', function () {
+                expect(json.dependencies.hawk).to.be('3.1.3');
             });
 
             it('must point to a valid semver', function () {

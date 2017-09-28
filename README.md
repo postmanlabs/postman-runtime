@@ -1,7 +1,7 @@
 # postman-runtime
 
-> This is a low-level library used as the backbone for all Collection running & Request sending functionality, in 
-> the Postman App, and allied systems ([Postman Monitoring](https://www.getpostman.com/docs/schedule_cloud_runs), 
+> This is a low-level library used as the backbone for all Collection running & Request sending functionality, in
+> the Postman App, and allied systems ([Postman Monitoring](https://www.getpostman.com/docs/schedule_cloud_runs),
 [Newman](https://github.com/postmanlabs/newman))
 
 > If you are looking to execute collections, you should be using Newman, this is very low level.
@@ -15,7 +15,7 @@
 
 ## Options
 
-Postman Runtime supports a lot of options to customize its behavior for different environments and use-cases. 
+Postman Runtime supports a lot of options to customize its behavior for different environments and use-cases.
 
 ```javascript
 var runner = new runtime.Runner(); // runtime = require('postman-runtime');
@@ -26,37 +26,38 @@ var collection = new sdk.Collection();
 runner.run(collection, {
     // Iteration Data
     data: [],
-    
+
     // Timeouts (in ms)
     timeout: {
         request: 30000,
+        script: 5000
     },
-    
+
     // Number of iterations
     iterationCount: 1,
 
     // Control flags (you can only specify one of these):
-    
+
     // - gracefully halts on errors (errors in request scripts or while sending the request)
     //   calls the `item` and `iteration` callbacks and does not run any further items (requests)
     stopOnError: true,
-    
+
     // - abruptly halts the run on errors, and directly calls the `done` callback
     abortOnError: true,
-    
+
     // - gracefully halts on errors _or_ test failures.
     //   calls the `item` and `iteration` callbacks and does not run any further items (requests)
     stopOnFailure: true,
 
     // - abruptly halts the run on errors or test failures, and directly calls the `done` callback
     abortOnFailure: true,
-    
+
     // Environment (a "VariableScope" from the SDK)
     environment: new sdk.VariableScope(),
-    
+
     // Globals (a "VariableScope" from the SDK)
     globals: new sdk.VariableScope(),
-    
+
     // Configure delays (in ms)
     delay: {
         // between each request
@@ -67,23 +68,23 @@ runner.run(collection, {
 
     // Used to fetch contents of files, certificates wherever needed
     fileResolver: require('fs'),
-    
+
     // Options specific to the requester
     requester: {
-        
+
         // An object compatible with the cookieJar provided by the 'postman-request' module
         cookieJar: jar,
-        
+
         // Controls redirect behavior (only supported on Node, ignored in the browser)
         followRedirects: true,
 
         // Enable or disable certificate verification (only supported on Node, ignored in the browser)
         strictSSL: false,
-        
+
         // Enable sending of bodies with GET requests (only supported on Node, ignored in the browser)
         sendBodyWithGetRequests: true,
     },
-    
+
     // authorizer
     authorizer: {
 
@@ -99,13 +100,13 @@ runner.run(collection, {
 
     // A ProxyConfigList, from the SDK
     proxies: new sdk.ProxyConfigList(),
-    
+
     // A function that fetches the system proxy for a given URL.
     systemProxy: function (url, callback) { return callback(null, {/* ProxyConfig object */}) },
-    
+
     // A CertificateList from the SDK
     certificates: new sdk.CertificateList(),
-    
+
     // *note* Not implemented yet.
     // In the future, this will be used to read certificates from the OS keychain.
     systemCertificate: function() {}
@@ -113,7 +114,7 @@ runner.run(collection, {
     console.log('Created a new Run!');
 
     // Check the section below for detailed documentation on what callbacks should be.
-    run.start(callbacks); 
+    run.start(callbacks);
 });
 ```
 
@@ -132,7 +133,7 @@ runner.run(collection, { /* options */ }, function(err, run) {
             // err.message: String - The name of the test that failed.
             // err.stack: String - The stacktrace associated with the current test failure.
             // err.index: Integer - A unique integer id for the current error, present only for failed assertions.
-            
+
             // meta: Object
             // meta.assertion: String - The name of the current assertion
             // meta.cursor: Object
@@ -142,13 +143,13 @@ runner.run(collection, { /* options */ }, function(err, run) {
             // meta.event: Event - A collection SDK Event instance.
             // meta.item: Item - A collection SDK Item instance.
         },
-        
+
         // Called when the run begins
         start: function (err, cursor) {
             // err: null or Error
             // cursor = {
             //     position: Number,
-            //     iteration: Number, 
+            //     iteration: Number,
             //     length: Number,
             //     cycles: Number,
             //     eof: Boolean,
@@ -158,40 +159,40 @@ runner.run(collection, { /* options */ }, function(err, run) {
             //     ref: String
             // }
         },
-        
+
         // Called before starting a new iteration
-        beforeIteration: function (err, cursor) { 
-            /* Same as arguments for "start" */ 
+        beforeIteration: function (err, cursor) {
+            /* Same as arguments for "start" */
         },
-        
+
         // Called when an iteration is completed
         iteration: function (err, cursor) {
-            /* Same as arguments for "start" */ 
+            /* Same as arguments for "start" */
         },
-        
+
         // Called before running a new Item (check the postman collection v2 format for what Item means)
         beforeItem: function (err, cursor, item) {
             // err, cursor: Same as arguments for "start"
             // item: sdk.Item
         },
-        
+
         // Called after completion of an Item
         item: function (err, cursor, item) {
             /* Same as arguments for "beforeItem" */
         },
-        
+
         // Called before running pre-request script(s) (Yes, Runtime supports multiple pre-request scripts!)
         beforePrerequest: function (err, cursor, events, item) {
             // err, cursor: Same as arguments for "start"
             // events: Array of sdk.Event objects
             // item: sdk.Item
         },
-        
+
         // Called after running pre-request script(s)
-        prerequest: function (err, cursor, results, item) { 
+        prerequest: function (err, cursor, results, item) {
             // err, cursor: Same as arguments for "start"
             // item: sdk.Item
-            
+
             // results: Array of objects. Each object looks like this:
             //  {
             //      error: Error,
@@ -211,14 +212,14 @@ runner.run(collection, { /* options */ }, function(err, run) {
             //      }
             //  }
         },
-        
+
         // Called before running test script(s)
         beforeTest: function (err, cursor, events, item) {
             // err, cursor: Same as arguments for "start"
             // events: Array of sdk.Event objects
             // item: sdk.Item
         },
-        
+
         // Called just after running test script (s)
         test: function (err, cursor, results, item) {
             // results: Array of objects. Each object looks like this:
@@ -244,46 +245,61 @@ runner.run(collection, { /* options */ }, function(err, run) {
             //      }
             //  }
         },
-        
+
         // Called just before sending a request
         beforeRequest: function (err, cursor, request, item) {
             // err, cursor: Same as arguments for "start"
             // item: sdk.Item
-            
+
             // request: sdk.request
         },
-        
-        // Called just after sending a request
+
+        // Called just after sending a request, may include request replays
         request: function (err, cursor, response, request, item, cookies) {
             // err, cursor: Same as arguments for "start"
             // item: sdk.Item
-            
+
             // response: sdk.Response
             // request: sdk.request
         },
-        
+
+        // Called once with response for each request in a collection
+        response: function (err, cursor, response, request, item, cookies) {
+            // err, cursor: Same as arguments for "start"
+            // item: sdk.Item
+
+            // response: sdk.Response
+            // request: sdk.request
+        },
+
+        exception: function (cursor, err) {
+             // Called when an exception occurs
+             // @param {Object} cursor - A representation of the current run state.
+             // @param {Error} err - An Error instance with name, message, and type properties.
+        },
+
         // Called at the end of a run
         done: function (err) {
             // err: null or Error
             console.log('done');
         },
-        
+
         // Called any time a console.* function is called in test/pre-request scripts
         console: function (cursor, level, ...logs) {},
-        
+
         io: function (err, cursor, trace, ...otherArgs) {
             // err, cursor: Same as arguments for "start"
             // trace: An object which looks like this:
             // {
             //     -- Indicates the type of IO event, may be HTTP, File, etc. Any requests sent out as a part of
             //     -- auth flows, replays, etc will show up here.
-            //     type: 'http', 
+            //     type: 'http',
             //
             //     -- Indicates what this IO event originated from, (collection, auth flows, etc)
             //     source: 'collection'
             // }
             // otherArgs: Variable number of arguments, specific to the type of the IO event.
-            
+
             // For http type, the otherArgs are:
             // response: sdk.Response()
             // request: sdk.Request()

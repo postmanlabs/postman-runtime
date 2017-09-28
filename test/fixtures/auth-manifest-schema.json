@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "required": ["info", "updates"],
+  "properties": {
+      "info": {
+          "type": "object",
+          "required": ["name", "version"],
+          "properties": {
+              "name": {
+                  "type": "string"
+              },
+              "version": {
+                  "type": "string"
+              }
+          }
+      },
+      "updates": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+              "required": ["property", "type"],
+              "type": "object",
+              "properties": {
+                  "property": {
+                      "type": "string"
+                  },
+                  "type": {
+                      "type": "string"
+                  }
+              }
+          },
+          "uniqueItems": true
+      }
+  }
+}

@@ -1,33 +1,11 @@
 It's very easy to add new authentication mechanisms in Runtime and SDK. This document outlines the steps to be 
 done to add a new auth mechanism. For the purposes of this documentation, we'll call the new auth method `demo`.
 
-## Define the data structure in the SDK.
-
-Create a new file (`demo.js`) in `postman-collection/lib/collection/request-auth/`
-
-The file needs to expose three properties, `name`, `update` and `authorize`.
-
-```javascript
-module.exports = {
-    name: 'demo',
-    update: function(params) {
-        _.assign(this, params);
-    },
-    authorize: function(request) {
-        // sign the request with header addition etc. This is not mandatory, and may not make
-        // sense for all auths, in which case, just return the request.
-        return request;
-    }
-}
-```
-    
-Update `lib/collection/request-auth.js` to require your new auth method.
-
 ## Add your new authentication to Runtime
 
 Create a new file `demo.js` in `postman-runtime/lib/authorizer/`
 
-Every auth method needs to expose four different functionalities, `pre`, `post`, `init` and `_sign`. These
+Every auth method needs to expose four different hooks, `pre`, `post`, `init` and `sign`. These
 are called in the {@tutorial request-send-flow}.
 
 ```javascript
@@ -44,8 +22,8 @@ module.exports = {
         done(null, true);
     },
 
-    _sign: function (request) {
-        return this.authorize(request);
+    sign: function (params, request) {
+        return request;
     }
 };
 ```
@@ -61,8 +39,9 @@ boolean value indicating whether the pre-verification was successful.
 e.g:
 ```javascript
 pre: function demoAuthPreverification (context, requester, done) {
-    // if nonce is not present, fail the pre-verification step.
-    if (!this.nonce) {
+    var auth = context.auth.demo.toObject();
+    // if username or password is not present, fail the pre-verification step.
+    if (!(auth.username && auth.password)) {
         return done(null, false); 
     }
     done(null, true);
@@ -77,7 +56,7 @@ other mechanism.
 e.g:
 ```javascript
 init: function demoAuthInitialize (context, requester, done) {
-    var auth = this;
+    var auth = context.auth.demo.toObject();
     requester.request(new sdk.Item({ request: 'http://demoserver.com' }), function(err, response) {
         auth.challenge = response.headers.get('authorization');
     });
@@ -92,7 +71,7 @@ replayed (sent again).
 e.g:
 ```javascript
 post: function demoAuthPost (context, requester, done) {
-    var auth = this;
+    var auth = context.auth.demo.toObject();
     requester.request(new sdk.Item({ request: 'http://demoserver.com' }), function(err, response) {
         if (response.code === 401) {
             return done(null, false);  // replay the request
@@ -102,13 +81,19 @@ post: function demoAuthPost (context, requester, done) {
 }
 ```
 
-### `_sign`
+### `sign`
 
-This function is in charge of calling the SDK's signing method. Eventually, it will become independent by itself.
+This function is in charge of signing the request
 
 e.g:
 ```javascript
-    _sign: function demoSign (request) {
-        return this.authorize(request);
+    sign: function demoSign (params, request) {
+        var auth = context.auth.demo.toObject();
+        request.addHeader({
+            key: 'Authorization',
+            value: 'Basic ' + btoa(auth.username + ':' + auth.password),
+            system: true
+        });
+        return request;
     }
 ```
