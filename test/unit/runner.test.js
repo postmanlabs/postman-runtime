@@ -70,8 +70,9 @@ describe('runner', function () {
                     var runner = new Runner();
 
                     runner.run('random', {}, function (err, run) {
-                        expect(err.message).to.be('A valid collection SDK instance is required');
-                        expect(run).to.not.be.ok();
+                        expect(err).to.be(null);
+                        expect(run).to.be.ok();
+                        expect(run.state.items).to.eql([]);
 
                         done();
                     });
@@ -142,48 +143,29 @@ describe('runner', function () {
             }]
         });
 
-        it('should handle invalid arguments correctly', function (done) {
-            Runner.extractRunnableItems(function (err, runnableItems) {
-                expect(err.message).to.be('A valid collection SDK instance is required');
-                expect(runnableItems).to.not.be.ok();
-                done();
-            });
-        });
-
-        it('should return the entire collection if no entrypoint has been specified', function (done) {
-            Runner.extractRunnableItems(collection, function (err, runnableItems) {
-                expect(err).to.be(null);
-                expect(runnableItems).to.have.keys(['entrypoint', 'items']);
-                expect(runnableItems.entrypoint).to.eql(collection);
-                expect(_.map(runnableItems.items, 'name')).to.eql(['F1.R1', 'F1.R2']);
-                done();
-            });
-        });
-
         it('should handle invalid entry points correctly ', function (done) {
-            Runner.extractRunnableItems(collection, 'random', function (err, runnableItems) {
+            Runner.extractRunnableItems(collection, 'random', function (err, runnableItems, entrypoint) {
                 expect(err).to.be(null);
-                expect(runnableItems).to.eql({items: [], entrypoint: undefined});
+                expect(runnableItems).to.eql([]);
+                expect(entrypoint).to.be(undefined);
                 done();
             });
         });
 
         it('should filter down to the provided groupId correctly', function (done) {
-            Runner.extractRunnableItems(collection, 'F1', function (err, runnableItems) {
+            Runner.extractRunnableItems(collection, 'F1', function (err, runnableItems, entrypoint) {
                 expect(err).to.be(null);
-                expect(runnableItems).to.have.keys(['entrypoint', 'items']);
-                expect(runnableItems.entrypoint).to.eql(collection.items.members[0]);
-                expect(_.map(runnableItems.items, 'name')).to.eql(['F1.R1']);
+                expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
+                expect(entrypoint).to.eql(collection.items.members[0]);
                 done();
             });
         });
 
         it('should prioritize id matches over name matches correctly', function (done) {
-            Runner.extractRunnableItems(collection, 'F2', function (err, runnableItems) {
+            Runner.extractRunnableItems(collection, 'F2', function (err, runnableItems, entrypoint) {
                 expect(err).to.be(null);
-                expect(runnableItems).to.have.keys(['entrypoint', 'items']);
-                expect(runnableItems.entrypoint).to.eql(collection.items.members[0]);
-                expect(_.map(runnableItems.items, 'name')).to.eql(['F1.R1']);
+                expect(entrypoint).to.eql(collection.items.members[0]);
+                expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
                 done();
             });
         });
