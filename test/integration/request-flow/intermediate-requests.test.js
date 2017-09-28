@@ -76,9 +76,11 @@ describe('intermediate requests from auth', function () {
 
         it('must have sent the original request', function () {
             var err = testrun.response.firstCall.args[0],
+                cursor = testrun.response.firstCall.args[1],
                 request = testrun.response.firstCall.args[3];
 
             expect(err).to.be(null);
+            expect(cursor).to.have.keys('ref', 'httpRequestId');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
@@ -88,8 +90,11 @@ describe('intermediate requests from auth', function () {
 
             expect(err).to.be(null);
             expect(request.url.toString()).to.be('https://postman-echo.com/get');
-            // @todo: add trace to cursor and enable this test
-            // expect(cursor.trace.source).to.be('fake.auth');
+        });
+
+        it('must have the right trace', function () {
+            expect(testrun.io.firstCall.args[2]).to.have.property('source', 'fake.auth');
+            expect(testrun.io.secondCall.args[2]).to.have.property('source', 'collection');
         });
 
         it('must have followed auth control flow', function () {
@@ -292,10 +297,21 @@ describe('intermediate requests from auth', function () {
             expect(testrun.start.callCount).to.be(1);
         });
 
-        it('must have ended with max count error', function () {
-            var err = testrun.request.lastCall.args[0];
+        it('must have bubbled with max count error', function () {
+            var err = testrun.console.lastCall.args[2];
 
-            expect(err).to.have.property('message', 'runtime: maximum intermediate request limit exceeded');
+            expect(err).to.contain('runtime: maximum intermediate request limit exceeded');
+        });
+
+        it('must complete the request with the last response', function () {
+            var reqErr = testrun.request.lastCall.args[0],
+                resErr = testrun.response.lastCall.args[0],
+                response = testrun.response.lastCall.args[2];
+
+            expect(reqErr).to.be(null);
+            expect(resErr).to.be(null);
+            expect(response.code).to.be(401);
+            expect(response.text()).to.contain('Unauthorized');
         });
     });
 });

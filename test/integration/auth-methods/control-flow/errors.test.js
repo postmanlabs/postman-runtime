@@ -65,13 +65,12 @@ describe('auth control flow', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.callCount).to.be(1);
-            expect(testrun.io.callCount).to.be(0);
         });
 
         it('must have sent the request once', function () {
             expect(testrun.request.callCount).to.be(1);
 
-            var err = testrun.request.firstCall.args[0],
+            var err = testrun.console.firstCall.args[3],
                 request = testrun.request.firstCall.args[3];
 
             expect(err).to.have.property('message', 'Pre Error!');
@@ -82,7 +81,7 @@ describe('auth control flow', function () {
             expect(handlerSpies.pre.callCount).to.be(1);
             expect(handlerSpies.init.callCount).to.be(0);
             expect(handlerSpies.sign.callCount).to.be(0);
-            expect(handlerSpies.post.callCount).to.be(0);
+            expect(handlerSpies.post.callCount).to.be(1);
         });
     });
 
@@ -134,10 +133,10 @@ describe('auth control flow', function () {
         it('must have sent the request once', function () {
             expect(testrun.request.callCount).to.be(1);
 
-            var err = testrun.request.firstCall.args[0],
-                request = testrun.request.firstCall.args[3];
+            var request = testrun.request.firstCall.args[3],
+                err = testrun.console.firstCall.args[3];
 
-            // @todo: handle error
+            expect(testrun.console.callCount).to.eql(1);
             expect(err).to.have.property('message', 'Post Error!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
@@ -197,11 +196,11 @@ describe('auth control flow', function () {
 
         it('must have sent the request once', function () {
             expect(testrun.request.callCount).to.be(1);
+            expect(testrun.console.callCount).to.be(1);
 
-            var err = testrun.request.firstCall.args[0],
+            var err = testrun.console.firstCall.args[3],
                 request = testrun.request.firstCall.args[3];
 
-            // @todo: handle error
             expect(err).to.have.property('message', 'Post Error!');
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
@@ -268,7 +267,7 @@ describe('auth control flow', function () {
         });
 
         it('should have bubbled the error to the request', function () {
-            var err = testrun.request.firstCall.args[0];
+            var err = testrun.console.firstCall.args[3];
 
             expect(err).to.have.property('message', 'Pre Error!');
         });
@@ -277,7 +276,7 @@ describe('auth control flow', function () {
             expect(handlerSpies.pre.callCount).to.be(1);
             expect(handlerSpies.init.callCount).to.be(0);
             expect(handlerSpies.sign.callCount).to.be(0);
-            expect(handlerSpies.post.callCount).to.be(0);
+            expect(handlerSpies.post.callCount).to.be(1);
         });
     });
 
@@ -323,7 +322,6 @@ describe('auth control flow', function () {
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.callCount).to.be(1);
-            expect(testrun.io.callCount).to.be(0);
         });
 
         it('must have sent the request once', function () {
@@ -335,7 +333,7 @@ describe('auth control flow', function () {
         });
 
         it('must have bubbled the error', function () {
-            var err = testrun.request.firstCall.args[0];
+            var err = testrun.console.firstCall.args[3];
 
             expect(err).to.have.property('message', 'Sign Error!');
         });
@@ -344,7 +342,7 @@ describe('auth control flow', function () {
             expect(handlerSpies.pre.callCount).to.be(1);
             expect(handlerSpies.init.callCount).to.be(0);
             expect(handlerSpies.sign.callCount).to.be(1);
-            expect(handlerSpies.post.callCount).to.be(0);
+            expect(handlerSpies.post.callCount).to.be(1);
         });
     });
 
@@ -405,7 +403,7 @@ describe('auth control flow', function () {
         });
 
         it('must have bubbled the error', function () {
-            var err = testrun.request.secondCall.args[0];
+            var err = testrun.console.firstCall.args[3];
 
             expect(err).to.have.property('message', 'Init Error!');
         });
@@ -414,7 +412,7 @@ describe('auth control flow', function () {
             expect(handlerSpies.pre.callCount).to.be(1);
             expect(handlerSpies.init.callCount).to.be(1);
             expect(handlerSpies.sign.callCount).to.be(0);
-            expect(handlerSpies.post.callCount).to.be(0);
+            expect(handlerSpies.post.callCount).to.be(1);
         });
     });
 });
