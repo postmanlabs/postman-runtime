@@ -1,4 +1,4 @@
 {
-  "exceptions": ["https://nodesecurity.io/advisories/525"],
+  "exceptions": [],
   "exclusions": ["postman-collection"]
 }
