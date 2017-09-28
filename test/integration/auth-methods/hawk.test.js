@@ -36,14 +36,14 @@ describe('hawk auth', function () {
 
     it('must have completed the run', function () {
         expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
+        expect(testrun.done.callCount).to.be(1);
         testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
         expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+        expect(testrun.start.callCount).be(1);
     });
 
     it('must have sent the request once', function () {
-        expect(testrun.request.calledOnce).be.ok();
+        expect(testrun.request.callCount).to.be(1);
 
         var request = testrun.request.getCall(0).args[3],
             response = testrun.request.getCall(0).args[2];
@@ -53,7 +53,7 @@ describe('hawk auth', function () {
     });
 
     it('must have sent one request internally', function () {
-        expect(testrun.io.calledOnce).be.ok();
+        expect(testrun.io.callCount).to.be(1);
 
         var firstError = testrun.io.firstCall.args[0],
             firstRequest = testrun.io.firstCall.args[4],
@@ -65,7 +65,7 @@ describe('hawk auth', function () {
     });
 
     it('must have passed the hawk authorization', function () {
-        expect(testrun.request.calledOnce).be.ok();
+        expect(testrun.request.callCount).to.be(1);
 
         var request = testrun.request.getCall(0).args[3],
             response = testrun.request.getCall(0).args[2];

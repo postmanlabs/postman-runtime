@@ -1,5 +1,5 @@
 describe('requests from sandbox', function() {
-    describe('sanity checks', function () {
+    describe('single .sendRequest', function () {
         var testrun,
             sandboxRequestUrl = 'postman-echo.com/get?sandbox=true';
 
@@ -14,7 +14,7 @@ describe('requests from sandbox', function() {
                                 exec: `
                                 var sdk = require('postman-collection'),
                                     myreq = new sdk.Request('${sandboxRequestUrl}');
-                                
+
                                 pm.sendRequest(myreq, function(err, _response) {
                                     pm.test('request was sent from sandbox', function () {
                                         pm.expect(_response).to.have.property('code', 200);
@@ -37,8 +37,8 @@ describe('requests from sandbox', function() {
             expect(testrun.io.calledTwice).to.be(true);
         });
 
-        it('should have called the request event once', function () {
-            expect(testrun.request.calledOnce).to.be(true);
+        it('should have called the request event twice', function () {
+            expect(testrun.request.calledTwice).to.be(true);
         });
 
         it('should have the same cursor id for both the io events', function () {
@@ -114,21 +114,21 @@ describe('requests from sandbox', function() {
                                 exec: `
                                 var sdk = require('postman-collection'),
                                     req1 = new sdk.Request('${sandboxRequestUrl1}');
-                                
+
                                 pm.sendRequest(req1, function(err, response1) {
                                     pm.test('${testname1}', function () {
                                         pm.expect(response1).to.have.property('code', 200);
                                         pm.expect(response1).to.have.property('status', 'OK');
-                                        
+
                                         pm.expect(response1.json().args).to.have.property('n', '1');
                                     });
-                                    
+
                                     var req2 = new sdk.Request('${sandboxRequestUrl2}');
                                     pm.sendRequest(req2, function (err, response2) {
                                         pm.test('${testname2}', function () {
                                             pm.expect(response2).to.have.property('code', 200);
                                             pm.expect(response2).to.have.property('status', 'OK');
-                                            
+
                                             pm.expect(response2.json().args).to.have.property('n', '2');
                                         });
                                     });
@@ -149,8 +149,8 @@ describe('requests from sandbox', function() {
             expect(testrun.io.calledThrice).to.be(true);
         });
 
-        it('should have called the request event once', function () {
-            expect(testrun.request.calledOnce).to.be(true);
+        it('should have called the request event thrice', function () {
+            expect(testrun.request.calledThrice).to.be(true);
         });
 
         it('should have the same cursor id for all the io events', function () {
@@ -238,6 +238,77 @@ describe('requests from sandbox', function() {
         });
     });
 
+    describe('with invalid urls', function () {
+        var testrun;
+
+        before(function(done) {
+            this.run({
+                collection: {
+                    item: {
+                        // ensure that we run something for test and pre-req scripts
+                        event: [{
+                            listen: 'prerequest',
+                            script: {
+                                exec: `
+                                pm.sendRequest({}, function(err, _response) {
+                                    pm.test('request did not complete', function () {
+                                        pm.expect(err).to.not.eql(null);
+                                        pm.expect(_response).to.not.be.ok;
+                                    });
+                                });
+                                `
+                            }
+                        }],
+                        request: 'https://postman-echo.com/get'
+                    }
+                }
+            }, function(err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have called io event twice', function () {
+            expect(testrun.io.callCount).to.eql(2);
+        });
+
+        it('should have called request event twice', function () {
+            expect(testrun.request.callCount).to.eql(2);
+        });
+
+        it('should have provided the error to the sandbox sendrequest function', function () {
+            var assertion = testrun.assertion.firstCall.args[1];
+
+            expect(assertion).to.have.property('name', 'request did not complete');
+            expect(assertion).to.have.property('skipped', false);
+            expect(assertion).to.have.property('passed', true);
+            expect(assertion).to.have.property('error', null);
+            expect(assertion).to.have.property('index', 0);
+        });
+
+        it('should have sent the second request as a part of the collection run', function () {
+            var error = testrun.io.secondCall.args[0],
+                request = testrun.io.secondCall.args[4],
+                response = testrun.io.secondCall.args[3],
+                trace = testrun.io.secondCall.args[2];
+
+            expect(error).to.be(null);
+
+            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(response.code).to.eql(200);
+
+            expect(trace).to.have.property('type', 'http');
+            expect(trace).to.have.property('source', 'collection');
+        });
+
+        it('must have completed the run', function() {
+            expect(testrun).be.ok();
+            expect(testrun.done.calledOnce).be.ok();
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.calledOnce).be.ok();
+        });
+    });
+
     describe('sending errors', function () {
         var testrun,
             sandboxRequestUrl = 'somenonexistentweirddomain.com/get?sandbox=true';
@@ -253,7 +324,7 @@ describe('requests from sandbox', function() {
                                 exec: `
                                 var sdk = require('postman-collection'),
                                     myreq = new sdk.Request('${sandboxRequestUrl}');
-                                
+
                                 pm.sendRequest(myreq, function(err, _response) {
                                     pm.test('request did not complete', function () {
                                         pm.expect(err).to.have.property('code', 'ENOTFOUND');
@@ -276,8 +347,8 @@ describe('requests from sandbox', function() {
             expect(testrun.io.calledTwice).to.be(true);
         });
 
-        it('should have called the request event once', function () {
-            expect(testrun.request.calledOnce).to.be(true);
+        it('should have called the request event twice', function () {
+            expect(testrun.request.calledTwice).to.be(true);
         });
 
         it('should have the same cursor id for both the io events', function () {
@@ -333,6 +404,126 @@ describe('requests from sandbox', function() {
             expect(testrun.done.calledOnce).be.ok();
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
+        });
+    });
+
+    describe('with files', function () {
+        var testrun;
+        describe('in binary mode', function () {
+            before(function (done) {
+                this.run({
+                    collection: {
+                        item: {
+                            // ensure that we run something for test and pre-req scripts
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                    var sdk = require('postman-collection'),
+                                        myreq = new sdk.Request({
+                                            url: 'https://postman-echo.com/post',
+                                            method: 'POST',
+                                            body: {
+                                                mode: 'file',
+                                                file: {src: 'test/fixtures/upload-file.json'}
+                                            }
+                                        });
+
+                                    pm.sendRequest(myreq, function(err, _response) {
+                                        pm.test('request was sent from sandbox', function () {
+                                            pm.expect(_response).to.be.ok();
+                                        });
+                                    });
+                                    `
+                                }
+                            }],
+                            request: {
+                                url: 'https://postman-echo.com/get'
+                            }
+                        }
+                    }
+                }, function(err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should send a warning', function () {
+                var warning = testrun.console.firstCall;
+
+                expect(testrun).to.be.ok();
+                expect(warning.args[1]).to.eql('warn');
+                expect(warning.args[2]).to.eql('uploading files from scripts is not allowed');
+            });
+
+            it('should not send file in body', function () {
+                var response = testrun.io.firstCall.args[3];
+
+                expect(response.json().data).to.be.empty();
+            });
+        });
+
+        describe('in formdata', function () {
+            before(function (done) {
+                this.run({
+                    collection: {
+                        item: {
+                            // ensure that we run something for test and pre-req scripts
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                    var sdk = require('postman-collection'),
+                                        myreq = new sdk.Request({
+                                            url: 'https://postman-echo.com/post',
+                                            method: 'POST',
+                                            body: {
+                                                mode: 'formdata',
+                                                formdata: [{
+                                                    type: 'file',
+                                                    key: 'foo',
+                                                    src: 'test/fixtures/upload-file.json'
+                                                }, {
+                                                    type: 'text',
+                                                    key: 'bar',
+                                                    value: 'baz'
+                                                }]
+                                            }
+                                        });
+
+                                    pm.sendRequest(myreq, function(err, _response) {
+                                        pm.test('request was sent from sandbox', function () {
+                                            pm.expect(_response).to.be.ok();
+                                        });
+                                    });
+                                    `
+                                }
+                            }],
+                            request: {
+                                url: 'https://postman-echo.com/get'
+                            }
+                        }
+                    }
+                }, function(err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should send a warning', function () {
+                var warning = testrun.console.firstCall;
+
+                expect(testrun).to.be.ok();
+                expect(warning.args[1]).to.eql('warn');
+                expect(warning.args[2]).to.eql('uploading files from scripts is not allowed');
+            });
+
+            it('should remove only file type params from formdata', function () {
+                var response = testrun.io.firstCall.args[3];
+
+                expect(response.json().files).to.be.empty();
+                expect(response.json().form).to.eql({bar: 'baz'});
+            });
         });
     });
 });

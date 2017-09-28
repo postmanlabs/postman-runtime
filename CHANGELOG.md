@@ -1,5 +1,20 @@
 # Postman Runtime Changelog
 
+#### v6.3.1-2 (August 28, 2017)
+* :bug: Prevented empty/missing request urls from crashing `pm.sendRequest` #361
+
+#### v6.3.0 (August 21, 2017)
+* :arrow_up: Updated `postman-sandbox` to `v2.3.2`, which contains a header assertion bugfix. #358
+
+#### 6.2.6 (August 18, 2017)
+* Updated dependencies :arrow_up:
+* Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`. #353, #354
+* :lock: Prevented files from being uploaded via `pm.sendRequest` #351
+* Queued `pm.sendRequest` through the request command, emitted the `request` event. #345
+* :scroll: Expanded documentation for the `assertion` event. #342
+* Ensured that the `tunnel` value is set from the request protocol. #327
+* Prevented headers with falsy keys from being sent with requests. #337
+
 #### 6.2.5 (July 19, 2017)
 * :bug: Fixed a regression that prevented cookies from being passed across requests. #323
 
