@@ -3,7 +3,10 @@ var expect = require('expect.js');
 describe('digest auth', function () {
     var testrun;
 
-    describe('with correct details (MD5)', function () {
+    // @todo add a test case with qop="". For this we need a Digest server which does not return qop value
+    // echo, httpbin and windows server, all return the value of qop
+
+    describe('with correct details (qop="auth", algorithm="MD5)', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
@@ -87,9 +90,16 @@ describe('digest auth', function () {
             expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
             expect(response.code).to.eql(200);
         });
+
+        it('must have taken the qop value from the server\'s response', function () {
+            var request = testrun.request.getCall(1).args[3],
+                authHeader = request.headers.get('authorization');
+
+            expect(authHeader.match(/qop=auth/)).to.be.ok();
+        });
     });
 
-    describe('with correct details (MD5-sess)', function () {
+    describe('with correct details (qop="auth", algorithm="MD5-sess")', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
@@ -100,6 +110,7 @@ describe('digest auth', function () {
                             auth: {
                                 type: 'digest',
                                 digest: {
+                                    qop: 'auth',
                                     algorithm: 'MD5-sess',
                                     username: '{{uname}}',
                                     password: '{{pass}}'
