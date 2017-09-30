@@ -1,5 +1,20 @@
 # Postman Runtime Changelog
 
+#### v6.4.0 (September 28, 2017)
+* Improved flows for NTLM, Digest, and OAuth2 :tada:
+* #382 Added script timeout option :tada:
+* #408 Prevented max replay errors from bubling up :bug:
+* #394 Refurbished interactive mode for auth :tada:
+* #400 Fixed digest-md5-sess :bug:
+* #402 Fix OAuth1 camelcased timestamp :bug:
+* #350 Fixed abort-after-pause :bug:
+* #386 Added support for bearer-token auth :tada:
+* #373 Added response callback :tada:
+* #360 Shifted the auth sign function from the Collection SDK.
+* #368 All new auth-interface :tada:
+* #367 Made basic-auth username optional :tada:
+* #366 Documented exception callback :scroll:
+
 #### v6.3.1-2 (August 28, 2017)
 * :bug: Prevented empty/missing request urls from crashing `pm.sendRequest` #361
 

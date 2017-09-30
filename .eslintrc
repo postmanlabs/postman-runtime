@@ -129,7 +129,7 @@
         "no-restricted-globals": "error",
         "no-shadow": "off",
         "no-shadow-restricted-names": "error",
-        "no-undef": "off",
+        "no-undef": "error",
         "no-undef-init": "error",
         "no-undefined": "off",
         "no-unused-vars": "error",

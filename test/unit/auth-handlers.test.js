@@ -146,7 +146,7 @@ describe('Auth Handler:', function () {
     });
 
     describe('digest', function () {
-        it('Auth header must be added (qop="", algorithm="MD5', function () {
+        it('Auth header must be added (algorithm="MD5", qop=""', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -169,7 +169,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be(true);
         });
 
-        it('Auth header must be added (qop="auth", algorithm="MD5")', function () {
+        it('Auth header must be added (algorithm="MD5", qop="auth")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -200,7 +200,38 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be(true);
         });
 
-        it('Auth header must be added (qop="", algorithm="MD5-sess")', function () {
+        it('Auth header must be added (algorithm="MD5", qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            qop: 'auth-int'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                expectedHeader,
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
+                'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
+                'algorithm="MD5", qop=auth-int, nc=00000001, cnonce="0a4f113b", ' +
+                'response="65d355634828a04d3a73717dc810a4bf", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+            authHeader;
+
+            expect(headers.length).to.eql(1);
+            authHeader = headers[0];
+
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be(true);
+        });
+
+        it('Auth header must be added (algorithm="MD5-sess", qop="")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -231,7 +262,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be(true);
         });
 
-        it('Auth header must be added (qop="auth", algorithm="MD5-sess")', function () {
+        it('Auth header must be added (algorithm="MD5-sess", qop="auth")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -263,9 +294,16 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be(true);
         });
 
-        it('should throw an error if qop is auth-int', function () {
-            var request = new Request(rawRequests.digest),
-                digestAuthObject = _.cloneDeep(rawRequests.digest),
+        it('Auth header must be added (algorithm="MD5-sess", qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            qop: 'auth-int',
+                            algorithm: 'MD5-sess'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
@@ -277,7 +315,8 @@ describe('Auth Handler:', function () {
             headers = request.headers.all();
             expectedHeader = 'Authorization: Digest username="postman", realm="Users", ' +
                 'nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", ' +
-                'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+                'algorithm="MD5-sess", qop=auth-int, nc=00000001, cnonce="0a4f113b", ' +
+                'response="eb2ec4193a936809d035976f5f20cc65", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
             expect(headers.length).to.eql(1);
@@ -285,15 +324,6 @@ describe('Auth Handler:', function () {
 
             expect(authHeader.toString()).to.eql(expectedHeader);
             expect(authHeader.system).to.be(true);
-
-            digestAuthObject.auth.digest.algorithm = 'MD5-sess';
-            digestAuthObject.auth.digest.qop = 'auth-int';
-            request = new Request(digestAuthObject);
-            authInterface = createAuthInterface(request.auth);
-
-            handler.sign(authInterface, request, function (err) {
-                expect(err).to.have.property('message', 'Digest Auth with "qop": "auth-int" is not supported.');
-            });
         });
 
         it('Auth header must have uri with query params in case of request with the same', function () {

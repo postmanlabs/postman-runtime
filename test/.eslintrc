@@ -7,6 +7,9 @@
         "node": true,
         "es6": true
     },
+    "globals": {
+        "expect": true
+    },
     "rules": {
         // Mocha
         "mocha/handle-done-callback": "error",

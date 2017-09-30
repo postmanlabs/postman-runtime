@@ -3,7 +3,15 @@ var expect = require('expect.js');
 describe('digest auth', function () {
     var testrun;
 
-    describe('with correct details (MD5)', function () {
+    // @todo
+    // 1. add a test case with (qop=""). For this we need a Digest server which does not return qop value
+    //        echo, httpbin and windows server, all return the value of qop
+    // 2. add a test case with (qop="auth-int" and algorithm="MD5-sess")
+    //        httpbin has auth-int but no support for MD5-sess
+    // 3. add a test case with (qop="auth-int" and with body defined (method != "GET"))
+    //        httbin does not support methods other than "GET"
+
+    describe('with correct details (qop="auth", algorithm="MD5")', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
@@ -87,9 +95,16 @@ describe('digest auth', function () {
             expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
             expect(response.code).to.eql(200);
         });
+
+        it('must have taken the qop value from the server\'s response', function () {
+            var request = testrun.request.getCall(1).args[3],
+                authHeader = request.headers.get('authorization');
+
+            expect(authHeader.match(/qop=auth/)).to.be.ok();
+        });
     });
 
-    describe('with correct details (MD5-sess)', function () {
+    describe('with correct details (qop="auth", algorithm="MD5-sess")', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
@@ -100,6 +115,7 @@ describe('digest auth', function () {
                             auth: {
                                 type: 'digest',
                                 digest: {
+                                    qop: 'auth',
                                     algorithm: 'MD5-sess',
                                     username: '{{uname}}',
                                     password: '{{pass}}'
@@ -295,30 +311,39 @@ describe('digest auth', function () {
         });
     });
 
-    describe('with unsupported qop', function () {
+    describe('with correct details (qop="auth-int", algorithm="MD5")', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: 'https://postman-echo.com/digest-auth',
+                            url: 'https://httpbin.org/digest-auth/auth-int/postman/password/MD5',
                             auth: {
                                 type: 'digest',
                                 digest: {
                                     algorithm: 'MD5',
-                                    username: 'postman',
-                                    password: 'password',
-                                    qop: 'auth-int'
+                                    username: '{{uname}}',
+                                    password: '{{pass}}'
                                 }
                             }
                         }
                     }
                 },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: 'postman'
+                    }, {
+                        key: 'pass',
+                        value: 'password'
+                    }]
+                },
                 authorizer: {
                     interactive: true
                 }
             };
+
             // perform the collection run
             this.run(runOptions, function (err, results) {
                 testrun = results;
@@ -334,10 +359,38 @@ describe('digest auth', function () {
             expect(testrun.start.callCount).to.be(1);
         });
 
-        it('must have bubbled the error to callback', function () {
-            var err = testrun.console.firstCall.args[3];
+        it('must have sent two requests internally', function () {
+            expect(testrun.io.callCount).to.be(2);
+            expect(testrun.request.callCount).to.be(2);
 
-            expect(err).to.have.property('message', 'Digest Auth with "qop": "auth-int" is not supported.');
+            var firstError = testrun.io.firstCall.args[0],
+                secondError = testrun.io.secondCall.args[0],
+                firstResponse = testrun.io.firstCall.args[3],
+                secondResponse = testrun.io.secondCall.args[3];
+
+            expect(firstError).to.be(null);
+            expect(secondError).to.be(null);
+            expect(firstResponse.code).to.eql(401);
+            expect(secondResponse.code).to.eql(200);
+        });
+
+        it('must have failed the digest authorization in first attempt', function () {
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response.code).to.eql(401);
+        });
+
+        it('must have passed the digest authorization in second attempt', function () {
+            var response = testrun.request.getCall(1).args[2];
+
+            expect(response.code).to.eql(200);
+        });
+
+        it('must have taken the qop value from the server\'s response', function () {
+            var request = testrun.request.getCall(1).args[3],
+                authHeader = request.headers.get('authorization');
+
+            expect(authHeader.match(/qop=auth-int/)).to.be.ok();
         });
     });
 });
