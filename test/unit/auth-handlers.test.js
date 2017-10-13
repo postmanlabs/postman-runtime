@@ -641,6 +641,47 @@ describe('Auth Handler:', function () {
             });
         });
 
+        it('should do a case insensitive check for token type', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.tokenType = 'Bearer';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(1);
+            expect(request.headers.all()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+
+            clonedRequestObj.auth.oauth2.tokenType = 'bearer';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all().length).to.be(1);
+            expect(request.headers.all()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
         it('should return when token type is not known', function () {
             var clonedRequestObj,
                 request,
