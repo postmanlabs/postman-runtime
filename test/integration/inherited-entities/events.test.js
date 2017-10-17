@@ -116,10 +116,16 @@ describe('Events', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
-                    event: [{
-                        listen: 'prerequest',
-                        script: {exec: 'console.log("collection level script")'}
-                    }],
+                    event: [
+                        {
+                            listen: 'prerequest',
+                            script: {exec: 'console.log("collection level script 1")'}
+                        },
+                        {
+                            listen: 'prerequest',
+                            script: {exec: 'console.log("collection level script 2")'}
+                        }
+                    ],
                     item: {
                         event: [{
                             listen: 'prerequest',
@@ -147,11 +153,12 @@ describe('Events', function () {
 
         it('must have executed all the events, and called prerequest callback once', function () {
             expect(testRun.prerequest.callCount).to.be(1);
-            expect(testRun.console.callCount).to.be(2);
+            expect(testRun.console.callCount).to.be(3);
 
             // test for order as well
-            expect(testRun.console.firstCall.args[2]).to.be('request level script');
-            expect(testRun.console.secondCall.args[2]).to.be('collection level script');
+            expect(testRun.console.firstCall.args[2]).to.be('collection level script 1');
+            expect(testRun.console.secondCall.args[2]).to.be('collection level script 2');
+            expect(testRun.console.thirdCall.args[2]).to.be('request level script');
         });
     });
 
@@ -195,8 +202,8 @@ describe('Events', function () {
             expect(testRun.console.callCount).to.be(2);
 
             // test for order as well
-            expect(testRun.console.firstCall.args[2]).to.be('folder level script');
-            expect(testRun.console.secondCall.args[2]).to.be('collection level script');
+            expect(testRun.console.firstCall.args[2]).to.be('collection level script');
+            expect(testRun.console.secondCall.args[2]).to.be('folder level script');
         });
     });
 });
