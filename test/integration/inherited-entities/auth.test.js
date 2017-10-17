@@ -68,8 +68,8 @@ describe('Inherited Auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(err).to.be(null);
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
-            expect(response.code).to.eql(200);
+            expect(request.url.toString()).to.be('https://postman-echo.com/basic-auth');
+            expect(response.code).to.be(200);
         });
     });
 
@@ -130,8 +130,8 @@ describe('Inherited Auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(err).to.be(null);
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
-            expect(response.code).to.eql(200);
+            expect(request.url.toString()).to.be('https://postman-echo.com/basic-auth');
+            expect(response.code).to.be(200);
         });
     });
 
@@ -183,8 +183,8 @@ describe('Inherited Auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(err).to.be(null);
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
-            expect(response.code).to.eql(200);
+            expect(request.url.toString()).to.be('https://postman-echo.com/basic-auth');
+            expect(response.code).to.be(200);
         });
     });
 
@@ -247,8 +247,8 @@ describe('Inherited Auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(err).to.be(null);
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
-            expect(response.code).to.eql(200);
+            expect(request.url.toString()).to.be('https://postman-echo.com/basic-auth');
+            expect(response.code).to.be(200);
         });
     });
 });
