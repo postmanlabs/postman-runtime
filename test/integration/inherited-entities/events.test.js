@@ -6,10 +6,15 @@ describe('Events', function () {
             var runOptions = {
                 collection: {
                     item: {
-                        event: [{
-                            listen: 'prerequest',
-                            script: {exec: 'console.log("request level script")'}
-                        }],
+                        event: [
+                            {
+                                listen: 'prerequest',
+                                script: {exec: 'console.log("request level prerequest script")'}
+                            }, {
+                                listen: 'test',
+                                script: {exec: 'console.log("request level test script")'}
+                            }
+                        ],
                         request: 'https://postman-echo.com/get'
                     }
                 }
@@ -33,8 +38,10 @@ describe('Events', function () {
 
         it('must have executed the event once', function () {
             expect(testRun.prerequest.callCount).to.be(1);
-            expect(testRun.console.callCount).to.be(1);
-            expect(testRun.console.firstCall.args[2]).to.be('request level script');
+            expect(testRun.test.callCount).to.be(1);
+            expect(testRun.console.callCount).to.be(2);
+            expect(testRun.console.firstCall.args[2]).to.be('request level prerequest script');
+            expect(testRun.console.secondCall.args[2]).to.be('request level test script');
         });
     });
 
@@ -43,10 +50,16 @@ describe('Events', function () {
             var runOptions = {
                 collection: {
                     item: [{
-                        event: [{
-                            listen: 'prerequest',
-                            script: {exec: 'console.log("folder level script")'}
-                        }],
+                        event: [
+                            {
+                                listen: 'prerequest',
+                                script: {exec: 'console.log("folder level prerequest script")'}
+                            },
+                            {
+                                listen: 'test',
+                                script: {exec: 'console.log("folder level test script")'}
+                            }
+                        ],
                         item: {
                             request: 'https://postman-echo.com/get'
                         }
@@ -71,8 +84,10 @@ describe('Events', function () {
 
         it('must have executed the event once', function () {
             expect(testRun.prerequest.callCount).to.be(1);
-            expect(testRun.console.callCount).to.be(1);
-            expect(testRun.console.firstCall.args[2]).to.be('folder level script');
+            expect(testRun.test.callCount).to.be(1);
+            expect(testRun.console.callCount).to.be(2);
+            expect(testRun.console.firstCall.args[2]).to.be('folder level prerequest script');
+            expect(testRun.console.secondCall.args[2]).to.be('folder level test script');
         });
     });
 
@@ -80,10 +95,16 @@ describe('Events', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
-                    event: [{
-                        listen: 'prerequest',
-                        script: {exec: 'console.log("collection level script")'}
-                    }],
+                    event: [
+                        {
+                            listen: 'prerequest',
+                            script: {exec: 'console.log("collection level prerequest script")'}
+                        },
+                        {
+                            listen: 'test',
+                            script: {exec: 'console.log("collection level test script")'}
+                        }
+                    ],
                     item: {
                         request: 'https://postman-echo.com'
                     }
@@ -107,8 +128,10 @@ describe('Events', function () {
 
         it('must have executed the event once', function () {
             expect(testRun.prerequest.callCount).to.be(1);
-            expect(testRun.console.callCount).to.be(1);
-            expect(testRun.console.firstCall.args[2]).to.be('collection level script');
+            expect(testRun.test.callCount).to.be(1);
+            expect(testRun.console.callCount).to.be(2);
+            expect(testRun.console.firstCall.args[2]).to.be('collection level prerequest script');
+            expect(testRun.console.secondCall.args[2]).to.be('collection level test script');
         });
     });
 
@@ -119,18 +142,28 @@ describe('Events', function () {
                     event: [
                         {
                             listen: 'prerequest',
-                            script: {exec: 'console.log("collection level script 1")'}
+                            script: {exec: 'console.log("collection level prerequest script 1")'}
                         },
                         {
                             listen: 'prerequest',
-                            script: {exec: 'console.log("collection level script 2")'}
+                            script: {exec: 'console.log("collection level prerequest script 2")'}
+                        },
+                        {
+                            listen: 'test',
+                            script: {exec: 'console.log("collection level test script")'}
                         }
                     ],
                     item: {
-                        event: [{
-                            listen: 'prerequest',
-                            script: {exec: 'console.log("request level script")'}
-                        }],
+                        event: [
+                            {
+                                listen: 'prerequest',
+                                script: {exec: 'console.log("request level prerequest script")'}
+                            },
+                            {
+                                listen: 'test',
+                                script: {exec: 'console.log("request level test script")'}
+                            }
+                        ],
                         request: 'https://postman-echo.com/get'
                     }
                 }
@@ -153,12 +186,15 @@ describe('Events', function () {
 
         it('must have executed all the events, and called prerequest callback once', function () {
             expect(testRun.prerequest.callCount).to.be(1);
-            expect(testRun.console.callCount).to.be(3);
+            expect(testRun.test.callCount).to.be(1);
+            expect(testRun.console.callCount).to.be(5);
 
             // test for order as well
-            expect(testRun.console.firstCall.args[2]).to.be('collection level script 1');
-            expect(testRun.console.secondCall.args[2]).to.be('collection level script 2');
-            expect(testRun.console.thirdCall.args[2]).to.be('request level script');
+            expect(testRun.console.firstCall.args[2]).to.be('collection level prerequest script 1');
+            expect(testRun.console.secondCall.args[2]).to.be('collection level prerequest script 2');
+            expect(testRun.console.thirdCall.args[2]).to.be('request level prerequest script');
+            expect(testRun.console.getCall(3).args[2]).to.be('collection level test script');
+            expect(testRun.console.getCall(4).args[2]).to.be('request level test script');
         });
     });
 
@@ -166,15 +202,27 @@ describe('Events', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
-                    event: [{
-                        listen: 'prerequest',
-                        script: {exec: 'console.log("collection level script")'}
-                    }],
-                    item: [{
-                        event: [{
+                    event: [
+                        {
                             listen: 'prerequest',
-                            script: {exec: 'console.log("folder level script")'}
-                        }],
+                            script: {exec: 'console.log("collection level prerequest script")'}
+                        },
+                        {
+                            listen: 'test',
+                            script: {exec: 'console.log("collection level test script")'}
+                        }
+                    ],
+                    item: [{
+                        event: [
+                            {
+                                listen: 'prerequest',
+                                script: {exec: 'console.log("folder level prerequest script")'}
+                            },
+                            {
+                                listen: 'test',
+                                script: {exec: 'console.log("folder level test script")'}
+                            }
+                        ],
                         item: {
                             request: 'https://postman-echo.com/get'
                         }
@@ -199,11 +247,14 @@ describe('Events', function () {
 
         it('must have executed all the events, and called prerequest callback once', function () {
             expect(testRun.prerequest.callCount).to.be(1);
-            expect(testRun.console.callCount).to.be(2);
+            expect(testRun.test.callCount).to.be(1);
+            expect(testRun.console.callCount).to.be(4);
 
             // test for order as well
-            expect(testRun.console.firstCall.args[2]).to.be('collection level script');
-            expect(testRun.console.secondCall.args[2]).to.be('folder level script');
+            expect(testRun.console.firstCall.args[2]).to.be('collection level prerequest script');
+            expect(testRun.console.secondCall.args[2]).to.be('folder level prerequest script');
+            expect(testRun.console.getCall(2).args[2]).to.be('collection level test script');
+            expect(testRun.console.getCall(3).args[2]).to.be('folder level test script');
         });
     });
 });
