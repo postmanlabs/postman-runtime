@@ -339,7 +339,7 @@ describe('UVM', function () {
                                         "type": "text/javascript",
                                         "exec": [
                                             'var jsonData = JSON.parse(responseBody);',
-                                            'tests["Correct auth header"] = jsonData.headers.authorization.length>10;'
+                                            'tests["Authenitcated"] = jsonData.authenticated === true;'
                                         ]
                                     }
                                 }
@@ -349,9 +349,9 @@ describe('UVM', function () {
                                     "type": "digest",
                                     "digest": {
                                         "algorithm": "",
-                                        "username": "aa",
-                                        "realm": "aa",
-                                        "password": "aa",
+                                        "username": "postman",
+                                        "realm": "Users",
+                                        "password": "password",
                                         "nonce": "",
                                         "nonceCount": "",
                                         "clientNonce": "",
@@ -359,7 +359,7 @@ describe('UVM', function () {
                                         "qop": ""
                                     }
                                 },
-                                "url": "https://postman-echo.com/post",
+                                "url": "https://postman-echo.com/auth/digest",
                                 "method": "POST",
                                 "header": [],
                                 "body": {
@@ -576,7 +576,7 @@ describe('UVM', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    response: function (err, cursor, response, request, item) {
                         check(function () {
                             expect(err).to.be(null);
 
