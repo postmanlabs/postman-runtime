@@ -26,9 +26,6 @@ describe('NTLM', function () {
                         }
                     }
                 }
-            },
-            authorizer: {
-                interactive: true
             }
         };
 
@@ -130,7 +127,7 @@ describe('NTLM', function () {
         });
     });
 
-    describe('with interactive mode turned off', function () {
+    describe('with retrying turned off', function () {
         before(function (done) {
             var clonedRunOptions = _.merge({}, runOptions, {
                 collection: {
