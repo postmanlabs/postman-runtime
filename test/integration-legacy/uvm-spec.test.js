@@ -339,7 +339,7 @@ describe('UVM', function () {
                                         "type": "text/javascript",
                                         "exec": [
                                             'var jsonData = JSON.parse(responseBody);',
-                                            'tests["Authenitcated"] = jsonData.authenticated === true;'
+                                            'tests["Authenticated"] = jsonData.authenticated === true;'
                                         ]
                                     }
                                 }
