@@ -85,19 +85,6 @@ runner.run(collection, {
         sendBodyWithGetRequests: true,
     },
 
-    // authorizer
-    authorizer: {
-
-        // Enables advanced mode only in these auths
-        interactive: {
-            ntlm: true,
-            basic: true
-        },
-
-        // Enables advanced mode for all auths
-        interactive: true
-    },
-
     // A ProxyConfigList, from the SDK
     proxies: new sdk.ProxyConfigList(),
 

@@ -77,9 +77,6 @@ describe('response callback', function () {
                                 }
                             }
                         }]
-                    },
-                    authorizer: {
-                        interactive: true
                     }
                 },
                 fakeHandler = {

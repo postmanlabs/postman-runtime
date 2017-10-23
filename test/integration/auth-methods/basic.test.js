@@ -15,9 +15,6 @@ describe('basic auth', function () {
                         }
                     }
                 }
-            },
-            authorizer: {
-                interactive: true
             }
         };
 
