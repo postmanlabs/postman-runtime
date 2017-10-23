@@ -9,6 +9,12 @@ describe('Collection Variables', function() {
                     {key: 'user', value: 'incorrect username', name: 'user', enabled: true}
                 ]
             },
+            environment: {
+                values: [
+                    {key: 'env-var', value: 'env var value', name: 'env-var', enabled: true},
+                    {key: 'pass', value: 'password', name: 'pass', enabled: true}
+                ]
+            },
             collection: {
                 variable: [
                     {key: 'user', value: 'postman', enabled: true},
@@ -21,6 +27,7 @@ describe('Collection Variables', function() {
                         listen: 'test',
                         script: {
                             exec: [`
+                                // @todo use pm.variables.toObject() once the bug of reversed order is fixed in sdk
                                 console.log('test', {
                                     'global-var': pm.variables.get('global-var'),
                                     'env-var': pm.variables.get('env-var'),
@@ -56,12 +63,6 @@ describe('Collection Variables', function() {
                         }
                     }
                 }
-            },
-            environment: {
-                values: [
-                    {key: 'env-var', value: 'env var value', name: 'env-var', enabled: true},
-                    {key: 'pass', value: 'password', name: 'pass', enabled: true}
-                ]
             }
         }, function(err, results) {
             testrun = results;
