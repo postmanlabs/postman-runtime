@@ -17,9 +17,6 @@ describe('auth control flow', function () {
                     }
                 }
             }
-        },
-        authorizer: {
-            interactive: true
         }
     };
 

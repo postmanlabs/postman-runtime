@@ -15,9 +15,6 @@ describe('bearer token', function () {
                         }
                     }
                 }
-            },
-            authorizer: {
-                interactive: true
             }
         };
 

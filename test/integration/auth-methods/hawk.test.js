@@ -26,8 +26,7 @@ describe('hawk auth', function () {
                         method: 'GET'
                     }
                 }
-            },
-            authorizer: {interactive: true}
+            }
         }, function (err, results) {
             testrun = results;
             done(err);

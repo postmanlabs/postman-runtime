@@ -13,9 +13,6 @@ describe('requests replayed', function () {
                         }
                     }
                 }]
-            },
-            authorizer: {
-                interactive: true
             }
         };
     describe('finite times', function () {

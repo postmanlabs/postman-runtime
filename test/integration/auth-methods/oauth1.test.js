@@ -27,8 +27,7 @@ describe('oauth 1', function () {
                         method: 'GET'
                     }
                 }
-            },
-            authorizer: {interactive: true}
+            }
         }, function (err, results) {
             testrun = results;
             done(err);
