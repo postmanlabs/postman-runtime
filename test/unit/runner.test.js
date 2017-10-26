@@ -1,6 +1,5 @@
 /* global describe, it */
-var _ = require('lodash'),
-    expect = require('expect.js'),
+var expect = require('expect.js'),
     Runner = require('../../lib/runner/'),
     sdk = require('postman-collection');
 
@@ -122,83 +121,6 @@ describe('runner', function () {
 
         it('should duplicate the last element of the data set if length is greater', function () {
             expect(Runner.normaliseIterationData([{foo: 'alpha'}], 2)).to.eql([{foo: 'alpha'}, {foo: 'alpha'}]);
-        });
-    });
-
-    describe('extractRunnableItems', function () {
-        var collection = new sdk.Collection({
-            item: [{
-                id: 'ID1',
-                name: 'F1',
-                item: [{
-                    name: 'F1.R1',
-                    request: 'https://postman-echo.com/get'
-                }, {
-                    id: 'ID3',
-                    name: 'F1.R2',
-                    request: 'https://postman-echo.com/cookies'
-                }]
-            }, {
-                id: 'ID2',
-                name: 'F2',
-                item: [{
-                    name: 'F2.R1',
-                    request: 'https://postman-echo.com/get'
-                }]
-            }]
-        });
-
-        describe('with invalid entrypoint', function () {
-            it('should handle invalid entry points correctly ', function (done) {
-                Runner.extractRunnableItems(collection, 'random', function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(runnableItems).to.eql([]);
-                    expect(entrypoint).to.be(undefined);
-                    done();
-                });
-            });
-        });
-
-        describe('with entrypoint matching folder', function () {
-            it('should filter item group by name', function (done) {
-                Runner.extractRunnableItems(collection, 'F1', function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.R2']);
-                    expect(entrypoint).to.eql(collection.items.members[0]);
-                    done();
-                });
-            });
-
-            it('should filter item group by id', function (done) {
-                Runner.extractRunnableItems(collection, 'ID2', function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(_.map(runnableItems, 'name')).to.eql(['F2.R1']);
-                    expect(entrypoint).to.eql(collection.items.members[1]);
-                    done();
-                });
-            });
-        });
-
-        describe('with entrypoint matching request', function () {
-            it('should filter item correctly by name', function (done) {
-                Runner.extractRunnableItems(collection, 'F1.R1', function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(runnableItems).to.have.length(1);
-                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
-                    expect(entrypoint).to.have.property('name', 'F1.R1');
-                    done();
-                });
-            });
-
-            it('should filter item correctly by id', function (done) {
-                Runner.extractRunnableItems(collection, 'ID3', function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(runnableItems).to.have.length(1);
-                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R2']);
-                    expect(entrypoint).to.have.property('name', 'F1.R2');
-                    done();
-                });
-            });
         });
     });
 });
