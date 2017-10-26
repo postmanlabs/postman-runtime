@@ -65,7 +65,7 @@ describe('extractRunnableItems', function () {
     });
 
     describe('with invalid entrypoint', function () {
-        it('should handle invalid entry points as id/string', function (done) {
+        it('should handle invalid entry points as string', function (done) {
             extractRunnableItems(collection, 'random', function (err, runnableItems, entrypoint) {
                 expect(err).to.be(null);
                 expect(runnableItems).to.eql([]);
@@ -74,21 +74,53 @@ describe('extractRunnableItems', function () {
             });
         });
 
-        it('should handle invalid entry points as path', function (done) {
-            extractRunnableItems(collection, ['random'], function (err, runnableItems, entrypoint) {
-                expect(err).to.be(null);
-                expect(runnableItems).to.eql([]);
-                expect(entrypoint).to.be(undefined);
-                done();
-            });
+        it('should handle invalid entry points for path lookupStrategy', function (done) {
+            extractRunnableItems(
+                collection,
+                {execute: 'random', lookupStrategy: 'path', path: ['random_path']},
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be(null);
+                    expect(runnableItems).to.eql([]);
+                    expect(entrypoint).to.be(undefined);
+                    done();
+                }
+            );
+        });
+
+        it('should handle invalid entry points for idOrName lookupStrategy', function (done) {
+            extractRunnableItems(
+                collection,
+                {execute: 'random', lookupStrategy: 'idOrName'},
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be(null);
+                    expect(runnableItems).to.eql([]);
+                    expect(entrypoint).to.be(undefined);
+                    done();
+                }
+            );
+        });
+
+        it('should handle invalid lookupStrategy', function (done) {
+            extractRunnableItems(
+                collection,
+                {execute: 'random', lookupStrategy: 'dealWithIt'},
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.have.property(
+                        'message', 'runtime~extractRunnableItems: Invalid entrypoint lookupStrategy'
+                    );
+                    expect(runnableItems).to.be(undefined);
+                    expect(entrypoint).to.be(undefined);
+                    done();
+                }
+            );
         });
     });
 
-    describe('with entrypoint as path lookup', function () {
+    describe('with entrypoint with lookupStrategy as path', function () {
         it('can match item in top level', function (done) {
             extractRunnableItems(
                 collection,
-                ['ID6'],
+                {execute: 'ID6', lookupStrategy: 'path'},
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be(null);
                     expect(_.map(runnableItems, 'name')).to.eql(['R1']);
@@ -101,7 +133,7 @@ describe('extractRunnableItems', function () {
         it('can match item in nested level', function (done) {
             extractRunnableItems(
                 collection,
-                ['ID1', 'ID3'],
+                {execute: 'ID3', lookupStrategy: 'path', path: ['ID1']},
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be(null);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
@@ -114,7 +146,7 @@ describe('extractRunnableItems', function () {
         it('can match item group at top level', function (done) {
             extractRunnableItems(
                 collection,
-                ['ID1'],
+                {execute: 'ID1', lookupStrategy: 'path'},
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be(null);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
@@ -127,7 +159,7 @@ describe('extractRunnableItems', function () {
         it('can match item group at nested level', function (done) {
             extractRunnableItems(
                 collection,
-                ['ID1', 'ID4'],
+                {execute: 'ID4', lookupStrategy: 'path', path: ['ID1']},
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be(null);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.F1.R1']);
@@ -138,11 +170,24 @@ describe('extractRunnableItems', function () {
         });
     });
 
-    describe('with entrypoint as id', function () {
+    describe('with lookupStrategy idOrName', function () {
+        it('should be default', function (done) {
+            extractRunnableItems(
+                collection,
+                {execute: 'ID2'},
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be(null);
+                    expect(_.map(runnableItems, 'name')).to.eql(['F2.R1']);
+                    expect(entrypoint).to.eql(collection.items.members[1]);
+                    done();
+                }
+            );
+        });
+
         it('should filter item group by id', function (done) {
             extractRunnableItems(
                 collection,
-                'ID2',
+                {execute: 'ID2', lookupStrategy: 'idOrName'},
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be(null);
                     expect(_.map(runnableItems, 'name')).to.eql(['F2.R1']);
@@ -155,7 +200,7 @@ describe('extractRunnableItems', function () {
         it('should filter item correctly by id', function (done) {
             extractRunnableItems(
                 collection,
-                'ID3',
+                {execute: 'ID3', lookupStrategy: 'idOrName'},
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be(null);
                     expect(runnableItems).to.have.length(1);
@@ -166,26 +211,10 @@ describe('extractRunnableItems', function () {
             );
         });
 
-        it('should prioritize id match over name', function (done) {
-            extractRunnableItems(
-                collection,
-                'N1',
-                function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(runnableItems).to.have.length(1);
-                    expect(_.map(runnableItems, 'name')).to.eql(['F3.R1']);
-                    expect(entrypoint).to.have.property('name', 'F3');
-                    done();
-                }
-            );
-        });
-    });
-
-    describe('with entrypoint as name', function () {
         it('should filter item group by name', function (done) {
             extractRunnableItems(
                 collection,
-                'F1',
+                {execute: 'F1', lookupStrategy: 'idOrName'},
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be(null);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
@@ -198,7 +227,7 @@ describe('extractRunnableItems', function () {
         it('should filter item correctly by name', function (done) {
             extractRunnableItems(
                 collection,
-                'F1.R1',
+                {execute: 'F1.R1', lookupStrategy: 'idOrName'},
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.be(null);
                     expect(runnableItems).to.have.length(1);
