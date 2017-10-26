@@ -30,22 +30,6 @@ describe('extractRunnableItems', function () {
                 name: 'F2.R1',
                 request: 'https://postman-echo.com/get'
             }]
-        },
-        {
-            id: 'ID5',
-            name: 'N1', // intentionally a duplicate to simulate id/name conflict
-            item: [{
-                name: 'N1.R1',
-                request: 'https://postman-echo.com/get'
-            }]
-        },
-        {
-            id: 'N1',
-            name: 'F3', // intentionally a duplicate to simulate id/name conflict
-            item: [{
-                name: 'F3.R1',
-                request: 'https://postman-echo.com/get'
-            }]
         }, {
             id: 'ID6',
             name: 'R1',
@@ -57,7 +41,7 @@ describe('extractRunnableItems', function () {
         it('should return all items on collection', function (done) {
             extractRunnableItems(collection, null, function (err, runnableItems, entrypoint) {
                 expect(err).to.be(null);
-                expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1', 'F2.R1', 'N1.R1', 'F3.R1', 'R1']);
+                expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1', 'F2.R1', 'R1']);
                 expect(entrypoint).to.have.property('name', 'Collection C1');
                 done();
             });
