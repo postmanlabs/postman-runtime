@@ -17,9 +17,6 @@ describe('intermediate requests from auth', function () {
                     }
                 }
             }
-        },
-        authorizer: {
-            interactive: true
         }
     };
 

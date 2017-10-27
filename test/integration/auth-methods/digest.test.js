@@ -38,9 +38,6 @@ describe('digest auth', function () {
                         key: 'pass',
                         value: 'password'
                     }]
-                },
-                authorizer: {
-                    interactive: true
                 }
             };
 
@@ -132,9 +129,6 @@ describe('digest auth', function () {
                         key: 'pass',
                         value: 'password'
                     }]
-                },
-                authorizer: {
-                    interactive: true
                 }
             };
 
@@ -191,7 +185,7 @@ describe('digest auth', function () {
         });
     });
 
-    describe('with interactive mode turned off', function () {
+    describe('with retrying turned off', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
@@ -219,9 +213,6 @@ describe('digest auth', function () {
                         key: 'pass',
                         value: 'password'
                     }]
-                },
-                authorizer: {
-                    interactive: true
                 }
             };
 
@@ -281,9 +272,6 @@ describe('digest auth', function () {
                         key: 'pass',
                         value: 'password'
                     }]
-                },
-                authorizer: {
-                    interactive: true
                 }
             };
 
@@ -338,9 +326,6 @@ describe('digest auth', function () {
                         key: 'pass',
                         value: 'password'
                     }]
-                },
-                authorizer: {
-                    interactive: true
                 }
             };
 

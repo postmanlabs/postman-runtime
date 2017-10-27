@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+#### v6.4.1 (October 13, 2017)
+* :arrow_up: Updated dependencies.
+* :bug: Made Bearer token case insensitive #417
+
 #### v6.4.0 (September 28, 2017)
 * Improved flows for NTLM, Digest, and OAuth2 :tada:
 * #382 Added script timeout option :tada:
@@ -21,7 +25,7 @@
 #### v6.3.0 (August 21, 2017)
 * :arrow_up: Updated `postman-sandbox` to `v2.3.2`, which contains a header assertion bugfix. #358
 
-#### 6.2.6 (August 18, 2017)
+#### v6.2.6 (August 18, 2017)
 * Updated dependencies :arrow_up:
 * Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`. #353, #354
 * :lock: Prevented files from being uploaded via `pm.sendRequest` #351
