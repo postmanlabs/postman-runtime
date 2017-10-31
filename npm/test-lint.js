@@ -6,13 +6,8 @@ var async = require('async'),
     ESLintCLIEngine = require('eslint').CLIEngine,
 
     LINT_SOURCE_DIRS = [
-        './lib/runner',
-        './lib/authorizer',
-        './lib/uvm/*.js',
-        './lib/backpack',
-        './test/system',
-        './test/unit',
-        './test/integration',
+        './lib',
+        './test',
         './npm/*.js',
         './index.js'
     ];

@@ -109,7 +109,7 @@ describe('cookie sandbox request interaction', function () {
                 });
 
                 // @todo: Unskip this when the corresponding behaviour is fixed
-                it.skip('should make the set cookies usable outside the sandbox as well', function () {
+                it('should make the set cookies usable outside the sandbox as well', function () {
                     var reqOne = testrun.request.firstCall.args[3],
                         resOne = testrun.request.firstCall.args[2];
 

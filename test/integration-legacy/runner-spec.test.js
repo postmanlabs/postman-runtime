@@ -10,85 +10,85 @@ describe('Runner', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "post",
-                            "event": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'post',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "postman.setEnvironmentVariable('method', 'get');\npostman.setEnvironmentVariable('count', '1');\nconsole.log('Environment is now: ', environment);\npostman.setNextRequest('method');"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'postman.setEnvironmentVariable(\'method\', \'get\');\npostman.setEnvironmentVariable(\'count\', \'1\');\nconsole.log(\'Environment is now: \', environment);\npostman.setNextRequest(\'method\');'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/post",
-                                "method": "POST",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/post',
+                                'method': 'POST',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "id": "5c822123-4bb4-62df-4aa5-ef509a84de8e",
-                            "name": "html",
-                            "event": [
+                            'id': '5c822123-4bb4-62df-4aa5-ef509a84de8e',
+                            'name': 'html',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "var count = _.parseInt(postman.getEnvironmentVariable('count'));\ncount++;\npostman.setEnvironmentVariable('count', String(count));\n\nif (responseCode.code === 200) {\n    postman.setEnvironmentVariable('method', 'headers');\n    console.log('Setting next request to \"method\"');\n    postman.setNextRequest('method');\n}"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'var count = _.parseInt(postman.getEnvironmentVariable(\'count\'));\ncount++;\npostman.setEnvironmentVariable(\'count\', String(count));\n\nif (responseCode.code === 200) {\n    postman.setEnvironmentVariable(\'method\', \'headers\');\n    console.log(\'Setting next request to "method"\');\n    postman.setNextRequest(\'method\');\n}'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/type/html",
-                                "method": "GET",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/type/html',
+                                'method': 'GET',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "id": "b6dda40c-4045-fcc3-df78-97e27564db8f",
-                            "name": "method",
-                            "event": [
+                            'id': 'b6dda40c-4045-fcc3-df78-97e27564db8f',
+                            'name': 'method',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "var jsonData = JSON.parse(responseBody);\nvar count = _.parseInt(postman.getEnvironmentVariable('count'));\ncount++;\npostman.setEnvironmentVariable('count', String(count));\n\nif (jsonData.url === 'https://postman-echo.com/get') {\n    console.log('Setting next request to \"html\"');\n    postman.setNextRequest('html');\n}\nelse if (!jsonData.url && jsonData.headers) {\n    console.log('Ending here.'); tests['Success'] = _.parseInt(postman.getEnvironmentVariable('count')) === 4\n    postman.setNextRequest(null);\n}\nelse {\n    console.log('Not setting next request.. ', responseBody);\n}"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'var jsonData = JSON.parse(responseBody);\nvar count = _.parseInt(postman.getEnvironmentVariable(\'count\'));\ncount++;\npostman.setEnvironmentVariable(\'count\', String(count));\n\nif (jsonData.url === \'https://postman-echo.com/get\') {\n    console.log(\'Setting next request to "html"\');\n    postman.setNextRequest(\'html\');\n}\nelse if (!jsonData.url && jsonData.headers) {\n    console.log(\'Ending here.\'); tests[\'Success\'] = _.parseInt(postman.getEnvironmentVariable(\'count\')) === 4\n    postman.setNextRequest(null);\n}\nelse {\n    console.log(\'Not setting next request.. \', responseBody);\n}'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/{{method}}",
-                                "method": "GET",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/{{method}}',
+                                'method': 'GET',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         }
                     ]
                 },
@@ -98,7 +98,7 @@ describe('Runner', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -114,7 +114,7 @@ describe('Runner', function () {
             runner.run(collection, {
                 iterationCount: 2
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -136,7 +136,7 @@ describe('Runner', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor){
+                    beforeIteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
