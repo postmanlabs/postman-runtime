@@ -40,7 +40,7 @@
     "node-oauth1": "1.2.1",
     "postman-collection": "postmanlabs/postman-collection#develop",
     "postman-request": "2.81.1-postman.3",
-    "postman-sandbox": "postmanlabs/postman-sandbox#feature/persist-pm-variables",
+    "postman-sandbox": "postmanlabs/postman-sandbox#develop",
     "resolve-from": "4.0.0",
     "serialised-error": "1.1.2",
     "uuid": "3.1.0"
