@@ -10,64 +10,64 @@ describe('Option', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "test",
-                        "_postman_id": "cd9e83b1-03dd-18ae-ff02-574414594a87",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'test',
+                        '_postman_id': 'cd9e83b1-03dd-18ae-ff02-574414594a87',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "name": "Request Methods",
-                            "description": "HTTP has multiple request \"verbs\", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n",
-                            "item": [
+                            'name': 'Request Methods',
+                            'description': 'HTTP has multiple request "verbs", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n',
+                            'item': [
                                 {
-                                    "name": "First Request",
-                                    "event": [
+                                    'name': 'First Request',
+                                    'event': [
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": "tests['fail'] = false;\ntests[\"Body contains headers\"] = responseBody.has(\"headers\");\ntests[\"Body contains args\"] = responseBody.has(\"args\");\ntests[\"Body contains url\"] = responseBody.has(\"url\");\n\nvar data = JSON.parse(responseBody)\n\ntests[\"Args key contains argument passed as url parameter\"] = 'test' in data.args"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': 'tests[\'fail\'] = false;\ntests["Body contains headers"] = responseBody.has("headers");\ntests["Body contains args"] = responseBody.has("args");\ntests["Body contains url"] = responseBody.has("url");\n\nvar data = JSON.parse(responseBody)\n\ntests["Args key contains argument passed as url parameter"] = \'test\' in data.args'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://postman-echo.com/get?test=1",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://postman-echo.com/get?test=1',
+                                        'method': 'GET'
                                     }
                                 },
                                 {
-                                    "name": "Second Request",
-                                    "event": [
+                                    'name': 'Second Request',
+                                    'event': [
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": ";"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': ';'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://postman-echo.com/get?test=2",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://postman-echo.com/get?test=2',
+                                        'method': 'GET'
                                     }
                                 },
                                 {
-                                    "name": "Third Request",
-                                    "event": [
+                                    'name': 'Third Request',
+                                    'event': [
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": ";"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': ';'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://postman-echo.com/get?test=3",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://postman-echo.com/get?test=3',
+                                        'method': 'GET'
                                     }
                                 }
                             ]
@@ -80,7 +80,7 @@ describe('Option', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -97,7 +97,7 @@ describe('Option', function () {
                 iterationCount: 2,
                 stopOnFailure: true
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -119,7 +119,7 @@ describe('Option', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor){
+                    beforeIteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -263,71 +263,71 @@ describe('Option', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "test",
-                        "_postman_id": "cd9e83b1-03dd-18ae-ff02-574414594a87",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'test',
+                        '_postman_id': 'cd9e83b1-03dd-18ae-ff02-574414594a87',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "name": "Request Methods",
-                            "description": "HTTP has multiple request \"verbs\", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n",
-                            "item": [
+                            'name': 'Request Methods',
+                            'description': 'HTTP has multiple request "verbs", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n',
+                            'item': [
                                 {
-                                    "name": "First Request",
-                                    "event": [
+                                    'name': 'First Request',
+                                    'event': [
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": "tests[\"Body contains headers\"] = responseBody.has(\"headers\");\ntests[\"Body contains args\"] = responseBody.has(\"args\");\ntests[\"Body contains url\"] = responseBody.has(\"url\");\n\nvar data = JSON.parse(responseBody)\n\ntests[\"Args key contains argument passed as url parameter\"] = 'test' in data.args"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': 'tests["Body contains headers"] = responseBody.has("headers");\ntests["Body contains args"] = responseBody.has("args");\ntests["Body contains url"] = responseBody.has("url");\n\nvar data = JSON.parse(responseBody)\n\ntests["Args key contains argument passed as url parameter"] = \'test\' in data.args'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://postman-echo.com/get?test=123",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://postman-echo.com/get?test=123',
+                                        'method': 'GET'
                                     }
                                 },
                                 {
-                                    "name": "Second Request",
-                                    "event": [
+                                    'name': 'Second Request',
+                                    'event': [
                                         {
-                                            "listen": "prerequest",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": "if (iteration === 1) { throw new Error('omg!'); }"
+                                            'listen': 'prerequest',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': 'if (iteration === 1) { throw new Error(\'omg!\'); }'
                                             }
                                         },
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": ";"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': ';'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://postman-echo.com/get?test=123",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://postman-echo.com/get?test=123',
+                                        'method': 'GET'
                                     }
                                 },
                                 {
-                                    "name": "Third Request",
-                                    "event": [
+                                    'name': 'Third Request',
+                                    'event': [
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": ";"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': ';'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://postman-echo.com/get?test=123",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://postman-echo.com/get?test=123',
+                                        'method': 'GET'
                                     }
                                 }
                             ]
@@ -340,7 +340,7 @@ describe('Option', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -357,7 +357,7 @@ describe('Option', function () {
                 iterationCount: 3,
                 stopOnFailure: true
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -379,7 +379,7 @@ describe('Option', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor){
+                    beforeIteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -573,71 +573,71 @@ describe('Option', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "test",
-                        "_postman_id": "cd9e83b1-03dd-18ae-ff02-574414594a87",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'test',
+                        '_postman_id': 'cd9e83b1-03dd-18ae-ff02-574414594a87',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "name": "Request Methods",
-                            "description": "HTTP has multiple request \"verbs\", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n",
-                            "item": [
+                            'name': 'Request Methods',
+                            'description': 'HTTP has multiple request "verbs", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n',
+                            'item': [
                                 {
-                                    "name": "First Request",
-                                    "event": [
+                                    'name': 'First Request',
+                                    'event': [
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": "tests[\"Body contains headers\"] = responseBody.has(\"headers\");\ntests[\"Body contains args\"] = responseBody.has(\"args\");\ntests[\"Body contains url\"] = responseBody.has(\"url\");\n\nvar data = JSON.parse(responseBody)\n\ntests[\"Args key contains argument passed as url parameter\"] = 'test' in data.args"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': 'tests["Body contains headers"] = responseBody.has("headers");\ntests["Body contains args"] = responseBody.has("args");\ntests["Body contains url"] = responseBody.has("url");\n\nvar data = JSON.parse(responseBody)\n\ntests["Args key contains argument passed as url parameter"] = \'test\' in data.args'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://postman-echo.com/get?test=123",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://postman-echo.com/get?test=123',
+                                        'method': 'GET'
                                     }
                                 },
                                 {
-                                    "name": "Second Request",
-                                    "event": [
+                                    'name': 'Second Request',
+                                    'event': [
                                         {
-                                            "listen": "prerequest",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": "if (iteration === 1) { throw new Error('omg!'); }"
+                                            'listen': 'prerequest',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': 'if (iteration === 1) { throw new Error(\'omg!\'); }'
                                             }
                                         },
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": ";"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': ';'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://somenonexistantdomainnamehere/get?test=123",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://somenonexistantdomainnamehere/get?test=123',
+                                        'method': 'GET'
                                     }
                                 },
                                 {
-                                    "name": "Third Request",
-                                    "event": [
+                                    'name': 'Third Request',
+                                    'event': [
                                         {
-                                            "listen": "test",
-                                            "script": {
-                                                "type": "text/javascript",
-                                                "exec": ";"
+                                            'listen': 'test',
+                                            'script': {
+                                                'type': 'text/javascript',
+                                                'exec': ';'
                                             }
                                         }
                                     ],
-                                    "request": {
-                                        "url": "https://postman-echo.com/get?test=123",
-                                        "method": "GET"
+                                    'request': {
+                                        'url': 'https://postman-echo.com/get?test=123',
+                                        'method': 'GET'
                                     }
                                 }
                             ]
@@ -650,7 +650,7 @@ describe('Option', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -667,7 +667,7 @@ describe('Option', function () {
                 iterationCount: 3,
                 stopOnFailure: true
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -689,7 +689,7 @@ describe('Option', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor){
+                    beforeIteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -824,7 +824,7 @@ describe('Option', function () {
                             if (item.name === 'Second Request') {
                                 expect(err).to.be.ok();
                                 expect(err.message).to.be('getaddrinfo ENOTFOUND somenonexistantdomainnamehere ' +
-                                    'somenonexistantdomainnamehere:443')
+                                    'somenonexistantdomainnamehere:443');
                             }
                             else {
                                 expect(err).to.be(null);

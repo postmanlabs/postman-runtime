@@ -15,7 +15,7 @@ describe('Localhost requests', function () {
             server = http.createServer();
 
             server.on('request', function (req, res) {
-                res.writeHead(200, { 'Content-Type': 'text/plain' });
+                res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.end('Hello World\n');
             });
 
@@ -31,20 +31,20 @@ describe('Localhost requests', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://localhost:" + port + '/',
-                                "method": "GET"
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://localhost:' + port + '/',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -55,7 +55,7 @@ describe('Localhost requests', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -74,7 +74,7 @@ describe('Localhost requests', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -224,7 +224,7 @@ describe('Localhost requests', function () {
             server = http.createServer();
 
             server.on('request', function (req, res) {
-                res.writeHead(200, { 'Content-Type': 'text/plain' });
+                res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.end('Hello World\n');
             });
 
@@ -240,20 +240,20 @@ describe('Localhost requests', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://localhost:" + port + '/',
-                                "method": "GET"
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://localhost:' + port + '/',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -264,7 +264,7 @@ describe('Localhost requests', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -283,7 +283,7 @@ describe('Localhost requests', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
