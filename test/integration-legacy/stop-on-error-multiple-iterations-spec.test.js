@@ -130,7 +130,7 @@ describe('Option', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -142,7 +142,7 @@ describe('Option', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor) {
                         check(function () {
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
@@ -190,7 +190,7 @@ describe('Option', function () {
                             expect(scriptResult.error).to.be(undefined);
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -200,7 +200,7 @@ describe('Option', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
