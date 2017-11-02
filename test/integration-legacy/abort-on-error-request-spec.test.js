@@ -20,6 +20,7 @@ describe('Option', function () {
                     'item': [
                         {
                             'name': 'Request Methods',
+                            // eslint-disable-next-line max-len
                             'description': 'HTTP has multiple request "verbs", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n',
                             'item': [
                                 {
@@ -29,6 +30,7 @@ describe('Option', function () {
                                             'listen': 'test',
                                             'script': {
                                                 'type': 'text/javascript',
+                                                // eslint-disable-next-line max-len
                                                 'exec': 'tests["Body contains headers"] = responseBody.has("headers");\ntests["Body contains args"] = responseBody.has("args");\ntests["Body contains url"] = responseBody.has("url");\n\nvar data = JSON.parse(responseBody)\n\ntests["Args key contains argument passed as url parameter"] = \'test\' in data.args'
                                             }
                                         }
@@ -195,7 +197,7 @@ describe('Option', function () {
                             expect(err).to.be(null);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -208,7 +210,7 @@ describe('Option', function () {
                             expect(events.length).to.be(1);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -217,14 +219,14 @@ describe('Option', function () {
                             expect(cursor.position).to.eql(runStore.position);
                             expect(cursor.ref).to.eql(runStore.ref);
 
-                            var result = results[0];
+                            var result = results[0],
+                                scriptResult = results[0];
                             expect(result.error).to.be(undefined);
 
-                            var scriptResult = results[0];
                             expect(scriptResult.result.target).to.eql('test');
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
