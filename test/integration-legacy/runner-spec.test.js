@@ -26,6 +26,7 @@ describe('Runner', function () {
                                     'listen': 'test',
                                     'script': {
                                         'type': 'text/javascript',
+                                        // eslint-disable-next-line max-len
                                         'exec': 'postman.setEnvironmentVariable(\'method\', \'get\');\npostman.setEnvironmentVariable(\'count\', \'1\');\nconsole.log(\'Environment is now: \', environment);\npostman.setNextRequest(\'method\');'
                                     }
                                 }
@@ -50,6 +51,7 @@ describe('Runner', function () {
                                     'listen': 'test',
                                     'script': {
                                         'type': 'text/javascript',
+                                        // eslint-disable-next-line max-len
                                         'exec': 'var count = _.parseInt(postman.getEnvironmentVariable(\'count\'));\ncount++;\npostman.setEnvironmentVariable(\'count\', String(count));\n\nif (responseCode.code === 200) {\n    postman.setEnvironmentVariable(\'method\', \'headers\');\n    console.log(\'Setting next request to "method"\');\n    postman.setNextRequest(\'method\');\n}'
                                     }
                                 }
@@ -74,6 +76,7 @@ describe('Runner', function () {
                                     'listen': 'test',
                                     'script': {
                                         'type': 'text/javascript',
+                                        // eslint-disable-next-line max-len
                                         'exec': 'var jsonData = JSON.parse(responseBody);\nvar count = _.parseInt(postman.getEnvironmentVariable(\'count\'));\ncount++;\npostman.setEnvironmentVariable(\'count\', String(count));\n\nif (jsonData.url === \'https://postman-echo.com/get\') {\n    console.log(\'Setting next request to "html"\');\n    postman.setNextRequest(\'html\');\n}\nelse if (!jsonData.url && jsonData.headers) {\n    console.log(\'Ending here.\'); tests[\'Success\'] = _.parseInt(postman.getEnvironmentVariable(\'count\')) === 4\n    postman.setNextRequest(null);\n}\nelse {\n    console.log(\'Not setting next request.. \', responseBody);\n}'
                                     }
                                 }
@@ -172,7 +175,7 @@ describe('Runner', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -184,7 +187,7 @@ describe('Runner', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -197,7 +200,7 @@ describe('Runner', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -210,7 +213,7 @@ describe('Runner', function () {
                             expect(events.length).to.be(1);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -222,14 +225,14 @@ describe('Runner', function () {
                             // This collection has no pre-request scripts
                             expect(results.length).to.be(1);
 
-                            var result = results[0];
+                            var result = results[0],
+                                scriptResult = results[0];
                             expect(result.error).to.be(undefined);
 
-                            var scriptResult = results[0];
                             expect(scriptResult.result.target).to.eql('test');
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -239,7 +242,7 @@ describe('Runner', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
