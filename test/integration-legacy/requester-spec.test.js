@@ -122,7 +122,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -134,7 +134,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -147,7 +147,7 @@ describe('Requester', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -160,7 +160,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(1);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -172,14 +172,14 @@ describe('Requester', function () {
                             // This collection has no pre-request scripts
                             expect(results.length).to.be(1);
 
-                            var result = results[0];
+                            var result = results[0],
+                                scriptResult = results[0];
                             expect(result.error).to.be(undefined);
 
-                            var scriptResult = results[0];
                             expect(scriptResult.result.target).to.eql('test');
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -189,7 +189,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -329,7 +329,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -341,7 +341,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -354,7 +354,7 @@ describe('Requester', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -367,7 +367,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(1);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -379,14 +379,14 @@ describe('Requester', function () {
                             // This collection has no pre-request scripts
                             expect(results.length).to.be(1);
 
-                            var result = results[0];
+                            var result = results[0],
+                                scriptResult = results[0];
                             expect(result.error).to.be(undefined);
 
-                            var scriptResult = results[0];
                             expect(scriptResult.result.target).to.eql('test');
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -396,7 +396,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -531,7 +531,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -543,7 +543,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -556,7 +556,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -569,7 +569,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -580,7 +580,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -590,7 +590,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -729,7 +729,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -741,7 +741,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -754,7 +754,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -767,7 +767,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -778,7 +778,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -788,7 +788,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -926,7 +926,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -938,7 +938,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -951,7 +951,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -964,7 +964,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -975,7 +975,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -985,7 +985,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1132,7 +1132,7 @@ describe('Requester', function () {
                         testables.itemsComplete[cursor.iteration].push(item);
                     });
                 },
-                beforePrerequest: function (err, cursor, events, item) {
+                beforePrerequest: function (err, cursor, events) {
                     check(function () {
                         expect(err).to.be(null);
 
@@ -1144,7 +1144,7 @@ describe('Requester', function () {
                         expect(events.length).to.be(0);
                     });
                 },
-                prerequest: function (err, cursor, results, item) {
+                prerequest: function (err, cursor, results) {
                     check(function () {
                         expect(err).to.be(null);
 
@@ -1335,7 +1335,7 @@ describe('Requester', function () {
                         testables.itemsComplete[cursor.iteration].push(item);
                     });
                 },
-                beforePrerequest: function (err, cursor, events, item) {
+                beforePrerequest: function (err, cursor, events) {
                     check(function () {
                         expect(err).to.be(null);
 
@@ -1347,7 +1347,7 @@ describe('Requester', function () {
                         expect(events.length).to.be(0);
                     });
                 },
-                prerequest: function (err, cursor, results, item) {
+                prerequest: function (err, cursor, results) {
                     check(function () {
                         expect(err).to.be(null);
 
@@ -1541,7 +1541,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1553,7 +1553,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1566,7 +1566,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1579,7 +1579,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1590,7 +1590,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1600,7 +1600,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1756,7 +1756,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1768,7 +1768,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1781,7 +1781,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1794,7 +1794,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1805,7 +1805,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1815,7 +1815,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1971,7 +1971,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1983,7 +1983,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1996,7 +1996,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2009,7 +2009,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2020,7 +2020,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2030,7 +2030,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2186,7 +2186,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2198,7 +2198,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2211,7 +2211,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2224,7 +2224,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2235,7 +2235,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2245,7 +2245,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2397,7 +2397,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2409,7 +2409,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2422,7 +2422,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2435,7 +2435,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2446,7 +2446,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2456,7 +2456,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2472,7 +2472,8 @@ describe('Requester', function () {
 
                             var body = response.json();
                             expect(body.args).to.be.empty();
-                            expect(_.startsWith(body.files['binary-file.png'], 'data:application/octet-stream;base64')).to.be(true);
+                            expect(_.startsWith(body.files['binary-file.png'],
+                                'data:application/octet-stream;base64')).to.be(true);
                         });
                     },
                     done: function (err) {
@@ -2488,7 +2489,6 @@ describe('Requester', function () {
         it('should not upload a binary data file if path is absent', function (mochaDone) {
             var errored = false,
                 runner = new runtime.Runner(),
-                path = require('path'),
                 rawCollection = {
                     'variables': [],
                     'info': {
@@ -2601,7 +2601,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2613,7 +2613,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2626,7 +2626,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2639,7 +2639,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2650,7 +2650,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2660,7 +2660,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2812,7 +2812,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2824,7 +2824,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2837,7 +2837,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2850,7 +2850,7 @@ describe('Requester', function () {
                             expect(events).to.be.empty();
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2861,7 +2861,7 @@ describe('Requester', function () {
                             expect(results).to.be.empty();
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -2871,7 +2871,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3046,7 +3046,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3058,7 +3058,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3071,7 +3071,7 @@ describe('Requester', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3084,7 +3084,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(1);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3094,7 +3094,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3104,7 +3104,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3153,7 +3153,9 @@ describe('Requester', function () {
                                     'script': {
                                         'type': 'text/javascript',
                                         'exec': [
+                                            // eslint-disable-next-line max-len
                                             'tests[\'Cookie A\'] = postman.getResponseCookie(\'a\') && postman.getResponseCookie(\'a\').value === \'one\';',
+                                            // eslint-disable-next-line max-len
                                             'tests[\'Cookie b\'] = postman.getResponseCookie(\'b\') && postman.getResponseCookie(\'b\').value === \'two\';'
                                         ]
                                     }
@@ -3250,7 +3252,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3262,7 +3264,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3275,7 +3277,7 @@ describe('Requester', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3288,7 +3290,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(1);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3306,12 +3308,12 @@ describe('Requester', function () {
 
                             expect(scriptResult.result.tests).to.be.ok();
 
-                            _.forOwn(scriptResult.result.tests, function (result, test) {
+                            _.forOwn(scriptResult.result.tests, function (result) {
                                 expect(result).to.be.ok();
                             });
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3321,7 +3323,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3466,7 +3468,7 @@ describe('Requester', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3478,7 +3480,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3491,7 +3493,7 @@ describe('Requester', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3504,7 +3506,7 @@ describe('Requester', function () {
                             expect(events.length).to.be(1);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3516,14 +3518,14 @@ describe('Requester', function () {
                             // This collection has no pre-request scripts
                             expect(results.length).to.be(1);
 
-                            var result = results[0];
+                            var result = results[0],
+                                scriptResult = results[0];
                             expect(result.error).to.be(undefined);
 
-                            var scriptResult = results[0];
                             expect(scriptResult.result.target).to.eql('test');
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3533,7 +3535,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -3585,6 +3587,7 @@ describe('Requester', function () {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
                     res.setHeader('Content-Encoding', 'deflate');
+                    // eslint-disable-next-line handle-callback-err
                     zlib.deflateRaw('thisisadeflatedresponse', function (err, buffer) {
                         res.end(buffer);
                     });
@@ -3693,7 +3696,8 @@ describe('Requester', function () {
                             check(function () {
                                 expect(err).to.be(null);
 
-                                testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
+                                testables.itemsStarted[cursor.iteration] =
+                                    testables.itemsStarted[cursor.iteration] || [];
                                 testables.itemsStarted[cursor.iteration].push(item);
                                 runStore.position = cursor.position;
                                 runStore.ref = cursor.ref;
@@ -3705,11 +3709,12 @@ describe('Requester', function () {
                                 expect(cursor.position).to.eql(runStore.position);
                                 expect(cursor.ref).to.eql(runStore.ref);
 
-                                testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
+                                testables.itemsComplete[cursor.iteration] =
+                                    testables.itemsComplete[cursor.iteration] || [];
                                 testables.itemsComplete[cursor.iteration].push(item);
                             });
                         },
-                        beforePrerequest: function (err, cursor, events, item) {
+                        beforePrerequest: function (err, cursor, events) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3721,7 +3726,7 @@ describe('Requester', function () {
                                 expect(events.length).to.be(0);
                             });
                         },
-                        prerequest: function (err, cursor, results, item) {
+                        prerequest: function (err, cursor, results) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3734,7 +3739,7 @@ describe('Requester', function () {
                                 expect(results.length).to.be(0);
                             });
                         },
-                        beforeTest: function (err, cursor, events, item) {
+                        beforeTest: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3744,7 +3749,7 @@ describe('Requester', function () {
                                 expect(cursor.ref).to.eql(runStore.ref);
                             });
                         },
-                        test: function (err, cursor, results, item) {
+                        test: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3754,7 +3759,7 @@ describe('Requester', function () {
                                 expect(cursor.ref).to.eql(runStore.ref);
                             });
                         },
-                        beforeRequest: function (err, cursor, request, item) {
+                        beforeRequest: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3764,7 +3769,7 @@ describe('Requester', function () {
                                 expect(cursor.ref).to.eql(runStore.ref);
                             });
                         },
-                        request: function (err, cursor, response, request, item) {
+                        request: function (err, cursor, response, request) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3809,6 +3814,7 @@ describe('Requester', function () {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
                     res.setHeader('Content-Encoding', 'deflate');
+                    // eslint-disable-next-line handle-callback-err
                     zlib.deflate('thisisadeflatedresponsetoo', function (err, buffer) {
                         res.end(buffer);
                     });
@@ -3917,7 +3923,8 @@ describe('Requester', function () {
                             check(function () {
                                 expect(err).to.be(null);
 
-                                testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
+                                testables.itemsStarted[cursor.iteration] =
+                                    testables.itemsStarted[cursor.iteration] || [];
                                 testables.itemsStarted[cursor.iteration].push(item);
                                 runStore.position = cursor.position;
                                 runStore.ref = cursor.ref;
@@ -3929,11 +3936,12 @@ describe('Requester', function () {
                                 expect(cursor.position).to.eql(runStore.position);
                                 expect(cursor.ref).to.eql(runStore.ref);
 
-                                testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
+                                testables.itemsComplete[cursor.iteration] =
+                                    testables.itemsComplete[cursor.iteration] || [];
                                 testables.itemsComplete[cursor.iteration].push(item);
                             });
                         },
-                        beforePrerequest: function (err, cursor, events, item) {
+                        beforePrerequest: function (err, cursor, events) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3945,7 +3953,7 @@ describe('Requester', function () {
                                 expect(events.length).to.be(0);
                             });
                         },
-                        prerequest: function (err, cursor, results, item) {
+                        prerequest: function (err, cursor, results) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3958,7 +3966,7 @@ describe('Requester', function () {
                                 expect(results.length).to.be(0);
                             });
                         },
-                        beforeTest: function (err, cursor, events, item) {
+                        beforeTest: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3968,7 +3976,7 @@ describe('Requester', function () {
                                 expect(cursor.ref).to.eql(runStore.ref);
                             });
                         },
-                        test: function (err, cursor, results, item) {
+                        test: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3978,7 +3986,7 @@ describe('Requester', function () {
                                 expect(cursor.ref).to.eql(runStore.ref);
                             });
                         },
-                        beforeRequest: function (err, cursor, request, item) {
+                        beforeRequest: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -3988,7 +3996,7 @@ describe('Requester', function () {
                                 expect(cursor.ref).to.eql(runStore.ref);
                             });
                         },
-                        request: function (err, cursor, response, request, item) {
+                        request: function (err, cursor, response, request) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -4033,6 +4041,7 @@ describe('Requester', function () {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
                     res.setHeader('Content-Encoding', 'gzip');
+                    // eslint-disable-next-line handle-callback-err
                     zlib.gzip('thisisagzippedresponse', function (err, buffer) {
                         res.end(buffer);
                     });
@@ -4150,7 +4159,8 @@ describe('Requester', function () {
                             check(function () {
                                 expect(err).to.be(null);
 
-                                testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
+                                testables.itemsStarted[cursor.iteration] =
+                                    testables.itemsStarted[cursor.iteration] || [];
                                 testables.itemsStarted[cursor.iteration].push(item);
                                 runStore.position = cursor.position;
                                 runStore.ref = cursor.ref;
@@ -4162,11 +4172,12 @@ describe('Requester', function () {
                                 expect(cursor.position).to.eql(runStore.position);
                                 expect(cursor.ref).to.eql(runStore.ref);
 
-                                testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
+                                testables.itemsComplete[cursor.iteration] =
+                                    testables.itemsComplete[cursor.iteration] || [];
                                 testables.itemsComplete[cursor.iteration].push(item);
                             });
                         },
-                        beforePrerequest: function (err, cursor, events, item) {
+                        beforePrerequest: function (err, cursor, events) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -4178,7 +4189,7 @@ describe('Requester', function () {
                                 expect(events.length).to.be(0);
                             });
                         },
-                        prerequest: function (err, cursor, results, item) {
+                        prerequest: function (err, cursor, results) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -4191,7 +4202,7 @@ describe('Requester', function () {
                                 expect(results.length).to.be(0);
                             });
                         },
-                        beforeTest: function (err, cursor, events, item) {
+                        beforeTest: function (err, cursor, events) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -4204,7 +4215,7 @@ describe('Requester', function () {
                                 expect(events.length).to.be(1);
                             });
                         },
-                        test: function (err, cursor, results, item) {
+                        test: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -4214,7 +4225,7 @@ describe('Requester', function () {
                                 expect(cursor.ref).to.eql(runStore.ref);
                             });
                         },
-                        beforeRequest: function (err, cursor, request, item) {
+                        beforeRequest: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be(null);
 
@@ -4224,7 +4235,7 @@ describe('Requester', function () {
                                 expect(cursor.ref).to.eql(runStore.ref);
                             });
                         },
-                        request: function (err, cursor, response, request, item) {
+                        request: function (err, cursor, response, request) {
                             check(function () {
                                 expect(err).to.be(null);
 
