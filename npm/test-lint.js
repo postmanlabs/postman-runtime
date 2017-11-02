@@ -10,9 +10,7 @@ var async = require('async'),
         './lib/authorizer',
         './lib/uvm/*.js',
         './lib/backpack',
-        './test/system',
-        './test/unit',
-        './test/integration',
+        './test',
         './npm/*.js',
         './index.js'
     ];
