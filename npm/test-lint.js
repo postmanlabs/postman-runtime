@@ -13,6 +13,7 @@ var async = require('async'),
         './test/system',
         './test/unit',
         './test/integration',
+        './test/fixtures',
         './npm/*.js',
         './index.js'
     ];
