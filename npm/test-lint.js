@@ -7,6 +7,11 @@ var async = require('async'),
 
     LINT_SOURCE_DIRS = [
         './lib',
+        './lib/runner',
+        './lib/authorizer',
+        './lib/uvm/*.js',
+        './lib/backpack',
+        './test',
         './test/system',
         './test/unit',
         './test/integration',
