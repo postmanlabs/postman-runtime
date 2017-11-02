@@ -5,7 +5,8 @@ var _ = require('lodash'),
 
 /* global describe, it, beforeEach, afterEach */
 describe('Localhost requests', function () {
-    describe('IPv6 server', function () {
+    // IPv6 is disabled on Travis
+    (process.env.TRAVIS ? describe.skip : describe)('IPv6 server', function () {
         var server,
             port;
 
