@@ -11,22 +11,22 @@ describe('UVM', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "Testing general sandbox functionality",
-                        "_postman_id": "37a82a6b-1af6-18f5-442d-2e973fa34214",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'Testing general sandbox functionality',
+                        '_postman_id': '37a82a6b-1af6-18f5-442d-2e973fa34214',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "name": "r1",
-                            "event": [
+                            'name': 'r1',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'try {',
                                             '    var jsonObject = xml2Json(responseBody);',
                                             '    tests["xml2Json"]=true;',
@@ -51,42 +51,46 @@ describe('UVM', function () {
                                             'var newString="diabetes";',
                                             'tests["SugarJS working"]=newString.has("betes");',
                                             'tests["tv4 present"] = (typeof tv4.validate === "function");',
+                                            // eslint-disable-next-line max-len
                                             'tests["CryptoJS md5"] = (CryptoJS.MD5("jasonpurse") == "288d14f08b5ad40da43dbe06467729c9");'
                                         ]
                                     }
                                 },
                                 {
-                                    "listen": "prerequest",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "postman.setGlobalVariable(\"g1\", \"0\");"
+                                    'listen': 'prerequest',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'postman.setGlobalVariable("g1", "0");'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/type/xml",
-                                "method": "GET",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/type/xml',
+                                'method': 'GET',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "r2",
-                            "event": [
+                            'name': 'r2',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'tests["Status code is 200"] = responseCode.code === 200;',
                                             'var jsonData = JSON.parse(responseBody);',
+                                            // eslint-disable-next-line max-len
                                             'tests["Correct GUID: " + jsonData.form.guid] = jsonData.form.guid.length === 36;',
+                                            // eslint-disable-next-line max-len
                                             'tests["Correct Random: " + jsonData.form.randomInt] = parseInt(jsonData.form.randomInt)>=0;',
+                                            // eslint-disable-next-line max-len
                                             'tests["Correct Timestamp: " + jsonData.form.timestamp] = parseInt(jsonData.form.timestamp)>1000',
                                             'tests["Correct global"] = jsonData.form.global == "0";',
                                             'tests["Correct global2"] = jsonData.form.global == globals.g1;',
@@ -96,325 +100,326 @@ describe('UVM', function () {
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/post",
-                                "method": "POST",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": [
+                            'request': {
+                                'url': 'https://postman-echo.com/post',
+                                'method': 'POST',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': [
                                         {
-                                            "key": "k1",
-                                            "value": "v1",
-                                            "type": "text",
-                                            "enabled": true
+                                            'key': 'k1',
+                                            'value': 'v1',
+                                            'type': 'text',
+                                            'enabled': true
                                         },
                                         {
-                                            "key": "k2",
-                                            "value": "v2",
-                                            "type": "text",
-                                            "enabled": true
+                                            'key': 'k2',
+                                            'value': 'v2',
+                                            'type': 'text',
+                                            'enabled': true
                                         },
                                         {
-                                            "key": "guid",
-                                            "value": "{{$guid}}",
-                                            "type": "text",
-                                            "enabled": true
+                                            'key': 'guid',
+                                            'value': '{{$guid}}',
+                                            'type': 'text',
+                                            'enabled': true
                                         },
                                         {
-                                            "key": "timestamp",
-                                            "value": "{{$timestamp}}",
-                                            "type": "text",
-                                            "enabled": true
+                                            'key': 'timestamp',
+                                            'value': '{{$timestamp}}',
+                                            'type': 'text',
+                                            'enabled': true
                                         },
                                         {
-                                            "key": "randomInt",
-                                            "value": "{{$randomInt}}",
-                                            "type": "text",
-                                            "enabled": true
+                                            'key': 'randomInt',
+                                            'value': '{{$randomInt}}',
+                                            'type': 'text',
+                                            'enabled': true
                                         },
                                         {
-                                            "key": "global",
-                                            "value": "{{g1}}",
-                                            "type": "text",
-                                            "enabled": true
+                                            'key': 'global',
+                                            'value': '{{g1}}',
+                                            'type': 'text',
+                                            'enabled': true
                                         },
                                         {
-                                            "key": "envValue",
-                                            "value": "{{e1}}",
-                                            "type": "text",
-                                            "enabled": true
+                                            'key': 'envValue',
+                                            'value': '{{e1}}',
+                                            'type': 'text',
+                                            'enabled': true
                                         }
                                     ]
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "r3",
-                            "event": [
+                            'name': 'r3',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/put",
-                                "method": "PUT",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/put',
+                                'method': 'PUT',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "r4",
-                            "event": [
+                            'name': 'r4',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/patch",
-                                "method": "PATCH",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/patch',
+                                'method': 'PATCH',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "delete",
-                            "event": [
+                            'name': 'delete',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/delete",
-                                "method": "DELETE",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/delete',
+                                'method': 'DELETE',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "head",
-                            "event": [
+                            'name': 'head',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'tests["Status code is 200"] = responseCode.code === 200;',
                                             'tests["Body is correct"] = responseBody === "";'
                                         ]
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/get",
-                                "method": "HEAD",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/get',
+                                'method': 'HEAD',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "options",
-                            "event": [
+                            'name': 'options',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'tests["Status code is 200"] = responseCode.code === 200;',
                                             'tests["Body is correct"] = !_.isEmpty(responseBody.split(","));'
                                         ]
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/get",
-                                "method": "OPTIONS",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/get',
+                                'method': 'OPTIONS',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "r2 copy",
-                            "event": [
+                            'name': 'r2 copy',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": 'tests["Status code is 200"] = responseCode.code === 200;'
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/post",
-                                "method": "POST",
-                                "header": [],
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": "RAWDATA"
+                            'request': {
+                                'url': 'https://postman-echo.com/post',
+                                'method': 'POST',
+                                'header': [],
+                                'body': {
+                                    'mode': 'raw',
+                                    'raw': 'RAWDATA'
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "BasicAuth",
-                            "event": [
+                            'name': 'BasicAuth',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'var jsonData = JSON.parse(responseBody);',
+                                            // eslint-disable-next-line max-len
                                             'tests["Correct auth header"] = jsonData.headers.authorization.indexOf("YWJoaWppdDprYW5l")>-1;'
                                         ]
                                     }
                                 }
                             ],
-                            "request": {
-                                "auth": {
-                                    "type": "basic",
-                                    "basic": {
-                                        "username": "abhijit",
-                                        "password": "kane",
-                                        "saveHelperData": true,
-                                        "showPassword": false
+                            'request': {
+                                'auth': {
+                                    'type': 'basic',
+                                    'basic': {
+                                        'username': 'abhijit',
+                                        'password': 'kane',
+                                        'saveHelperData': true,
+                                        'showPassword': false
                                     }
                                 },
-                                "url": "https://postman-echo.com/post",
-                                "method": "POST",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                                'url': 'https://postman-echo.com/post',
+                                'method': 'POST',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "DigestAuth",
-                            "event": [
+                            'name': 'DigestAuth',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'var jsonData = JSON.parse(responseBody);',
                                             'tests["Correct auth header"] = jsonData.headers.authorization.length>10;'
                                         ]
                                     }
                                 }
                             ],
-                            "request": {
-                                "auth": {
-                                    "type": "digest",
-                                    "digest": {
-                                        "algorithm": "",
-                                        "username": "aa",
-                                        "realm": "aa",
-                                        "password": "aa",
-                                        "nonce": "",
-                                        "nonceCount": "",
-                                        "clientNonce": "",
-                                        "opaque": "",
-                                        "qop": ""
+                            'request': {
+                                'auth': {
+                                    'type': 'digest',
+                                    'digest': {
+                                        'algorithm': '',
+                                        'username': 'aa',
+                                        'realm': 'aa',
+                                        'password': 'aa',
+                                        'nonce': '',
+                                        'nonceCount': '',
+                                        'clientNonce': '',
+                                        'opaque': '',
+                                        'qop': ''
                                     }
                                 },
-                                "url": "https://postman-echo.com/post",
-                                "method": "POST",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                                'url': 'https://postman-echo.com/post',
+                                'method': 'POST',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "Recursive Res",
-                            "event": [
+                            'name': 'Recursive Res',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'var jsonData = JSON.parse(responseBody);',
                                             '//tests["Recur. res. working"] = jsonData.args.a == "kane";'
                                         ]
                                     }
                                 },
                                 {
-                                    "listen": "prerequest",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'prerequest',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'postman.setGlobalVariable("name1", "kane");',
                                             'postman.setGlobalVariable("i", "1");'
                                         ]
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/get?a={{name{{i}}}}",
-                                "method": "GET",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'https://postman-echo.com/get?a={{name{{i}}}}',
+                                'method': 'GET',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         },
                         {
-                            "name": "Buffer and JSON",
-                            "request": "postman-echo.com/get",
-                            "event": [
+                            'name': 'Buffer and JSON',
+                            'request': 'postman-echo.com/get',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
                                             'tests[\'global JSON object\'] = typeof JSON.stringify === \'function\';',
                                             'tests[\'global Buffer object\'] = !!Buffer'
                                         ]
@@ -430,7 +435,7 @@ describe('UVM', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -454,7 +459,7 @@ describe('UVM', function () {
                     cookieJar: cookieJar
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -476,7 +481,7 @@ describe('UVM', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor){
+                    beforeIteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -512,7 +517,7 @@ describe('UVM', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -522,7 +527,7 @@ describe('UVM', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -532,7 +537,7 @@ describe('UVM', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -542,7 +547,7 @@ describe('UVM', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -554,19 +559,19 @@ describe('UVM', function () {
                             // This collection has no pre-request scripts
                             expect(results.length).to.be(1);
 
-                            var result = results[0];
+                            var result = results[0],
+                                scriptResult = results[0];
                             expect(result.error).to.be(undefined);
 
-                            var scriptResult = results[0];
                             expect(scriptResult.result.target).to.eql('test');
                             expect(scriptResult.result.tests).to.be.ok();
 
-                            _.forOwn(scriptResult.result.tests, function (result, test) {
+                            _.forOwn(scriptResult.result.tests, function (result) {
                                 expect(result).to.be.ok();
                             });
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -576,7 +581,7 @@ describe('UVM', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -620,36 +625,37 @@ describe('UVM', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "event": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
-                                            "var d = new Date(1470659144696);", // Monday, Aug 08, 2016
-                                            "tests['date prototype'] = ('Monday' === d.format('{Weekday}'));",
-                                            "tests['string prototype'] = 'asdasd'.has('as');",
-                                            "tests['Object'] = typeof Object.each === 'function'",
-                                            "tests['Date.create'] = typeof Date.create === 'function';",
-                                            "tests['Other Date functions'] = !!(1).daysAfter(new Date()).format('{yyyy}{MM}{dd}');"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
+                                            'var d = new Date(1470659144696);', // Monday, Aug 08, 2016
+                                            'tests[\'date prototype\'] = (\'Monday\' === d.format(\'{Weekday}\'));',
+                                            'tests[\'string prototype\'] = \'asdasd\'.has(\'as\');',
+                                            'tests[\'Object\'] = typeof Object.each === \'function\'',
+                                            'tests[\'Date.create\'] = typeof Date.create === \'function\';',
+                                            // eslint-disable-next-line max-len
+                                            'tests[\'Other Date functions\'] = !!(1).daysAfter(new Date()).format(\'{yyyy}{MM}{dd}\');'
                                         ]
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/redirect-to?url=https://postman-echo.com/get",
-                                "method": "GET"
+                            'request': {
+                                'url': 'https://postman-echo.com/redirect-to?url=https://postman-echo.com/get',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -660,7 +666,7 @@ describe('UVM', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -676,7 +682,7 @@ describe('UVM', function () {
             runner.run(collection, {
                 iterationCount: 1
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -799,7 +805,7 @@ describe('UVM', function () {
                             expect(scriptResult.result.target).to.eql('test');
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -809,7 +815,7 @@ describe('UVM', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -839,36 +845,37 @@ describe('UVM', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "SugarJS and native prototypes work",
-                        "_postman_id": "8f31aeff-c5b5-5c42-9540-fae109785538",
-                        "description": "A set of requests to test Array, String, Date, and Function prototypes",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'SugarJS and native prototypes work',
+                        '_postman_id': '8f31aeff-c5b5-5c42-9540-fae109785538',
+                        'description': 'A set of requests to test Array, String, Date, and Function prototypes',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "name": "objectPrototype",
-                            "event": [
+                            'name': 'objectPrototype',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "// Extended Array prototype tests\ntests[\"Array prototype none\"] = ['a', 'b', 'c'].none('d');\ntests[\"Array prototype any\"] = [ [1,2], [2,3] ].any([2,3]);\ntests[\"Array prototype average\"] = [ 1, 2, 3, 4, 5 ].average() === 3;\n\n// Extended Date prototype tests\nconsole.log(Object.keys(new Date()));\ntests[\"Date prototype getTime\"] = Date.now()==(new Date()).getTime();\ntests[\"Date prototype isFuture\"] = Date.create('next week').isFuture();\ntests[\"Date prototype isLeapYear\"] = Date.create('2000').isLeapYear();\ntests[\"Date prototype isPast\"] = Date.create('last week').isPast();\ntests[\"Date prototype isValid\"] = new Date().isValid();\ntests[\"Date prototype negated isValid\"] = !(new Date('random string').isValid());\n\n// Extended Function prototype tests\nvar fCount = 0;\nvar fn = (function() {\n  fCount++;\n}).once(); fn(); fn(); fn();\ntests[\"Function prototype once\"] = fCount===1;\n\n// Extended Number prototype tests\ntests[\"Number prototype hex\"] = (56).hex() === '38';\ntests[\"Number prototype isEven\"] = (56).isEven() === true;\ntests[\"Number prototype ordinalize\"] = (56).ordinalize() === '56th';\ntests[\"Number prototype format\"] = (56789.10).format() === '56,789.1';\n\n// Extended String prototype tests\ntests[\"String prototype endsWith\"] = 'jumpy'.endsWith('py');\ntests[\"String prototype negated endsWith\"] = !('jumpy'.endsWith('MPY'));\ntests[\"String prototype camelize\"] = 'a-beta'.camelize() === 'ABeta';\ntests[\"String prototype repeat\"] = 'a'.repeat(5) === 'aaaaa';\ntests[\"String prototype shift\"] = 'abc'.shift(5) === 'fgh';\ntests[\"String prototype spacify\"] = 'a-b_cD'.spacify() === 'a b c d';"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        // eslint-disable-next-line max-len
+                                        'exec': '// Extended Array prototype tests\ntests["Array prototype none"] = [\'a\', \'b\', \'c\'].none(\'d\');\ntests["Array prototype any"] = [ [1,2], [2,3] ].any([2,3]);\ntests["Array prototype average"] = [ 1, 2, 3, 4, 5 ].average() === 3;\n\n// Extended Date prototype tests\nconsole.log(Object.keys(new Date()));\ntests["Date prototype getTime"] = Date.now()==(new Date()).getTime();\ntests["Date prototype isFuture"] = Date.create(\'next week\').isFuture();\ntests["Date prototype isLeapYear"] = Date.create(\'2000\').isLeapYear();\ntests["Date prototype isPast"] = Date.create(\'last week\').isPast();\ntests["Date prototype isValid"] = new Date().isValid();\ntests["Date prototype negated isValid"] = !(new Date(\'random string\').isValid());\n\n// Extended Function prototype tests\nvar fCount = 0;\nvar fn = (function() {\n  fCount++;\n}).once(); fn(); fn(); fn();\ntests["Function prototype once"] = fCount===1;\n\n// Extended Number prototype tests\ntests["Number prototype hex"] = (56).hex() === \'38\';\ntests["Number prototype isEven"] = (56).isEven() === true;\ntests["Number prototype ordinalize"] = (56).ordinalize() === \'56th\';\ntests["Number prototype format"] = (56789.10).format() === \'56,789.1\';\n\n// Extended String prototype tests\ntests["String prototype endsWith"] = \'jumpy\'.endsWith(\'py\');\ntests["String prototype negated endsWith"] = !(\'jumpy\'.endsWith(\'MPY\'));\ntests["String prototype camelize"] = \'a-beta\'.camelize() === \'ABeta\';\ntests["String prototype repeat"] = \'a\'.repeat(5) === \'aaaaa\';\ntests["String prototype shift"] = \'abc\'.shift(5) === \'fgh\';\ntests["String prototype spacify"] = \'a-b_cD\'.spacify() === \'a b c d\';'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "postman-echo.com/get",
-                                "method": "GET",
-                                "header": [],
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'request': {
+                                'url': 'postman-echo.com/get',
+                                'method': 'GET',
+                                'header': [],
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 },
-                                "description": ""
+                                'description': ''
                             },
-                            "response": []
+                            'response': []
                         }
                     ]
                 },
@@ -878,7 +885,7 @@ describe('UVM', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -894,7 +901,7 @@ describe('UVM', function () {
             runner.run(collection, {
                 iterationCount: 1
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -1022,7 +1029,7 @@ describe('UVM', function () {
                             expect(scriptResult.result.target).to.eql('test');
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -1032,7 +1039,7 @@ describe('UVM', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
