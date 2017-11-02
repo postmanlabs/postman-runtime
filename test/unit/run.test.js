@@ -12,7 +12,7 @@ describe('run', function () {
         expect(new Run()).to.be.a(Run);
     });
 
-    describe('seeking', function () {
+    describe.skip('seeking', function () {
         describe('with no item', function () {
             it('must not seek when no item present', function (done) {
                 var run = new Run();

@@ -90,7 +90,7 @@ describe('backpack.multiback', function () {
         sinon.assert.calledWith(callback, 'err');
     });
 
-    it('should not suppress repeated callback for success flag', function () {
+    it.skip('should not suppress repeated callback for success flag', function () {
         var callback = sinon.spy(function () { return 1; }),
             flagback;
 
