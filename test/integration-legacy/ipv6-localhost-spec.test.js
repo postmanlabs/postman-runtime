@@ -1,5 +1,4 @@
-var _ = require('lodash'),
-    expect = require('expect.js'),
+var expect = require('expect.js'),
     runtime = require('../../index'),
     sdk = require('postman-collection');
 
@@ -133,7 +132,7 @@ describe('Localhost requests', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -145,7 +144,7 @@ describe('Localhost requests', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -158,7 +157,7 @@ describe('Localhost requests', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -168,7 +167,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -178,7 +177,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -188,7 +187,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -342,7 +341,7 @@ describe('Localhost requests', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -354,7 +353,7 @@ describe('Localhost requests', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -367,7 +366,7 @@ describe('Localhost requests', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -377,7 +376,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -387,7 +386,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -397,7 +396,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
