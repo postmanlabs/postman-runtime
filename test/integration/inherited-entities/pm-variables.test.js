@@ -115,24 +115,18 @@ describe('pm.variables', function () {
                             listen: 'prerequest',
                             script: {
                                 exec: `
-                                // only run for 1st item
-                                if (pm.variables.get('key-1') !== 'modified-1') {
-                                    pm.variables.set('key-1', 'modified-1');
-                                    pm.variables.set('key-2', 'modified-1');
-                                    console.log('collection pre', pm.variables.toObject())
-                                }
+                                pm.variables.set('key-1', 'modified-1');
+                                pm.variables.set('key-2', 'modified-1');
+                                console.log('collection pre', pm.variables.toObject())
                             `}
                         },
                         {
                             listen: 'test',
                             script: {
                                 exec: `
-                                // only run for 1st item
-                                if (pm.variables.get('key-3') !== 'modified-3') {
-                                    pm.variables.set('key-3', 'modified-3');
-                                    pm.variables.set('key-4', 'modified-3');
-                                    console.log('collection test', pm.variables.toObject())
-                                }
+                                pm.variables.set('key-3', 'modified-3');
+                                pm.variables.set('key-4', 'modified-3');
+                                console.log('collection test', pm.variables.toObject())
                             `}
                         }
                     ],
@@ -181,6 +175,11 @@ describe('pm.variables', function () {
                                 script: {
                                     exec: `
                                     console.log('item 2 test', pm.variables.toObject())
+                                    pm.variables.unset('key-1')
+                                    pm.variables.unset('key-2')
+                                    pm.variables.unset('key-3')
+                                    pm.variables.unset('key-4')
+                                    console.log('item 2 test after unsetting', pm.variables.toObject())
                                 `}
                             }
                         ],
@@ -208,8 +207,8 @@ describe('pm.variables', function () {
                 itemPreConsole = testRun.console.getCall(1).args.slice(2),
                 collTestConsole = testRun.console.getCall(2).args.slice(2),
                 itemTestConsole = testRun.console.getCall(3).args.slice(2),
-                item2PreConsole = testRun.console.getCall(4).args.slice(2),
-                item2TestConsole = testRun.console.getCall(5).args.slice(2);
+                item2PreConsole = testRun.console.getCall(5).args.slice(2),
+                item2TestConsole = testRun.console.getCall(7).args.slice(2);
 
             expect(collPreConsole[0]).to.be('collection pre');
             expect(collPreConsole[1]).to.eql({
@@ -246,7 +245,7 @@ describe('pm.variables', function () {
             expect(item2PreConsole[0]).to.be('item 2 pre');
             expect(item2PreConsole[1]).to.eql({
                 'key-1': 'modified-1',
-                'key-2': 'modified-2',
+                'key-2': 'modified-1',
                 'key-3': 'modified-3',
                 'key-4': 'modified-4'
             });
@@ -254,9 +253,9 @@ describe('pm.variables', function () {
             expect(item2TestConsole[0]).to.be('item 2 test');
             expect(item2TestConsole[1]).to.eql({
                 'key-1': 'modified-1',
-                'key-2': 'modified-2',
+                'key-2': 'modified-1',
                 'key-3': 'modified-3',
-                'key-4': 'modified-4'
+                'key-4': 'modified-3'
             });
         });
 
@@ -288,7 +287,7 @@ describe('pm.variables', function () {
             var url1 = testRun.request.getCall(0).args[3].url.toString(),
                 url2 = testRun.request.getCall(1).args[3].url.toString(),
                 expectedToken1 = 'modified-1:modified-2:modified-2:data-value-4',
-                expectedToken2 = 'modified-1:modified-2:modified-3:modified-4';
+                expectedToken2 = 'modified-1:modified-1:modified-3:modified-4';
 
             expect(url1).to.be('https://postman-echo.com/get?param=' + expectedToken1);
             expect(url2).to.be('https://postman-echo.com/get?param=' + expectedToken2);
@@ -298,10 +297,22 @@ describe('pm.variables', function () {
             var response1 = testRun.response.getCall(0).args[2],
                 response2 = testRun.response.getCall(1).args[2],
                 expectedToken1 = 'modified-1:modified-2:modified-2:data-value-4',
-                expectedToken2 = 'modified-1:modified-2:modified-3:modified-4';
+                expectedToken2 = 'modified-1:modified-1:modified-3:modified-4';
 
             expect(response1.json().headers).to.have.property('authorization', 'Bearer ' + expectedToken1);
             expect(response2.json().headers).to.have.property('authorization', 'Bearer ' + expectedToken2);
+        });
+
+        it('must be able to unset variables', function () {
+            var item2TestConsoleAfter = testRun.console.getCall(8).args.slice(2);
+
+            expect(item2TestConsoleAfter[0]).to.be('item 2 test after unsetting');
+            expect(item2TestConsoleAfter[1]).to.eql({
+                'key-1': 'global-value-1',
+                'key-2': 'coll-value-2',
+                'key-3': 'env-value-3',
+                'key-4': 'data-value-4'
+            });
         });
     });
 });
