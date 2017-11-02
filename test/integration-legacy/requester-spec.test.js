@@ -12,29 +12,29 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "event": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests['worked'] = responseCode.code === 302;"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests[\'worked\'] = responseCode.code === 302;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/redirect-to?url=https://postman-echo.com/get",
-                                "method": "GET"
+                            'request': {
+                                'url': 'https://postman-echo.com/redirect-to?url=https://postman-echo.com/get',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -45,7 +45,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -64,7 +64,7 @@ describe('Requester', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -218,29 +218,29 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "event": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests['worked'] = responseCode.code === 302;"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests[\'worked\'] = responseCode.code === 302;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/redirect-to?url=https://postman-echo.com/get",
-                                "method": "GET"
+                            'request': {
+                                'url': 'https://postman-echo.com/redirect-to?url=https://postman-echo.com/get',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -251,7 +251,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -271,7 +271,7 @@ describe('Requester', function () {
                 //     followRedirects: true
                 // }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -427,22 +427,22 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": ""
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'raw',
+                                    'raw': ''
                                 }
                             }
                         }
@@ -454,7 +454,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -473,7 +473,7 @@ describe('Requester', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -625,22 +625,22 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "urlencoded",
-                                    "urlencoded": []
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'urlencoded',
+                                    'urlencoded': []
                                 }
                             }
                         }
@@ -652,7 +652,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -671,7 +671,7 @@ describe('Requester', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -822,22 +822,22 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": []
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': []
                                 }
                             }
                         }
@@ -849,7 +849,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -868,7 +868,7 @@ describe('Requester', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -1021,28 +1021,28 @@ describe('Requester', function () {
         var errored = false,
             runner = new runtime.Runner(),
             rawCollection = {
-                "variables": [],
-                "info": {
-                    "name": "TestCollection",
-                    "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                    "description": "",
-                    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                'variables': [],
+                'info': {
+                    'name': 'TestCollection',
+                    '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                    'description': '',
+                    'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                 },
-                "item": [
+                'item': [
                     {
-                        "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                        "name": "First Request",
-                        "request": {
-                            "url": "http://postman-echo.com/headers",
-                            "method": "GET",
-                            "header": [
+                        'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                        'name': 'First Request',
+                        'request': {
+                            'url': 'http://postman-echo.com/headers',
+                            'method': 'GET',
+                            'header': [
                                 {
-                                    "key": "xx",
-                                    "value": "yy"
+                                    'key': 'xx',
+                                    'value': 'yy'
                                 },
                                 {
-                                    "key": "xx",
-                                    "value": "zz"
+                                    'key': 'xx',
+                                    'value': 'zz'
                                 }
                             ]
                         }
@@ -1055,7 +1055,7 @@ describe('Requester', function () {
                 iterationsComplete: [],
                 itemsStarted: {},
                 itemsComplete: {}
-            },  // populate during the run, and then perform tests on it, at the end.
+            }, // populate during the run, and then perform tests on it, at the end.
 
             /**
              * Since each callback runs in a separate callstack, this helper function
@@ -1074,7 +1074,7 @@ describe('Requester', function () {
                 followRedirects: false
             }
         }, function (err, run) {
-            var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+            var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
             expect(err).to.be(null);
             run.start({
@@ -1221,30 +1221,30 @@ describe('Requester', function () {
         var errored = false,
             runner = new runtime.Runner(),
             rawCollection = {
-                "variables": [],
-                "info": {
-                    "name": "TestCollection",
-                    "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                    "description": "",
-                    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                'variables': [],
+                'info': {
+                    'name': 'TestCollection',
+                    '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                    'description': '',
+                    'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                 },
-                "item": [
+                'item': [
                     {
-                        "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                        "name": "First Request",
-                        "request": {
-                            "url": "https://postman-echo.com/post",
-                            "method": "POST",
-                            "body": {
-                                "mode": "formdata",
-                                "formdata": [
+                        'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                        'name': 'First Request',
+                        'request': {
+                            'url': 'https://postman-echo.com/post',
+                            'method': 'POST',
+                            'body': {
+                                'mode': 'formdata',
+                                'formdata': [
                                     {
-                                        "key": "xx",
-                                        "value": "yy"
+                                        'key': 'xx',
+                                        'value': 'yy'
                                     },
                                     {
-                                        "key": "xx",
-                                        "value": "zz"
+                                        'key': 'xx',
+                                        'value': 'zz'
                                     }
                                 ]
                             }
@@ -1258,7 +1258,7 @@ describe('Requester', function () {
                 iterationsComplete: [],
                 itemsStarted: {},
                 itemsComplete: {}
-            },  // populate during the run, and then perform tests on it, at the end.
+            }, // populate during the run, and then perform tests on it, at the end.
 
             /**
              * Since each callback runs in a separate callstack, this helper function
@@ -1277,7 +1277,7 @@ describe('Requester', function () {
                 followRedirects: false
             }
         }, function (err, run) {
-            var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+            var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
             expect(err).to.be(null);
             run.start({
@@ -1426,30 +1426,30 @@ describe('Requester', function () {
                 runner = new runtime.Runner(),
                 fakeFileResolver = {
                     createReadStream: function () {
-                        return "fake-file-content"
+                        return 'fake-file-content';
                     }
                 },
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': [
                                         {
-                                            "key": "myfile",
-                                            "type": "file",
-                                            "src": "/some/path"
+                                            'key': 'myfile',
+                                            'type': 'file',
+                                            'src': '/some/path'
                                         }
                                     ]
                                 }
@@ -1463,7 +1463,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -1479,11 +1479,11 @@ describe('Requester', function () {
             runner.run(collection, {
                 iterationCount: 1,
                 requester: {
-                    followRedirects: false,
+                    followRedirects: false
                 },
                 fileResolver: fakeFileResolver
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -1618,7 +1618,7 @@ describe('Requester', function () {
                             expect(body.args).to.be.empty();
                             expect(body.data).to.be.empty();
                             expect(body.files).to.be.empty();
-                            expect(body.form).to.be.eql({ myfile: 'fake-file-content' });
+                            expect(body.form).to.be.eql({myfile: 'fake-file-content'});
                         });
                     },
                     done: function (err) {
@@ -1635,26 +1635,26 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': [
                                         {
-                                            "key": "myfile",
-                                            "type": "file",
-                                            "src": "/some/path"
+                                            'key': 'myfile',
+                                            'type': 'file',
+                                            'src': '/some/path'
                                         }
                                     ]
                                 }
@@ -1668,7 +1668,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -1687,7 +1687,7 @@ describe('Requester', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -1850,31 +1850,31 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': [
                                         {
-                                            "key": "files",
-                                            "type": "file",
-                                            "src": require('path').join(__dirname, 'data', 'one.txt')
+                                            'key': 'files',
+                                            'type': 'file',
+                                            'src': require('path').join(__dirname, 'data', 'one.txt')
                                         },
                                         {
-                                            "key": "files",
-                                            "type": "file",
-                                            "src": require('path').join(__dirname, 'data', 'two.txt')
+                                            'key': 'files',
+                                            'type': 'file',
+                                            'src': require('path').join(__dirname, 'data', 'two.txt')
                                         }
                                     ]
                                 }
@@ -1888,7 +1888,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -1904,11 +1904,11 @@ describe('Requester', function () {
             runner.run(collection, {
                 iterationCount: 1,
                 requester: {
-                    followRedirects: false,
+                    followRedirects: false
                 },
                 fileResolver: require('fs')
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -2066,30 +2066,30 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': [
                                         {
-                                            "key": "files",
-                                            "type": "file",
-                                            "src": require('path').join(__dirname, 'data', 'one.txt')
+                                            'key': 'files',
+                                            'type': 'file',
+                                            'src': require('path').join(__dirname, 'data', 'one.txt')
                                         },
                                         {
-                                            "key": "myParam",
-                                            "value": "myValue"
+                                            'key': 'myParam',
+                                            'value': 'myValue'
                                         }
                                     ]
                                 }
@@ -2103,7 +2103,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -2119,11 +2119,11 @@ describe('Requester', function () {
             runner.run(collection, {
                 iterationCount: 1,
                 requester: {
-                    followRedirects: false,
+                    followRedirects: false
                 },
                 fileResolver: require('fs')
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -2281,26 +2281,26 @@ describe('Requester', function () {
                 runner = new runtime.Runner(),
                 path = require('path'),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "https://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "formdata",
-                                    "formdata": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'https://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'formdata',
+                                    'formdata': [
                                         {
-                                            "key": "file",
-                                            "type": "file",
-                                            "src": path.join(__dirname, 'data', 'binary-file.png')
+                                            'key': 'file',
+                                            'type': 'file',
+                                            'src': path.join(__dirname, 'data', 'binary-file.png')
                                         }
                                     ]
                                 }
@@ -2314,7 +2314,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -2334,7 +2334,7 @@ describe('Requester', function () {
                 },
                 fileResolver: require('fs')
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -2490,22 +2490,22 @@ describe('Requester', function () {
                 runner = new runtime.Runner(),
                 path = require('path'),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "https://postman-echo.com/post",
-                                "method": "POST",
-                                "body": {
-                                    "mode": "file",
-                                    "file": {}
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'https://postman-echo.com/post',
+                                'method': 'POST',
+                                'body': {
+                                    'mode': 'file',
+                                    'file': {}
                                 }
                             }
                         }
@@ -2517,7 +2517,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -2537,7 +2537,7 @@ describe('Requester', function () {
                 },
                 fileResolver: require('fs')
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -2697,34 +2697,34 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "EmptyRawBody",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'EmptyRawBody',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": {
-                                    "host": [
-                                        "postman-echo",
-                                        "com"
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': {
+                                    'host': [
+                                        'postman-echo',
+                                        'com'
                                     ],
-                                    "path": [
-                                        "status",
-                                        ":code"
+                                    'path': [
+                                        'status',
+                                        ':code'
                                     ],
-                                    "variable": [
+                                    'variable': [
                                         {
-                                            "id": "code",
-                                            "value": "201"
+                                            'id': 'code',
+                                            'value': '201'
                                         }
                                     ]
                                 },
-                                "method": "GET"
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -2735,7 +2735,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -2754,7 +2754,7 @@ describe('Requester', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -2914,10 +2914,11 @@ describe('Requester', function () {
 
             server.on('request', function (req, res) {
                 if (req.client.authorized) {
-                    res.writeHead(200, { 'Content-Type': 'text/plain' });
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
                     res.end('authorized\n');
-                } else {
-                    res.writeHead(401, { 'Content-Type': 'text/plain' });
+                }
+                else {
+                    res.writeHead(401, {'Content-Type': 'text/plain'});
                     res.end('unauthorized\n');
                 }
             });
@@ -2934,29 +2935,29 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "event": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests['worked'] = responseCode.code === 302;"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests[\'worked\'] = responseCode.code === 302;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://localhost:" + port + '/',
-                                "method": "GET"
+                            'request': {
+                                'url': 'https://localhost:' + port + '/',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -2967,7 +2968,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -2987,7 +2988,7 @@ describe('Requester', function () {
                     strictSSL: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -3135,32 +3136,32 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "event": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": [
-                                            "tests['Cookie A'] = postman.getResponseCookie('a') && postman.getResponseCookie('a').value === 'one';",
-                                            "tests['Cookie b'] = postman.getResponseCookie('b') && postman.getResponseCookie('b').value === 'two';",
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': [
+                                            'tests[\'Cookie A\'] = postman.getResponseCookie(\'a\') && postman.getResponseCookie(\'a\').value === \'one\';',
+                                            'tests[\'Cookie b\'] = postman.getResponseCookie(\'b\') && postman.getResponseCookie(\'b\').value === \'two\';'
                                         ]
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/cookies/set?A=one&b=two",
-                                "method": "GET"
+                            'request': {
+                                'url': 'https://postman-echo.com/cookies/set?A=one&b=two',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -3172,7 +3173,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -3191,7 +3192,7 @@ describe('Requester', function () {
                     cookieJar: cookieJar
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -3351,29 +3352,29 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "event": [
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests['worked'] = responseCode.code === 302;"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests[\'worked\'] = responseCode.code === 302;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/cookies",
-                                "method": "GET"
+                            'request': {
+                                'url': 'https://postman-echo.com/cookies',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -3384,7 +3385,7 @@ describe('Requester', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -3407,7 +3408,7 @@ describe('Requester', function () {
                     cookieJar: cookieJar
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -3606,20 +3607,20 @@ describe('Requester', function () {
                 var errored = false,
                     runner = new runtime.Runner(),
                     rawCollection = {
-                        "variables": [],
-                        "info": {
-                            "name": "Raw deflate",
-                            "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                            "description": "",
-                            "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                        'variables': [],
+                        'info': {
+                            'name': 'Raw deflate',
+                            '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                            'description': '',
+                            'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                         },
-                        "item": [
+                        'item': [
                             {
-                                "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                                "name": "First Request",
-                                "request": {
-                                    "url": "https://localhost:" + port + '/',
-                                    "method": "GET"
+                                'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                                'name': 'First Request',
+                                'request': {
+                                    'url': 'https://localhost:' + port + '/',
+                                    'method': 'GET'
                                 }
                             }
                         ]
@@ -3630,7 +3631,7 @@ describe('Requester', function () {
                         iterationsComplete: [],
                         itemsStarted: {},
                         itemsComplete: {}
-                    },  // populate during the run, and then perform tests on it, at the end.
+                    }, // populate during the run, and then perform tests on it, at the end.
 
                     /**
                      * Since each callback runs in a separate callstack, this helper function
@@ -3650,7 +3651,7 @@ describe('Requester', function () {
                         strictSSL: false
                     }
                 }, function (err, run) {
-                    var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                    var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                     expect(err).to.be(null);
                     run.start({
@@ -3830,20 +3831,20 @@ describe('Requester', function () {
                 var errored = false,
                     runner = new runtime.Runner(),
                     rawCollection = {
-                        "variables": [],
-                        "info": {
-                            "name": "Deflate",
-                            "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                            "description": "",
-                            "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                        'variables': [],
+                        'info': {
+                            'name': 'Deflate',
+                            '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                            'description': '',
+                            'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                         },
-                        "item": [
+                        'item': [
                             {
-                                "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                                "name": "First Request",
-                                "request": {
-                                    "url": "https://localhost:" + port + '/',
-                                    "method": "GET"
+                                'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                                'name': 'First Request',
+                                'request': {
+                                    'url': 'https://localhost:' + port + '/',
+                                    'method': 'GET'
                                 }
                             }
                         ]
@@ -3854,7 +3855,7 @@ describe('Requester', function () {
                         iterationsComplete: [],
                         itemsStarted: {},
                         itemsComplete: {}
-                    },  // populate during the run, and then perform tests on it, at the end.
+                    }, // populate during the run, and then perform tests on it, at the end.
 
                     /**
                      * Since each callback runs in a separate callstack, this helper function
@@ -3874,7 +3875,7 @@ describe('Requester', function () {
                         strictSSL: false
                     }
                 }, function (err, run) {
-                    var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                    var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                     expect(err).to.be(null);
                     run.start({
@@ -4054,29 +4055,29 @@ describe('Requester', function () {
                 var errored = false,
                     runner = new runtime.Runner(),
                     rawCollection = {
-                        "variables": [],
-                        "info": {
-                            "name": "NewmanSetNextRequest",
-                            "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                            "description": "",
-                            "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                        'variables': [],
+                        'info': {
+                            'name': 'NewmanSetNextRequest',
+                            '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                            'description': '',
+                            'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                         },
-                        "item": [
+                        'item': [
                             {
-                                "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                                "name": "First Request",
-                                "event": [
+                                'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                                'name': 'First Request',
+                                'event': [
                                     {
-                                        "listen": "test",
-                                        "script": {
-                                            "type": "text/javascript",
-                                            "exec": "tests['worked'] = responseCode.code === 302;"
+                                        'listen': 'test',
+                                        'script': {
+                                            'type': 'text/javascript',
+                                            'exec': 'tests[\'worked\'] = responseCode.code === 302;'
                                         }
                                     }
                                 ],
-                                "request": {
-                                    "url": "https://localhost:" + port + '/',
-                                    "method": "GET"
+                                'request': {
+                                    'url': 'https://localhost:' + port + '/',
+                                    'method': 'GET'
                                 }
                             }
                         ]
@@ -4087,7 +4088,7 @@ describe('Requester', function () {
                         iterationsComplete: [],
                         itemsStarted: {},
                         itemsComplete: {}
-                    },  // populate during the run, and then perform tests on it, at the end.
+                    }, // populate during the run, and then perform tests on it, at the end.
 
                     /**
                      * Since each callback runs in a separate callstack, this helper function
@@ -4107,7 +4108,7 @@ describe('Requester', function () {
                         strictSSL: false
                     }
                 }, function (err, run) {
-                    var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                    var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                     expect(err).to.be(null);
                     run.start({
