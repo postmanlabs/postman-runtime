@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### v6.4.2 (November 2, 2017)
+* :arrow_up: Updated dependencies.
+* #435 Added option to blacklist certain IP addresses from being hit :lock:
+* #436 Improved HTTP request error handling :muscle:
+
 #### v6.4.1 (October 13, 2017)
 * :arrow_up: Updated dependencies.
 * :bug: Made Bearer token case insensitive #417
