@@ -1,11 +1,11 @@
-var _ = require('lodash'),
-    expect = require('expect.js'),
+var expect = require('expect.js'),
     runtime = require('../../index'),
     sdk = require('postman-collection');
 
 /* global describe, it, beforeEach, afterEach */
 describe('Localhost requests', function () {
-    describe('IPv6 server', function () {
+    // IPv6 is disabled on Travis
+    (process.env.TRAVIS ? describe.skip : describe)('IPv6 server', function () {
         var server,
             port;
 
@@ -15,7 +15,7 @@ describe('Localhost requests', function () {
             server = http.createServer();
 
             server.on('request', function (req, res) {
-                res.writeHead(200, { 'Content-Type': 'text/plain' });
+                res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.end('Hello World\n');
             });
 
@@ -31,20 +31,20 @@ describe('Localhost requests', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://localhost:" + port + '/',
-                                "method": "GET"
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://localhost:' + port + '/',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -55,7 +55,7 @@ describe('Localhost requests', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -74,7 +74,7 @@ describe('Localhost requests', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -132,7 +132,7 @@ describe('Localhost requests', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -144,7 +144,7 @@ describe('Localhost requests', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -157,7 +157,7 @@ describe('Localhost requests', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -167,7 +167,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -177,7 +177,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -187,7 +187,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -224,7 +224,7 @@ describe('Localhost requests', function () {
             server = http.createServer();
 
             server.on('request', function (req, res) {
-                res.writeHead(200, { 'Content-Type': 'text/plain' });
+                res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.end('Hello World\n');
             });
 
@@ -240,20 +240,20 @@ describe('Localhost requests', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "NewmanSetNextRequest",
-                        "_postman_id": "d6f7bb29-2258-4e1b-9576-b2315cf5b77e",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'NewmanSetNextRequest',
+                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "id": "bf0a6006-c987-253a-525d-9f6be7071210",
-                            "name": "First Request",
-                            "request": {
-                                "url": "http://localhost:" + port + '/',
-                                "method": "GET"
+                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            'name': 'First Request',
+                            'request': {
+                                'url': 'http://localhost:' + port + '/',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -264,7 +264,7 @@ describe('Localhost requests', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -283,7 +283,7 @@ describe('Localhost requests', function () {
                     followRedirects: false
                 }
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -341,7 +341,7 @@ describe('Localhost requests', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -353,7 +353,7 @@ describe('Localhost requests', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor, results) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -366,7 +366,7 @@ describe('Localhost requests', function () {
                             expect(results.length).to.be(0);
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -376,7 +376,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -386,7 +386,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -396,7 +396,7 @@ describe('Localhost requests', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be(null);
 
