@@ -365,7 +365,7 @@ describe('UVM', function () {
                                     }
                                 },
                                 'url': 'https://postman-echo.com/digest-auth',
-                                'method': 'POST',
+                                'method': 'GET',
                                 'header': [],
                                 'body': {
                                     'mode': 'formdata',
