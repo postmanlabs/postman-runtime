@@ -8,9 +8,13 @@ describe('synchronous script timeouts', function () {
                     item: [{
                         event: [{
                             listen: 'prerequest',
-                            script: [
-                                'for(var i = 0; i++ < 1e7;);' // ~0.3s in node 6 and ~0.15s in node 8
-                            ]
+                            script: {
+                                exec: [
+                                    'var now = Date.now(),',
+                                    '    later = now + 300;',
+                                    'while(Date.now()<later);'
+                                ]
+                            }
                         }],
                         request: {
                             url: 'https://postman-echo.com/get',
@@ -50,7 +54,13 @@ describe('synchronous script timeouts', function () {
                     item: [{
                         event: [{
                             listen: 'prerequest',
-                            script: 'for(var i = 0; i++ < 1e9;);'
+                            script: {
+                                exec: [
+                                    'var now = Date.now(),',
+                                    '    later = now + 500;',
+                                    'while(Date.now()<later);'
+                                ]
+                            }
                         }],
                         request: {
                             url: 'https://postman-echo.com/get',
@@ -59,7 +69,7 @@ describe('synchronous script timeouts', function () {
                     }]
                 },
                 timeout: {
-                    script: 100
+                    script: 300
                 }
             }, function (err, results) {
                 testrun = results;
