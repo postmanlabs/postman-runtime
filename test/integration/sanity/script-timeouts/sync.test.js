@@ -50,7 +50,7 @@ describe('synchronous script timeouts', function () {
                     item: [{
                         event: [{
                             listen: 'prerequest',
-                            script: 'for(var i = 0; i++ < 2e9;);'
+                            script: 'for(var i = 0; i++ < 1e9;);'
                         }],
                         request: {
                             url: 'https://postman-echo.com/get',
@@ -59,7 +59,7 @@ describe('synchronous script timeouts', function () {
                     }]
                 },
                 timeout: {
-                    script: 500
+                    script: 300
                 }
             }, function (err, results) {
                 testrun = results;
