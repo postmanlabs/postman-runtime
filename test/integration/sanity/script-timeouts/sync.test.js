@@ -8,7 +8,9 @@ describe('synchronous script timeouts', function () {
                     item: [{
                         event: [{
                             listen: 'prerequest',
-                            script: 'for(var i = 0; i++ < 1e8;);' // ~0.3s
+                            script: [
+                                'for(var i = 0; i++ < 1e7;);' // ~0.3s in node 6 and ~0.15s in node 8
+                            ]
                         }],
                         request: {
                             url: 'https://postman-echo.com/get',
@@ -41,15 +43,14 @@ describe('synchronous script timeouts', function () {
         });
     });
 
-    // @todo: Unskip when underlying behaviour has been fixed.
-    (process.env.APPVEYOR ? describe.skip : describe)('breached', function () {
+    describe('breached', function () {
         before(function (done) {
             this.run({
                 collection: {
                     item: [{
                         event: [{
                             listen: 'prerequest',
-                            script: 'for(var i = 0; i++ < 1e9;);'
+                            script: 'for(var i = 0; i++ < 2e9;);'
                         }],
                         request: {
                             url: 'https://postman-echo.com/get',
