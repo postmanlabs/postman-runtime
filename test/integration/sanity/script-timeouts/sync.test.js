@@ -59,7 +59,7 @@ describe('synchronous script timeouts', function () {
                     }]
                 },
                 timeout: {
-                    script: 300
+                    script: 100
                 }
             }, function (err, results) {
                 testrun = results;
