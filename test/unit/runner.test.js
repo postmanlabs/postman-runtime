@@ -174,6 +174,74 @@ describe('runner', function () {
                         done();
                     });
                 });
+
+                it('should have proper defaults', function (done) {
+                    var runner = new Runner();
+
+                    runner.run(collection, {}, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(180000); // 3 minutes
+                        expect(run.options.timeout.script).to.be(Infinity);
+                        expect(run.options.timeout.request).to.be(Infinity);
+                        done();
+                    });
+                });
+
+                it('should consider null/undefined as infinity', function (done) {
+                    var runner = new Runner();
+
+                    runner.run(collection, {
+                        timeout: {
+                            global: null,
+                            script: null,
+                            request: undefined
+                        }
+                    }, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(Infinity);
+                        expect(run.options.timeout.script).to.be(Infinity);
+                        expect(run.options.timeout.request).to.be(Infinity);
+                        done();
+                    });
+                });
+
+                it('should normalize to infinity for 0', function (done) {
+                    var runner = new Runner({
+                        run: {
+                            timeout: {global: 0}
+                        }
+                    });
+
+                    runner.run(collection, {}, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(Infinity);
+                        done();
+                    });
+                });
+
+                it('should preserve finite values', function (done) {
+                    var runner = new Runner({
+                        run: {
+                            timeout: {global: 100, script: 120, request: 180000}
+                        }
+                    });
+
+                    runner.run(collection, {}, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(100);
+                        expect(run.options.timeout.script).to.be(120);
+                        expect(run.options.timeout.request).to.be(180000);
+                        done();
+                    });
+                });
             });
         });
     });
