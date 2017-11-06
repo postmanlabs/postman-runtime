@@ -1,5 +1,4 @@
-var _ = require('lodash'),
-    expect = require('expect.js'),
+var expect = require('expect.js'),
     request = require('postman-request'),
     runtime = require('../../index'),
     sdk = require('postman-collection');
@@ -562,13 +561,13 @@ describe('UVM', function () {
                             var result = results[0],
                                 scriptResult = results[0];
                             expect(result.error).to.be(undefined);
-
                             expect(scriptResult.result.target).to.eql('test');
-                            expect(scriptResult.result.tests).to.be.ok();
 
-                            _.forOwn(scriptResult.result.tests, function (result) {
-                                expect(result).to.be.ok();
-                            });
+                            // `tests` object is no longer bubbled-up in the results.
+                            // expect(scriptResult.result.tests).to.be.ok();
+                            // _.forOwn(scriptResult.result.tests, function (result) {
+                            //     expect(result).to.be.ok();
+                            // });
                         });
                     },
                     beforeRequest: function (err, cursor) {
@@ -797,11 +796,6 @@ describe('UVM', function () {
 
                             var scriptResult = results[0];
                             expect(scriptResult.error).to.be(undefined);
-
-                            _.forOwn(scriptResult.result.globals.tests, function (result) {
-                                expect(result).to.be.ok();
-                            });
-
                             expect(scriptResult.result.target).to.eql('test');
                         });
                     },
@@ -1022,9 +1016,10 @@ describe('UVM', function () {
                             var scriptResult = results[0];
                             expect(scriptResult.error).to.be(undefined);
 
-                            _.forOwn(scriptResult.result.globals.tests, function (result) {
-                                expect(result).to.be.ok();
-                            });
+                            // `tests` object is no longer bubbled-up in the results.
+                            // _.forOwn(scriptResult.result.globals.tests, function (result) {
+                            //     expect(result).to.be.ok();
+                            // });
 
                             expect(scriptResult.result.target).to.eql('test');
                         });

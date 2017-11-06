@@ -9,14 +9,14 @@ describe('assertions', function () {
                     request: 'https://postman-echo.com/get?testvar={{testVar}}',
                     event: [{
                         listen: 'test',
-                        script: [
-                            '"use sandbox2";',
-                            'pm.test("response body must be json", function () {',
-                            '    pm.expect(pm.response.json()).be.an("object");',
-                            '    });',
-                            '    pm.test("this test will force fail", function () {',
-                            '        throw new Error("I am an error!");',
-                            '    });']
+                        script: [`"use sandbox2";
+                            pm.test('response body must be json', function () {
+                                pm.expect(pm.response.json()).to.be.an('object');
+                            });
+                            pm.test('this test will force fail', function () {
+                                throw new Error('I am an error!');
+                            });
+                        `]
                     }]
                 }
             },
@@ -54,8 +54,8 @@ describe('assertions', function () {
     });
 
     it('test assertion should have bubbled up', function () {
-        expect(testrun.assertion.getCall(0).args[1]).have.property('passed', true);
-        expect(testrun.assertion.getCall(1).args[1]).have.property('passed', false);
-        expect(testrun.assertion.getCall(1).args[1].error).have.property('message', 'I am an error!');
+        expect(testrun.assertion.getCall(0).args[1][0]).have.property('passed', true);
+        expect(testrun.assertion.getCall(1).args[1][0]).have.property('passed', false);
+        expect(testrun.assertion.getCall(1).args[1][0].error).have.property('message', 'I am an error!');
     });
 });

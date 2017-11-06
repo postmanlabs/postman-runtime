@@ -204,44 +204,66 @@ describe('Sandbox libraries', function() {
     it('must have run the test script successfully', function() {
         expect(testrun).be.ok();
         expect(testrun.test.callCount).be(11);
+        expect(testrun.assertion.callCount).be(10);
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests')).to.eql({
-            xml2Json: true,
-            GetResponseHeader: true,
-            GetResponseCookie: true,
-            'Correct global': true,
-            'Lodash working': true,
-            'SugarJS working': true,
-            'tv4 present': true,
-            'CryptoJS md5': true
-        });
+        expect(testrun.assertion.getCall(0).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'xml2Json'},
+            {error: null, index: 1, passed: true, skipped: false, name: 'GetResponseHeader'},
+            {error: null, index: 2, passed: true, skipped: false, name: 'GetResponseCookie'},
+            {error: null, index: 3, passed: true, skipped: false, name: 'Correct global'},
+            {error: null, index: 4, passed: true, skipped: false, name: 'Lodash working'},
+            {error: null, index: 5, passed: true, skipped: false, name: 'SugarJS working'},
+            {error: null, index: 6, passed: true, skipped: false, name: 'tv4 present'},
+            {error: null, index: 7, passed: true, skipped: false, name: 'CryptoJS md5'}
+        ]);
+
 
         expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(1).args[2], '0.result.tests')).to.eql({
-            'Status code is 200': true,
-            'Correct GUID': true,
-            'Correct Random': true,
-            'Correct Timestamp': true,
-            'Correct global': true,
-            'Correct global2': true,
-            'Correct envVar': true,
-            'Correct envVar2': true
+        expect(testrun.assertion.getCall(1).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
+            {error: null, index: 1, passed: true, skipped: false, name: 'Correct GUID'},
+            {error: null, index: 2, passed: true, skipped: false, name: 'Correct Random'},
+            {error: null, index: 3, passed: true, skipped: false, name: 'Correct Timestamp'},
+            {error: null, index: 4, passed: true, skipped: false, name: 'Correct global'},
+            {error: null, index: 5, passed: true, skipped: false, name: 'Correct global2'},
+            {error: null, index: 6, passed: true, skipped: false, name: 'Correct envVar'},
+            {error: null, index: 7, passed: true, skipped: false, name: 'Correct envVar2'}
+        ]);
+
+        _.range(2, 5).forEach(function(index) { // generates a range [2, 4], and checks the tests on those indices
+            expect(testrun.test.getCall(index).args[0]).to.be(null);
+            expect(testrun.assertion.getCall(index).args[1]).to.eql([
+                {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
+            ]);
         });
 
-        _.range(2, 8).forEach(function(index) { // generates a range [2, 7], and checks the tests on those indices
-            expect(testrun.test.getCall(index).args[0]).to.be(null);
-            expect(_.get(testrun.test.getCall(index).args[2], '0.result.tests["Status code is 200"]')).to.be(true);
-        });
+        expect(testrun.test.getCall(5).args[0]).to.be(null);
+        expect(testrun.assertion.getCall(5).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
+            {error: null, index: 1, passed: true, skipped: false, name: 'Body is correct'}
+        ]);
+
+        expect(testrun.test.getCall(6).args[0]).to.be(null);
+        expect(testrun.assertion.getCall(6).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
+            {error: null, index: 1, passed: true, skipped: false, name: 'Body is correct'}
+        ]);
+
+        expect(testrun.test.getCall(7).args[0]).to.be(null);
+        expect(testrun.assertion.getCall(7).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
+        ]);
 
         expect(testrun.test.getCall(8).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(8).args[2], '0.result.tests["Correct auth header"]')).to.be(true);
+        expect(testrun.assertion.getCall(8).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Correct auth header'}
+        ]);
 
         expect(testrun.test.getCall(9).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(9).args[2], '0.result.tests.Authenticated')).to.be(true);
-
-        expect(testrun.test.getCall(10).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(10).args[2], '0.result.tests')).to.eql({});
+        expect(testrun.assertion.getCall(9).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Authenticated'}
+        ]);
     });
 
     it('must have completed the run', function() {
