@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 describe('sandbox test for `undefined` test values', function () {
     var testrun;
 

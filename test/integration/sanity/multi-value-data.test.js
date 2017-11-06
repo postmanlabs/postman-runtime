@@ -1,6 +1,5 @@
 describe('Multi value data', function() {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function(done) {
         this.run({

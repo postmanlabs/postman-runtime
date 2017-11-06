@@ -1,6 +1,5 @@
 describe('V2 regressions', function() {
-    var _ = require('lodash'),
-        request = require('postman-request'),
+    var request = require('postman-request'),
 
         testrun;
 
