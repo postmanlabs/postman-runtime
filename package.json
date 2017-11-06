@@ -37,7 +37,7 @@
     "httpntlm": "1.7.5",
     "inherits": "2.0.3",
     "lodash": "4.17.4",
-    "node-oauth1": "1.2.1",
+    "node-oauth1": "1.2.2",
     "postman-collection": "postmanlabs/postman-collection#develop",
     "postman-request": "2.81.1-postman.3",
     "postman-sandbox": "2.3.5",
