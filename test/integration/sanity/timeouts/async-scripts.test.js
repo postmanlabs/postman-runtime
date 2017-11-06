@@ -93,7 +93,7 @@ describe('asynchronous script timeouts', function () {
                                 script: `
                                     setInterval(function () {
                                         console.log(Date.now())
-                                    }, 499)
+                                    }, 200)
                                 `
                             }],
                             request: {
@@ -123,11 +123,15 @@ describe('asynchronous script timeouts', function () {
             });
 
             it('should clear all the timers', function (done) {
-                var consoleCountsBefore = testrun.console.callCount;
-                setTimeout(function() {
-                    expect(testrun.console.callCount).to.be(consoleCountsBefore);
-                    done();
-                }, 1000);
+                // @todo: done callback is called before the actual script execution timeout
+                // so we wait for the sandbox to timeout, before testing the effects of timeout
+                setTimeout(function () {
+                    var consoleCountsBefore = testrun.console.callCount;
+                    setTimeout(function() {
+                        expect(testrun.console.callCount).to.be(consoleCountsBefore);
+                        done();
+                    }, 2000);
+                }, 2000);
             });
         });
     });
