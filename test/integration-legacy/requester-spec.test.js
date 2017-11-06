@@ -3306,11 +3306,7 @@ describe('Requester', function () {
                             expect(scriptResult.error).to.be(undefined);
                             expect(scriptResult.result.target).to.eql('test');
 
-                            expect(scriptResult.result.tests).to.be.ok();
 
-                            _.forOwn(scriptResult.result.tests, function (result) {
-                                expect(result).to.be.ok();
-                            });
                         });
                     },
                     beforeRequest: function (err, cursor) {
