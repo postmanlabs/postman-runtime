@@ -1,4 +1,4 @@
-describe.only('synchronous script timeouts', function () {
+describe('synchronous script timeouts', function () {
     describe('not breached', function () {
         var testrun;
 
@@ -94,7 +94,9 @@ describe.only('synchronous script timeouts', function () {
         });
 
         describe('script timeout', function () {
-            var testrun;
+            var testrun,
+                // todo remove this
+                doneCalled = false;
 
             before(function (done) {
                 this.run({
@@ -119,7 +121,10 @@ describe.only('synchronous script timeouts', function () {
                     }
                 }, function (err, results) {
                     testrun = results;
-                    done(err);
+                    if (!doneCalled) {
+                        doneCalled = true;
+                        done(err);
+                    }
                 });
             });
 

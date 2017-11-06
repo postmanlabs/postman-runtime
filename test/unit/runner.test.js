@@ -107,6 +107,74 @@ describe('runner', function () {
                     });
                 });
             });
+
+            describe('options parameter', function () {
+                var runnerTimeout = 400,
+                    runTimeout = 500;
+
+                it('should handle timeout in runner options', function (done) {
+                    var runner = new Runner({
+                        run: {
+                            timeout: {
+                                global: runnerTimeout,
+                                script: runnerTimeout
+                            }
+                        }
+                    });
+
+                    runner.run(collection, {}, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(runnerTimeout);
+                        expect(run.options.timeout.script).to.be(runnerTimeout);
+                        done();
+                    });
+                });
+
+                it('should handle timeout in run options', function (done) {
+                    var runner = new Runner({});
+
+                    runner.run(collection, {
+                        timeout: {
+                            global: runTimeout,
+                            script: runTimeout
+                        }
+                    }, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(runTimeout);
+                        expect(run.options.timeout.script).to.be(runTimeout);
+                        done();
+                    });
+                });
+
+                it('should give more precedence to runner options', function (done) {
+                    var runner = new Runner({
+                        run: {
+                            timeout: {
+                                global: runnerTimeout,
+                                script: runnerTimeout
+                            }
+                        }
+                    });
+
+                    runner.run(collection, {
+                        timeout: {
+                            global: runTimeout,
+                            script: runTimeout
+                        }
+                    }, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(runnerTimeout);
+                        expect(run.options.timeout.script).to.be(runnerTimeout);
+                        done();
+                    });
+                });
+            });
         });
     });
 
