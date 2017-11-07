@@ -110,7 +110,8 @@ describe('runner', function () {
 
             describe('options parameter', function () {
                 var runnerTimeout = 400,
-                    runTimeout = 500;
+                    runTimeout = 500,
+                    defaultGlobalTimeout = 3 * 60 * 1000; // 3 minutes
 
                 it('should handle timeout in runner options', function (done) {
                     var runner = new Runner({
@@ -128,6 +129,7 @@ describe('runner', function () {
                         expect(run).to.be.ok();
                         expect(run.options.timeout.global).to.be(runnerTimeout);
                         expect(run.options.timeout.script).to.be(runnerTimeout);
+                        expect(run.options.timeout.request).to.be(Infinity);
                         done();
                     });
                 });
@@ -146,6 +148,7 @@ describe('runner', function () {
                         expect(run).to.be.ok();
                         expect(run.options.timeout.global).to.be(runTimeout);
                         expect(run.options.timeout.script).to.be(runTimeout);
+                        expect(run.options.timeout.request).to.be(Infinity);
                         done();
                     });
                 });
@@ -155,6 +158,7 @@ describe('runner', function () {
                         run: {
                             timeout: {
                                 global: runnerTimeout,
+                                request: runnerTimeout,
                                 script: runnerTimeout
                             }
                         }
@@ -163,6 +167,7 @@ describe('runner', function () {
                     runner.run(collection, {
                         timeout: {
                             global: runTimeout,
+                            request: runTimeout,
                             script: runTimeout
                         }
                     }, function (err, run) {
@@ -171,25 +176,26 @@ describe('runner', function () {
                         expect(run).to.be.ok();
                         expect(run.options.timeout.global).to.be(runnerTimeout);
                         expect(run.options.timeout.script).to.be(runnerTimeout);
+                        expect(run.options.timeout.request).to.be(runnerTimeout);
                         done();
                     });
                 });
 
-                it('should have proper defaults', function (done) {
+                it('should have proper defaults for timeout', function (done) {
                     var runner = new Runner();
 
                     runner.run(collection, {}, function (err, run) {
                         expect(err).to.not.be.ok();
 
                         expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(180000); // 3 minutes
+                        expect(run.options.timeout.global).to.be(defaultGlobalTimeout);
                         expect(run.options.timeout.script).to.be(Infinity);
                         expect(run.options.timeout.request).to.be(Infinity);
                         done();
                     });
                 });
 
-                it('should consider null/undefined as infinity', function (done) {
+                it('should set default timeouts for null/undefined timeout values', function (done) {
                     var runner = new Runner();
 
                     runner.run(collection, {
@@ -202,14 +208,14 @@ describe('runner', function () {
                         expect(err).to.not.be.ok();
 
                         expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(Infinity);
+                        expect(run.options.timeout.global).to.be(defaultGlobalTimeout);
                         expect(run.options.timeout.script).to.be(Infinity);
                         expect(run.options.timeout.request).to.be(Infinity);
                         done();
                     });
                 });
 
-                it('should normalize to infinity for 0', function (done) {
+                it('should normalize 0 timeouts to infinity', function (done) {
                     var runner = new Runner({
                         run: {
                             timeout: {global: 0}
@@ -225,7 +231,23 @@ describe('runner', function () {
                     });
                 });
 
-                it('should preserve finite values', function (done) {
+                it('should normalize negative values to Infinity', function (done) {
+                    var runner = new Runner({
+                        run: {
+                            timeout: {global: -1}
+                        }
+                    });
+
+                    runner.run(collection, {}, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(Infinity);
+                        done();
+                    });
+                });
+
+                it('should preserve finite timeouts', function (done) {
                     var runner = new Runner({
                         run: {
                             timeout: {global: 100, script: 120, request: 180000}
