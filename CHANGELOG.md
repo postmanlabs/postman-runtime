@@ -34,11 +34,9 @@
     }});
     ```
 * [BREAKING] #428 Advanced auth flows are now enabled by default(`interactive` flag has been removed)
-* :tada: #424 Added support for collection level variables
-* :tada: #424 Added support for collection/folder level authentication
-* :tada: #424 Added support for collection/folder level scripts
+* :tada: #424 Added support for collection level variables, collection/folder level authentication and scripts
 * :arrow_up: Updated dependencies
-* :bug: Invalid values in `entrypoint` now throw an error (when `abortOnError` is set to `true`)
+* :bug: Invalid values in `entrypoint` now results in an error (when `abortOnError` is set to `true`)
 
 #### v6.4.2 (November 2, 2017)
 * :arrow_up: Updated dependencies.
