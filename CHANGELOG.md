@@ -1,5 +1,18 @@
 # Postman Runtime Changelog
 
+#### v7.0.0 (November 7, 2017)
+
+* :arrow_up: Updated dependencies
+* [breaking] #453 #447 Added default timeout value to 3 min.
+    To get the earlier behaviour of never timeout by default, the option `timeout.global` needs to be passed as `0`.
+* [breaking] Updated `postman-sandbox` to `v3.0.0`, which now calls the assertion events for both new `pm.test` API and legacy `tests`.
+    All `assertion` events are now passed with an array of assertion. Also `tests` object has been removed from `result`.
+* #430 Added support for persistenting pm.variables which is available throughout the collection run
+* #427 Added support for filtering by request in entry  point
+* #424 Add support for collection level variables
+* #428 Enabled interactive auth by default
+* :bug: Fixed the case where setting entrypoint as an invalid value was throwing error
+
 #### v6.4.2 (November 2, 2017)
 * :arrow_up: Updated dependencies.
 * #435 Added option to blacklist certain IP addresses from being hit :lock:
@@ -47,7 +60,7 @@
 
 #### 6.2.3 (July 5, 2017)
 * Support for updated `ProxyConfig` from Collection SDK v2.0.0
-* Custom proxies now have higher preference than system proxies 
+* Custom proxies now have higher preference than system proxies
 
 #### 6.2.2 (June 28, 2017)
 * Bumped Postman Sandbox to v2.3.0, which includes support for synchronous csv-parse #298
@@ -63,7 +76,7 @@
 * Added suport for NTLM auth #266
 * Runtime now supports another event, `io`, which provides information about intermediate requests that may be sent
   as part of authentication or other flows.
-  
+
     ```javascript
     io: function inputOutput (err, cursor, trace, ...otherArgs) {
         // err, cursor: Same as arguments for "start"
@@ -71,7 +84,7 @@
         // {
         //     -- Indicates the type of IO event, may be HTTP, File, etc. Any requests sent out as a part of
         //     -- auth flows, replays, etc will show up here.
-        //     type: 'http', 
+        //     type: 'http',
         //
         //     -- Indicates what this IO event originated from, (collection, auth flows, etc)
         //     source: 'collection'
@@ -107,7 +120,7 @@
 
 #### 6.0.0 (April 05, 2017)
 * Updated `postman-collection` to v1.1.0, which contains a bugfix for handling multi-valued response headers
-* The structure of script run results has changed 
+* The structure of script run results has changed
 
         // v5.x
         run.start({
@@ -124,7 +137,7 @@
                 // 3. result.globals.* have now been moved to result.*
             }
         });
-        
+
         // v6.x
         run.start({
             prerequest: function (err, cursor, results, item) {
@@ -160,7 +173,7 @@
                 // do something
             }
         });
-        
+
         // v6.x
         run.start({
             request: function (err, cursor, response, request, item, cookies) {
@@ -173,7 +186,7 @@
 
         // v4.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
            requester: {
                certificateManager: myCertManager
@@ -182,7 +195,7 @@
 
         // v5.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
             certificates: new sdk.CertificateList(/* list */)
         });
@@ -191,18 +204,18 @@
 
         // v4.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
             requester: {
                 proxyManager: myProxyManager
-            }   
+            }
         });
 
         // v5.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
-            // Resolves system proxy 
+            // Resolves system proxy
             systemProxy: function (url, callback) {
                 return callback(null, new ProxyConfig());
             },
@@ -214,16 +227,16 @@
 
         // v4.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
             requester: {
                 fileResolver: require('fs')
-            }   
+            }
         });
 
         // v5.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
             fileResolver: require('fs')
         });
