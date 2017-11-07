@@ -11,8 +11,8 @@
             script: 200 // timeout for individual scripts
         } });
         ```
-    - If you are increasing the default timeout for `script`/`request`, make sure `global` timeout is sufficiantly larger that that.
-    - Use `0` for no timeout.
+    - If you are increasing the default timeout for `script`/`request`, make sure `global` timeout is sufficiantly larger than that.
+    - Use `0` for no timeout (infinite timeout).
 * [BREAKING] The signature for `assertion` and `test` callbacks have changed.
     - The `assertion` callback is now passed with an array of assertions.
     - All assertions, both `pm.test` and legacy `tests` global are now available in the `assertion` callback.
