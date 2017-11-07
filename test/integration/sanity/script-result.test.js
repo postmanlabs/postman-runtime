@@ -100,20 +100,6 @@ describe('script result format', function() {
             expect(test.cookies).to.have.length(1);
         });
 
-        it('must have test results in the result', function () {
-            var prerequest = testrun.script.firstCall.args[2],
-                test = testrun.script.secondCall.args[2];
-
-            expect(prerequest).to.have.property('tests');
-            expect(test).to.have.property('tests');
-
-            expect(prerequest.tests).to.eql({}); // @todo - should this be present in the pre-request script?
-
-            // the test script must have a cookie
-            expect(test.tests).to.be.an('object');
-            expect(test.tests).to.have.property('worked', true);
-        });
-
         it('must have empty return object', function () {
             var prerequest = testrun.script.firstCall.args[2],
                 test = testrun.script.secondCall.args[2];

@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 describe('sandbox test for `undefined` test values', function () {
     var testrun;
 
@@ -39,11 +37,14 @@ describe('sandbox test for `undefined` test values', function () {
     });
 
     it('must have run the test script, and replaced `undefined` with `false`', function () {
-        var tests = _.get(testrun.test.getCall(0), 'args[2][0].result.tests');
-        expect(tests).to.eql({
-            undefined: false, // this was set to undefined in the test script, but should be changed to false here.
-            true: true,
-            false: false
-        });
+        var assertions = testrun.assertion.getCall(0).args[1];
+
+        expect(assertions[0]).to.have.property('name', 'undefined');
+        // this was set to undefined in the test script, but should be changed to false here.
+        expect(assertions[0]).to.have.property('passed', false);
+        expect(assertions[1]).to.have.property('name', 'true');
+        expect(assertions[1]).to.have.property('passed', true);
+        expect(assertions[2]).to.have.property('name', 'false');
+        expect(assertions[2]).to.have.property('passed', false);
     });
 });

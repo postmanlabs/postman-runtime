@@ -10,41 +10,41 @@ describe('Option', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    "variables": [],
-                    "info": {
-                        "name": "Collection",
-                        "_postman_id": "3a61d579-d55d-da37-1ffe-c24950fca3ec",
-                        "description": "",
-                        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+                    'variables': [],
+                    'info': {
+                        'name': 'Collection',
+                        '_postman_id': '3a61d579-d55d-da37-1ffe-c24950fca3ec',
+                        'description': '',
+                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    "item": [
+                    'item': [
                         {
-                            "name": "First Request",
-                            "event": [
+                            'name': 'First Request',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "if (iteration === 1) { throw new Error('fail') };"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'if (iteration === 1) { throw new Error(\'fail\') };'
                                     }
                                 }
                             ],
-                            "request": "http://postman-echo.com/get"
+                            'request': 'http://postman-echo.com/get'
                         },
                         {
-                            "name": "Second Request",
-                            "event": [
+                            'name': 'Second Request',
+                            'event': [
                                 {
-                                    "listen": "test",
-                                    "script": {
-                                        "type": "text/javascript",
-                                        "exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
+                                    'listen': 'test',
+                                    'script': {
+                                        'type': 'text/javascript',
+                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            "request": {
-                                "url": "https://postman-echo.com/get",
-                                "method": "GET"
+                            'request': {
+                                'url': 'https://postman-echo.com/get',
+                                'method': 'GET'
                             }
                         }
                     ]
@@ -55,7 +55,7 @@ describe('Option', function () {
                     iterationsComplete: [],
                     itemsStarted: {},
                     itemsComplete: {}
-                },  // populate during the run, and then perform tests on it, at the end.
+                }, // populate during the run, and then perform tests on it, at the end.
 
                 /**
                  * Since each callback runs in a separate callstack, this helper function
@@ -72,7 +72,7 @@ describe('Option', function () {
                 iterationCount: 2,
                 stopOnError: true
             }, function (err, run) {
-                var runStore = {};  // Used for validations *during* the run. Cursor increments, etc.
+                var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be(null);
                 run.start({
@@ -94,7 +94,7 @@ describe('Option', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor){
+                    beforeIteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -130,7 +130,7 @@ describe('Option', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest: function (err, cursor, events) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -142,7 +142,7 @@ describe('Option', function () {
                             expect(events.length).to.be(0);
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest: function (err, cursor) {
                         check(function () {
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);
@@ -190,7 +190,7 @@ describe('Option', function () {
                             expect(scriptResult.error).to.be(undefined);
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest: function (err, cursor) {
                         check(function () {
                             expect(err).to.be(null);
 
@@ -200,7 +200,7 @@ describe('Option', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request: function (err, cursor, response, request) {
                         check(function () {
                             // Sanity
                             expect(cursor.iteration).to.eql(runStore.iteration);

@@ -1,6 +1,5 @@
 describe('request name scripts', function() {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function(done) {
         this.run({
@@ -44,12 +43,14 @@ describe('request name scripts', function() {
     });
 
     it('must have run the test script successfully', function() {
+        var assertions = testrun.assertion.getCall(0).args[1];
         expect(testrun).be.ok();
         expect(testrun.test.calledOnce).be.ok();
         expect(testrun.prerequest.calledOnce).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests.working')).to.be(true);
+        expect(assertions[0]).to.have.property('name', 'working');
+        expect(assertions[0]).to.have.property('passed', true);
     });
 
     it('must have completed the run', function() {

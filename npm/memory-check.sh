@@ -80,7 +80,7 @@ function setup_version {
 				}
 			}
 		}]
-	}), { iterationCount: ${NUM_ITERATIONS} }, function(err, run) {
+	}), { timeout: { global: Infinity }, iterationCount: ${NUM_ITERATIONS} }, function(err, run) {
 		if (err) { console.error('Error creating run', err.stack); process.exit(1); }
 
 		run.start({
