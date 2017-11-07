@@ -88,19 +88,6 @@ runner.run(collection, {
         restrictedAddresses: {'192.168.1.1': true}
     },
 
-    // authorizer
-    authorizer: {
-
-        // Enables advanced mode only in these auths
-        interactive: {
-            ntlm: true,
-            basic: true
-        },
-
-        // Enables advanced mode for all auths
-        interactive: true
-    },
-
     // A ProxyConfigList, from the SDK
     proxies: new sdk.ProxyConfigList(),
 
@@ -130,21 +117,27 @@ runner.run(collection, { /* options */ }, function(err, run) {
     run.start({
         // Called any time we see a new assertion in the test scripts
         // *note* Not used yet.
-        assertion: function (err, meta) {
-            // err: Error|null
-            // err.name: String - This will usually be AssertionError.
-            // err.message: String - The name of the test that failed.
-            // err.stack: String - The stacktrace associated with the current test failure.
-            // err.index: Integer - A unique integer id for the current error, present only for failed assertions.
+        assertion: function (cursor, assertions) {
+            // cursor = {
+            //     position: Number,
+            //     iteration: Number,
+            //     length: Number,
+            //     cycles: Number,
+            //     eof: Boolean,
+            //     empty: Boolean,
+            //     bof: Boolean,
+            //     cr: Boolean,
+            //     ref: String
+            // }
 
-            // meta: Object
-            // meta.assertion: String - The name of the current assertion
-            // meta.cursor: Object
-            // meta.execution: - The state descriptor for the current execution. Includes details on the request,
-            // response, globals, and environment variables associated with the current request.
-            // meta.script: Script - A Collection SDK Script instance.
-            // meta.event: Event - A collection SDK Event instance.
-            // meta.item: Item - A collection SDK Item instance.
+            // assertions: array of assertion objects
+            // assertion: {
+            //     error: Error,
+            //     index: Number,
+            //     name: String,
+            //     skipped: Number,
+            //     passed: Number
+            // }
         },
 
         // Called when the run begins

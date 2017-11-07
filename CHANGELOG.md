@@ -1,5 +1,43 @@
 # Postman Runtime Changelog
 
+#### v7.0.0 (November 7, 2017)
+
+* [BREAKING] #453 #447 Added default timeout value to 3 min.
+    - Timeout options take a positive value in milliseconds. e.g.
+        ```javascript
+        runner.run(collection, { timeout: {
+            global: 5 * 60 * 1000, // total timeout of 5 minutes
+            request: 500, // timeout for individual requests
+            script: 200 // timeout for individual scripts
+        } });
+        ```
+    - If you are increasing the default timeout for `script`/`request`, make sure `global` timeout is sufficiantly larger than that.
+    - Use `0` for no timeout (infinite timeout).
+* [BREAKING] The signature for `assertion` and `test` callbacks have changed.
+    - The `assertion` callback is now passed with an array of assertions.
+    - All assertions, both `pm.test` and legacy `tests` global are now available in the `assertion` callback.
+    - The legacy `tests` are no longer available in results parameter in `test` callback.
+* [BREAKING] #427 The `entrypoint` option now supports selecting requests as well as folders
+    - To execute a folder/request using id or name
+    ```javascript
+    runner.run(collection, { entrypoint: {
+        execute: `${desiredIdOrName}`,
+        lookupStrategy: 'idOrName'
+    }});
+    ```
+    - To execute a folder/request using a path
+    ```javascript
+    runner.run(collection, { entrypoint: {
+        execute: `${desiredId}`,
+        lookupStrategy: 'path',
+        path: ['grand_parent_folder_id', 'parent_folder_id']
+    }});
+    ```
+* [BREAKING] #428 Advanced auth flows are now enabled by default(`interactive` flag has been removed)
+* :tada: #424 Added support for collection level variables, collection/folder level authentication and scripts
+* :arrow_up: Updated dependencies
+* :bug: Invalid values in `entrypoint` now results in an error (when `abortOnError` is set to `true`)
+
 #### v6.4.2 (November 2, 2017)
 * :arrow_up: Updated dependencies.
 * #435 Added option to blacklist certain IP addresses from being hit :lock:
@@ -47,7 +85,7 @@
 
 #### 6.2.3 (July 5, 2017)
 * Support for updated `ProxyConfig` from Collection SDK v2.0.0
-* Custom proxies now have higher preference than system proxies 
+* Custom proxies now have higher preference than system proxies
 
 #### 6.2.2 (June 28, 2017)
 * Bumped Postman Sandbox to v2.3.0, which includes support for synchronous csv-parse #298
@@ -63,7 +101,7 @@
 * Added suport for NTLM auth #266
 * Runtime now supports another event, `io`, which provides information about intermediate requests that may be sent
   as part of authentication or other flows.
-  
+
     ```javascript
     io: function inputOutput (err, cursor, trace, ...otherArgs) {
         // err, cursor: Same as arguments for "start"
@@ -71,7 +109,7 @@
         // {
         //     -- Indicates the type of IO event, may be HTTP, File, etc. Any requests sent out as a part of
         //     -- auth flows, replays, etc will show up here.
-        //     type: 'http', 
+        //     type: 'http',
         //
         //     -- Indicates what this IO event originated from, (collection, auth flows, etc)
         //     source: 'collection'
@@ -107,7 +145,7 @@
 
 #### 6.0.0 (April 05, 2017)
 * Updated `postman-collection` to v1.1.0, which contains a bugfix for handling multi-valued response headers
-* The structure of script run results has changed 
+* The structure of script run results has changed
 
         // v5.x
         run.start({
@@ -124,7 +162,7 @@
                 // 3. result.globals.* have now been moved to result.*
             }
         });
-        
+
         // v6.x
         run.start({
             prerequest: function (err, cursor, results, item) {
@@ -160,7 +198,7 @@
                 // do something
             }
         });
-        
+
         // v6.x
         run.start({
             request: function (err, cursor, response, request, item, cookies) {
@@ -173,7 +211,7 @@
 
         // v4.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
            requester: {
                certificateManager: myCertManager
@@ -182,7 +220,7 @@
 
         // v5.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
             certificates: new sdk.CertificateList(/* list */)
         });
@@ -191,18 +229,18 @@
 
         // v4.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
             requester: {
                 proxyManager: myProxyManager
-            }   
+            }
         });
 
         // v5.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
-            // Resolves system proxy 
+            // Resolves system proxy
             systemProxy: function (url, callback) {
                 return callback(null, new ProxyConfig());
             },
@@ -214,16 +252,16 @@
 
         // v4.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
             requester: {
                 fileResolver: require('fs')
-            }   
+            }
         });
 
         // v5.x
         var runner = new Runner();
-        
+
         runner.run(collection, {
             fileResolver: require('fs')
         });

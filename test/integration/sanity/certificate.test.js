@@ -108,8 +108,7 @@ describe('certificates', function () {
             server = https.createServer({
                 key: fs.readFileSync(serverKeyPath),
                 cert: fs.readFileSync(serverCertPath),
-                ca: fs.readFileSync(serverCaPath),
-                requestCert: true
+                ca: fs.readFileSync(serverCaPath)
             });
 
             server.on('request', function (req, res) {

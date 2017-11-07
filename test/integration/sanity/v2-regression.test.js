@@ -1,6 +1,5 @@
 describe('V2 regressions', function() {
-    var _ = require('lodash'),
-        request = require('postman-request'),
+    var request = require('postman-request'),
 
         testrun;
 
@@ -61,19 +60,21 @@ describe('V2 regressions', function() {
         expect(testrun.test.calledThrice).be.ok();
 
         expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.tests')).to.eql({
-            'Status code is 200': true,
-            'foo1 cookie is present in the response body': true
-        });
+        expect(testrun.assertion.getCall(0).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
+            {error: null, index: 1, passed: true, skipped: false, name: 'foo1 cookie is present in the response body'}
+        ]);
 
         expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(1).args[2], '0.result.tests["Status code is 200"]')).to.be(true);
+        expect(testrun.assertion.getCall(1).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
+        ]);
 
         expect(testrun.test.getCall(2).args[0]).to.be(null);
-        expect(_.get(testrun.test.getCall(2).args[2], '0.result.tests')).to.eql({
-            'Status code is 200': true,
-            'Disabled header is absent': true
-        });
+        expect(testrun.assertion.getCall(2).args[1]).to.eql([
+            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
+            {error: null, index: 1, passed: true, skipped: false, name: 'Disabled header is absent'}
+        ]);
     });
 
     it('must have completed the run', function() {

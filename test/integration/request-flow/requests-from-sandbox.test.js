@@ -79,7 +79,7 @@ describe('requests from sandbox', function() {
         });
 
         it('should have provided the response to the sandbox sendrequest function', function () {
-            var assertion = testrun.assertion.firstCall.args[1];
+            var assertion = testrun.assertion.firstCall.args[1][0];
 
             expect(assertion).to.have.property('name', 'request was sent from sandbox');
             expect(assertion).to.have.property('skipped', false);
@@ -211,7 +211,7 @@ describe('requests from sandbox', function() {
         });
 
         it('should ensure that the first response was provided to the test script', function () {
-            var assertion = testrun.assertion.firstCall.args[1];
+            var assertion = testrun.assertion.firstCall.args[1][0];
 
             expect(assertion).to.have.property('name', testname1);
             expect(assertion).to.have.property('skipped', false);
@@ -221,7 +221,7 @@ describe('requests from sandbox', function() {
         });
 
         it('should ensure that the second response was provided to the test script', function () {
-            var assertion = testrun.assertion.secondCall.args[1];
+            var assertion = testrun.assertion.secondCall.args[1][0];
 
             expect(assertion).to.have.property('name', testname2);
             expect(assertion).to.have.property('skipped', false);
@@ -277,7 +277,7 @@ describe('requests from sandbox', function() {
         });
 
         it('should have provided the error to the sandbox sendrequest function', function () {
-            var assertion = testrun.assertion.firstCall.args[1];
+            var assertion = testrun.assertion.firstCall.args[1][0];
 
             expect(assertion).to.have.property('name', 'request did not complete');
             expect(assertion).to.have.property('skipped', false);
@@ -375,7 +375,7 @@ describe('requests from sandbox', function() {
         });
 
         it('should have provided the error to the sandbox sendrequest function', function () {
-            var assertion = testrun.assertion.firstCall.args[1];
+            var assertion = testrun.assertion.firstCall.args[1][0];
 
             expect(assertion).to.have.property('name', 'request did not complete');
             expect(assertion).to.have.property('skipped', false);

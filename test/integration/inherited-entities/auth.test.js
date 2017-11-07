@@ -10,9 +10,6 @@ describe('Inherited Auth', function () {
                         url: 'https://postman-echo.com/basic-auth'
                     }
                 }
-            },
-            authorizer: {
-                interactive: true
             }
         };
 
