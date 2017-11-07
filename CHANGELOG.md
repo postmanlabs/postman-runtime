@@ -2,16 +2,43 @@
 
 #### v7.0.0 (November 7, 2017)
 
+* [BREAKING] #453 #447 Added default timeout value to 3 min.
+    - Timeout options take a positive value in milliseconds. e.g.
+        ```javascript
+        runner.run(collection, { timeout: {
+            global: 5 * 60 * 1000, // total timeout of 5 minutes
+            request: 500, // timeout for individual requests
+            script: 200 // timeout for individual scripts
+        } });
+        ```
+    - If you are increasing the default timeout for `script`/`request`, make sure `global` timeout is sufficiantly larger that that.
+    - Use `0` for no timeout.
+* [BREAKING] The signature for `assertion` and `test` callbacks have changed.
+    - The `assertion` callback is now passed with an array of assertions.
+    - All assertions, both `pm.test` and legacy `tests` global are now available in the `assertion` callback.
+    - The legacy `tests` are no longer available in results parameter in `test` callback.
+* [BREAKING] #427 The `entrypoint` option now supports selecting requests as well as folders
+    - To execute a folder/request using id or name
+    ```javascript
+    runner.run(collection, { entrypoint: {
+        execute: `${desiredIdOrName}`,
+        lookupStrategy: 'idOrName'
+    }});
+    ```
+    - To execute a folder/request using a path
+    ```javascript
+    runner.run(collection, { entrypoint: {
+        execute: `${desiredId}`,
+        lookupStrategy: 'path',
+        path: ['grand_parent_folder_id', 'parent_folder_id']
+    }});
+    ```
+* [BREAKING] #428 Advanced auth flows are now enabled by default(`interactive` flag has been removed)
+* :tada: #424 Added support for collection level variables
+* :tada: #424 Added support for collection/folder level authentication
+* :tada: #424 Added support for collection/folder level scripts
 * :arrow_up: Updated dependencies
-* [breaking] #453 #447 Added default timeout value to 3 min.
-    To get the earlier behaviour of never timeout by default, the option `timeout.global` needs to be passed as `0`.
-* [breaking] Updated `postman-sandbox` to `v3.0.0`, which now calls the assertion events for both new `pm.test` API and legacy `tests`.
-    All `assertion` events are now passed with an array of assertion. Also `tests` object has been removed from `result`.
-* #430 Added support for persistenting pm.variables which is available throughout the collection run
-* #427 Added support for filtering by request in entry  point
-* #424 Add support for collection level variables
-* #428 Enabled interactive auth by default
-* :bug: Fixed the case where setting entrypoint as an invalid value was throwing error
+* :bug: Invalid values in `entrypoint` now throw an error (when `abortOnError` is set to `true`)
 
 #### v6.4.2 (November 2, 2017)
 * :arrow_up: Updated dependencies.
