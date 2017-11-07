@@ -247,6 +247,22 @@ describe('runner', function () {
                     });
                 });
 
+                it('should normalize Infinty values to default', function (done) {
+                    var runner = new Runner({
+                        run: {
+                            timeout: {global: Infinity}
+                        }
+                    });
+
+                    runner.run(collection, {}, function (err, run) {
+                        expect(err).to.not.be.ok();
+
+                        expect(run).to.be.ok();
+                        expect(run.options.timeout.global).to.be(defaultGlobalTimeout);
+                        done();
+                    });
+                });
+
                 it('should preserve finite timeouts', function (done) {
                     var runner = new Runner({
                         run: {
