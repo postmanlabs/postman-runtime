@@ -57,8 +57,20 @@ describe('Sugar.js', function() {
             {error: null, index: 4, passed: true, skipped: false, name: 'Function prototype once'},
             {error: null, index: 5, passed: true, skipped: false, name: 'Number prototype hex'},
             {error: null, index: 6, passed: true, skipped: false, name: 'Number prototype isEven'},
-            {error: null, index: 7, passed: false, skipped: false, name: 'Number prototype ordinalize'},
-            {error: null, index: 8, passed: false, skipped: false, name: 'Number prototype format'},
+            {
+                error: {message: 'Number prototype ordinalize', name: 'AssertionError', type: 'Error'},
+                index: 7,
+                passed: false,
+                skipped: false,
+                name: 'Number prototype ordinalize'
+            },
+            {
+                error: {message: 'Number prototype format', name: 'AssertionError', type: 'Error'},
+                index: 8,
+                passed: false,
+                skipped: false,
+                name: 'Number prototype format'
+            },
             {error: null, index: 9, passed: true, skipped: false, name: 'String prototype endsWith'},
             {error: null, index: 10, passed: true, skipped: false, name: 'String prototype negated endsWith'},
             {error: null, index: 11, passed: true, skipped: false, name: 'String prototype camelize'},
