@@ -1,5 +1,11 @@
 # Postman Runtime Changelog
 
+### Unreleased
+
+### v7.0.1 (November 8, 2017)
+* :bug: Fixed a bug where the assertions for legacy `tests` failures did not have an `error` object.
+* :arrow_up: Updated dependencies
+
 #### v7.0.0 (November 7, 2017)
 
 * [BREAKING] #453 #447 Added default timeout value to 3 min.
