@@ -82,7 +82,7 @@ describe('Inherited Auth', function () {
                             auth: {
                                 type: 'digest',
                                 digest: {
-                                    username: '{{user}}',
+                                    username: '{{uname}}',
                                     password: '{{pass}}'
                                 }
                             },
