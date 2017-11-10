@@ -354,7 +354,13 @@ describe('Auth Handler:', function () {
             expect(request.headers.all()).to.be.empty();
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
             expect(request.toJSON()).to.eql({
-                url: 'https://postman-echo.com/digest-auth',
+                url: {
+                    host: ['postman-echo', 'com'],
+                    path: ['digest-auth'],
+                    protocol: 'https',
+                    query: [],
+                    variable: []
+                },
                 method: 'GET',
                 auth: {
                     type: 'digest',
@@ -450,7 +456,13 @@ describe('Auth Handler:', function () {
 
         it('should apply sensible defaults where applicable', function () {
             var rawReq = _(rawRequests.oauth1).omit(['auth.oauth1.nonce', 'auth.oauth1.timestamp']).merge({
-                    url: 'https://postman-echo.com/auth/oauth1',
+                    url: {
+                        host: ['postman-echo', 'com'],
+                        path: ['auth', 'oauth1'],
+                        protocol: 'https',
+                        query: [],
+                        variable: []
+                    },
                     auth: {
                         oauth1: {
                             addEmptyParamsToSign: true,
@@ -525,6 +537,10 @@ describe('Auth Handler:', function () {
                 'oauth_consumer_key', 'oauth_token', 'oauth_signature_method', 'oauth_timestamp', 'oauth_nonce',
                 'oauth_version', 'oauth_signature'
             ]);
+            // All the query paramters added by runtime must have `system: true` property
+            _.forEach(request.url.query.members, function (param) {
+                expect(param.system).to.be(true);
+            });
             expect(request.auth.parameters().toObject()).to
                 .eql({
                     consumerKey: 'RKCGzna7bv9YD57c',
@@ -591,7 +607,8 @@ describe('Auth Handler:', function () {
             expect(request.url.query.all().length).to.be(1);
             expect(request.url.query.all()[0]).to.eql({
                 key: 'access_token',
-                value: requestObj.auth.oauth2.accessToken
+                value: requestObj.auth.oauth2.accessToken,
+                system: true
             });
         });
 
