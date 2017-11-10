@@ -108,7 +108,8 @@ describe('assertions', function () {
             expect(testrun.assertion.getCall(0).args[1][1]).have.property('passed', false);
             expect(testrun.assertion.getCall(0).args[1][1]).have.property('error');
             expect(testrun.assertion.getCall(0).args[1][1].error).have.property('name', 'AssertionError');
-            expect(testrun.assertion.getCall(0).args[1][1].error).have.property('message', 'fail');
+            expect(testrun.assertion.getCall(0).args[1][1].error)
+                .have.property('message', 'expected false to be truthy');
         });
     });
 });
