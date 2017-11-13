@@ -74,6 +74,36 @@ describe('requester util', function () {
                 agentOptions: {keepAlive: undefined}
             });
         });
+
+        it('should override lookup function for localhost', function () {
+            var request = new sdk.Request({
+                url: 'http://localhost:8080/random/path'
+            });
+
+            expect(requesterUtil.getRequestOptions(request).lookup).to.be.a('function');
+        });
+
+        it('should override lookup function for restricted addresses', function () {
+            var request = new sdk.Request({
+                    url: 'http://postman-echo.com/get'
+                }),
+                options = {
+                    restrictedAddresses: []
+                };
+
+            expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
+        });
+
+        it('should override lookup function for hostIpMap', function () {
+            var request = new sdk.Request({
+                    url: 'http://postman-echo.com/get'
+                }),
+                options = {
+                    hostIpMap: {}
+                };
+
+            expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
+        });
     });
 
     describe('.ensureHeaderExists', function () {
