@@ -354,7 +354,13 @@ describe('Auth Handler:', function () {
             expect(request.headers.all()).to.be.empty();
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
             expect(request.toJSON()).to.eql({
-                url: 'https://postman-echo.com/digest-auth',
+                url: {
+                    host: ['postman-echo', 'com'],
+                    path: ['digest-auth'],
+                    protocol: 'https',
+                    query: [],
+                    variable: []
+                },
                 method: 'GET',
                 auth: {
                     type: 'digest',
@@ -450,7 +456,13 @@ describe('Auth Handler:', function () {
 
         it('should apply sensible defaults where applicable', function () {
             var rawReq = _(rawRequests.oauth1).omit(['auth.oauth1.nonce', 'auth.oauth1.timestamp']).merge({
-                    url: 'https://postman-echo.com/auth/oauth1',
+                    url: {
+                        host: ['postman-echo', 'com'],
+                        path: ['auth', 'oauth1'],
+                        protocol: 'https',
+                        query: [],
+                        variable: []
+                    },
                     auth: {
                         oauth1: {
                             addEmptyParamsToSign: true,
