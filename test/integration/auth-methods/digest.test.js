@@ -245,7 +245,7 @@ describe('digest auth', function () {
         });
     });
 
-    describe('with incorrect details', function () {
+    describe('with incorrect details (advance options not provided)', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
@@ -290,12 +290,81 @@ describe('digest auth', function () {
             expect(testrun.start.callCount).to.be(1);
         });
 
-        it('must have ended with max replay count exceeded', function () {
-            var err = testrun.console.lastCall.args[2],
-                response = testrun.response.lastCall.args[2];
+        it('must have tried twice', function () {
+            expect(testrun.io.callCount).to.be(2);
+            expect(testrun.request.callCount).to.be(2);
 
-            expect(err).to.contain('runtime: maximum intermediate request limit exceeded');
-            expect(response.code).to.be(401);
+            var firstError = testrun.io.firstCall.args[0],
+                secondError = testrun.io.secondCall.args[0],
+                firstResponse = testrun.io.firstCall.args[3],
+                secondResponse = testrun.io.secondCall.args[3];
+
+            expect(firstError).to.be(null);
+            expect(secondError).to.be(null);
+            expect(firstResponse.code).to.eql(401);
+            expect(secondResponse.code).to.eql(401);
+        });
+    });
+
+    describe('with incorrect details (all advance options provided)', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: 'https://postman-echo.com/digest-auth',
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: '{{uname}}',
+                                    password: '{{pass}}',
+                                    nonce: 'random',
+                                    realm: 'random',
+                                    clientNonce: 'random',
+                                    nonceCount: 1,
+                                    qop: 'auth'
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: 'notpostman'
+                    }, {
+                        key: 'pass',
+                        value: 'password'
+                    }]
+                }
+            };
+
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('must have completed the run', function () {
+            expect(testrun).be.ok();
+            expect(testrun.done.callCount).to.be(1);
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.callCount).to.be(1);
+        });
+
+        it('must try only once', function () {
+            expect(testrun.io.callCount).to.be(1);
+            expect(testrun.request.callCount).to.be(1);
+
+            var firstError = testrun.io.firstCall.args[0],
+                firstResponse = testrun.io.firstCall.args[3];
+
+            expect(firstError).to.be(null);
+            expect(firstResponse.code).to.eql(401);
         });
     });
 
