@@ -208,19 +208,20 @@ describe('Inherited Auth', function () {
             expect(testrun.request.callCount).to.be(3);
 
             var err1 = testrun.request.firstCall.args[0],
+                err2 = testrun.request.secondCall.args[0],
                 request1 = testrun.request.firstCall.args[3],
+                request2 = testrun.request.secondCall.args[3],
                 response1 = testrun.request.firstCall.args[2],
-                err2 = testrun.request.firstCall.args[0],
-                request2 = testrun.request.firstCall.args[3],
-                response2 = testrun.request.firstCall.args[2];
+                response2 = testrun.request.secondCall.args[2],
+                response3 = testrun.request.thirdCall.args[2];
 
             expect(err1).to.be(null);
-            expect(request1.url.toString()).to.be('https://postman-echo.com/basic-auth');
-            expect(response1.code).to.be(200);
-
             expect(err2).to.be(null);
-            expect(request2.url.toString()).to.be('https://postman-echo.com/basic-auth');
+            expect(request1.url.toString()).to.be('https://postman-echo.com/digest-auth');
+            expect(request2.url.toString()).to.be('https://postman-echo.com/digest-auth');
+            expect(response1.code).to.be(401);
             expect(response2.code).to.be(200);
+            expect(response3.code).to.be(200);
         });
     });
 
