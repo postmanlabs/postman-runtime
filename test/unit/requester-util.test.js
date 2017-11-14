@@ -88,7 +88,9 @@ describe('requester util', function () {
                     url: 'http://postman-echo.com/get'
                 }),
                 options = {
-                    restrictedAddresses: []
+                    network: {
+                        restrictedAddresses: {}
+                    }
                 };
 
             expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
@@ -99,7 +101,9 @@ describe('requester util', function () {
                     url: 'http://postman-echo.com/get'
                 }),
                 options = {
-                    hostIpMap: {}
+                    network: {
+                        hostIpMap: {}
+                    }
                 };
 
             expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
