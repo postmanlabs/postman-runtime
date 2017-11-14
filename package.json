@@ -59,7 +59,7 @@
     "istanbul": "0.4.5",
     "js-yaml": "3.9.1",
     "jsdoc": "3.5.5",
-    "jsdoc-to-markdown": "3.0.1",
+    "jsdoc-to-markdown": "3.0.2",
     "mocha": "4.0.1",
     "nsp": "2.8.1",
     "parse-gitignore": "0.4.0",
