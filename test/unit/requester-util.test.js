@@ -21,7 +21,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestOptions(request)).to.eql({
+            expect(requesterUtil.getRequestOptions(request, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -54,7 +54,7 @@ describe('requester util', function () {
                 }]
             });
 
-            expect(requesterUtil.getRequestOptions(request)).to.eql({
+            expect(requesterUtil.getRequestOptions(request, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -80,7 +80,7 @@ describe('requester util', function () {
                 url: 'http://localhost:8080/random/path'
             });
 
-            expect(requesterUtil.getRequestOptions(request).lookup).to.be.a('function');
+            expect(requesterUtil.getRequestOptions(request, {}).lookup).to.be.a('function');
         });
 
         it('should override lookup function for restricted addresses', function () {
