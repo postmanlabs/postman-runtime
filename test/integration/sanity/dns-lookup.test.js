@@ -20,11 +20,12 @@ describe('DNS lookup', function() {
                         request: 'http://fake2postman-echo.com/get?foo=bar'
                     }]
                 },
-                hostIpMap: {
-                    'fakepostman-echo.com': echoIp,
-                    'fake2postman-echo.com': {
-                        ip: echoIp,
-                        family: 4
+                network: {
+                    hosts: {
+                        type: 'hostIpMap',
+                        hostIpMap: {
+                            'fakepostman-echo.com': echoIp
+                        }
                     }
                 }
             }, function(err, results) {
@@ -43,14 +44,10 @@ describe('DNS lookup', function() {
 
     it('must have used the provided hostIpMap for resolving hostname', function() {
         expect(testrun.response.getCall(0).args[0]).to.be(null);
-        expect(testrun.response.getCall(1).args[0]).to.be(null);
 
-        var response1 = testrun.response.firstCall.args[2],
-            response2 = testrun.response.firstCall.args[2];
+        var response = testrun.response.firstCall.args[2];
 
-        expect(response1.code).to.be(200);
-        expect(response2.code).to.be(200);
-        expect(response1.json().args).to.eql({foo: 'bar'});
-        expect(response2.json().args).to.eql({foo: 'bar'});
+        expect(response.code).to.be(200);
+        expect(response.json().args).to.eql({foo: 'bar'});
     });
 });
