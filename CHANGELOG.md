@@ -4,6 +4,7 @@
 * Runtime now adds `system: true` to all the query parameters that it sets
 * More useful error messages for assertion failures in legacy `tests`
 * Digest auth does not attempt retries for invalid credentials/configuration. It will continue to retry for missing configuration.
+* Auth will maintain it's state across a collection run. Digest auth no longer needs to send 2 requests for every digest auth protected item in a collection
 
 ### v7.0.1 (November 8, 2017)
 * :bug: Fixed a bug where the assertions for legacy `tests` failures did not have an `error` object.
