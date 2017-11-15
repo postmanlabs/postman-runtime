@@ -84,8 +84,17 @@ runner.run(collection, {
         // Enable sending of bodies with GET requests (only supported on Node, ignored in the browser)
         sendBodyWithGetRequests: true,
 
-        // Allows restricting IP/host in requests
-        restrictedAddresses: {'192.168.1.1': true}
+        // network related options
+        network: {
+            hosts: { // hosts configuration for dns lookup
+                type: 'hostIpMap',
+                hostIpMap: {
+                    'domain.com': '127.0.0.1',
+                    'ipv6-domain.com': '::1',
+                }
+            },
+            restrictedAddresses: {'192.168.1.1': true} // Allows restricting IP/host in requests
+        }
     },
 
     // A ProxyConfigList, from the SDK
