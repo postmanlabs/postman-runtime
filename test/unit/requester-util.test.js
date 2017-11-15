@@ -89,20 +89,24 @@ describe('requester util', function () {
                 }),
                 options = {
                     network: {
-                        restrictedAddresses: {}
+                        restrictedAddresses: {
+                            '127.0.0.1': true
+                        }
                     }
                 };
 
             expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
         });
 
-        it('should override lookup function for hostIpMap', function () {
+        it('should override lookup function for hosts', function () {
             var request = new sdk.Request({
                     url: 'http://postman-echo.com/get'
                 }),
                 options = {
                     network: {
-                        hostIpMap: {}
+                        hosts: {
+                            type: 'hostIpMap'
+                        }
                     }
                 };
 
