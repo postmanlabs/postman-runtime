@@ -14,11 +14,9 @@ describe('DNS lookup', function() {
 
             self.run({
                 collection: {
-                    item: [{
+                    item: {
                         request: 'http://fakepostman-echo.com/get?foo=bar'
-                    }, {
-                        request: 'http://fake2postman-echo.com/get?foo=bar'
-                    }]
+                    }
                 },
                 network: {
                     hosts: {
