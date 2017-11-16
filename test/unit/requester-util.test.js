@@ -21,7 +21,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestOptions(request)).to.eql({
+            expect(requesterUtil.getRequestOptions(request, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -54,7 +54,7 @@ describe('requester util', function () {
                 }]
             });
 
-            expect(requesterUtil.getRequestOptions(request)).to.eql({
+            expect(requesterUtil.getRequestOptions(request, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -73,6 +73,44 @@ describe('requester util', function () {
                 encoding: null,
                 agentOptions: {keepAlive: undefined}
             });
+        });
+
+        it('should override lookup function for localhost', function () {
+            var request = new sdk.Request({
+                url: 'http://localhost:8080/random/path'
+            });
+
+            expect(requesterUtil.getRequestOptions(request, {}).lookup).to.be.a('function');
+        });
+
+        it('should override lookup function for restricted addresses', function () {
+            var request = new sdk.Request({
+                    url: 'http://postman-echo.com/get'
+                }),
+                options = {
+                    network: {
+                        restrictedAddresses: {
+                            '127.0.0.1': true
+                        }
+                    }
+                };
+
+            expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
+        });
+
+        it('should override lookup function for hosts', function () {
+            var request = new sdk.Request({
+                    url: 'http://postman-echo.com/get'
+                }),
+                options = {
+                    network: {
+                        hostLookup: {
+                            type: 'hostIpMap'
+                        }
+                    }
+                };
+
+            expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
         });
     });
 
