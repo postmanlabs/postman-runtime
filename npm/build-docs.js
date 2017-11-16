@@ -26,7 +26,7 @@ module.exports = function (exit) {
     }
 
     exec(`${IS_WINDOWS ? '' : 'node'} ${path.join('node_modules', '.bin', 'jsdoc')}${IS_WINDOWS ? '.cmd' : ''}` +
-        ` -c .jsdoc-config.json -u docs lib --query 'pkgVersion=${pkg.version}'`, function (code) {
+        ` -c .jsdoc-config.json -u docs lib --query 'pkgVersion=${pkg.version}' -p`, function (code) {
         // output status
         console.log(code ?
             colors.red.bold('unable to genereate documentation') :
