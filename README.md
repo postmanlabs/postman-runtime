@@ -86,7 +86,7 @@ runner.run(collection, {
 
         // network related options
         network: {
-            hosts: { // hosts configuration for dns lookup
+            hostLookup: { // hosts file configuration for dns lookup
                 type: 'hostIpMap',
                 hostIpMap: {
                     'domain.com': '127.0.0.1',

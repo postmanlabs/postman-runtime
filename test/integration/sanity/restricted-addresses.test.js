@@ -16,7 +16,7 @@ describe('restricted addresses', function() {
             },
             network: {
                 restrictedAddresses: {'169.254.169.254': true},
-                hosts: {
+                hostLookup: {
                     type: 'hostIpMap',
                     hostIpMap: {
                         'fake.vulnerable.postman.wtf': '169.254.169.254'

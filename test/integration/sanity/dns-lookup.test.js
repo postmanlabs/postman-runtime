@@ -19,7 +19,7 @@ describe('DNS lookup', function() {
                     }
                 },
                 network: {
-                    hosts: {
+                    hostLookup: {
                         type: 'hostIpMap',
                         hostIpMap: {
                             'fakepostman-echo.com': echoIp

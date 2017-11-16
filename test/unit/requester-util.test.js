@@ -104,7 +104,7 @@ describe('requester util', function () {
                 }),
                 options = {
                     network: {
-                        hosts: {
+                        hostLookup: {
                             type: 'hostIpMap'
                         }
                     }
