@@ -43,6 +43,7 @@ describe('Set next request', function() {
 
         expect(_.get(testrun.request.getCall(0).args[4], 'name')).to.be('one');
         expect(_.get(testrun.request.getCall(1).args[4], 'name')).to.be('three');
+        expect(testrun.item.getCall(0).args[3]).to.have.property('name', 'three');
     });
 
     it('must have completed the run', function() {
