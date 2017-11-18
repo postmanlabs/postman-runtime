@@ -26,29 +26,12 @@ describe('Collection Variables', function() {
                     event: [{
                         listen: 'test',
                         script: {
-                            exec: [`
-                                // @todo use pm.variables.toObject() once the bug of reversed order is fixed in sdk
-                                console.log('test', {
-                                    'global-var': pm.variables.get('global-var'),
-                                    'env-var': pm.variables.get('env-var'),
-                                    'echo-url': pm.variables.get('echo-url'),
-                                    'user': pm.variables.get('user'),
-                                    'pass': pm.variables.get('pass')
-                                })
-                            `]
+                            exec: ['console.log("test", pm.variables.toObject())']
                         }
                     }, {
                         listen: 'prerequest',
                         script: {
-                            exec: [`
-                                console.log('test', {
-                                    'global-var': pm.variables.get('global-var'),
-                                    'env-var': pm.variables.get('env-var'),
-                                    'echo-url': pm.variables.get('echo-url'),
-                                    'user': pm.variables.get('user'),
-                                    'pass': pm.variables.get('pass')
-                                })
-                            `]
+                            exec: ['console.log("test", pm.variables.toObject())']
                         }
                     }],
                     request: {
