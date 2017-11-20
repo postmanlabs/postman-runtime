@@ -58,14 +58,14 @@ describe('Sugar.js', function() {
             {error: null, index: 5, passed: true, skipped: false, name: 'Number prototype hex'},
             {error: null, index: 6, passed: true, skipped: false, name: 'Number prototype isEven'},
             {
-                error: {message: 'Number prototype ordinalize', name: 'AssertionError', type: 'Error'},
+                error: {message: 'expected false to be truthy', name: 'AssertionError', type: 'Error'},
                 index: 7,
                 passed: false,
                 skipped: false,
                 name: 'Number prototype ordinalize'
             },
             {
-                error: {message: 'Number prototype format', name: 'AssertionError', type: 'Error'},
+                error: {message: 'expected false to be truthy', name: 'AssertionError', type: 'Error'},
                 index: 8,
                 passed: false,
                 skipped: false,

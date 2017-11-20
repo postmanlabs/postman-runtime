@@ -84,8 +84,17 @@ runner.run(collection, {
         // Enable sending of bodies with GET requests (only supported on Node, ignored in the browser)
         sendBodyWithGetRequests: true,
 
-        // Allows restricting IP/host in requests
-        restrictedAddresses: {'192.168.1.1': true}
+        // network related options
+        network: {
+            hostLookup: { // hosts file configuration for dns lookup
+                type: 'hostIpMap',
+                hostIpMap: {
+                    'domain.com': '127.0.0.1',
+                    'ipv6-domain.com': '::1',
+                }
+            },
+            restrictedAddresses: {'192.168.1.1': true} // Allows restricting IP/host in requests
+        }
     },
 
     // A ProxyConfigList, from the SDK
@@ -116,7 +125,6 @@ You can pass a series of callbacks for runtime to execute as a collection is bei
 runner.run(collection, { /* options */ }, function(err, run) {
     run.start({
         // Called any time we see a new assertion in the test scripts
-        // *note* Not used yet.
         assertion: function (cursor, assertions) {
             // cursor = {
             //     position: Number,
@@ -127,7 +135,9 @@ runner.run(collection, { /* options */ }, function(err, run) {
             //     empty: Boolean,
             //     bof: Boolean,
             //     cr: Boolean,
-            //     ref: String
+            //     ref: String,
+            //     scriptId: String,
+            //     eventId: String
             // }
 
             // assertions: array of assertion objects
