@@ -1,6 +1,8 @@
 # Postman Runtime Changelog
 
 ### Unreleased
+
+### v7.1.0 (November 21, 2017)
 * Runtime now adds `system: true` to all the query parameters that it sets
 * More useful error messages for assertion failures in legacy `tests`
 * Digest auth does not attempt retries for invalid credentials/configuration. It will continue to retry for missing configuration.
