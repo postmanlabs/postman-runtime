@@ -125,7 +125,6 @@ You can pass a series of callbacks for runtime to execute as a collection is bei
 runner.run(collection, { /* options */ }, function(err, run) {
     run.start({
         // Called any time we see a new assertion in the test scripts
-        // *note* Not used yet.
         assertion: function (cursor, assertions) {
             // cursor = {
             //     position: Number,
@@ -136,7 +135,9 @@ runner.run(collection, { /* options */ }, function(err, run) {
             //     empty: Boolean,
             //     bof: Boolean,
             //     cr: Boolean,
-            //     ref: String
+            //     ref: String,
+            //     scriptId: String,
+            //     eventId: String
             // }
 
             // assertions: array of assertion objects
