@@ -15,7 +15,7 @@
             restrictedAddresses: {'x.x.x.x': true}
         }});
         ```
-    - In Unreleased
+    - In v7.1.0
         ```js
         runner.run(collection, {
             network: {
