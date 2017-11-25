@@ -100,7 +100,7 @@ function setup_version {
 	EOF
 
 	# Do an npm install. Suppress all output, especially those huge trees. There is no CLI flag to turn that off :/
-	npm install --silent &> /dev/null;
+	npm install --only=production --silent &> /dev/null;
 
 	# Setup is complete, go back to the original directory.
 	cd ${ORIG_DIR};
