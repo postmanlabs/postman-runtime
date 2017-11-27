@@ -60,12 +60,12 @@ runner.run(collection, {
 
     // Execute a folder/request using id/name or path
     entrypoint: {
-        //execute a folder/request using id or name
+        // execute a folder/request using id or name
         execute: 'folderName',
-        //'idOrName' in case of execute and 'path' in case of path 
-        //is chosen to specify the folder/request to be executed
+        // idOrName in case of execute and path in case of path 
+        // is chosen to specify the folder/request to be executed
         lookupStrategy: 'path',
-        //execute a folder/request using a path
+        // execute a folder/request using a path
         path: ['grand_parent_folder_idOrName', 'parent_folder_idOrName']
     },
 
