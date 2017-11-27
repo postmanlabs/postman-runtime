@@ -58,7 +58,7 @@ runner.run(collection, {
     // Globals (a "VariableScope" from the SDK)
     globals: new sdk.VariableScope(),
 
-    //'Execute a folder/request using id/name or path'
+    // Execute a folder/request using id/name or path
     entrypoint: {
         //execute a folder/request using id or name
         execute: 'folderName',
@@ -66,7 +66,7 @@ runner.run(collection, {
         //is chosen to specify the folder/request to be executed
         lookupStrategy: 'path',
         //execute a folder/request using a path
-        path: ['grand_parent_folder_id', 'parent_folder_id']
+        path: ['grand_parent_folder_idOrName', 'parent_folder_idOrName']
     },
 
     // Configure delays (in ms)
