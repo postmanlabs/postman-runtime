@@ -2,6 +2,10 @@
 
 ### Unreleased
 
+### v7.1.1 (November 30, 2017)
+* Dropped support for legacy `serviceName` property in `aws` auth.
+* :arrow_up: Updated dependencies.
+
 ### v7.1.0 (November 21, 2017)
 * Runtime now adds `system: true` to all the query parameters that it sets
 * More useful error messages for assertion failures in legacy `tests`
