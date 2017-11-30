@@ -40,7 +40,7 @@
     "node-oauth1": "1.2.2",
     "postman-collection": "3.0.5",
     "postman-request": "2.81.1-postman.3",
-    "postman-sandbox": "3.0.3",
+    "postman-sandbox": "3.0.4",
     "resolve-from": "4.0.0",
     "serialised-error": "1.1.2",
     "uuid": "3.1.0"
