@@ -719,6 +719,147 @@ describe('Auth Handler:', function () {
             expect(request.headers.all().length).to.be(0);
             expect(request.url.query.all().length).to.be(0);
         });
+
+        it('should remove user defined Authorization header and query param for addTokenTo: header', function () {
+            var requestWithAuthHeader,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            requestWithAuthHeader = _.defaults({
+                header: [{key: 'Authorization', value: 'This should be removed'}],
+                url: 'https://postman-echo.com/get?access_token=not-anymore'
+            }, requestObj);
+
+            request = new Request(requestWithAuthHeader);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.toJSON()).to.eql([{
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            }]);
+
+            expect(request.url.toJSON()).to.eql({
+                protocol: 'https',
+                path: ['get'],
+                host: ['postman-echo', 'com'],
+                query: [],
+                variable: []
+            });
+        });
+
+        it('should remove user defined Authorization header and query param for addTokenTo: queryParams', function () {
+            var requestWithAuthHeader,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            requestWithAuthHeader = _.defaults({
+                auth: {
+                    type: 'oauth2',
+                    oauth2: {
+                        accessToken: '123456789abcdefghi',
+                        addTokenTo: 'queryParams',
+                        tokenType: 'bearer'
+                    }
+                },
+                header: [{key: 'Authorization', value: 'This should be removed'}],
+                url: 'https://postman-echo.com/get?access_token=not-anymore'
+            }, requestObj);
+
+            request = new Request(requestWithAuthHeader);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.toJSON()).to.eql([]);
+
+            expect(request.url.toJSON()).to.eql({
+                protocol: 'https',
+                path: ['get'],
+                host: ['postman-echo', 'com'],
+                query: [{key: 'access_token', value: '123456789abcdefghi', system: true}],
+                variable: []
+            });
+        });
+
+        it('should not remove user config for bail out case', function () {
+            var requestWithAuthHeader,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            // no access token
+            requestWithAuthHeader = _.defaults({
+                auth: {
+                    type: 'oauth2',
+                    oauth2: {
+                        addTokenTo: 'queryParams',
+                        tokenType: 'bearer'
+                    }
+                },
+                header: [{key: 'Authorization', value: 'Old-Header'}],
+                url: 'https://postman-echo.com/get?access_token=old-token'
+            }, requestObj);
+
+            request = new Request(requestWithAuthHeader);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.toJSON()).to.eql([{key: 'Authorization', value: 'Old-Header'}]);
+
+            expect(request.url.toJSON()).to.eql({
+                protocol: 'https',
+                path: ['get'],
+                host: ['postman-echo', 'com'],
+                query: [{key: 'access_token', value: 'old-token'}],
+                variable: []
+            });
+
+            // invalid token type
+            requestWithAuthHeader = _.defaults({
+                auth: {
+                    type: 'oauth2',
+                    oauth2: {
+                        accessToken: '123456789abcdefghi',
+                        addTokenTo: 'queryParams',
+                        tokenType: 'micdrop'
+                    }
+                },
+                header: [{key: 'Authorization', value: 'Old-Header'}],
+                url: 'https://postman-echo.com/get?access_token=old-token'
+            }, requestObj);
+
+            request = new Request(requestWithAuthHeader);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.toJSON()).to.eql([{key: 'Authorization', value: 'Old-Header'}]);
+
+            expect(request.url.toJSON()).to.eql({
+                protocol: 'https',
+                path: ['get'],
+                host: ['postman-echo', 'com'],
+                query: [{key: 'access_token', value: 'old-token'}],
+                variable: []
+            });
+        });
     });
 
     // querystring.unescape is not available in browserify's querystring module, so this goes to hell
