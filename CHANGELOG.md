@@ -1,6 +1,13 @@
 # Postman Runtime Changelog
 
-### Unreleased
+#### v7.1.2 (December 8, 2017)
+* Updated dependencies :arrow_up:
+* #500 Fixed entrypoint detection error :bug:
+* #498 Cleared OAuth2 state conflicts for duplicate parameters :bug:
+* #490 Switched to variable lists from POJOs :racehorse:
+* #492 Removed redundant AWS auth region fallback :bug:
+* #491 Updated entrypoint documentation :srcoll:
+* #487 Accelerated memory leack checker script :racehorse:
 
 ### v7.1.1 (November 30, 2017)
 * Dropped support for legacy `serviceName` property in `aws` auth.
