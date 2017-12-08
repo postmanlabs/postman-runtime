@@ -35,11 +35,25 @@ describe('runner', function () {
             });
 
             describe('invalid entrypoint', function () {
-                it('must bail out if options.abortOnError is set', function (done) {
+                it('must bail out if options.abortOnError is set with entrypoint as string', function (done) {
                     var runner = new Runner();
 
                     runner.run(collection, {
-                        entrypoint: 'random',
+                        entrypoint: {execute: 'random'},
+                        abortOnError: true
+                    }, function (err, run) {
+                        expect(err.message).to.be('Unable to find a folder or request: random');
+                        expect(run).to.not.be.ok();
+
+                        done();
+                    });
+                });
+
+                it('must bail out if options.abortOnError is set with entrypoint as object', function (done) {
+                    var runner = new Runner();
+
+                    runner.run(collection, {
+                        entrypoint: {execute: 'random'},
                         abortOnError: true
                     }, function (err, run) {
                         expect(err.message).to.be('Unable to find a folder or request: random');
