@@ -39,7 +39,7 @@ describe('runner', function () {
                     var runner = new Runner();
 
                     runner.run(collection, {
-                        entrypoint: 'random',
+                        entrypoint: {execute: 'random'},
                         abortOnError: true
                     }, function (err, run) {
                         expect(err.message).to.be('Unable to find a folder or request: random');
