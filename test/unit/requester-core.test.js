@@ -3,7 +3,7 @@
 var expect = require('expect.js'),
     sdk = require('postman-collection'),
     runtimeVersion = require('../../package').version,
-    requesterUtil = require('../../lib/requester/util');
+    requesterCore = require('../../lib/requester/core');
 
 describe('requester util', function () {
     describe('.getRequestOptions', function () {
@@ -21,7 +21,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestOptions(request, {})).to.eql({
+            expect(requesterCore.getRequestOptions(request, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -54,7 +54,7 @@ describe('requester util', function () {
                 }]
             });
 
-            expect(requesterUtil.getRequestOptions(request, {})).to.eql({
+            expect(requesterCore.getRequestOptions(request, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -80,7 +80,7 @@ describe('requester util', function () {
                 url: 'http://localhost:8080/random/path'
             });
 
-            expect(requesterUtil.getRequestOptions(request, {}).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(request, {}).lookup).to.be.a('function');
         });
 
         it('should override lookup function for restricted addresses', function () {
@@ -95,7 +95,7 @@ describe('requester util', function () {
                     }
                 };
 
-            expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
         });
 
         it('should override lookup function for hosts', function () {
@@ -110,7 +110,7 @@ describe('requester util', function () {
                     }
                 };
 
-            expect(requesterUtil.getRequestOptions(request, options).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
         });
     });
 
@@ -118,21 +118,21 @@ describe('requester util', function () {
         it('should not mutate the header if it already exists', function () {
             var headers = {alpha: 'foo', beta: 'bar'};
 
-            requesterUtil.ensureHeaderExists(headers, 'alpha');
+            requesterCore.ensureHeaderExists(headers, 'alpha');
             expect(headers).to.eql({alpha: 'foo', beta: 'bar'});
         });
 
         it('should correctly set a missing header', function () {
             var headers = {alpha: 'foo', beta: 'bar'};
 
-            requesterUtil.ensureHeaderExists(headers, 'gamma', 'baz');
+            requesterCore.ensureHeaderExists(headers, 'gamma', 'baz');
             expect(headers).to.eql({alpha: 'foo', beta: 'bar', gamma: 'baz'});
         });
     });
 
     describe('.getRequestHeaders', function () {
         it('should handle invalid input correctly', function () {
-            var result = requesterUtil.getRequestHeaders({});
+            var result = requesterCore.getRequestHeaders({});
             expect(result).to.be(undefined);
         });
 
@@ -149,7 +149,7 @@ describe('requester util', function () {
                         {key: '', value: 'random'}
                     ]
                 }),
-                headers = requesterUtil.getRequestHeaders(request);
+                headers = requesterCore.getRequestHeaders(request);
 
             expect(headers).to.eql({
                 alpha: ['foo', 'next', 'other'],
@@ -166,7 +166,7 @@ describe('requester util', function () {
                 body: {mode: 'formdata'}
             });
 
-            expect(requesterUtil.getRequestBody(request)).to.be(undefined);
+            expect(requesterCore.getRequestBody(request)).to.be(undefined);
         });
 
         it('should correctly handle missing bodies', function () {
@@ -175,7 +175,7 @@ describe('requester util', function () {
                 method: 'POST'
             });
 
-            expect(requesterUtil.getRequestBody(request)).to.be(undefined);
+            expect(requesterCore.getRequestBody(request)).to.be(undefined);
         });
 
         it('should correctly handle missing request methods', function () {
@@ -195,7 +195,7 @@ describe('requester util', function () {
             });
 
             delete request.method;
-            expect(requesterUtil.getRequestBody(request, {})).to.eql({
+            expect(requesterCore.getRequestBody(request, {})).to.eql({
                 formData: {foo: 'bar'}
             });
         });
@@ -212,7 +212,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestBody(request, {sendBodyWithGetRequests: true})).to.eql({
+            expect(requesterCore.getRequestBody(request, {sendBodyWithGetRequests: true})).to.eql({
                 formData: {foo: 'bar'}
             });
         });
@@ -227,7 +227,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestBody(request)).to.eql({
+            expect(requesterCore.getRequestBody(request)).to.eql({
                 body: '{"beta":"bar"}'
             });
         });
@@ -248,7 +248,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestBody(request)).to.eql({
+            expect(requesterCore.getRequestBody(request)).to.eql({
                 form: {alpha: ['foo', 'other', 'next'], beta: 'bar'}
             });
         });
@@ -269,7 +269,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestBody(request)).to.eql({
+            expect(requesterCore.getRequestBody(request)).to.eql({
                 formData: {alpha: ['foo', 'other', 'next'], beta: 'bar'}
             });
         });
@@ -284,7 +284,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestBody(request)).to.have.property('body');
+            expect(requesterCore.getRequestBody(request)).to.have.property('body');
         });
 
         it('should handle arbitrary request bodies correctly', function () {
@@ -297,29 +297,29 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterUtil.getRequestBody(request)).to.be(undefined);
+            expect(requesterCore.getRequestBody(request)).to.be(undefined);
         });
     });
 
     describe('.jsonifyResponse', function () {
         it('should handle falsy input correctly', function () {
-            expect(requesterUtil.jsonifyResponse()).to.be(undefined);
+            expect(requesterCore.jsonifyResponse()).to.be(undefined);
         });
     });
 
     describe('.arrayPairsToObject', function () {
         it('should bail out for non-arrays', function () {
-            var result = requesterUtil.arrayPairsToObject('random');
+            var result = requesterCore.arrayPairsToObject('random');
             expect(result).to.be(undefined);
         });
 
         it('should correctly convert an array of pairs to an object', function () {
-            var obj = requesterUtil.arrayPairsToObject(['a', 'b', 'c', 'd']);
+            var obj = requesterCore.arrayPairsToObject(['a', 'b', 'c', 'd']);
             expect(obj).to.eql({a: 'b', c: 'd'});
         });
 
         it('should correctly handle multi valued keys', function () {
-            var obj = requesterUtil.arrayPairsToObject(['a', 'b', 'c', 'd', 'a', 'e']);
+            var obj = requesterCore.arrayPairsToObject(['a', 'b', 'c', 'd', 'a', 'e']);
             expect(obj).to.eql({a: ['b', 'e'], c: 'd'});
         });
     });
