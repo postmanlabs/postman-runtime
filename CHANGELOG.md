@@ -9,11 +9,11 @@
 * #491 Updated entrypoint documentation :srcoll:
 * #487 Accelerated memory leack checker script :racehorse:
 
-### v7.1.1 (November 30, 2017)
+#### v7.1.1 (November 30, 2017)
 * Dropped support for legacy `serviceName` property in `aws` auth.
 * :arrow_up: Updated dependencies.
 
-### v7.1.0 (November 21, 2017)
+#### v7.1.0 (November 21, 2017)
 * Runtime now adds `system: true` to all the query parameters that it sets
 * More useful error messages for assertion failures in legacy `tests`
 * Digest auth does not attempt retries for invalid credentials/configuration. It will continue to retry for missing configuration.
@@ -35,7 +35,7 @@
         }});
         ```
 
-### v7.0.1 (November 8, 2017)
+#### v7.0.1 (November 8, 2017)
 * :bug: Fixed a bug where the assertions for legacy `tests` failures did not have an `error` object.
 * :arrow_up: Updated dependencies
 
