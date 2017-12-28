@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+### Unreleased
+* #480 Removed blacklisting of headers for aws auth. All the headers are now included in the signature calculation.
+
 #### v7.1.2 (December 8, 2017)
 * Updated dependencies :arrow_up:
 * #500 Fixed entrypoint detection error :bug:
