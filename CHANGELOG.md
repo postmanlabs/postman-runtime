@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+#### v7.1.3 (January 2, 2018)
+* #510 Updated `postman-request` to `v2.81.1-postman.4`, which contains a formdata `RangeError` bugfix.
+* #480 Removed blacklisting of headers for aws auth. All the headers are now included in the signature calculation.
+
 #### v7.1.2 (December 8, 2017)
 * Updated dependencies :arrow_up:
 * #500 Fixed entrypoint detection error :bug:
@@ -9,11 +13,11 @@
 * #491 Updated entrypoint documentation :srcoll:
 * #487 Accelerated memory leack checker script :racehorse:
 
-### v7.1.1 (November 30, 2017)
+#### v7.1.1 (November 30, 2017)
 * Dropped support for legacy `serviceName` property in `aws` auth.
 * :arrow_up: Updated dependencies.
 
-### v7.1.0 (November 21, 2017)
+#### v7.1.0 (November 21, 2017)
 * Runtime now adds `system: true` to all the query parameters that it sets
 * More useful error messages for assertion failures in legacy `tests`
 * Digest auth does not attempt retries for invalid credentials/configuration. It will continue to retry for missing configuration.
@@ -35,7 +39,7 @@
         }});
         ```
 
-### v7.0.1 (November 8, 2017)
+#### v7.0.1 (November 8, 2017)
 * :bug: Fixed a bug where the assertions for legacy `tests` failures did not have an `error` object.
 * :arrow_up: Updated dependencies
 
