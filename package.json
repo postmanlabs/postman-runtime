@@ -39,7 +39,7 @@
     "lodash": "4.17.4",
     "node-oauth1": "1.2.2",
     "postman-collection": "3.0.6",
-    "postman-request": "2.81.1-postman.3",
+    "postman-request": "2.81.1-postman.4",
     "postman-sandbox": "3.0.4",
     "resolve-from": "4.0.0",
     "serialised-error": "1.1.2",
