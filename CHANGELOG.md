@@ -1,6 +1,7 @@
 # Postman Runtime Changelog
 
-#### Unreleased
+#### v7.1.3 (January 2, 2018)
+* #510 Updated `postman-request` to `v2.81.1-postman.4`, which contains a formdata `RangeError` bugfix.
 * #480 Removed blacklisting of headers for aws auth. All the headers are now included in the signature calculation.
 
 #### v7.1.2 (December 8, 2017)
