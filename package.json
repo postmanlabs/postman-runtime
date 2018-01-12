@@ -65,7 +65,7 @@
     "parse-gitignore": "0.4.0",
     "postman-jsdoc-theme": "0.0.3",
     "recursive-readdir": "2.2.1",
-    "shelljs": "0.7.8",
+    "shelljs": "0.8.0",
     "sinon": "4.1.4",
     "tmp": "0.0.33"
   },
