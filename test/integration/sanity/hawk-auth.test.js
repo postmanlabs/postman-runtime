@@ -40,7 +40,7 @@ describe('Hawk authentication', function () {
 
         var response = testrun.request.getCall(0).args[2];
         expect(response.code).to.eql(200);
-        expect(response.json().status).to.eql('pass');
+        expect(response.json().message).to.eql('Hawk Authentication Successful');
     });
 
     it('must have completed the run', function () {
