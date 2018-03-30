@@ -1,4 +1,7 @@
 {
   "exceptions": [],
-  "exclusions": []
+  "exclusions": {
+    "hawk": "3.1.3",
+    "postman-request": "2.81.1-postman.4"
+  }
 }
