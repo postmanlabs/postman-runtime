@@ -29,10 +29,7 @@ describe('nsp', function () {
         });
 
         it('must exclude only a known set of packages', function () {
-            expect(nsprc.exclusions).to.eql({
-                hawk: '3.1.3',
-                'postman-request': '2.81.1-postman.4'
-            });
+            expect(nsprc.exclusions).to.eql({});
         });
 
         // if you are changing the version here, most probably you are better of removing the exclusion in first place.
