@@ -299,6 +299,92 @@ describe('requester util', function () {
 
             expect(requesterCore.getRequestBody(request)).to.be(undefined);
         });
+
+        describe('request bodies with special keywords', function () {
+            describe('formdata', function () {
+                it('should handle request bodies with whitelisted special keywords correctly', function () {
+                    var request = new sdk.Request({
+                        url: 'postman-echo.com/post',
+                        method: 'POST',
+                        body: {
+                            mode: 'formdata',
+                            formdata: [
+                                {key: 'constructor', value: 'builds away!'},
+                                {key: 'foo', value: 'bar'}
+                            ]
+                        }
+                    });
+
+                    expect(requesterCore.getRequestBody(request)).to.eql({
+                        formData: {constructor: 'builds away!', foo: 'bar'}
+                    });
+                });
+
+                it('should handle request bodies with multiple whitelisted special keywords correctly', function () {
+                    var request = new sdk.Request({
+                        url: 'postman-echo.com/post',
+                        method: 'POST',
+                        body: {
+                            mode: 'formdata',
+                            formdata: [
+                                {key: 'constructor', value: 'I\'ll be back'},
+                                {key: 'constructor', value: 'Come with me if you want to live!'},
+                                {key: 'foo', value: 'bar'}
+                            ]
+                        }
+                    });
+
+                    expect(requesterCore.getRequestBody(request)).to.eql({
+                        formData: {
+                            constructor: ['I\'ll be back', 'Come with me if you want to live!'],
+                            foo: 'bar'
+                        }
+                    });
+                });
+            });
+
+            describe('url encoded', function () {
+                it('should handle request bodies with whitelisted special keywords correctly', function () {
+                    var request = new sdk.Request({
+                        url: 'postman-echo.com/post',
+                        method: 'POST',
+                        body: {
+                            mode: 'urlencoded',
+                            urlencoded: [
+                                {key: 'constructor', value: 'builds away!'},
+                                {key: 'foo', value: 'bar'}
+                            ]
+                        }
+                    });
+
+                    expect(requesterCore.getRequestBody(request)).to.eql({
+                        form: {constructor: 'builds away!', foo: 'bar'}
+                    });
+                });
+
+                it('should handle request bodies with multiple whitelisted special keywords correctly', function () {
+                    var request = new sdk.Request({
+                        url: 'postman-echo.com/post',
+                        method: 'POST',
+                        body: {
+                            mode: 'urlencoded',
+                            urlencoded: [
+                                {key: 'constructor', value: 'I\'ll be back'},
+                                {key: 'constructor', value: 'Come with me if you want to live!'},
+                                {key: 'foo', value: 'bar'}
+                            ]
+                        }
+                    });
+
+                    expect(requesterCore.getRequestBody(request)).to.eql({
+                        form: {
+                            constructor: ['I\'ll be back', 'Come with me if you want to live!'],
+                            foo: 'bar'
+                        }
+                    });
+                });
+            });
+        });
     });
 
     describe('.jsonifyResponse', function () {

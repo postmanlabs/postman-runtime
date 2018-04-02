@@ -66,9 +66,9 @@ describe('project repository', function () {
                 expect(json.dependencies).to.be.a('object');
             });
 
-            // Hawk library v3.1.2+ uses ES6 and is not compatible with the browser.
+            // Hawk library v6.0.2+ uses ES2017 and is not compatible with Node <8.
             it('hawk version', function () {
-                expect(json.dependencies.hawk).to.be('3.1.3');
+                expect(json.dependencies.hawk).to.be('6.0.2');
             });
 
             it('must point to a valid semver', function () {
