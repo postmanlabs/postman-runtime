@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### v7.1.5 (April 10, 2018)
+* #565 Updated `postman-sandbox` to `v3.0.6`.
+
 #### v7.1.4 (April 9, 2018)
 * Updated dependencies :arrow_up:
 * #563 Updated `postman-sandbox` to `v3.0.5`, which fixes assertion centric bugs :bug:

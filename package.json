@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "7.1.4",
+  "version": "7.1.5",
   "description": "Underlying library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -40,7 +40,7 @@
     "node-oauth1": "1.2.2",
     "postman-collection": "3.0.6",
     "postman-request": "2.85.1-postman.1",
-    "postman-sandbox": "3.0.5",
+    "postman-sandbox": "3.0.6",
     "resolve-from": "4.0.0",
     "serialised-error": "1.1.2",
     "uuid": "3.2.1"
@@ -50,7 +50,7 @@
     "colors": "1.2.1",
     "editorconfig": "0.15.0",
     "eslint": "4.19.1",
-    "eslint-plugin-jsdoc": "3.5.0",
+    "eslint-plugin-jsdoc": "3.6.2",
     "eslint-plugin-lodash": "2.7.0",
     "eslint-plugin-mocha": "4.11.0",
     "eslint-plugin-security": "1.4.0",
