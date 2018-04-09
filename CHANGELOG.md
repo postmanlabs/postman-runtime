@@ -1,5 +1,11 @@
 # Postman Runtime Changelog
 
+#### v7.1.4 (April 9, 2018)
+* Updated dependencies :arrow_up:
+* #563 Updated `postman-sandbox` to `v3.0.5`, which fixes assertion centric bugs :bug:
+* #554 Updated `postman-request` to `v2.85.1-postman.1`, which fixes https://nodesecurity.io/advisories/566 :lock:.
+* #553 Fixed a bug that prevented JavaScript keywords from being used as keys in request bodies. :bug:
+
 #### v7.1.3 (January 2, 2018)
 * #510 Updated `postman-request` to `v2.81.1-postman.4`, which contains a formdata `RangeError` bugfix.
 * #480 Removed blacklisting of headers for aws auth. All the headers are now included in the signature calculation.
