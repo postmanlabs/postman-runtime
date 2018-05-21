@@ -34,7 +34,7 @@
     "eventemitter3": "3.1.0",
     "hawk": "6.0.2",
     "http-reasons": "0.1.0",
-    "httpntlm": "1.7.5",
+    "httpntlm": "1.7.6",
     "inherits": "2.0.3",
     "lodash": "4.17.9",
     "node-oauth1": "1.2.2",
