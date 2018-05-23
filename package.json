@@ -36,7 +36,7 @@
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.6",
     "inherits": "2.0.3",
-    "lodash": "4.17.9",
+    "lodash": "4.17.10",
     "node-oauth1": "1.2.2",
     "postman-collection": "3.0.10",
     "postman-request": "2.86.1-postman.1",
