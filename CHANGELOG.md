@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+#### v7.1.6 (May 24, 2018)
+* Updated dependencies
+* Updated `postman-request` to `v2.86.1-postman.1`, which fixes https://nodesecurity.io/advisories/664
+
 #### v7.1.5 (April 10, 2018)
 * #565 Updated `postman-sandbox` to `v3.0.6`.
 
