@@ -38,7 +38,7 @@
     "inherits": "2.0.3",
     "lodash": "4.17.10",
     "node-oauth1": "1.2.2",
-    "postman-collection": "3.1.0-beta.1",
+    "postman-collection": "postmanlabs/postman-collection#feature/wip-change-tracking",
     "postman-request": "2.86.1-postman.1",
     "postman-sandbox": "3.0.9-beta.1",
     "resolve-from": "4.0.0",
