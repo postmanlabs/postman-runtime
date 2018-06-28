@@ -21,9 +21,7 @@ describe('variable changes', function() {
                     }, {
                         listen: 'test',
                         script: {
-                            exec: `
-                                pm.environment.set('environment', 'environment updated value');
-                            `
+                            exec: `pm.environment.set('environment', 'environment updated value');`
                         }
                     }],
                     request: 'https://postman-echo.com/get'
