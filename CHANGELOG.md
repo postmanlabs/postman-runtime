@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+### v7.2.0 (June 30, 2018)
+* Added support for variable change tracking in scripts. Variable scopes in `result` of script callbacks like `script`, `test` and `prerequest` will now have a `mutations` object. This contains only the mutations made within that script, if any.
+* Updated dependencies
+
 #### v7.1.6 (May 24, 2018)
 * Updated dependencies
 * Updated `postman-request` to `v2.86.1-postman.1`, which fixes https://nodesecurity.io/advisories/664
