@@ -158,13 +158,18 @@ describe('certificates', function () {
         });
 
         it('must trigger a console warning', function () {
-            expect(testrun.console.calledOnce).to.be.ok();
+            expect(testrun.console.calledTwice).to.be.ok();
 
-            var call = testrun.console.firstCall.args;
+            var call1 = testrun.console.firstCall.args,
+                call2 = testrun.console.secondCall.args;
 
-            expect(call[0]).to.have.property('ref');
-            expect(call[1]).to.eql('warn');
-            expect(call[2]).to.match(/^certificate load error:/);
+            expect(call1[0]).to.have.property('ref');
+            expect(call1[1]).to.eql('warn');
+            expect(call1[2]).to.match(/^certificate ("key"|"cert") load error:/);
+
+            expect(call2[0]).to.have.property('ref');
+            expect(call2[1]).to.eql('warn');
+            expect(call2[2]).to.match(/^certificate ("key"|"cert") load error:/);
         });
 
         after(function () {
