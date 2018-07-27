@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: New Authentication Mechanisms - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: New Authentication Mechanisms</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>New Authentication Mechanisms</h2>
+</header>
+
+<article>
+    <p>It's very easy to add new authentication mechanisms in Runtime and SDK. This document outlines the steps to be 
+done to add a new auth mechanism. For the purposes of this documentation, we'll call the new auth method <code>demo</code>.</p>
+<h2>Add your new authentication to Runtime</h2><p>Create a new file <code>demo.js</code> in <code>postman-runtime/lib/authorizer/</code></p>
+<p>Every auth method needs to expose four different hooks, <code>pre</code>, <code>post</code>, <code>init</code> and <code>sign</code>. These
+are called in the <a href="tutorial-request-send-flow.html">Request Send Flow</a>.</p>
+<pre class="prettyprint source lang-javascript"><code>module.exports = {
+    pre: function (context, requester, done) {
+        done(null, true);
+    },
+
+    init: function (context, requester, done) {
+        done(null);
+    },
+
+    post: function (context, requester, done) {
+        done(null, true);
+    },
+
+    sign: function (params, request) {
+        return request;
+    }
+};</code></pre><h3><code>pre</code></h3><p>This function accepts three parameters, the context, a requester and a callback. The context contains information
+about the current <a href="http://www.postmanlabs.com/postman-collection/Item.html">Item</a>, the cursor, etc.  The requester 
+allows you to perform intermediate requests if necessary.</p>
+<p>Ultimately, this function should check whether the required authentication parameters are present, and return a
+boolean value indicating whether the pre-verification was successful.</p>
+<p>e.g:</p>
+<pre class="prettyprint source lang-javascript"><code>pre: function demoAuthPreverification (context, requester, done) {
+    var auth = context.auth.demo.toObject();
+    // if username or password is not present, fail the pre-verification step.
+    if (!(auth.username && auth.password)) {
+        return done(null, false); 
+    }
+    done(null, true);
+}</code></pre><h3><code>init</code></h3><p>If the pre-verification step returns a falsey value, the Authorizer will call this function. This function 
+should ideally fetch all required parameters, by either sending requests or by asking the user for input, or any
+other mechanism.</p>
+<p>e.g:</p>
+<pre class="prettyprint source lang-javascript"><code>init: function demoAuthInitialize (context, requester, done) {
+    var auth = context.auth.demo.toObject();
+    requester.request(new sdk.Item({ request: 'http://demoserver.com' }), function(err, response) {
+        auth.challenge = response.headers.get('authorization');
+    });
+}</code></pre><h3><code>post</code></h3><p>Once the request is sent and the response is received, the Authorizer will call this function. The job of this
+function is to determine whether the request should be replayed. If the post-verification fails, the request is 
+replayed (sent again).</p>
+<p>e.g:</p>
+<pre class="prettyprint source lang-javascript"><code>post: function demoAuthPost (context, requester, done) {
+    var auth = context.auth.demo.toObject();
+    requester.request(new sdk.Item({ request: 'http://demoserver.com' }), function(err, response) {
+        if (response.code === 401) {
+            return done(null, false);  // replay the request
+        }
+        return done(null, true);  // don't replay
+    });
+}</code></pre><h3><code>sign</code></h3><p>This function is in charge of signing the request</p>
+<p>e.g:</p>
+<pre class="prettyprint source lang-javascript"><code>    sign: function demoSign (params, request) {
+        var auth = context.auth.demo.toObject();
+        request.addHeader({
+            key: 'Authorization',
+            value: 'Basic ' + btoa(auth.username + ':' + auth.password),
+            system: true
+        });
+        return request;
+    }</code></pre>
+</article>
+
+</section>
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

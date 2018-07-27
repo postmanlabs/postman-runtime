@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>runner/cursor.js - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">runner/cursor.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var _ = require('lodash'),
+    uuid = require('uuid'),
+    Cursor;
+
+/**
+ * @param {Number} [length=0]
+ * @param {Number} [cycles=1]
+ * @param {Number} [position=0]
+ * @param {Number} [iteration=0]
+ * @param {String} [ref]
+ * @constructor
+ */
+Cursor = function RunCursor (length, cycles, position, iteration, ref) {
+
+    this.length = Cursor.validate(length, 0);
+    this.position = Cursor.validate(position, 0, this.length);
+
+    this.cycles = Cursor.validate(cycles, 1, 1);
+    this.iteration = Cursor.validate(iteration, 0, this.cycles);
+
+    this.ref = ref || uuid.v4();
+};
+
+_.assign(Cursor.prototype, {
+    /**
+     *
+     *
+     * @param {Object} state
+     * @param {Number} [state.length=0]
+     * @param {Number} [state.cycles=1]
+     * @param {Number} [state.position=0]
+     * @param {Number} [state.iteration=0]
+     * @param {String} [state.ref]
+     * @param {Function} [callback] - receives `(err:Error, coords:Object, previous:Object)`
+     * @param {Object} [scope]
+     */
+    load: function (state, callback, scope) {
+        !state &amp;&amp; (state = {});
+        (state instanceof Cursor) &amp;&amp; (state = state.current());
+
+        this.reset(state.length, state.cycles, state.position, state.iteration, state.ref, callback, scope);
+    },
+
+    /**
+     * Update length and cycle bounds
+     *
+     * @param {Number} [length=0]
+     * @param {Number} [cycles=1]
+     * @param {Number} [position=0]
+     * @param {Number} [iteration=0]
+     * @param {String} [ref]
+     * @param {Function} [callback] - receives `(err:Error, coords:Object, previous:Object)`
+     * @param {Object} [scope]
+     */
+    reset: function (length, cycles, position, iteration, ref, callback, scope) {
+        var coords = _.isFunction(callback) &amp;&amp; this.current();
+
+        // validate parameter defaults
+        _.isNil(length) &amp;&amp; (length = this.length);
+        _.isNil(cycles) &amp;&amp; (cycles = this.cycles);
+        _.isNil(position) &amp;&amp; (position = this.position);
+        _.isNil(iteration) &amp;&amp; (iteration = this.iteration);
+        _.isNil(ref) &amp;&amp; (ref = this.ref);
+
+        // use the constructor to set the values
+        Cursor.call(this, length, cycles, position, iteration, ref);
+
+        // send before and after values to the callback
+        return coords &amp;&amp; callback.call(scope || this, null, this.current(), coords);
+    },
+
+    /**
+     * Update length and cycle bounds
+     *
+     * @param {Number} [length=0]
+     * @param {Number} [cycles=1]
+     * @param {Function} [callback] - receives `(err:Error, coords:Object, previous:Object)`
+     * @param {Object} [scope]
+     */
+    bounds: function (length, cycles, callback, scope) {
+        var coords = _.isFunction(callback) &amp;&amp; this.current();
+
+        // validate parameter defaults
+        _.isNil(length) &amp;&amp; (length = this.length);
+        _.isNil(cycles) &amp;&amp; (cycles = this.cycles);
+
+        // use the constructor to set the values
+        Cursor.call(this, length, cycles, this.position, this.iteration);
+
+        return coords &amp;&amp; callback.call(scope || this, null, this.current(), coords);
+    },
+
+    /**
+     * Set everything to minimum dimension
+     *
+     * @param {Function} [callback] - receives `(err:Error, coords:Object, previous:Object)`
+     * @param {Object} [scope]
+     */
+    zero: function (callback, scope) {
+        var coords = _.isFunction(callback) &amp;&amp; this.current();
+
+        this.position = 0;
+        this.iteration = 0;
+
+        // send before and after values to the callback
+        return coords &amp;&amp; callback.call(scope || this, null, this.current(), coords);
+    },
+
+    /**
+     * Set everything to mnimum dimension
+     *
+     * @param {Function} [callback] - receives `(err:Error, coords:Object, previous:Object)`
+     * @param {Object} [scope]
+     */
+    clear: function (callback, scope) {
+        var coords = _.isFunction(callback) &amp;&amp; this.current();
+
+        this.position = 0;
+        this.iteration = 0;
+        this.cycles = 1;
+        this.length = 0;
+
+        return coords &amp;&amp; callback.call(scope || this, null, this.current(), coords);
+    },
+
+    /**
+     * Seek to a specified Cursor
+     *
+     * @param {Number} [position]
+     * @param {Number} [iteration]
+     * @param {Function} [callback] - receives `(err:Error, changed:Boolean, coords:Object, previous:Object)`
+     * @param {Object} [scope]
+     */
+    seek: function (position, iteration, callback, scope) {
+        var coords = _.isFunction(callback) &amp;&amp; this.current();
+
+        // if null or undefined implies use existing seek position
+        _.isNil(position) &amp;&amp; (position = this.position);
+        _.isNil(iteration) &amp;&amp; (iteration = this.iteration);
+
+        // make the pointers stay within boundary
+        if ((position >= this.length) || (iteration >= this.cycles) || (position &lt; 0) || (iteration &lt; 0) ||
+            isNaN(position) || isNaN(iteration)) {
+            return coords &amp;&amp;
+                callback.call(scope || this, new Error('runcursor: seeking out of bounds: ' + [position, iteration]));
+        }
+
+        // floor the numbers
+        position = ~~position;
+        iteration = ~~iteration;
+
+        // set the new positions
+        this.position = Cursor.validate(position, 0, this.length);
+        this.iteration = Cursor.validate(iteration, 0, this.cycles);
+
+        // finally execute the callback with the seek position
+        return coords &amp;&amp; callback.call(scope || this, null, this.hasChanged(coords), this.current(), coords);
+    },
+
+    /**
+     * Seek one forward
+     *
+     * @param {Function} [callback] - receives `(err:Error, changed:Boolean, coords:Object, previous:Object)`
+     * @param {Object} [scope]
+     */
+    next: function (callback, scope) {
+        var position = this.position,
+            iteration = this.iteration,
+
+            coords;
+
+        // increment position
+        position += 1;
+
+        // check if we need to increment cycle
+        if (position >= this.length) {
+            // set position to 0 and increment iteration
+            position = 0;
+            iteration += 1;
+
+            if (iteration >= this.cycles) {
+                coords = _.isFunction(callback) &amp;&amp; this.current();
+                coords.eof = true;
+                return coords &amp;&amp; callback.call(scope || this, null, false, coords, coords);
+            }
+
+            coords &amp;&amp; (coords.cr = true);
+        }
+
+        // finally handover the new coordinates to seek function
+        return this.seek(position, iteration, callback, scope);
+    },
+
+    /**
+     * Tentative Cursor status, if we do `.next()`
+     * @param {Object} coords
+     *
+     * @returns {Object}
+     */
+    whatnext: function (coords) {
+        var base = {
+                ref: this.ref,
+                length: this.length,
+                cycles: this.cycles
+            },
+            position,
+            iteration;
+
+        if (!_.isObject(coords)) {
+            return _.assign(base, {eof: true, bof: true, empty: this.empty()});
+        }
+        if (!this.length) {
+            return _.assign(base, {eof: true, bof: true, empty: true});
+        }
+
+        position = coords.position;
+        iteration = coords.iteration;
+
+        // increment position
+        position += 1;
+
+        // check if we need to increment cycle
+        if (position >= this.length) {
+            // set position to 0 and increment iteration
+            position = 0;
+            iteration += 1;
+
+            if (iteration >= this.cycles) {
+                return _.assign(base, {
+                    position: this.length - 1,
+                    iteration: iteration - 1,
+                    eof: true
+                });
+            }
+
+            return _.assign(base, {
+                position: position,
+                iteration: iteration,
+                cr: true
+            });
+        }
+
+        return _.assign(base, {position: position, iteration: iteration});
+    },
+
+    /**
+     * Check whether current position and iteration is not as the same specified
+     * @param {Object} coords
+     * @returns {Boolean}
+     */
+    hasChanged: function (coords) {
+        return _.isObject(coords) &amp;&amp; !((this.position === coords.position) &amp;&amp; (this.iteration === coords.iteration));
+    },
+
+    /**
+     * Current Cursor state
+     * @returns {Object}
+     */
+    current: function () {
+        return {
+            position: this.position,
+            iteration: this.iteration,
+            length: this.length,
+            cycles: this.cycles,
+            empty: this.empty(),
+            eof: this.eof(),
+            bof: this.bof(),
+            cr: this.cr(),
+            ref: this.ref
+        };
+    },
+
+    /**
+     * Is the current position going to trigger a new iteration on `.next`?
+     * @returns {Boolean}
+     */
+    cr: function () {
+        return !this.length || (this.position >= this.length);
+    },
+
+    /**
+     * @returns {Boolean}
+     */
+    eof: function () {
+        return !this.length || (this.position >= this.length) &amp;&amp; (this.iteration >= this.cycles);
+    },
+
+    /**
+     * @returns {Boolean}
+     */
+    bof: function () {
+        return !this.length || ((this.position === 0) &amp;&amp; (this.iteration === 0));
+    },
+
+    /**
+     * @returns {Boolean}
+     */
+    empty: function () {
+        return !this.length;
+    },
+
+    /**
+     * @returns {Object}
+     */
+    valueOf: function () {
+        return this.current();
+    },
+
+    clone: function () {
+        return new Cursor(this.length, this.cycles, this.position, this.iteration);
+    }
+});
+
+_.assign(Cursor, {
+    /**
+     * @param {Number} [length=0]
+     * @param {Number} [cycles=1]
+     * @param {Number} [position=0]
+     * @param {Number} [iteration=0]
+     * @param {String} [ref]
+     *
+     * @returns {Number}
+     */
+    create: function (length, cycles, position, iteration, ref) {
+        return new Cursor(length, cycles, position, iteration, ref);
+    },
+
+    /**
+     * @param {Object|Cursor} obj
+     * @param {Object} [bounds]
+     * @param {Number} [bounds.length]
+     * @param {Number} [bounds.cycles]
+     *
+     * @returns {Cursor}
+     */
+    box: function (obj, bounds) {
+        // already a Cursor, do nothing
+        if (obj instanceof Cursor) {
+            bounds &amp;&amp; obj.bounds(bounds.length, bounds.cycles);
+            return obj;
+        }
+
+        // nothing to box, create a blank Cursor
+        if (!_.isObject(obj)) { return new Cursor(bounds &amp;&amp; bounds.length, bounds &amp;&amp; bounds.cycles); }
+
+        // load Cursor values from object
+        return new Cursor((bounds || obj).length, (bounds || obj).cycles, obj.position, obj.iteration, obj.ref);
+    },
+
+    /**
+     * @private
+     *
+     * @param {Number} num
+     * @param {Number} min [description]
+     * @param {Number} [max]
+     *
+     * @returns {Number}
+     */
+    validate: function (num, min, max) {
+        if (typeof num !== 'number' || num &lt; min) {
+            return min;
+        }
+        if (num === Infinity) {
+            return _.isNil(max) ? min : max;
+        }
+
+        return num;
+    }
+});
+
+module.exports = Cursor;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

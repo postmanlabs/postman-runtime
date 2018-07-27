@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>AuthHandlerInterface - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">AuthHandlerInterface</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        AuthHandlerInterface
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Interface for implementing auth handlers</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="manifest"><span class="type-signature"></span>manifest<span class="type-signature"> :<a href="AuthHandlerInterface.html#~AuthManifest">AuthHandlerInterface~AuthManifest</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Defines the behaviour of an Auth Handler. This way the handler allows to statically analyse
+any changes the Handler will make ahead of time.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="AuthHandlerInterface.html#~AuthManifest">AuthHandlerInterface~AuthManifest</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line133">line 133</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="init"><span class="type-signature"></span>init<span class="signature">(auth, response, done)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This hook is called with the response from the intermediate request, which was requested from the
+<a href="AuthHandlerInterface.html#pre">pre</a> hook.
+Here the <code>auth</code> can be modified using the response. After this <a href="AuthHandlerInterface.html#pre">pre</a> hook will be
+called again to verify the required parameters.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>auth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AuthInterface.html">AuthInterface</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AuthHandlerInterface.html#~authInitHookCallback">AuthHandlerInterface~authInitHookCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback function which takes error as the only argument</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line153">line 153</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="post"><span class="type-signature"></span>post<span class="signature">(auth, response, done)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This hook is called after the request is made. It receives the response using which it can determine whether
+it was a failure or success. It can also modify the <code>auth</code> and ask to replay the <code>request</code>.
+For this it has to call the <a href="AuthHandlerInterface.html#~authPostHookCallback">done</a> callback with <code>success</code> as false.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>auth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AuthInterface.html">AuthInterface</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AuthHandlerInterface.html#~authPostHookCallback">AuthHandlerInterface~authPostHookCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback function which takes error and success as arguments</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line178">line 178</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="pre"><span class="type-signature"></span>pre<span class="signature">(auth, done)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This hook decides whether all the required parameters are present in the auth or not.
+What happens next is dependent upon how the <code>done</code> callback is called.
+Check <a href="AuthHandlerInterface.html#~authPreHookCallback">AuthHandlerInterface~authPreHookCallback</a> for all the possible ways the callback can be called.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>auth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AuthInterface.html">AuthInterface</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AuthHandlerInterface.html#~authPreHookCallback">AuthHandlerInterface~authPreHookCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback function which takes error, success, and request as arguments</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line140">line 140</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="sign"><span class="type-signature"></span>sign<span class="signature">(auth, request, done)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This hook signs the <code>request</code> using the <code>auth</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>auth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AuthInterface.html">AuthInterface</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Request</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="AuthHandlerInterface.html#~authSignHookCallback">AuthHandlerInterface~authSignHookCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback function which takes error as the only argument</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line167">line 167</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+
+    
+
+    <h4 class="name" id="~authInitHookCallback"><span class="type-signature"></span>authInitHookCallback<span class="signature">(err<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This callback is called in the <code>init</code> hook of the auth handler</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line209">line 209</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="~AuthManifest">AuthManifest</h4>
+
+
+
+
+<div class="description">
+    <p>Structure of an Auth Manifest. See <a href="AuthHandlerInterface.html#manifest">AuthHandlerInterface#manifest</a> for description.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>info</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>version</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>updates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line228">line 228</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id="~authPostHookCallback"><span class="type-signature"></span>authPostHookCallback<span class="signature">(err<span class="signature-attributes">nullable</span>, success)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This callback is called in the <code>post</code> hook of the auth handler</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>success</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Defines whether the request was successful or not. If not, it will be replayed.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line221">line 221</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id="~authPreHookCallback"><span class="type-signature"></span>authPreHookCallback<span class="signature">(err<span class="signature-attributes">nullable</span>, success, request<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This callback is called in the <code>pre</code> hook of the auth handler
+Depending on what parameters are passed in this callback, one of the following flows will be executed:</p>
+<ol>
+<li>return (err): The request will be stopped and the error will be bubbled up</li>
+<li>return (null, true): The request will be signed and sent</li>
+<li>return (null, false): The request will be sent without being signed</li>
+<li>return (null, false, <code>request</code>):<ul>
+<li>send the intermediate request</li>
+<li>invoke the auth's <a href="AuthHandlerInterface.html#init">init</a> hook with the response of the intermediate request</li>
+<li>invoke the auth's <a href="AuthHandlerInterface.html#pre">pre</a> hook</li>
+</ul>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>success</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Defines whether the <a href="AuthHandlerInterface.html#pre">pre</a> hook was successful.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Request~definition</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>It can be either request definition or request URL</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line193">line 193</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                
+
+    
+
+    <h4 class="name" id="~authSignHookCallback"><span class="type-signature"></span>authSignHookCallback<span class="signature">(err<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>This callback is called in the <code>sign</code> hook of the auth handler</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_index.js.html">authorizer/index.js</a>, <a href="authorizer_index.js.html#line215">line 215</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

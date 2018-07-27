@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>backpack/index.js - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">backpack/index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var _ = require('lodash'),
+    meetExpectations,
+    backpack;
+
+/**
+ * ensure the specified keys are functions in subject
+ *
+ * @param {Object} subject
+ * @param {Array} expectations
+ * @param {Array=} [defaults]
+ * @returns {Object}
+ */
+meetExpectations = function (subject, expectations, defaults) {
+    // provided that the subject is an object, we meet expectations that the keys in array must be a function
+    _.isObject(subject) &amp;&amp; _.union(defaults, expectations).forEach(function (expect) {
+        !_.isFunction(subject[expect]) &amp;&amp; (subject[expect] = _.noop);
+    });
+    return subject;
+};
+
+module.exports = backpack = {
+    /**
+     * Ensures that the given argument is a callable.
+     *
+     * @param {*} arg
+     * @param {object=} ctx
+     * @returns {boolean|*}
+     */
+    ensure: function (arg, ctx) {
+        return (typeof arg === 'function') &amp;&amp; (ctx ? arg.bind(ctx) : arg) || undefined;
+    },
+
+    /**
+     * accept the callback parameter and convert it into a consistent object interface
+     *
+     * @param {Function|Object} cb
+     * @param {Array} [expect=]
+     * @returns {Object}
+     *
+     * @todo - write tests
+     */
+    normalise: function (cb, expect) {
+        if (_.isFunction(cb) &amp;&amp; cb.__normalised) {
+            return meetExpectations(cb, expect);
+        }
+
+        var userback, // this var will be populated and returned
+            // keep a reference of all initial callbacks sent by user
+            callback = (_.isFunction(cb) &amp;&amp; cb) || (_.isFunction(cb &amp;&amp; cb.done) &amp;&amp; cb.done),
+            callbackError = _.isFunction(cb &amp;&amp; cb.error) &amp;&amp; cb.error,
+            callbackSuccess = _.isFunction(cb &amp;&amp; cb.success) &amp;&amp; cb.success;
+
+        // create master callback that calls these user provided callbacks
+        userback = _.assign(function (err) {
+            // if common callback is defined, call that
+            callback &amp;&amp; callback.apply(this, arguments);
+
+            // for special error and success, call them if they are user defined
+            if (err) {
+                callbackError &amp;&amp; callbackError.apply(this, arguments);
+            }
+            else {
+                // remove the extra error param before calling success
+                callbackSuccess &amp;&amp; callbackSuccess.apply(this, (Array.prototype.shift.call(arguments), arguments));
+            }
+        }, _.isPlainObject(cb) &amp;&amp; cb, { // override error, success and done
+            error: function () {
+                return userback.apply(this, arguments);
+            },
+            success: function () {
+                // inject null to arguments and call the main callback
+                userback.apply(this, (Array.prototype.unshift.call(arguments, null), arguments));
+            },
+            done: function () {
+                return userback.apply(this, arguments);
+            },
+            __normalised: true
+        });
+
+        return meetExpectations(userback, expect);
+    },
+
+    /**
+     * Convert a callback into a function that is called multiple times and the callback is actually called when a set
+     * of flags are set to true
+     *
+     * @param {Array} flags
+     * @param {Function} callback
+     * @param {Array} args
+     * @param {Number} ms
+     * @returns {Function}
+     */
+    multiback: function (flags, callback, args, ms) {
+        var status = {},
+            sealed;
+
+        // ensure that the callback times out after a while
+        callback = backpack.timeback(callback, ms, null, function () {
+            sealed = true;
+        });
+
+        return function (err, flag, value) {
+            if (sealed) { return; } // do  not proceed of it is sealed
+            status[flag] = value;
+
+            if (err) { // on error we directly call the callback and seal subsequent calls
+                sealed = true;
+                status = null;
+                callback.call(status, err);
+                return;
+            }
+
+            // if any flag is not defined, we exit. when all flags hold a value, we know that the end callback has to be
+            // executed.
+            for (var i = 0, ii = flags.length; i &lt; ii; i++) {
+                if (!status.hasOwnProperty(flags[i])) { return; }
+            }
+
+            sealed = true;
+            status = null;
+            callback.apply(status, args);
+        };
+    },
+
+    /**
+     * Ensures that a callback is executed within a specific time.
+     *
+     * @param {Function} callback
+     * @param {Number=} [ms]
+     * @param {Object=} [scope]
+     * @param {Function=} [when] - function executed right before callback is called with timeout. one can do cleanup
+     * stuff here
+     * @returns {Function}
+     */
+    timeback: function (callback, ms, scope, when) {
+        ms = Number(ms);
+
+        // if np callback time is specified, just return the callback function and exit. this is because we do need to
+        // track timeout in 0ms
+        if (!ms) {
+            return callback;
+        }
+
+        var sealed = false,
+            irq = setTimeout(function () { // irq = interrupt request
+                sealed = true;
+                irq = null;
+                when &amp;&amp; when.call(scope || this);
+                callback.call(scope || this, new Error('callback timed out'));
+            }, ms);
+
+        return function () {
+            // if sealed, it means that timeout has elapsed and we accept no future callback
+            if (sealed) { return undefined; }
+
+            // otherwise we clear timeout and allow the callback to be executed. note that we do not seal the function
+            // since we should allow multiple callback calls.
+            irq &amp;&amp; (irq = clearTimeout(irq));
+            return callback.apply(scope || this, arguments);
+        };
+    }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

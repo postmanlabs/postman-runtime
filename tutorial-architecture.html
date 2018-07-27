@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: Architecture - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: Architecture</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>Architecture</h2>
+</header>
+
+<article>
+    <p>Postman Runtime has a queue-command based architecture, which allows a lot of flexibility
+when adding new behavior. Each concept below is explained in detail in its own module documentation.</p>
+<h3>Commands</h3><p>Each command accepts a payload and a callback, which should be called when the command is complete.
+By convention, the callback that indicates completion is called <code>next()</code> in the code.</p>
+<p>There is also the ability to pass additional information to the command, it will be covered in a
+later section.</p>
+<p>Example commands:</p>
+<ol>
+<li><p><code>test-script</code></p>
+<p> This command accepts a <em>test</em> <a href="http://www.postmanlabs.com/postman-collection/Event.html"><code>Event</code></a> as a part
+ of its payload, and runs the script using <a href="https://github.com/postmanlabs/postman-sandbox"><code>postman-sandbox</code></a>.</p>
+</li>
+<li><p><code>item</code></p>
+<p> This command is in charge of queuing a <code>prerequest</code>, <code>request</code> and <code>test</code> command, one after the other. It also
+ performs intermediate error handling. As you can see, a command has the option to queue other commands.</p>
+</li>
+</ol>
+<p>There are other commands too. They'll be explained in a later section.</p>
+<h3>Command (Instruction) Processer</h3><pre class="prettyprint source lang-text"><code>
+-------------------------------
+ C1 | C2 | C3 | C4 | ....
+-------------------------------
+  ^   ^
+  |   |
+  |   +---- Next command
+  |
+  +-------- Current command</code></pre><p>The commands are added to a queue, and processed one after the other. At any time,
+only one command may be running (but a command has the flexibility to run multiple tasks
+in parallel).</p>
+<p>Commands have the ability to manipulate the queue, by queueing additional commands, or interrupting the
+queue.</p>
+<h3>Triggers</h3><p>Triggers are the main interface through which Runtime interacts with the outside world. When starting a Run,
+users have the ability to provide a set of triggers to runtime. These are functions, which are called at specific
+times during a run. There are a great number of triggers supported by runtime, and new triggers are added
+regularly.</p>
+<p>Example triggers:</p>
+<ol>
+<li><p><code>start</code></p>
+<p>This trigger is called when runtime is ready to start a new run (but before actually starting it).</p>
+</li>
+<li><p><code>beforeRequest</code></p>
+<p> Before sending a request, runtime calls this trigger, and provides information about the request which is
+ about to be sent. This includes the final request, after variable resolution, authentication handlers, etc.</p>
+</li>
+</ol>
+<p>Check the readme for a complete list of supported triggers.</p>
+<h3>Requester</h3><p>Runtime allows sending requests from any command. This is done using a <code>Requester</code>. While the current implementation
+has only an HTTP requester, the architecture is such that we can add more types of requesters, such as
+Websocket, or even FTP.</p>
+<p>The HTTP requester accepts an Item, and returns the response, cookies and the sent request. It also adds
+extra headers, such as a <code>User-Agent</code>.</p>
+<h3>Request Flow</h3><p>Runtime supports a complicated request control flow, and performs multiple tasks such as:</p>
+<ol>
+<li>Variable Resolution</li>
+<li>Signing the request for various types of authentication mechanisms</li>
+<li>Reading of file attachements</li>
+<li>Looking up proxy information if required</li>
+<li>Loading client side SSL certificates</li>
+<li>Actually sending the request</li>
+<li>Determining if a replay is necessary (auth)</li>
+<li>Replaying a request</li>
+</ol>
+<h3>Authorizer</h3><p>A big part of the flow above is controlled by the Authorizer, which ultimately takes the call on
+whether a request was successfully signed, and decides whether it should be replayed.</p>
+<p>Runtime supports the following auths</p>
+<ol>
+<li>Basic</li>
+<li>Digest</li>
+<li>AWS Signature</li>
+<li>OAuth-1</li>
+<li>Oauth-2</li>
+<li>Hawk</li>
+<li>NTLM</li>
+</ol>
+<p>To know how to add a new auth, see this doc <a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a>.</p>
+<p>Each auth implements the <a href="AuthHandlerInterface.html">AuthHandlerInterface</a> which has the following hooks:</p>
+<ul>
+<li>pre</li>
+<li>init</li>
+<li>sign</li>
+<li>post</li>
+</ul>
+</article>
+
+</section>
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

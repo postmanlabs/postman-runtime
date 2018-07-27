@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>authorizer/oauth1.js - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">authorizer/oauth1.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var _ = require('lodash'),
+    RequestBody = require('postman-collection').RequestBody,
+    oAuth1 = require('node-oauth1'),
+
+    EMPTY = '',
+
+    OAUTH1_PARAMS = {
+        oauthConsumerKey: 'oauth_consumer_key',
+        oauthToken: 'oauth_token',
+        oauthSignatureMethod: 'oauth_signature_method',
+        oauthTimestamp: 'oauth_timestamp',
+        oauthNonce: 'oauth_nonce',
+        oauthVersion: 'oauth_version',
+        oauthSignature: 'oauth_signature'
+    };
+
+/**
+ * @implements {AuthHandlerInterface}
+ */
+module.exports = {
+    /**
+     * @property {AuthHandlerInterface~AuthManifest}
+     */
+    manifest: {
+        info: {
+            name: 'oauth1',
+            version: '1.0.0'
+        },
+        updates: [
+            {
+                property: 'Authorization',
+                type: 'header'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthConsumerKey,
+                type: 'url.param'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthToken,
+                type: 'url.param'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthSignatureMethod,
+                type: 'url.param'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthTimestamp,
+                type: 'url.param'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthNonce,
+                type: 'url.param'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthVersion,
+                type: 'url.param'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthSignature,
+                type: 'url.param'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthConsumerKey,
+                type: 'body.urlencoded'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthToken,
+                type: 'body.urlencoded'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthSignatureMethod,
+                type: 'body.urlencoded'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthTimestamp,
+                type: 'body.urlencoded'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthNonce,
+                type: 'body.urlencoded'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthVersion,
+                type: 'body.urlencoded'
+            },
+            {
+                property: OAUTH1_PARAMS.oauthSignature,
+                type: 'body.urlencoded'
+            }
+        ]
+    },
+
+    /**
+     * Initializes an item (extracts parameters from intermediate requests if any, etc)
+     * before the actual authorization step.
+     *
+     * @param {AuthInterface} auth
+     * @param {Response} response
+     * @param {AuthHandlerInterface~authInitHookCallback} done
+     */
+    init: function (auth, response, done) {
+        done(null);
+    },
+
+    /**
+     * Verifies whether the request has valid basic auth credentials (which is always).
+     * Sanitizes the auth parameters if needed.
+     *
+     * @param {AuthInterface} auth
+     * @param {AuthHandlerInterface~authPreHookCallback} done
+     */
+    pre: function (auth, done) {
+        done(null, true);
+    },
+
+    /**
+     * Verifies whether the basic auth succeeded.
+     *
+     * @param {AuthInterface} auth
+     * @param {Response} response
+     * @param {AuthHandlerInterface~authPostHookCallback} done
+     */
+    post: function (auth, response, done) {
+        done(null, true);
+    },
+
+    /**
+     * Generates a oAuth1.
+     *
+     * @param {Object} params
+     * @param {String} params.url OAuth 1.0 Base URL
+     * @param {String} params.method Request method
+     * @param {Object[]} params.helperParams The auth parameters stored with the `Request`
+     * @param {Object[]} params.queryParams An array of query parameters
+     * @param {Object[]} params.bodyParams An array of request body parameters (in case of url-encoded bodies)
+     *
+     * @returns {*}
+     */
+    computeHeader: function (params) {
+        var url = params.url,
+            method = params.method,
+            helperParams = params.helperParams,
+            queryParams = params.queryParams,
+            bodyParams = params.bodyParams,
+            signatureParams,
+            message,
+            accessor = {},
+            allParams,
+            signature;
+
+        signatureParams = [
+            {system: true, key: OAUTH1_PARAMS.oauthConsumerKey, value: helperParams.consumerKey},
+            {system: true, key: OAUTH1_PARAMS.oauthToken, value: helperParams.token},
+            {system: true, key: OAUTH1_PARAMS.oauthSignatureMethod, value: helperParams.signatureMethod},
+            {system: true, key: OAUTH1_PARAMS.oauthTimestamp, value: helperParams.timestamp},
+            {system: true, key: OAUTH1_PARAMS.oauthNonce, value: helperParams.nonce},
+            {system: true, key: OAUTH1_PARAMS.oauthVersion, value: helperParams.version}
+        ];
+
+        signatureParams = _.filter(signatureParams, function (param) {
+            return helperParams.addEmptyParamsToSign || param.value;
+        });
+
+        allParams = [].concat(signatureParams, queryParams, bodyParams);
+        message = {
+            action: url,
+            method: method,
+            parameters: _.map(allParams, function (param) {
+                return [param.key, param.value];
+            })
+        };
+
+        if (helperParams.consumerSecret) {
+            accessor.consumerSecret = helperParams.consumerSecret;
+        }
+        if (helperParams.tokenSecret) {
+            accessor.tokenSecret = helperParams.tokenSecret;
+        }
+        signature = oAuth1.SignatureMethod.sign(message, accessor);
+        signatureParams.push({system: true, key: OAUTH1_PARAMS.oauthSignature, value: signature});
+        return signatureParams;
+    },
+
+    /**
+     * Signs a request.
+     *
+     * @param {AuthInterface} auth
+     * @param {Request} request
+     * @param {AuthHandlerInterface~authSignHookCallback} done
+     */
+    sign: function (auth, request, done) {
+        var params = auth.get([
+                'consumerKey',
+                'consumerSecret',
+                'token',
+                'tokenSecret',
+                'signatureMethod',
+                'timestamp',
+                'nonce',
+                'version',
+                'realm',
+                'addParamsToHeader',
+                'addEmptyParamsToSign'
+            ]),
+            signatureParams,
+            header;
+
+        if (!params.consumerKey || !params.consumerSecret) {
+            return done(); // Nothing to do if required parameters are not present.
+        }
+
+        // Remove existing headers and params (if any)
+        request.removeHeader('Authorization');
+        request.removeQueryParams(_.values(OAUTH1_PARAMS));
+        request.body &amp;&amp; request.body.urlencoded &amp;&amp; request.body.urlencoded.remove(function (param) {
+            return _.includes(_.values(OAUTH1_PARAMS), param.key);
+        });
+
+        // Generate a new nonce and timestamp
+        params.nonce = params.nonce || oAuth1.nonce(11).toString();
+        params.timestamp = params.timestamp || oAuth1.timestamp().toString();
+
+        // Ensure that empty parameters are not added to the signature
+        if (!params.addEmptyParamsToSign) {
+            params = _.reduce(params, function (accumulator, value, key) {
+                if (_.isString(value) &amp;&amp; (value.trim() === EMPTY)) {
+                    return accumulator;
+                }
+                accumulator[key] = value;
+                return accumulator;
+            }, {});
+        }
+
+        // Generate a list of parameters associated with the signature.
+        signatureParams = this.computeHeader({
+            url: request.url.getOAuth1BaseUrl(),
+            method: request.method,
+            queryParams: request.url.query &amp;&amp; request.url.query.count() ? request.url.query.map(function (qParam) {
+                return {
+                    key: qParam.key,
+                    value: qParam.value
+                };
+            }) : [],
+
+            // todo: WTF! figure out a better way
+            // Body params only need to be included if they are URL encoded.
+            // http://oauth.net/core/1.0a/#anchor13
+            bodyParams: (request.body &amp;&amp;
+                request.body.mode === RequestBody.MODES.urlencoded &amp;&amp;
+                request.body.urlencoded &amp;&amp;
+                request.body.urlencoded.count &amp;&amp;
+                request.body.urlencoded.count()) ? request.body.urlencoded.map(function (formParam) {
+                    return {
+                        key: formParam.key,
+                        value: formParam.value
+                    };
+                }) : [],
+            helperParams: params
+        });
+
+        // The OAuth specification says that we should add parameters in the following order of preference:
+        // 1. Auth Header
+        // 2. Body parameters
+        // 3. Query parameters
+        //
+        // http://oauth.net/core/1.0/#consumer_req_param
+        if (params.addParamsToHeader) {
+            header = oAuth1.getAuthorizationHeader(params.realm, _.map(signatureParams, function (param) {
+                return [param.key, param.value];
+            }));
+            request.addHeader({
+                key: 'Authorization',
+                value: header,
+                system: true
+            });
+        }
+        else if (/PUT|POST/.test(request.method) &amp;&amp;
+                (request.body &amp;&amp; request.body.mode === RequestBody.MODES.urlencoded)) {
+            _.forEach(signatureParams, function (param) {
+                request.body.urlencoded.add(param);
+            });
+        }
+        else {
+            request.addQueryParams(signatureParams);
+        }
+
+        return done();
+    }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

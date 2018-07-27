@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>runner/instruction.js - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">runner/instruction.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * An instruction is a self contained piece of information that can be created and then later be executed. {@link Run}
+ * instance uses this as the values of the `Run.next` queue.
+ *
+ * @module  Run~Instructions
+ */
+var _ = require('lodash'),
+    Timings = require('./timings'),
+
+    arrayProtoSlice = Array.prototype.slice,
+    arrayProtoUnshift = Array.prototype.unshift,
+
+    pool; // function
+
+/**
+ * Create a new instruction pool
+ *
+ * @param {Object.&lt;Function>} processors - hash of all command processor functions
+ * @returns {InstructionPool}
+ */
+pool = function (processors) {
+    !_.isObject(processors) &amp;&amp; (processors = {});
+
+    /**
+     * Create a new instruction to be executed later
+     * @constructor
+     *
+     * @param {String} name - name of the instruction. this is useful for later lookup of the `processor` function when
+     * deserialising this object
+     * @param {Object} [payload] - a **JSON compatible** object that will be forwarded as the 2nd last parameter to the
+     * processor.
+     * @param {Array} [args] - all the arguments that needs to be passed to the processor is in this array
+     * @private
+     * @example
+     * var inst = Instruction.create(function (arg1, payload, next) {
+     *         console.log(payload);
+     *         next(null, 'hello-on-execute with ' + arg1);
+     *     }, 'sample-instruction', {
+     *         payloadData1: 'value'
+     *     }, ['one-arg']);
+     *
+     * // now, when we do execute, the result will be a console.log of payload and message will be as expected
+     * instance.execute(function (err, message) {
+     *     console.log(message);
+     * });
+     *
+     */
+    var Instruction = function (name, payload, args) {
+        var processor = processors[name];
+
+        if (!_.isString(name) || !_.isFunction(processor)) {
+            throw new Error('run-instruction: invalid construction');
+        }
+
+        // ensure that payload is an object so that data storage can be done. also ensure arguments is an array
+        !_.isObject(payload) &amp;&amp; (payload = {});
+        !_.isArray(args) &amp;&amp; (args = []);
+
+        _.assign(this, /** @lends Instruction.prototype */ {
+            /**
+             * @type {String}
+             */
+            action: name,
+
+            /**
+             * @type {Object}
+             */
+            payload: payload,
+
+            /**
+             * @type {Array}
+             */
+            in: args,
+
+            /**
+             * @type {Timings}
+             */
+            timings: Timings.create(),
+
+            /**
+             * @private
+             * @type {Function}
+             */
+            _processor: processor
+        });
+
+        // record the timing when this instruction was created
+        this.timings.record('created');
+    };
+
+    /**
+     * Shortcut to `new Instruction(...);`
+     *
+     * @param {Function} processor
+     * @param {String} name
+     * @param {Object} [payload]
+     * @param {Array} [args]
+     *
+     * @returns {Instruction}
+     */
+    Instruction.create = function (processor, name, payload, args) {
+        return new Instruction(processor, name, payload, args);
+    };
+
+    /**
+     * Store all thenable items
+     *
+     * @type {Array}
+     */
+    Instruction._queue = [];
+
+    /**
+     * Executes an instruction with previously saved payload and arguments
+     *
+     * @param {Function} callback
+     * @param {*} [scope]
+     *
+     * @todo: use timeback and control it via options sent during pool creation as an option
+     */
+    Instruction.prototype.execute = function(callback, scope) {
+        !scope &amp;&amp; (scope = this);
+
+        var params = _.clone(this.in),
+            sealed = false,
+
+            doneAndSpread = function (err) {
+                if (sealed) {
+                    console.error('__postmanruntime_fatal_debug: instruction.execute callback called twice');
+                    return;
+                }
+                sealed = true;
+                this.timings.record('end');
+
+                var args = arrayProtoSlice.call(arguments);
+                arrayProtoUnshift.call(args, scope);
+
+                if (err) { // in case it errored, we do not process any thenables
+                    _.isArray(this._catch) &amp;&amp; _.invokeMap(this._catch, _.apply, scope, arguments);
+                }
+                else {
+                    // call all the `then` stuff and then the main callback
+                    _.isArray(this._done) &amp;&amp; _.invokeMap(this._done, _.apply, scope, _.tail(arguments));
+                }
+
+                setTimeout(callback.bind.apply(callback, args), 0);
+            }.bind(this);
+
+        // add two additional arguments at the end of the arguments saved - i.e. the payload and a function to call the
+        // callback asynchronously
+        params.push(this.payload, doneAndSpread);
+
+        this.timings.record('start');
+
+        // run the processor in a try block to avoid causing stalled runs
+        try {
+            this._processor.apply(scope, params);
+        }
+        catch (e) {
+            doneAndSpread(e);
+        }
+    };
+
+    Instruction.prototype.done = function (callback) {
+        (this._done || (this._done = [])).push(callback);
+        return this;
+    };
+
+    Instruction.prototype.catch = function (callback) {
+        (this._catch || (this._catch = [])).push(callback);
+        return this;
+    };
+
+    Instruction.clear = function () {
+        _.forEach(Instruction._queue, function (instruction) {
+            delete instruction._done;
+        });
+        Instruction._queue.length = 0;
+    };
+
+    Instruction.shift = function () {
+        return Instruction._queue.shift.apply(Instruction._queue, arguments);
+    };
+
+    Instruction.unshift = function () {
+        return Instruction._queue.unshift.apply(Instruction._queue, arguments);
+    };
+
+    Instruction.push = function () {
+        return Instruction._queue.push.apply(Instruction._queue, arguments);
+    };
+
+    return Instruction;
+};
+
+module.exports = {
+    pool: pool
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

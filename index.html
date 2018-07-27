@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>postman-runtime</h1><blockquote>
+<p>This is a low-level library used as the backbone for all Collection running &amp; Request sending functionality, in
+the Postman App, and allied systems (<a href="https://www.getpostman.com/docs/schedule_cloud_runs">Postman Monitoring</a>,
+<a href="https://github.com/postmanlabs/newman">Newman</a>)</p>
+</blockquote>
+<blockquote>
+<p>If you are looking to execute collections, you should be using Newman, this is very low level.</p>
+</blockquote>
+<h2>Development Notes</h2><ul>
+<li><code>npm run test</code>: Runs lint, system, unit and integration tests of runtime</li>
+<li><code>npm run test-integration-newman</code>: This command runs tests of newman with the under-development variant of runtime</li>
+<li><code>npm run test-coverage</code>: This command runs <code>postman-runtime</code> tests and generate overall coverage</li>
+<li><code>npm/memory-check.sh</code>: This bash scripts performs first-level memory usage analysis, and plots a graph out of the results</li>
+</ul>
+<h2>Options</h2><p>Postman Runtime supports a lot of options to customize its behavior for different environments and use-cases.</p>
+<pre class="prettyprint source lang-javascript"><code>var runner = new runtime.Runner(); // runtime = require('postman-runtime');
+
+// a collection object constructed using the Postman Collection SDK.
+var collection = new sdk.Collection();
+
+runner.run(collection, {
+    // Iteration Data
+    data: [],
+
+    // Timeouts (in ms)
+    timeout: {
+        request: 30000,
+        script: 5000
+    },
+
+    // Number of iterations
+    iterationCount: 1,
+
+    // Control flags (you can only specify one of these):
+
+    // - gracefully halts on errors (errors in request scripts or while sending the request)
+    //   calls the `item` and `iteration` callbacks and does not run any further items (requests)
+    stopOnError: true,
+
+    // - abruptly halts the run on errors, and directly calls the `done` callback
+    abortOnError: true,
+
+    // - gracefully halts on errors _or_ test failures.
+    //   calls the `item` and `iteration` callbacks and does not run any further items (requests)
+    stopOnFailure: true,
+
+    // - abruptly halts the run on errors or test failures, and directly calls the `done` callback
+    abortOnFailure: true,
+
+    // Environment (a &quot;VariableScope&quot; from the SDK)
+    environment: new sdk.VariableScope(),
+
+    // Globals (a &quot;VariableScope&quot; from the SDK)
+    globals: new sdk.VariableScope(),
+
+    // Execute a folder/request using id/name or path
+    entrypoint: {
+        // execute a folder/request using id or name
+        execute: 'folderName',
+        // idOrName in case of execute and path in case of path 
+        // is chosen to specify the folder/request to be executed
+        lookupStrategy: 'path',
+        // execute a folder/request using a path
+        path: ['grand_parent_folder_idOrName', 'parent_folder_idOrName']
+    },
+
+    // Configure delays (in ms)
+    delay: {
+        // between each request
+        item: 1000,
+        // between iterations
+        iteration: 1000
+    },
+
+    // Used to fetch contents of files, certificates wherever needed
+    fileResolver: require('fs'),
+
+    // Options specific to the requester
+    requester: {
+
+        // An object compatible with the cookieJar provided by the 'postman-request' module
+        cookieJar: jar,
+
+        // Controls redirect behavior (only supported on Node, ignored in the browser)
+        followRedirects: true,
+
+        // Enable or disable certificate verification (only supported on Node, ignored in the browser)
+        strictSSL: false,
+
+        // Enable sending of bodies with GET requests (only supported on Node, ignored in the browser)
+        sendBodyWithGetRequests: true,
+
+        // network related options
+        network: {
+            hostLookup: { // hosts file configuration for dns lookup
+                type: 'hostIpMap',
+                hostIpMap: {
+                    'domain.com': '127.0.0.1',
+                    'ipv6-domain.com': '::1',
+                }
+            },
+            restrictedAddresses: {'192.168.1.1': true} // Allows restricting IP/host in requests
+        }
+    },
+
+    // A ProxyConfigList, from the SDK
+    proxies: new sdk.ProxyConfigList(),
+
+    // A function that fetches the system proxy for a given URL.
+    systemProxy: function (url, callback) { return callback(null, {/* ProxyConfig object */}) },
+
+    // A CertificateList from the SDK
+    certificates: new sdk.CertificateList(),
+
+    // *note* Not implemented yet.
+    // In the future, this will be used to read certificates from the OS keychain.
+    systemCertificate: function() {}
+}, function (err, run) {
+    console.log('Created a new Run!');
+
+    // Check the section below for detailed documentation on what callbacks should be.
+    run.start(callbacks);
+});</code></pre><h2>Callbacks</h2><p>You can pass a series of callbacks for runtime to execute as a collection is being executed.</p>
+<pre class="prettyprint source lang-javascript"><code>runner.run(collection, { /* options */ }, function(err, run) {
+    run.start({
+        // Called any time we see a new assertion in the test scripts
+        assertion: function (cursor, assertions) {
+            // cursor = {
+            //     position: Number,
+            //     iteration: Number,
+            //     length: Number,
+            //     cycles: Number,
+            //     eof: Boolean,
+            //     empty: Boolean,
+            //     bof: Boolean,
+            //     cr: Boolean,
+            //     ref: String,
+            //     scriptId: String,
+            //     eventId: String
+            // }
+
+            // assertions: array of assertion objects
+            // assertion: {
+            //     error: Error,
+            //     index: Number,
+            //     name: String,
+            //     skipped: Number,
+            //     passed: Number
+            // }
+        },
+
+        // Called when the run begins
+        start: function (err, cursor) {
+            // err: null or Error
+            // cursor = {
+            //     position: Number,
+            //     iteration: Number,
+            //     length: Number,
+            //     cycles: Number,
+            //     eof: Boolean,
+            //     empty: Boolean,
+            //     bof: Boolean,
+            //     cr: Boolean,
+            //     ref: String
+            // }
+        },
+
+        // Called before starting a new iteration
+        beforeIteration: function (err, cursor) {
+            /* Same as arguments for &quot;start&quot; */
+        },
+
+        // Called when an iteration is completed
+        iteration: function (err, cursor) {
+            /* Same as arguments for &quot;start&quot; */
+        },
+
+        // Called before running a new Item (check the postman collection v2 format for what Item means)
+        beforeItem: function (err, cursor, item) {
+            // err, cursor: Same as arguments for &quot;start&quot;
+            // item: sdk.Item
+        },
+
+        // Called after completion of an Item
+        item: function (err, cursor, item) {
+            /* Same as arguments for &quot;beforeItem&quot; */
+        },
+
+        // Called before running pre-request script(s) (Yes, Runtime supports multiple pre-request scripts!)
+        beforePrerequest: function (err, cursor, events, item) {
+            // err, cursor: Same as arguments for &quot;start&quot;
+            // events: Array of sdk.Event objects
+            // item: sdk.Item
+        },
+
+        // Called after running pre-request script(s)
+        prerequest: function (err, cursor, results, item) {
+            // err, cursor: Same as arguments for &quot;start&quot;
+            // item: sdk.Item
+
+            // results: Array of objects. Each object looks like this:
+            //  {
+            //      error: Error,
+            //      event: sdk.Event,
+            //      script: sdk.Script,
+            //      result: {
+            //          target: 'prerequest'
+            //
+            //          -- Updated environment
+            //          environment: &lt;VariableScope>
+            //
+            //          -- Updated globals
+            //          globals: &lt;VariableScope>
+            //
+            //          data: &lt;Object of data variables>
+            //          return: &lt;Object, contains set next request params, etc>
+            //      }
+            //  }
+        },
+
+        // Called before running test script(s)
+        beforeTest: function (err, cursor, events, item) {
+            // err, cursor: Same as arguments for &quot;start&quot;
+            // events: Array of sdk.Event objects
+            // item: sdk.Item
+        },
+
+        // Called just after running test script (s)
+        test: function (err, cursor, results, item) {
+            // results: Array of objects. Each object looks like this:
+            //  {
+            //      error: Error,
+            //      event: sdk.Event,
+            //      script: sdk.Script,
+            //      result: {
+            //          target: 'test'
+            //
+            //          -- Updated environment
+            //          environment: &lt;VariableScope>
+            //
+            //          -- Updated globals
+            //          globals: &lt;VariableScope>
+            //
+            //          response: &lt;sdk.Response>
+            //          request: &lt;sdk.Request>
+            //          data: &lt;Object of data variables>
+            //          cookies: &lt;Array of &quot;sdk.Cookie&quot; objects>
+            //          tests: &lt;Object>
+            //          return: &lt;Object, contains set next request params, etc>
+            //      }
+            //  }
+        },
+
+        // Called just before sending a request
+        beforeRequest: function (err, cursor, request, item) {
+            // err, cursor: Same as arguments for &quot;start&quot;
+            // item: sdk.Item
+
+            // request: sdk.request
+        },
+
+        // Called just after sending a request, may include request replays
+        request: function (err, cursor, response, request, item, cookies) {
+            // err, cursor: Same as arguments for &quot;start&quot;
+            // item: sdk.Item
+
+            // response: sdk.Response
+            // request: sdk.request
+        },
+
+        // Called once with response for each request in a collection
+        response: function (err, cursor, response, request, item, cookies) {
+            // err, cursor: Same as arguments for &quot;start&quot;
+            // item: sdk.Item
+
+            // response: sdk.Response
+            // request: sdk.request
+        },
+
+        exception: function (cursor, err) {
+             // Called when an exception occurs
+             // @param {Object} cursor - A representation of the current run state.
+             // @param {Error} err - An Error instance with name, message, and type properties.
+        },
+
+        // Called at the end of a run
+        done: function (err) {
+            // err: null or Error
+            console.log('done');
+        },
+
+        // Called any time a console.* function is called in test/pre-request scripts
+        console: function (cursor, level, ...logs) {},
+
+        io: function (err, cursor, trace, ...otherArgs) {
+            // err, cursor: Same as arguments for &quot;start&quot;
+            // trace: An object which looks like this:
+            // {
+            //     -- Indicates the type of IO event, may be HTTP, File, etc. Any requests sent out as a part of
+            //     -- auth flows, replays, etc will show up here.
+            //     type: 'http',
+            //
+            //     -- Indicates what this IO event originated from, (collection, auth flows, etc)
+            //     source: 'collection'
+            // }
+            // otherArgs: Variable number of arguments, specific to the type of the IO event.
+
+            // For http type, the otherArgs are:
+            // response: sdk.Response()
+            // request: sdk.Request()
+            // cookies: Array of sdk.Cookie()
+        }
+    });
+});</code></pre></article>
+    </section>
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        authorizer/ntlm.js
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Implements the NTLM over HTTP specification: [MS-NTHT] https://msdn.microsoft.com/en-us/library/cc237488.aspx
+Also see [MS-NLMP]: https://msdn.microsoft.com/en-us/library/cc236621.aspx</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="authorizer_ntlm.js.html">authorizer/ntlm.js</a>, <a href="authorizer_ntlm.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

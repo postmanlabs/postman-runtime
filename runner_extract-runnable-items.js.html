@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>runner/extract-runnable-items.js - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home 7.2.1-beta.1</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-architecture.html">Architecture</a></li><li><a href="tutorial-components.html">Postman Runtime Components</a></li><li><a href="tutorial-new-auth-mechanisms.html">New Authentication Mechanisms</a></li><li><a href="tutorial-request-send-flow.html">Request Send Flow</a></li></ul><h3>Classes</h3><ul><li><a href="AuthInterface.html">AuthInterface</a><ul class='methods'><li data-type='method'><a href="AuthInterface.html#get">get</a></li><li data-type='method'><a href="AuthInterface.html#set">set</a></li></ul></li><li><a href="Cursor.html">Cursor</a></li><li><a href="ReplayController.html">ReplayController</a><ul class='methods'><li data-type='method'><a href="ReplayController.html#getReplayState">getReplayState</a></li><li data-type='method'><a href="ReplayController.html#requestReplay">requestReplay</a></li></ul></li><li><a href="global.html#Run">Run</a><ul class='methods'><li data-type='method'><a href="global.html#Run#abort">abort</a></li><li data-type='method'><a href="global.html#Run#pause">pause</a></li><li data-type='method'><a href="global.html#Run#resume">resume</a></li></ul></li><li><a href="Runner.html">Runner</a></li><li><a href="Run-module_Instructions-pool-Instruction.html">Instruction</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#.create">create</a></li><li data-type='method'><a href="Run-module_Instructions-pool-Instruction.html#execute">execute</a></li></ul></li><li><a href="Run-module_Timer-Timings.html">Timings</a><ul class='methods'><li data-type='method'><a href="Run-module_Timer-Timings.html#.create">create</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#record">record</a></li><li data-type='method'><a href="Run-module_Timer-Timings.html#toObject">toObject</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="Runner-module_util.html">util</a><ul class='methods'><li data-type='method'><a href="Runner-module_util.html#.safeCall">safeCall</a></li><li data-type='method'><a href="Runner-module_util.html#.syncObject">syncObject</a></li></ul></li><li><a href="Run-module_Instructions.html">Instructions</a><ul class='methods'><li data-type='method'><a href="Run-module_Instructions.html#~pool">pool</a></li></ul></li><li><a href="Run-module_Timer.html">Timer</a></li></ul><h3>Interfaces</h3><ul><li><a href="AuthHandlerInterface.html">AuthHandlerInterface</a><ul class='methods'><li data-type='method'><a href="AuthHandlerInterface.html#init">init</a></li><li data-type='method'><a href="AuthHandlerInterface.html#post">post</a></li><li data-type='method'><a href="AuthHandlerInterface.html#pre">pre</a></li><li data-type='method'><a href="AuthHandlerInterface.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#_extractField">_extractField</a></li><li><a href="global.html#_getDigestAuthHeader">_getDigestAuthHeader</a></li><li><a href="global.html#_lookup">_lookup</a></li><li><a href="global.html#_schedule">_schedule</a></li><li><a href="global.html#AuthLoader">AuthLoader</a></li><li><a href="global.html#authorizeRequest">authorizeRequest</a></li><li><a href="global.html#bof">bof</a></li><li><a href="global.html#bounds">bounds</a></li><li><a href="global.html#box">box</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#commands">commands</a></li><li><a href="global.html#connect">connect</a></li><li><a href="global.html#cr">cr</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createItemContext">createItemContext</a></li><li><a href="global.html#current">current</a></li><li><a href="global.html#empty">empty</a></li><li><a href="global.html#eof">eof</a></li><li><a href="global.html#extractRunnableItems">extractRunnableItems</a></li><li><a href="global.html#findItemOrGroup">findItemOrGroup</a></li><li><a href="global.html#findItemsOrGroups">findItemsOrGroups</a></li><li><a href="global.html#flattenNode">flattenNode</a></li><li><a href="global.html#FUNCTION">FUNCTION</a></li><li><a href="global.html#hasChanged">hasChanged</a></li><li><a href="global.html#immediate">immediate</a></li><li><a href="global.html#initialisers">initialisers</a></li><li><a href="global.html#interrupt">interrupt</a></li><li><a href="global.html#load">load</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#lookupByIdOrName">lookupByIdOrName</a></li><li><a href="global.html#lookupByPath">lookupByPath</a></li><li><a href="global.html#meetExpectations">meetExpectations</a></li><li><a href="global.html#next">next</a></li><li><a href="global.html#normaliseIterationData">normaliseIterationData</a></li><li><a href="global.html#prepareLookupHash">prepareLookupHash</a></li><li><a href="global.html#prepareRunConfig">prepareRunConfig</a></li><li><a href="global.html#queue">queue</a></li><li><a href="global.html#randomString">randomString</a></li><li><a href="global.html#REQUEST_MODES">REQUEST_MODES</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#resolveCursor">resolveCursor</a></li><li><a href="global.html#resolveVariables">resolveVariables</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#sanitizeFiles">sanitizeFiles</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#setCertificate">setCertificate</a></li><li><a href="global.html#setProxy">setProxy</a></li><li><a href="global.html#start">start</a></li><li><a href="global.html#toChromeCookie">toChromeCookie</a></li><li><a href="global.html#transformMultiValueHeaders">transformMultiValueHeaders</a></li><li><a href="global.html#transformRequestBody">transformRequestBody</a></li><li><a href="global.html#triggers">triggers</a></li><li><a href="global.html#validate">validate</a></li><li><a href="global.html#valueOf">valueOf</a></li><li><a href="global.html#whatnext">whatnext</a></li><li><a href="global.html#zero">zero</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">runner/extract-runnable-items.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var sdk = require('postman-collection'),
+    ItemGroup = sdk.ItemGroup,
+    Item = sdk.Item,
+
+    DEFAULT_LOOKUP_STRATEGY = 'idOrName',
+    INVALID_LOOKUP_STRATEGY_ERROR = 'runtime~extractRunnableItems: Invalid entrypoint lookupStrategy',
+
+    /**
+     * Accumulate all items in order if entry point is a collection/folder.
+     * If an item is passed returns an array with that item.
+     *
+     * @param {ItemGroup|Item} node
+     *
+     * @returns {Array&lt;Item>}
+     *
+     * @todo: Possibly add mapItem to sdk.ItemGroup?
+     */
+    flattenNode = function (node) {
+        var items = [];
+
+        // bail out
+        if (!node) { return items; }
+
+        if (ItemGroup.isItemGroup(node)) {
+            node.forEachItem(function (item) { items.push(item); });
+        }
+        else if (Item.isItem(node)) {
+            items.push(node);
+        }
+
+        return items;
+    },
+
+    /**
+     * Finds an item or item group based on id or name.
+     *
+     * @param {ItemGroup} itemGroup
+     * @param {?String} match
+     *
+     * @returns {Item|ItemGroup|undefined}
+     */
+    findItemOrGroup = function (itemGroup, match) {
+        if (!itemGroup || !itemGroup.items) { return; }
+
+        var matched;
+
+        // lookup match on own children
+        itemGroup.items.each(function (itemOrGroup) {
+            if (itemOrGroup.id === match || itemOrGroup.name === match) {
+                matched = itemOrGroup;
+                return false; // exit the loop
+            }
+        });
+
+        // if there is no match on own children, start lookup on grand children
+        !matched &amp;&amp; itemGroup.items.each(function (itemOrGroup) {
+            matched = findItemOrGroup(itemOrGroup, match);
+            if (matched) { return false; } // exit the loop
+        });
+
+        return matched;
+    },
+
+    /**
+     * Finds items based on multiple ids or names provided.
+     *
+     * @param {ItemGroup} itemGroup - Composite list of Item or ItemGroup.
+     * @param {Object} entrypointSubset - Entry-points reference passed across multiple recursive calls.
+     * @param {Boolean} _continueAccumulation - Flag used to decide whether to accumulate items or not.
+     * @param {Array&lt;String>} _accumulatedItems - Found Items or ItemGroups.
+     * @returns {Object}
+     */
+    findItemsOrGroups = function (itemGroup, entrypointSubset, _continueAccumulation, _accumulatedItems) {
+        if (!itemGroup || !itemGroup.items) { return; }
+
+        !_accumulatedItems &amp;&amp; (_accumulatedItems = []);
+
+        var match;
+
+        itemGroup.items.each(function (item) {
+            // bail out if all entry-points are found.
+            if (!Object.keys(entrypointSubset).length) { return false; }
+
+            // lookup for item.id in entrypointSubset and if not found, lookup by item.name.
+            if (!(match = entrypointSubset[item.id] &amp;&amp; item.id)) {
+                match = entrypointSubset[item.name] &amp;&amp; item.name;
+            }
+
+            if (match) {
+                // only accumulate items which are not previously got tracked from its parent entrypoint.
+                _continueAccumulation &amp;&amp; _accumulatedItems.push(item);
+
+                // delete looked-up entrypoint.
+                delete entrypointSubset[match];
+            }
+
+            // recursive call to find nested entry-points. To make sure all provided entry-points got tracked.
+            // _continueAccumulation flag will be `false` for children if their parent entrypoint is found.
+            return findItemsOrGroups(item, entrypointSubset, !match, _accumulatedItems);
+        });
+
+        return _accumulatedItems;
+    },
+
+    /**
+     * Finds an item or group from a path. The path should be an array of ids from the parent chain.
+     *
+     * @param {Collection} collection
+     * @param {Object} options
+     * @param {String} options.execute
+     * @param {?Array&lt;String>} [options.path]
+     * @param {Function} callback
+     */
+    lookupByPath = function (collection, options, callback) {
+        var lookupPath,
+            lastMatch = collection,
+            lookupOptions = options || {},
+            i,
+            ii;
+
+        // path can be empty, if item/group is at the top level
+        lookupPath = lookupOptions.path || [];
+
+        // push execute id to the path
+        options.execute &amp;&amp; (lookupPath.push(options.execute));
+
+        // go down the lookup path
+        for (i = 0, ii = lookupPath.length; (i &lt; ii) &amp;&amp; lastMatch; i++) {
+            lastMatch = lastMatch.items &amp;&amp; lastMatch.items.one(lookupPath[i]);
+        }
+
+        callback &amp;&amp; callback(null, flattenNode(lastMatch), lastMatch);
+    },
+
+    /**
+     * Finds an item or group on a collection with a matching id or name.
+     *
+     * @param {Collection} collection
+     * @param {Object} options
+     * @param {String} [options.execute]
+     * @param {Function} callback
+     */
+    lookupByIdOrName = function (collection, options, callback) {
+        var match = options.execute,
+            matched;
+
+        if (!match) { return callback(null, []); }
+
+        // do a recursive lookup
+        matched = findItemOrGroup(collection, match);
+
+        callback(null, flattenNode(matched), matched);
+    },
+
+    lookupByMultipleIdOrName = function (collection, options, callback) {
+        var entrypoints = options.execute,
+            entrypointLookup = {},
+            runnableItems = [],
+            items,
+            i,
+            ii;
+
+        if (!(Array.isArray(entrypoints) &amp;&amp; entrypoints.length)) {
+            return callback(null, []);
+        }
+
+        // add temp reference for faster lookup of entry-point name/id.
+        // entry-points with same name/id will be ignored.
+        for (i = 0, ii = entrypoints.length; i &lt; ii; i++) {
+            entrypointLookup[entrypoints[i]] = true;
+        }
+
+        items = findItemsOrGroups(collection, entrypointLookup, true);
+
+        // at this point of time, we should have traversed all items mentioned in entrypoint and created a linear
+        // subset of items. However, if post that, we still have items remaining in lookup object, that implies that
+        // extra items were present in user input and corresponding items for those do not exist in collection. As such
+        // we need to bail out if any of the given entry-point is not found.
+        if (Object.keys(entrypointLookup).length) {
+            return callback(null, []);
+        }
+
+        // extract runnable items from the searched items.
+        for (i = 0, ii = items.length; i &lt; ii; i++) {
+            runnableItems = runnableItems.concat(flattenNode(items[i]));
+        }
+
+        callback(null, runnableItems, collection);
+    },
+
+    lookupStrategyMap = {
+        path: lookupByPath,
+        idOrName: lookupByIdOrName,
+        multipleIdOrName: lookupByMultipleIdOrName
+    },
+
+    /**
+     * Extracts all the items on a collection starting from the entrypoint.
+     *
+     * @param {Collection} collection
+     * @param {?Object} [entrypoint]
+     * @param {String} [entrypoint.execute] id of item or group to execute (can be name when used with `idOrName`)
+     * @param {Array&lt;String>} [entrypoint.path] path leading to the item or group selected (only for `path` strategy)
+     * @param {String} [entrypoint.lookupStrategy=idOrName] strategy to use for entrypoint lookup [idOrName, path]
+     * @param {Function} callback
+     */
+    extractRunnableItems = function (collection, entrypoint, callback) {
+        var lookupFunction,
+            lookupStrategy;
+
+        // if no entrypoint is specified, flatten the entire collection
+        if (!entrypoint) { return callback(null, flattenNode(collection), collection); }
+
+        lookupStrategy = entrypoint.lookupStrategy || DEFAULT_LOOKUP_STRATEGY;
+
+        // lookup entry using given strategy
+        (lookupFunction = lookupStrategyMap[lookupStrategy]) ?
+            lookupFunction(collection, entrypoint, callback) :
+            callback(new Error(INVALID_LOOKUP_STRATEGY_ERROR)); // eslint-disable-line callback-return
+    };
+
+module.exports = {
+    extractRunnableItems: extractRunnableItems
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Fri Jul 27 2018 12:18:40 GMT+0000 (UTC)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
