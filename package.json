@@ -18,7 +18,8 @@
     "build-docs": "node npm/build-docs.js",
     "build-wiki": "node npm/build-wiki.js",
     "publish-docs": "node npm/publish-docs.js",
-    "publish-wiki": "node npm/build-wiki.js"
+    "publish-wiki": "node npm/build-wiki.js",
+    "memory-check": "npm/memory-check.sh"
   },
   "repository": {
     "type": "git",
