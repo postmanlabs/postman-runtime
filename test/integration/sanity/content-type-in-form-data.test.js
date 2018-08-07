@@ -74,7 +74,11 @@ describe('content-type', function () {
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
-                                formdata: [{key: 'fileName', src: 'test/fixtures/upload-csv', type: 'file'}]
+                                formdata: [{
+                                    key: 'fileName',
+                                    src: 'test/fixtures/upload-csv',
+                                    type: 'file'
+                                }]
                             }
                         }
                     }]
@@ -96,7 +100,6 @@ describe('content-type', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2].stream.toString();
 
-            expect(testrun).be.ok();
             expect(testrun.request.calledOnce).to.be.ok();
             expect(testrun.request.getCall(0).args[0]).to.be(null);
 
@@ -108,8 +111,56 @@ describe('content-type', function () {
         });
     });
 
-    describe('custom', function () {
+    describe('text', function () {
         before(function(done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: 'http://localhost:5050/',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'data',
+                                    value: '{"key": "value"}',
+                                    contentType: 'application/json',
+                                    type: 'text'
+                                }]
+                            }
+                        }
+                    }]
+                }
+            }, function(err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function() {
+            expect(testrun).be.ok();
+            expect(testrun.done.calledOnce).be.ok();
+            expect(testrun.done.getCall(0).args[0]).to.be(null);
+            expect(testrun.start.calledOnce).be.ok();
+        });
+
+        it('should send the text with provided content-type in formdata', function() {
+            var request = testrun.request.getCall(0).args[3],
+                response = testrun.request.getCall(0).args[2].stream.toString();
+
+            expect(testrun.request.calledOnce).to.be.ok();
+            expect(testrun.request.getCall(0).args[0]).to.be(null);
+
+            // content-type sent to server in request
+            expect(request.body.formdata.members[0]).to.have.property('contentType', 'application/json');
+
+            // content-type received at server
+            expect(JSON.parse(response)[0]).to.have.property('contentType', 'application/json');
+        });
+    });
+
+    describe('file upload', function () {
+        before(function (done) {
             this.run({
                 fileResolver: fs,
                 collection: {
@@ -137,44 +188,37 @@ describe('content-type', function () {
                                     src: 'test/fixtures/upload-csv',
                                     contentType: 'text/csv',
                                     type: 'file'
-                                }, {
-                                    key: 'foo',
-                                    value: 'bar',
-                                    type: 'text'
                                 }]
                             }
                         }
                     }]
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
         });
 
-        it('should run the test script successfully', function() {
-            var assertions = testrun.assertion.getCall(0).args[1];
-
-            expect(testrun).be.ok();
-            expect(testrun.test.calledOnce).be.ok();
-
-            expect(testrun.test.getCall(0).args[0]).to.be(null);
-            expect(assertions[0]).to.have.property('name', 'content-type');
-            expect(assertions[0]).to.have.property('passed', true);
-        });
-
-        it('should complete the run', function() {
+        it('should complete the run', function () {
             expect(testrun).be.ok();
             expect(testrun.done.calledOnce).be.ok();
             expect(testrun.done.getCall(0).args[0]).to.be(null);
             expect(testrun.start.calledOnce).be.ok();
         });
 
-        it('should upload the file with provided content-type in formdata', function() {
+        it('should run the test script successfully', function () {
+            var assertions = testrun.assertion.getCall(0).args[1];
+
+            expect(testrun.test.calledOnce).be.ok();
+            expect(testrun.test.getCall(0).args[0]).to.be(null);
+            expect(assertions[0]).to.have.property('name', 'content-type');
+            expect(assertions[0]).to.have.property('passed', true);
+        });
+
+        it('should upload the file with provided content-type in formdata', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2].stream.toString();
 
-            expect(testrun).be.ok();
             expect(testrun.request.calledOnce).to.be.ok();
             expect(testrun.request.getCall(0).args[0]).to.be(null);
 
