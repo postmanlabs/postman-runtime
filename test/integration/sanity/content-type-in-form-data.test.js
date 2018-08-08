@@ -56,7 +56,10 @@ describe('content-type', function () {
             req.on('data', function (chunk) {
                 rawBody += chunk.toString(); // decode buffer to string
             }).on('end', function () {
-                res.writeHead(200, {'Content-Type': 'application/json'});
+                res.writeHead(200, {
+                    'Content-Type': 'application/json',
+                    'Connection': 'close'
+                });
                 res.end(JSON.stringify(parseRaw(rawBody)));
             });
         }).listen(5050, done);
