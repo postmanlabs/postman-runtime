@@ -1,7 +1,9 @@
+var fs = require('fs'),
+    http = require('http'),
+    sinon = require('sinon');
+
 describe('content-type', function () {
-    var http = require('http'),
-        fs = require('fs'),
-        server,
+    var server,
         testrun;
 
     /**
@@ -35,10 +37,10 @@ describe('content-type', function () {
             if (raw[i] !== boundary) { continue; }
 
             data = {};
-            match = (/ name="(.*?)"/).exec(raw[++i]);
+            match = (/\sname="(.*?)"/).exec(raw[++i]);
             match && (data.name = match[1]);
 
-            match = (/^Content-Type: (.*)$/).exec(raw[++i]);
+            match = (/^Content-Type:\s(.*)$/).exec(raw[++i]);
             match && (data.contentType = match[1]);
 
             Object.keys(data).length && result.push(data);
@@ -49,12 +51,13 @@ describe('content-type', function () {
 
     before(function(done) {
         server = http.createServer(function (req, res) {
-            req.rawBody = '';
+            var rawBody = '';
+
             req.on('data', function (chunk) {
-                req.rawBody += chunk.toString();
+                rawBody += chunk.toString();
             }).on('end', function () {
                 res.writeHead(200, {'Content-Type': 'application/json'});
-                res.end(JSON.stringify(parseRaw(req.rawBody)));
+                res.end(JSON.stringify(parseRaw(rawBody)));
             });
         }).listen(5050, done);
     });
@@ -91,17 +94,17 @@ describe('content-type', function () {
 
         it('should complete the run', function () {
             expect(testrun).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.calledOnce).be.ok();
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
         });
 
         it('should upload the file without content-type in formdata', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2].stream.toString();
 
-            expect(testrun.request.calledOnce).to.be.ok();
-            expect(testrun.request.getCall(0).args[0]).to.be(null);
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             // content-type sent to server in request
             expect(request.body.formdata.members[0]).to.have.property('contentType', undefined);
@@ -139,17 +142,17 @@ describe('content-type', function () {
 
         it('should complete the run', function() {
             expect(testrun).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.calledOnce).be.ok();
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
         });
 
         it('should send the text with provided content-type in formdata', function() {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2].stream.toString();
 
-            expect(testrun.request.calledOnce).to.be.ok();
-            expect(testrun.request.getCall(0).args[0]).to.be(null);
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             // content-type sent to server in request
             expect(request.body.formdata.members[0]).to.have.property('contentType', 'application/json');
@@ -201,16 +204,17 @@ describe('content-type', function () {
 
         it('should complete the run', function () {
             expect(testrun).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.calledOnce).be.ok();
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
         });
 
         it('should run the test script successfully', function () {
             var assertions = testrun.assertion.getCall(0).args[1];
 
-            expect(testrun.test.calledOnce).be.ok();
-            expect(testrun.test.getCall(0).args[0]).to.be(null);
+            sinon.assert.calledOnce(testrun.test);
+            sinon.assert.calledWith(testrun.test.getCall(0), null);
+
             expect(assertions[0]).to.have.property('name', 'content-type');
             expect(assertions[0]).to.have.property('passed', true);
         });
@@ -219,8 +223,8 @@ describe('content-type', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2].stream.toString();
 
-            expect(testrun.request.calledOnce).to.be.ok();
-            expect(testrun.request.getCall(0).args[0]).to.be(null);
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             // content-type sent to server in request
             expect(request.body.formdata.members[0]).to.have.property('contentType', 'text/csv');
