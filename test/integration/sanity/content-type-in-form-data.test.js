@@ -49,12 +49,12 @@ describe('content-type', function () {
         return result;
     }
 
-    before(function(done) {
+    before(function (done) {
         server = http.createServer(function (req, res) {
             var rawBody = '';
 
             req.on('data', function (chunk) {
-                rawBody += chunk.toString();
+                rawBody += chunk.toString(); // decode buffer to string
             }).on('end', function () {
                 res.writeHead(200, {'Content-Type': 'application/json'});
                 res.end(JSON.stringify(parseRaw(rawBody)));
@@ -62,7 +62,7 @@ describe('content-type', function () {
         }).listen(5050, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         server.close(done);
     });
 
@@ -115,7 +115,7 @@ describe('content-type', function () {
     });
 
     describe('text', function () {
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: [{
@@ -134,20 +134,20 @@ describe('content-type', function () {
                         }
                     }]
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
         });
 
-        it('should complete the run', function() {
+        it('should complete the run', function () {
             expect(testrun).be.ok();
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
         });
 
-        it('should send the text with provided content-type in formdata', function() {
+        it('should send the text with provided content-type in formdata', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2].stream.toString();
 
@@ -175,7 +175,7 @@ describe('content-type', function () {
                                 exec: [
                                     'pm.test("content-type", function () {',
                                     '    var jsonData = pm.response.json();',
-                                    '    var file = jsonData.find(function(f) { return f.name === "fileName" });',
+                                    '    var file = jsonData.find(function (f) { return f.name === "fileName" });',
                                     '    pm.expect(file.contentType).to.eql("text/csv");',
                                     '});'
                                 ]
