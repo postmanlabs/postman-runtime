@@ -1,76 +1,228 @@
-describe('File uploads', function() {
-    var fs = require('fs'),
-        _ = require('lodash'),
-        testrun;
+var fs = require('fs'),
+    _ = require('lodash'),
+    sinon = require('sinon');
 
-    before(function(done) {
-        this.run({
-            fileResolver: fs,
-            collection: {
-                item: [{
-                    event: [{
-                        listen: 'test',
-                        script: {
-                            exec: [
-                                'var file = JSON.parse(responseBody).files[\'upload-file.json\'];',
-                                // eslint-disable-next-line max-len
-                                'tests[\'File contents are valid\'] = _.startsWith(file, \'data:application/octet-stream;base64,\');'
-                            ]
+describe('File uploads', function () {
+    var testrun;
+
+    describe('upload successful', function () {
+        before(function (done) {
+            this.run({
+                fileResolver: fs,
+                collection: {
+                    item: [{
+                        event: [{
+                            listen: 'test',
+                            script: {
+                                exec: [
+                                    'var file = JSON.parse(responseBody).files[\'upload-file.json\'];',
+                                    // eslint-disable-next-line max-len
+                                    'tests[\'File contents are valid\'] = _.startsWith(file, \'data:application/octet-stream;base64,\');'
+                                ]
+                            }
+                        }],
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'file',
+                                    src: 'test/fixtures/upload-file.json',
+                                    type: 'file'
+                                }]
+                            }
                         }
-                    }],
-                    request: {
-                        url: 'https://postman-echo.com/post',
-                        method: 'POST',
-                        body: {
-                            mode: 'formdata',
-                            formdata: [{key: 'file', src: 'test/fixtures/upload-file.json', type: 'file'}]
+                    }, {
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'file',
+                                file: {
+                                    src: 'test/fixtures/upload-file.json'
+                                }
+                            }
                         }
-                    }
-                }, {
-                    request: {
-                        url: 'https://postman-echo.com/post',
-                        method: 'POST',
-                        body: {
-                            mode: 'file',
-                            file: {src: 'test/fixtures/upload-file.json'}
-                        }
-                    }
-                }]
-            }
-        }, function(err, results) {
-            testrun = results;
-            done(err);
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).be.ok();
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+        });
+
+        it('should run the test script successfully', function () {
+            var assertions = testrun.assertion.getCall(0).args[1];
+            sinon.assert.calledTwice(testrun.test);
+            sinon.assert.calledWith(testrun.test.getCall(0), null);
+            expect(assertions[0]).to.have.property('name', 'File contents are valid');
+            expect(assertions[0]).to.have.property('passed', true);
+        });
+
+        it('should upload the files in binary and formdata mode correctly', function () {
+            sinon.assert.calledTwice(testrun.request);
+
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+            expect(_.find(testrun.request.getCall(0).args[3].headers.members, {key: 'content-length'}))
+                .to.have.property('value', 253);
+
+            sinon.assert.calledWith(testrun.request.getCall(1), null);
+            expect(_.find(testrun.request.getCall(1).args[3].headers.members, {key: 'content-length'}))
+                .to.have.property('value', 33);
         });
     });
 
-    it('must have run the test script successfully', function() {
-        var assertions = testrun.assertion.getCall(0).args[1];
+    describe('upload errors', function () {
+        describe('missing src', function () {
+            before(function (done) {
+                this.run({
+                    fileResolver: fs,
+                    collection: {
+                        item: [{
+                            request: {
+                                url: 'https://postman-echo.com/post',
+                                method: 'POST',
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: [{
+                                        key: 'userData',
+                                        type: 'file'
+                                    }]
+                                }
+                            }
+                        }, {
+                            request: {
+                                url: 'https://postman-echo.com/post',
+                                method: 'POST',
+                                body: {
+                                    mode: 'file',
+                                    file: {}
+                                }
+                            }
+                        }]
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
 
-        expect(testrun).be.ok();
-        expect(testrun.test.calledTwice).be.ok();
+            it('should complete the run', function () {
+                expect(testrun).be.ok();
+                sinon.assert.calledOnce(testrun.start);
+                sinon.assert.calledOnce(testrun.done);
+                sinon.assert.calledWith(testrun.done.getCall(0), null);
+            });
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(assertions[0]).to.have.property('name', 'File contents are valid');
-        expect(assertions[0]).to.have.property('passed', true);
-    });
+            it('should handle missing src in binary and formdata mode correctly', function () {
+                sinon.assert.calledTwice(testrun.request);
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
-    });
+                // should log warning for missing file src.
+                expect(testrun.console.getCall(0).args[1]).to.equal('warn');
+                expect(testrun.console.getCall(0).args[2]).to.equal('unable to load form file for upload: "userData"');
 
-    it('must have uploaded the files in binary and formdata mode correctly', function() {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledTwice).to.be.ok();
+                expect(testrun.console.getCall(1).args[1]).to.equal('warn');
+                expect(testrun.console.getCall(1).args[2]).to.equal('unable to load raw file for upload: "undefined"');
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
-        expect(_.find(testrun.request.getCall(0).args[3].headers.members, {key: 'content-length'})).to.have
-            .property('value', 253);
+                // should complete the request.
+                sinon.assert.calledWith(testrun.request.getCall(0), null);
+                sinon.assert.calledWith(testrun.request.getCall(1), null);
+            });
+        });
 
-        expect(testrun.request.getCall(1).args[0]).to.be(null);
-        expect(_.find(testrun.request.getCall(1).args[3].headers.members, {key: 'content-length'})).to.have
-            .property('value', 33);
+        describe('missing file', function () {
+            before(function (done) {
+                this.run({
+                    fileResolver: fs,
+                    collection: {
+                        item: [{
+                            request: {
+                                url: 'https://postman-echo.com/post',
+                                method: 'POST',
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: [{
+                                        key: 'userData',
+                                        src: 'randomFile',
+                                        type: 'file'
+                                    }]
+                                }
+                            }
+                        }]
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).be.ok();
+                sinon.assert.calledOnce(testrun.start);
+                sinon.assert.calledOnce(testrun.done);
+                sinon.assert.calledWith(testrun.done.getCall(0), null);
+            });
+
+            // @todo handle this for binary mode also.
+            it('should handle missing file in formdata mode correctly', function () {
+                // bails out when error thrown in first request.
+                sinon.assert.calledOnce(testrun.request);
+
+                // should throw error for missing file.
+                // @todo handle this instead of sending error stream to postman-request.
+                expect(testrun.request.getCall(0).args[0].message)
+                    .to.match(/no such file or directory, open 'randomFile'/);
+            });
+        });
+
+        describe('disabled param', function () {
+            before(function (done) {
+                this.run({
+                    fileResolver: fs,
+                    collection: {
+                        item: [{
+                            request: {
+                                url: 'https://postman-echo.com/post',
+                                method: 'POST',
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: [{
+                                        key: 'userData',
+                                        src: 'randomFile',
+                                        type: 'file',
+                                        disabled: true
+                                    }]
+                                }
+                            }
+                        }]
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).be.ok();
+                sinon.assert.calledOnce(testrun.start);
+                sinon.assert.calledOnce(testrun.done);
+                sinon.assert.calledWith(testrun.done.getCall(0), null);
+            });
+
+            it('should handle disabled param in formdata mode correctly', function () {
+                sinon.assert.calledOnce(testrun.request);
+
+                // should complete the request without any error.
+                sinon.assert.calledWith(testrun.request.getCall(0), null);
+            });
+        });
     });
 });
