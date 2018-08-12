@@ -386,9 +386,8 @@ describe('requester util', function () {
             });
         });
 
-        describe('request bodies with options', function () {
+        describe('request bodies with additional options', function () {
             describe('formdata', function () {
-                // @todo add tests for `fileName` & `fileLength`, when those options are added in Schema and SDK.
                 it('should accept contentType ', function () {
                     var request = new sdk.Request({
                             url: 'postman-echo.com/post',
@@ -437,6 +436,28 @@ describe('requester util', function () {
                         requestBody = requesterCore.getRequestBody(request);
 
                     expect(requestBody.formData).to.eql({foo: 'bar'});
+                });
+
+                it('should not support fileName & fileLength', function () {
+                    // @todo this test is added to make sure to add tests for `fileName` & `fileLength`
+                    //       option when these options are added in Schema and SDK.
+                    var request = new sdk.Request({
+                            url: 'postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'foo',
+                                    value: 'bar',
+                                    fileName: 'file.json',
+                                    fileLength: 3,
+                                    type: 'text'
+                                }]
+                            }
+                        }),
+                        requestBody = requesterCore.getRequestBody(request);
+
+                    expect(requestBody.formData).to.only.have.keys('foo');
                 });
             });
         });
