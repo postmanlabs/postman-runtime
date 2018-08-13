@@ -385,6 +385,82 @@ describe('requester util', function () {
                 });
             });
         });
+
+        describe('request bodies with additional options', function () {
+            describe('formdata', function () {
+                it('should accept contentType ', function () {
+                    var request = new sdk.Request({
+                            url: 'postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'userData',
+                                    value: '{"name": "userName"}',
+                                    contentType: 'application/json',
+                                    type: 'text'
+                                }, {
+                                    key: 'userFile',
+                                    src: 'path/to/userFile',
+                                    contentType: 'application/json',
+                                    type: 'file'
+                                }]
+                            }
+                        }),
+                        requestBody = requesterCore.getRequestBody(request);
+
+                    expect(requestBody.formData).to.only.have.keys('userData', 'userFile');
+                    expect(requestBody.formData.userData).to.eql({
+                        value: '{"name": "userName"}',
+                        options: {contentType: 'application/json'}
+                    });
+                    expect(requestBody.formData.userFile).to.eql({
+                        value: '',
+                        options: {contentType: 'application/json'}
+                    });
+                });
+
+                it('should avoid contentType as blank string', function () {
+                    var request = new sdk.Request({
+                            url: 'postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'foo',
+                                    value: 'bar',
+                                    contentType: ''
+                                }]
+                            }
+                        }),
+                        requestBody = requesterCore.getRequestBody(request);
+
+                    expect(requestBody.formData).to.eql({foo: 'bar'});
+                });
+
+                it('should not support fileName & fileLength', function () {
+                    // @todo this test is added to make sure to add tests for `fileName` & `fileLength`
+                    //       option when these options are added in Schema and SDK.
+                    var request = new sdk.Request({
+                            url: 'postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'foo',
+                                    value: 'bar',
+                                    fileName: 'file.json',
+                                    fileLength: 3,
+                                    type: 'text'
+                                }]
+                            }
+                        }),
+                        requestBody = requesterCore.getRequestBody(request);
+
+                    expect(requestBody.formData).to.only.have.keys('foo');
+                });
+            });
+        });
     });
 
     describe('.jsonifyResponse', function () {
