@@ -127,10 +127,11 @@ describe('File uploads', function () {
 
                 // should log warning for missing file src.
                 expect(testrun.console.getCall(0).args[1]).to.equal('warn');
-                expect(testrun.console.getCall(0).args[2]).to.equal('unable to load form file for upload: "userData"');
+                expect(testrun.console.getCall(0).args[2])
+                    .to.equal('Form param \'userData\', file load error: Missing file source');
 
                 expect(testrun.console.getCall(1).args[1]).to.equal('warn');
-                expect(testrun.console.getCall(1).args[2]).to.equal('unable to load raw file for upload: "undefined"');
+                expect(testrun.console.getCall(1).args[2]).to.equal('Raw file load error: Missing file source');
 
                 // should complete the request.
                 sinon.assert.calledWith(testrun.request.getCall(0), null);
@@ -176,10 +177,11 @@ describe('File uploads', function () {
                 // bails out when error thrown in first request.
                 sinon.assert.calledOnce(testrun.request);
 
-                // should throw error for missing file.
-                // @todo handle this instead of sending error stream to postman-request.
-                expect(testrun.request.getCall(0).args[0].message)
-                    .to.match(/no such file or directory, open 'randomFile'/);
+                // should log warning for missing file src.
+                expect(testrun.console.getCall(0).args[1]).to.equal('warn');
+                expect(testrun.console.getCall(0).args[2])
+                    .to.equal('Form param \'userData\', file load error: ' +
+                        'ENOENT: no such file or directory, stat \'randomFile\'');
             });
         });
 
