@@ -1425,6 +1425,9 @@ describe('Requester', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 fakeFileResolver = {
+                    stat: function (src, cb) {
+                        cb(null, {isFile: function() { return true; }, mode: 33188});
+                    },
                     createReadStream: function () {
                         return 'fake-file-content';
                     }
@@ -1699,7 +1702,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
 
                             expect(level).to.be('warn');
-                            expect(message).to.be('unable to load form file for upload: "/some/path"');
+                            expect(message).to.be('Form param \'myfile\', file load error: Invalid file resolver');
                         });
                     },
                     start: function (err, cursor) {
@@ -2544,7 +2547,7 @@ describe('Requester', function () {
                     console: function (cursor, level, message) {
                         check(function () {
                             expect(level).be('warn');
-                            expect(message).be('unable to load raw file for upload: "undefined"');
+                            expect(message).be('Raw file load error: Missing file source');
                         });
                     },
                     start: function (err, cursor) {
