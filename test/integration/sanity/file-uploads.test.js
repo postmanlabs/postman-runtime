@@ -181,7 +181,6 @@ describe('File uploads', function () {
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
             });
 
-            // @todo handle this for binary mode also.
             it('should handle missing file in binary and formdata mode correctly', function () {
                 // bails out when error thrown in first request.
                 sinon.assert.calledTwice(testrun.request);
@@ -231,11 +230,17 @@ describe('File uploads', function () {
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
             });
 
-            it('should handle disabled param in formdata mode correctly', function () {
+            it('should not load disabled param file in formdata mode', function () {
+                var response = testrun.response.getCall(0).args[2];
+
                 sinon.assert.calledOnce(testrun.request);
 
                 // should complete the request without any error.
                 sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+                // make sure file is not loaded and sent.
+                expect(testrun.request.getCall(0).args[3].body.formdata.members[0]).to.have.property('value', '');
+                expect(JSON.parse(response.stream.toString()).files).to.eql({});
             });
         });
     });
