@@ -131,7 +131,7 @@ describe('File uploads', function () {
                     .to.equal('Form param \'userData\', file load error: Missing file source');
 
                 expect(testrun.console.getCall(1).args[1]).to.equal('warn');
-                expect(testrun.console.getCall(1).args[2]).to.equal('Raw file load error: Missing file source');
+                expect(testrun.console.getCall(1).args[2]).to.equal('Binary file load error: Missing file source');
 
                 // should complete the request.
                 sinon.assert.calledWith(testrun.request.getCall(0), null);
@@ -157,6 +157,15 @@ describe('File uploads', function () {
                                     }]
                                 }
                             }
+                        }, {
+                            request: {
+                                url: 'https://postman-echo.com/post',
+                                method: 'POST',
+                                body: {
+                                    mode: 'file',
+                                    file: {src: 'randomFile'}
+                                }
+                            }
                         }]
                     }
                 }, function (err, results) {
@@ -173,15 +182,19 @@ describe('File uploads', function () {
             });
 
             // @todo handle this for binary mode also.
-            it('should handle missing file in formdata mode correctly', function () {
+            it('should handle missing file in binary and formdata mode correctly', function () {
                 // bails out when error thrown in first request.
-                sinon.assert.calledOnce(testrun.request);
+                sinon.assert.calledTwice(testrun.request);
 
                 // should log warning for missing file src.
                 expect(testrun.console.getCall(0).args[1]).to.equal('warn');
                 expect(testrun.console.getCall(0).args[2])
                     .to.equal('Form param \'userData\', file load error: ' +
                         'ENOENT: no such file or directory, stat \'randomFile\'');
+
+                expect(testrun.console.getCall(1).args[1]).to.equal('warn');
+                expect(testrun.console.getCall(1).args[2])
+                    .to.equal('Binary file load error: ENOENT: no such file or directory, stat \'randomFile\'');
             });
         });
 

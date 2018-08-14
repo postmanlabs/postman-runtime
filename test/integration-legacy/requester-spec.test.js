@@ -2547,7 +2547,7 @@ describe('Requester', function () {
                     console: function (cursor, level, message) {
                         check(function () {
                             expect(level).be('warn');
-                            expect(message).be('Raw file load error: Missing file source');
+                            expect(message).be('Binary file load error: Missing file source');
                         });
                     },
                     start: function (err, cursor) {
