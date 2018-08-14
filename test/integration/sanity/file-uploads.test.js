@@ -128,10 +128,10 @@ describe('File uploads', function () {
                 // should log warning for missing file src.
                 expect(testrun.console.getCall(0).args[1]).to.equal('warn');
                 expect(testrun.console.getCall(0).args[2])
-                    .to.equal('Form param \'userData\', file load error: Missing file source');
+                    .to.equal('Form param \'userData\', file load error: missing file source');
 
                 expect(testrun.console.getCall(1).args[1]).to.equal('warn');
-                expect(testrun.console.getCall(1).args[2]).to.equal('Binary file load error: Missing file source');
+                expect(testrun.console.getCall(1).args[2]).to.equal('Binary file load error: missing file source');
 
                 // should complete the request.
                 sinon.assert.calledWith(testrun.request.getCall(0), null);
@@ -189,14 +189,11 @@ describe('File uploads', function () {
                 // should log warning for missing file src.
                 expect(testrun.console.getCall(0).args[1]).to.equal('warn');
                 expect(testrun.console.getCall(0).args[2])
-                    .to.match(/Form param 'userData', file load error: ENOENT: no such file or directory/);
-                // .match instead of .equal because actual error message:
-                // `Form param 'userData', file load error: ENOENT: no such file or directory, stat 'randomFile'`
-                // have stat path: 'randomFile', which varies in windows
+                    .to.equal('Form param \'userData\', file load error: \'randomFile\', no such file');
 
                 expect(testrun.console.getCall(1).args[1]).to.equal('warn');
                 expect(testrun.console.getCall(1).args[2])
-                    .to.match(/Binary file load error: ENOENT: no such file or directory/);
+                    .to.equal('Binary file load error: \'randomFile\', no such file');
             });
         });
 

@@ -1702,7 +1702,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
 
                             expect(level).to.be('warn');
-                            expect(message).to.be('Form param \'myfile\', file load error: Invalid file resolver');
+                            expect(message).to.be('Form param \'myfile\', file load error: invalid file resolver');
                         });
                     },
                     start: function (err, cursor) {
@@ -2547,7 +2547,7 @@ describe('Requester', function () {
                     console: function (cursor, level, message) {
                         check(function () {
                             expect(level).be('warn');
-                            expect(message).be('Binary file load error: Missing file source');
+                            expect(message).be('Binary file load error: missing file source');
                         });
                     },
                     start: function (err, cursor) {
