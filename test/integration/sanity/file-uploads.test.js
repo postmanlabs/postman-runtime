@@ -128,10 +128,10 @@ describe('File uploads', function () {
                 // should log warning for missing file src.
                 expect(testrun.console.getCall(0).args[1]).to.equal('warn');
                 expect(testrun.console.getCall(0).args[2])
-                    .to.equal('Form param \'userData\', file load error: missing file source');
+                    .to.equal('Form param `userData`, file load error: invalid or missing file source');
 
                 expect(testrun.console.getCall(1).args[1]).to.equal('warn');
-                expect(testrun.console.getCall(1).args[2]).to.equal('Binary file load error: missing file source');
+                expect(testrun.console.getCall(1).args[2]).to.equal('Binary file load error: invalid or missing file source');
 
                 // should complete the request.
                 sinon.assert.calledWith(testrun.request.getCall(0), null);
@@ -188,7 +188,7 @@ describe('File uploads', function () {
                 // should log warning for missing file src.
                 expect(testrun.console.getCall(0).args[1]).to.equal('warn');
                 expect(testrun.console.getCall(0).args[2])
-                    .to.equal('Form param \'userData\', file load error: "randomFile", no such file');
+                    .to.equal('Form param `userData`, file load error: "randomFile", no such file');
 
                 expect(testrun.console.getCall(1).args[1]).to.equal('warn');
                 expect(testrun.console.getCall(1).args[2])
