@@ -1702,7 +1702,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
 
                             expect(level).to.be('warn');
-                            expect(message).to.be('Form param `myfile`, file load error: file resolver not found');
+                            expect(message).to.be('Form param `myfile`, file load error: file resolver not supported');
                         });
                     },
                     start: function (err, cursor) {
