@@ -1,6 +1,14 @@
 # Postman Runtime Changelog
 
-### v7.2.0 (June 30, 2018)
+#### v7.3.0 (August 21, 2018)
+* Updated dependencies :arrow_up:
+* #627 Removed NSP and associated apparatus :fire:
+* #625 Improved file loading errors :bug:
+* #624 Added support for `contentType` to form data request bodies :tada:
+* #619 Added support for multi entrypoints by id or name :tada:
+* #616 Improved certificate lookup error handling :bug:
+
+#### v7.2.0 (June 30, 2018)
 * Added support for variable change tracking in scripts. Variable scopes in `result` of script callbacks like `script`, `test` and `prerequest` will now have a `mutations` object. This contains only the mutations made within that script, if any.
 * Updated dependencies
 
