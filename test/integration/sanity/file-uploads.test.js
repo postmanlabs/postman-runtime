@@ -1,9 +1,11 @@
-describe('File uploads', function() {
-    var fs = require('fs'),
-        _ = require('lodash'),
-        testrun;
+var fs = require('fs'),
+    _ = require('lodash'),
+    sinon = require('sinon');
 
-    before(function(done) {
+describe('File uploads', function () {
+    var testrun;
+
+    before(function (done) {
         this.run({
             fileResolver: fs,
             collection: {
@@ -23,7 +25,11 @@ describe('File uploads', function() {
                         method: 'POST',
                         body: {
                             mode: 'formdata',
-                            formdata: [{key: 'file', src: 'test/fixtures/upload-file.json', type: 'file'}]
+                            formdata: [{
+                                key: 'file',
+                                src: 'test/fixtures/upload-file.json',
+                                type: 'file'
+                            }]
                         }
                     }
                 }, {
@@ -32,45 +38,43 @@ describe('File uploads', function() {
                         method: 'POST',
                         body: {
                             mode: 'file',
-                            file: {src: 'test/fixtures/upload-file.json'}
+                            file: {
+                                src: 'test/fixtures/upload-file.json'
+                            }
                         }
                     }
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('must have run the test script successfully', function() {
-        var assertions = testrun.assertion.getCall(0).args[1];
-
+    it('should complete the run', function () {
         expect(testrun).be.ok();
-        expect(testrun.test.calledTwice).be.ok();
+        sinon.assert.calledOnce(testrun.start);
+        sinon.assert.calledOnce(testrun.done);
+        sinon.assert.calledWith(testrun.done.getCall(0), null);
+    });
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
+    it('should run the test script successfully', function () {
+        var assertions = testrun.assertion.getCall(0).args[1];
+        sinon.assert.calledTwice(testrun.test);
+        sinon.assert.calledWith(testrun.test.getCall(0), null);
         expect(assertions[0]).to.have.property('name', 'File contents are valid');
         expect(assertions[0]).to.have.property('passed', true);
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
-    });
+    it('should upload the files in binary and formdata mode correctly', function () {
+        sinon.assert.calledTwice(testrun.request);
 
-    it('must have uploaded the files in binary and formdata mode correctly', function() {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledTwice).to.be.ok();
+        sinon.assert.calledWith(testrun.request.getCall(0), null);
+        expect(_.find(testrun.request.getCall(0).args[3].headers.members, {key: 'content-length'}))
+            .to.have.property('value', 253);
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
-        expect(_.find(testrun.request.getCall(0).args[3].headers.members, {key: 'content-length'})).to.have
-            .property('value', 253);
-
-        expect(testrun.request.getCall(1).args[0]).to.be(null);
-        expect(_.find(testrun.request.getCall(1).args[3].headers.members, {key: 'content-length'})).to.have
-            .property('value', 33);
+        sinon.assert.calledWith(testrun.request.getCall(1), null);
+        expect(_.find(testrun.request.getCall(1).args[3].headers.members, {key: 'content-length'}))
+            .to.have.property('value', 33);
     });
 });
