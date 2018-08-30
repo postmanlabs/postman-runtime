@@ -10,7 +10,7 @@ describe('synchronous script timeouts', function () {
                             listen: 'prerequest',
                             script: `
                             var now = Date.now(),
-                                later = now + 300;
+                                later = now + 200;
                             while(Date.now() < later);
                         `
                         }],
@@ -21,7 +21,7 @@ describe('synchronous script timeouts', function () {
                     }]
                 },
                 timeout: {
-                    script: 500
+                    script: 2000
                 }
             }, function (err, results) {
                 // @todo fix multiple callbacks
@@ -144,7 +144,7 @@ describe('synchronous script timeouts', function () {
                                 listen: 'prerequest',
                                 script: `
                                     var now = Date.now(),
-                                        later = now + 1000;
+                                        later = now + 2200;
                                     while(Date.now() < later);
                                 `
                             }],
@@ -155,7 +155,7 @@ describe('synchronous script timeouts', function () {
                         }]
                     },
                     timeout: {
-                        script: 500
+                        script: 2000
                     }
                 }, function (err, results) {
                     // @todo fix multiple callbacks
@@ -163,7 +163,7 @@ describe('synchronous script timeouts', function () {
                 });
             });
 
-            it('should have completed the run', function () {
+            it('should completed the run', function () {
                 expect(testrun).to.be.ok();
                 expect(testrun.done.callCount).to.be(1);
                 expect(testrun.start.callCount).to.be(1);
