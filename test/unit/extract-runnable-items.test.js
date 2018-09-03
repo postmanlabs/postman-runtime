@@ -5,37 +5,51 @@ var expect = require('expect.js'),
 
 describe('extractRunnableItems', function () {
     var collection = new sdk.Collection({
-        id: 'C1',
-        name: 'Collection C1',
-        item: [{
-            id: 'ID1',
-            name: 'F1',
+            id: 'C1',
+            name: 'Collection C1',
             item: [{
-                id: 'ID3',
-                name: 'F1.R1',
-                request: 'https://postman-echo.com/get'
-            }, {
-                id: 'ID4',
-                name: 'F1.F1',
+                id: 'ID1',
+                name: 'F1',
                 item: [{
-                    name: 'F1.F1.R1',
-                    request: 'https://postman-echo.com/cookies'
+                    id: 'ID3',
+                    name: 'F1.R1',
+                    request: 'https://postman-echo.com/get'
+                }, {
+                    id: 'ID4',
+                    name: 'F1.F1',
+                    item: [{
+                        name: 'F1.F1.R1',
+                        request: 'https://postman-echo.com/cookies'
+                    }]
                 }]
-            }]
-        },
-        {
-            id: 'ID2',
-            name: 'F2',
-            item: [{
-                name: 'F2.R1',
+            },
+            {
+                id: 'ID2',
+                name: 'F2',
+                item: [{
+                    name: 'F2.R1',
+                    request: 'https://postman-echo.com/get'
+                }]
+            }, {
+                id: 'ID6',
+                name: 'R1',
                 request: 'https://postman-echo.com/get'
             }]
-        }, {
-            id: 'ID6',
-            name: 'R1',
-            request: 'https://postman-echo.com/get'
-        }]
-    });
+        }),
+        collectionWithDuplicates = new sdk.Collection({
+            id: 'C2',
+            name: 'Collection C2',
+            item: [{
+                id: 'ID1',
+                name: 'R1',
+                request: 'https://postman-echo.com/get'
+            },
+            {
+                id: 'ID2',
+                name: 'R1',
+                request: 'https://postman-echo.com/post'
+            }]
+        });
 
     describe('without entrypoint', function () {
         it('should return all items on collection', function (done) {
@@ -222,6 +236,22 @@ describe('extractRunnableItems', function () {
                     expect(runnableItems).to.have.length(1);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
                     expect(entrypoint).to.have.property('name', 'F1.R1');
+                    done();
+                }
+            );
+        });
+
+        it('should choose the first match in collection order', function (done) {
+            extractRunnableItems(
+                collectionWithDuplicates, {
+                    execute: 'R1',
+                    lookupStrategy: 'idOrName'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be(null);
+                    expect(runnableItems).to.have.length(1);
+                    expect(_.map(runnableItems, 'id')).to.eql(['ID1']);
+                    expect(entrypoint).to.have.property('name', 'R1');
                     done();
                 }
             );
@@ -420,6 +450,38 @@ describe('extractRunnableItems', function () {
                     expect(err).to.be(null);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should choose the first match in collection order', function (done) {
+            extractRunnableItems(
+                collectionWithDuplicates, {
+                    execute: ['R1'],
+                    lookupStrategy: 'multipleIdOrName'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be(null);
+                    expect(runnableItems).to.have.length(1);
+                    expect(_.map(runnableItems, 'id')).to.eql(['ID1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C2');
+                    done();
+                }
+            );
+        });
+
+        it('should ignore duplicates in name', function (done) {
+            extractRunnableItems(
+                collectionWithDuplicates, {
+                    execute: ['R1', 'R1'],
+                    lookupStrategy: 'multipleIdOrName'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be(null);
+                    expect(runnableItems).to.have.length(1);
+                    expect(_.map(runnableItems, 'id')).to.eql(['ID1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C2');
                     done();
                 }
             );
