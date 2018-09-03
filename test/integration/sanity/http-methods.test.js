@@ -59,13 +59,13 @@ describe('http methods', function () {
             sinon.assert.calledWith(testrun.response.getCall(0), null);
 
             var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2];
+                response = testrun.request.getCall(0).args[2].stream.toString();
 
             // method sent to server in request
             expect(request).to.have.property('method', 'GET');
 
             // method received at server
-            expect(response.stream.toString()).to.contain('GET / HTTP/1.1');
+            expect(response).to.contain('GET / HTTP/1.1');
         });
     });
 
@@ -101,13 +101,13 @@ describe('http methods', function () {
             sinon.assert.calledWith(testrun.response.getCall(0), null);
 
             var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2];
+                response = testrun.request.getCall(0).args[2].stream.toString();
 
             // method sent to server in request
             expect(request).to.have.property('method', 'POSTMAN');
 
             // method received at server
-            expect(response.stream.toString()).to.contain('POSTMAN / HTTP/1.1');
+            expect(response).to.contain('POSTMAN / HTTP/1.1');
         });
 
         describe('with request body', function () {
@@ -307,6 +307,88 @@ describe('http methods', function () {
                     expect(response).to.contain('{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
                 });
             });
+        });
+    });
+
+    describe('missing', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {url: URL}
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).be.ok();
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+        });
+
+        it('should defaults to GET method', function () {
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+
+            var request = testrun.request.getCall(0).args[3],
+                response = testrun.request.getCall(0).args[2].stream.toString();
+
+            // method sent to server in request
+            expect(request).to.have.property('method', 'GET');
+
+            // method received at server
+            expect(response).to.contain('GET / HTTP/1.1');
+        });
+    });
+
+    // @todo enable this when non-string request method is accepted in SDK.
+    describe.skip('non-string', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: URL,
+                            method: 12345
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).be.ok();
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+        });
+
+        it('should handle non-string method correctly', function () {
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+
+            var request = testrun.request.getCall(0).args[3],
+                response = testrun.request.getCall(0).args[2].stream.toString();
+
+            // method sent to server in request
+            expect(request).to.have.property('method', '12345');
+
+            // method received at server
+            expect(response).to.contain('12345 / HTTP/1.1');
         });
     });
 });
