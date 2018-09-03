@@ -65,7 +65,7 @@ describe('http methods', function () {
             expect(request).to.have.property('method', 'GET');
 
             // method received at server
-            expect(response.stream.toString()).to.match(/^GET \/ HTTP\/1.1/);
+            expect(response.stream.toString()).to.contain('GET / HTTP/1.1');
         });
     });
 
@@ -107,7 +107,7 @@ describe('http methods', function () {
             expect(request).to.have.property('method', 'POSTMAN');
 
             // method received at server
-            expect(response.stream.toString()).to.match(/^POSTMAN \/ HTTP\/1.1/);
+            expect(response.stream.toString()).to.contain('POSTMAN / HTTP/1.1');
         });
 
         describe('with request body', function () {
@@ -153,8 +153,8 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.match(/Content-Type:\stext\/plain/);
-                    expect(response).to.match(/foo=bar$/);
+                    expect(response).to.contain('Content-Type: text/plain');
+                    expect(response).to.contain('foo=bar');
                 });
             });
 
@@ -203,8 +203,8 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.match(/content-type:\sapplication\/x-www-form-urlencoded/);
-                    expect(response).to.match(/foo=bar$/);
+                    expect(response).to.contain('content-type: application/x-www-form-urlencoded');
+                    expect(response).to.contain('foo=bar');
                 });
             });
 
@@ -253,8 +253,8 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.match(/content-type:\smultipart\/form-data/);
-                    expect(response).to.match(/name="foo"\r\n\r\nbar/);
+                    expect(response).to.contain('content-type: multipart/form-data');
+                    expect(response).to.contain('name="foo"\r\n\r\nbar');
                 });
             });
 
@@ -303,8 +303,8 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.match(/Content-Type:\stext\/plain/);
-                    expect(response).to.match(/{\n\t"key1":"value1",\n\t"key2": 2\n}\n$/);
+                    expect(response).to.contain('Content-Type: text/plain');
+                    expect(response).to.contain('{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
                 });
             });
         });
