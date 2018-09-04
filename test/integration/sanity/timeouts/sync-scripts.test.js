@@ -37,6 +37,7 @@ describe('synchronous script timeouts', function () {
         });
 
         it('should handle script timeouts correctly', function () {
+            expect(testrun).to.be.ok();
             expect(testrun.prerequest.callCount).to.be(1);
             expect(testrun.prerequest.firstCall.args[0]).to.be(null);
             expect(testrun.prerequest.firstCall.args[2][0]).to.not.have.property('error');
@@ -81,6 +82,7 @@ describe('synchronous script timeouts', function () {
         });
 
         it('should handle script timeouts correctly', function () {
+            expect(testrun).to.be.ok();
             expect(testrun.prerequest.callCount).to.be(1);
             expect(testrun.prerequest.firstCall.args[0]).to.be(null);
             expect(testrun.prerequest.firstCall.args[2][0]).to.not.have.property('error');
@@ -99,7 +101,7 @@ describe('synchronous script timeouts', function () {
                                 listen: 'prerequest',
                                 script: `
                                     var now = Date.now(),
-                                        later = now + 600;
+                                        later = now + 1200;
                                     while(Date.now() < later);
                                 `
                             }],
@@ -110,7 +112,7 @@ describe('synchronous script timeouts', function () {
                         }]
                     },
                     timeout: {
-                        global: 500
+                        global: 1000
                     }
                 }, function (err, results) {
                     // @todo fix multiple callbacks
@@ -118,18 +120,24 @@ describe('synchronous script timeouts', function () {
                 });
             });
 
-            it('should throw an error because of timeout', function () {
+            it('should completed the run', function () {
                 expect(testrun).to.be.ok();
-                // @todo enable these checks
-                // expect(testrun.prerequest.callCount).to.be(1); // this is coming 0
-                // expect(testrun.done.callCount).to.be(1); // this is coming 2
+                // expect(testrun.done.callCount).to.be(1); // @todo this is coming 2
+                expect(testrun.start.callCount).to.be(1);
+                expect(testrun.done.firstCall.args[0]).to.have.property('message', 'Script execution timed out.');
+            });
 
-                var err = testrun.done.firstCall.args[0],
-                    knownErrMsg = ['Script execution timed out.', 'callback timed out'];
+            it('should handle script timeouts correctly', function (done) {
+                // @todo done callback is called before the actual script execution timeout
+                setTimeout(function () {
+                    expect(testrun).to.be.ok();
+                    expect(testrun.prerequest.callCount).to.be(1);
 
-                expect(err).to.be.ok();
-                expect(err).to.have.property('message');
-                expect(knownErrMsg).to.contain(err.message);
+                    expect(testrun.prerequest.firstCall.args[0]).to.be(null);
+                    expect(testrun.prerequest.firstCall.args[2][0].error).to.have.property('message',
+                        'sandbox: synchronous script execution timeout');
+                    done();
+                }, 2000);
             });
         });
 
@@ -144,7 +152,7 @@ describe('synchronous script timeouts', function () {
                                 listen: 'prerequest',
                                 script: `
                                     var now = Date.now(),
-                                        later = now + 2200;
+                                        later = now + 1000;
                                     while(Date.now() < later);
                                 `
                             }],
@@ -155,7 +163,7 @@ describe('synchronous script timeouts', function () {
                         }]
                     },
                     timeout: {
-                        script: 2000
+                        script: 500
                     }
                 }, function (err, results) {
                     // @todo fix multiple callbacks
@@ -167,22 +175,20 @@ describe('synchronous script timeouts', function () {
                 expect(testrun).to.be.ok();
                 expect(testrun.done.callCount).to.be(1);
                 expect(testrun.start.callCount).to.be(1);
-
-                var err = testrun.done.firstCall.args[0],
-                    knownErrMsg = ['Script execution timed out.', 'callback timed out'];
-
-                expect(err).to.be.ok();
-                expect(err).to.have.property('message');
-                expect(knownErrMsg).to.contain(err.message);
+                expect(testrun.done.firstCall.args[0]).to.have.property('message', 'Script execution timed out.');
             });
 
-            it('should handle script timeouts correctly', function () {
-                expect(testrun).to.be.ok();
-                expect(testrun.prerequest.callCount).to.be(1);
+            it('should handle script timeouts correctly', function (done) {
+                // @todo done callback is called before the actual script execution timeout
+                setTimeout(function () {
+                    expect(testrun).to.be.ok();
+                    expect(testrun.prerequest.callCount).to.be(1);
 
-                expect(testrun.prerequest.firstCall.args[0]).to.be(null);
-                expect(testrun.prerequest.firstCall.args[2][0].error).to.have.property('message',
-                    'sandbox: synchronous script execution timeout');
+                    expect(testrun.prerequest.firstCall.args[0]).to.be(null);
+                    expect(testrun.prerequest.firstCall.args[2][0].error).to.have.property('message',
+                        'sandbox: synchronous script execution timeout');
+                    done();
+                }, 2000);
             });
         });
     });
