@@ -124,7 +124,15 @@ describe('synchronous script timeouts', function () {
                 expect(testrun).to.be.ok();
                 // expect(testrun.done.callCount).to.be(1); // @todo this is coming 2
                 expect(testrun.start.callCount).to.be(1);
-                expect(testrun.done.firstCall.args[0]).to.have.property('message', 'Script execution timed out.');
+
+                // @todo global timeout sets up two setTimeouts(timeback & sandbox) and,
+                // due to sync script its not predictable which timeout callback will be executed first.
+                var err = testrun.done.firstCall.args[0],
+                    knownErrMsg = ['Script execution timed out.', 'callback timed out'];
+
+                expect(err).to.be.ok();
+                expect(err).to.have.property('message');
+                expect(knownErrMsg).to.contain(err.message);
             });
 
             it('should handle script timeouts correctly', function (done) {
