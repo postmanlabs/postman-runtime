@@ -349,8 +349,7 @@ describe('http methods', function () {
         });
     });
 
-    // @todo enable this when non-string request method is accepted in SDK.
-    describe.skip('non-string', function () {
+    describe('non-string', function () {
         before(function (done) {
             this.run({
                 collection: {
