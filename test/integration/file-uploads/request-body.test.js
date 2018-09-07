@@ -121,6 +121,52 @@ describe('file upload in request body', function () {
         });
     });
 
+    describe('with disabled body', function () {
+        before(function (done) {
+            this.run({
+                fileResolver: fs,
+                collection: {
+                    item: [{
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                disabled: true,
+                                mode: 'file',
+                                file: {src: 'test/fixtures/upload-file.json'}
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).be.ok();
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+        });
+
+        it('should not load file', function () {
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            var req = testrun.request.getCall(0).args[3],
+                resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
+
+            // make sure file is not loaded if body is disabled
+            expect(req.body).to.have.property('disabled', true);
+            expect(req.body.file).to.not.have.property('content');
+
+            expect(resp.data).to.eql({});
+            expect(resp.headers).to.have.property('content-length', '0');
+        });
+    });
+
     describe('with disabled param', function () {
         before(function (done) {
             this.run({
