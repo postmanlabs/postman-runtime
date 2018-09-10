@@ -268,6 +268,25 @@ describe('requester util', function () {
             expect(requesterCore.getRequestBody(request)).to.be.undefined;
         });
 
+        it('should not bail out on POST requests with forceInclude: false', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/post',
+                method: 'POST',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }],
+                    forceInclude: false
+                }
+            });
+
+            expect(requesterCore.getRequestBody(request)).to.eql({
+                formData: {foo: 'bar'}
+            });
+        });
+
         it('should handle raw request bodies correctly ', function () {
             var request = new sdk.Request({
                 url: 'postman-echo.com/post',
