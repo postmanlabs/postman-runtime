@@ -135,7 +135,7 @@ describe('request body forceInclude', function () {
                             method: 'GET',
                             body: {
                                 mode: 'raw',
-                                raw: 'foo=bar',
+                                raw: 'foo=bar'
                             }
                         }
                     }]
