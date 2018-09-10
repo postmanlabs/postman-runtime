@@ -200,7 +200,7 @@ describe('requester util', function () {
             });
         });
 
-        it('should not bail out on GET requests for sendBodyWithGetRequests', function () {
+        it('should not bail out on GET requests for sendBodyWithGetRequests: true', function () {
             var request = new sdk.Request({
                 url: 'postman-echo.com/get',
                 body: {
@@ -212,7 +212,77 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterCore.getRequestBody(request, {sendBodyWithGetRequests: true})).to.eql({
+            expect(requesterCore.getRequestBody(request, {
+                sendBodyWithGetRequests: true
+            })).to.eql({formData: {foo: 'bar'}});
+        });
+
+        it('should bail out on GET requests for sendBodyWithGetRequests: false', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/get',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }]
+                }
+            });
+
+            expect(requesterCore.getRequestBody(request, {
+                sendBodyWithGetRequests: false
+            })).to.be.undefined;
+        });
+
+        it('should not bail out on GET requests with forceInclude: true', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/get',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }],
+                    forceInclude: true
+                }
+            });
+
+            expect(requesterCore.getRequestBody(request)).to.eql({
+                formData: {foo: 'bar'}
+            });
+        });
+
+        it('should bail out on GET requests with forceInclude: false', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/get',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }],
+                    forceInclude: false
+                }
+            });
+
+            expect(requesterCore.getRequestBody(request)).to.be.undefined;
+        });
+
+        it('should not bail out on POST requests with forceInclude: false', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/post',
+                method: 'POST',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }],
+                    forceInclude: false
+                }
+            });
+
+            expect(requesterCore.getRequestBody(request)).to.eql({
                 formData: {foo: 'bar'}
             });
         });
@@ -298,6 +368,102 @@ describe('requester util', function () {
             });
 
             expect(requesterCore.getRequestBody(request)).to.be(undefined);
+        });
+
+        // make sure forceInclude has higher precedence than sendBodyWithGetRequests
+        // @todo cleanup this when sendBodyWithGetRequests support is dropped.
+        describe('should not bail out', function () {
+            it('with forceInclude: true & sendBodyWithGetRequests: undefined', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        forceInclude: true
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: undefined
+                })).to.eql({body: 'foo=bar'});
+            });
+
+            it('with forceInclude: true & sendBodyWithGetRequests: true', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        forceInclude: true
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: true
+                })).to.eql({body: 'foo=bar'});
+            });
+
+            it('with forceInclude: true & sendBodyWithGetRequests: false', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        forceInclude: true
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: false
+                })).to.eql({body: 'foo=bar'});
+            });
+        });
+
+        describe('should bail out', function () {
+            it('with forceInclude: false & sendBodyWithGetRequests: undefined', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        forceInclude: false
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: undefined
+                })).to.be.undefined;
+            });
+
+            it('with forceInclude: false & sendBodyWithGetRequests: true', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        forceInclude: false
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: true
+                })).to.be.undefined;
+            });
+
+            it('with forceInclude: false & sendBodyWithGetRequests: false', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        forceInclude: false
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: false
+                })).to.be.undefined;
+            });
         });
 
         describe('request bodies with special keywords', function () {
