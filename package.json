@@ -39,7 +39,7 @@
     "inherits": "2.0.3",
     "lodash": "4.17.10",
     "node-oauth1": "1.2.2",
-    "postman-collection": "git://github.com/postmanlabs/postman-collection.git#feature/disable-body",
+    "postman-collection": "git://github.com/postmanlabs/postman-collection.git#develop",
     "postman-request": "2.86.1-postman.1",
     "postman-sandbox": "3.1.2",
     "resolve-from": "4.0.0",
