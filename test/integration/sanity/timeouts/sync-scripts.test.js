@@ -145,7 +145,7 @@ describe('synchronous script timeouts', function () {
                     expect(testrun.prerequest.firstCall.args[2][0].error).to.have.property('message',
                         'sandbox: synchronous script execution timeout');
                     done();
-                }, 2000);
+                }, 3000);
             });
         });
 
@@ -196,7 +196,7 @@ describe('synchronous script timeouts', function () {
                     expect(testrun.prerequest.firstCall.args[2][0].error).to.have.property('message',
                         'sandbox: synchronous script execution timeout');
                     done();
-                }, 2000);
+                }, 3000);
             });
         });
     });
