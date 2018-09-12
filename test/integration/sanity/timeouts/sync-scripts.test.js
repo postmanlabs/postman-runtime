@@ -135,7 +135,8 @@ describe('synchronous script timeouts', function () {
                 expect(knownErrMsg).to.contain(err.message);
             });
 
-            it('should handle script timeouts correctly', function (done) {
+            // @todo ensure prerequest callback is called on timeout
+            it.skip('should handle script timeouts correctly', function (done) {
                 // @todo done callback is called before the actual script execution timeout
                 setTimeout(function () {
                     expect(testrun).to.be.ok();
