@@ -200,7 +200,7 @@ describe('requester util', function () {
             });
         });
 
-        it('should not bail out on GET requests for sendBodyWithGetRequests', function () {
+        it('should not bail out on GET requests for sendBodyWithGetRequests: true', function () {
             var request = new sdk.Request({
                 url: 'postman-echo.com/get',
                 body: {
@@ -212,7 +212,102 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterCore.getRequestBody(request, {sendBodyWithGetRequests: true})).to.eql({
+            expect(requesterCore.getRequestBody(request, {
+                sendBodyWithGetRequests: true
+            })).to.eql({formData: {foo: 'bar'}});
+        });
+
+        it('should bail out on GET requests for sendBodyWithGetRequests: false', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/get',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }]
+                }
+            });
+
+            expect(requesterCore.getRequestBody(request, {
+                sendBodyWithGetRequests: false
+            })).to.be.undefined;
+        });
+
+        it('should not bail out on GET requests with protocolProfileBehavior: "disable-body-pruning"', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/get',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }],
+                    protocolProfileBehavior: 'disable-body-pruning'
+                }
+            });
+
+            expect(request.body.protocolProfileBehavior).to.equal('disable-body-pruning');
+            expect(requesterCore.getRequestBody(request)).to.eql({
+                formData: {foo: 'bar'}
+            });
+        });
+
+        it('should bail out on GET requests with unknown protocolProfileBehavior', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/get',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }],
+                    protocolProfileBehavior: 'random'
+                }
+            });
+
+            expect(request.body.protocolProfileBehavior).to.be.undefined;
+            expect(requesterCore.getRequestBody(request)).to.be.undefined;
+        });
+
+        it('should not bail out on POST requests with protocolProfileBehavior: "disable-body-pruning"', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/post',
+                method: 'POST',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }],
+                    protocolProfileBehavior: 'disable-body-pruning'
+                }
+            });
+
+            expect(request.body.protocolProfileBehavior).to.equal('disable-body-pruning');
+            expect(requesterCore.getRequestBody(request)).to.eql({
+                formData: {foo: 'bar'}
+            });
+        });
+
+        it('should give protocolProfileBehavior higher precedence than sendBodyWithGetRequests', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/post',
+                method: 'GET',
+                body: {
+                    mode: 'formdata',
+                    formdata: [{
+                        key: 'foo',
+                        value: 'bar'
+                    }],
+                    protocolProfileBehavior: 'disable-body-pruning'
+                }
+            });
+
+            expect(request.body.protocolProfileBehavior).to.equal('disable-body-pruning');
+            expect(requesterCore.getRequestBody(request, {
+                sendBodyWithGetRequests: false
+            })).to.eql({
                 formData: {foo: 'bar'}
             });
         });
@@ -312,6 +407,102 @@ describe('requester util', function () {
             });
 
             expect(requesterCore.getRequestBody(request)).to.be(undefined);
+        });
+
+        // make sure protocolProfileBehavior has higher precedence than sendBodyWithGetRequests
+        // @todo cleanup this when sendBodyWithGetRequests support is dropped.
+        describe('should not bail out', function () {
+            it('with disableBodyPruning: true & sendBodyWithGetRequests: undefined', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        protocolProfileBehavior: 'disable-body-pruning'
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: undefined
+                })).to.eql({body: 'foo=bar'});
+            });
+
+            it('with disableBodyPruning: true & sendBodyWithGetRequests: true', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        protocolProfileBehavior: 'disable-body-pruning'
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: true
+                })).to.eql({body: 'foo=bar'});
+            });
+
+            it('with disableBodyPruning: true & sendBodyWithGetRequests: false', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        protocolProfileBehavior: 'disable-body-pruning'
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: false
+                })).to.eql({body: 'foo=bar'});
+            });
+        });
+
+        describe('should bail out', function () {
+            it('with disableBodyPruning: false & sendBodyWithGetRequests: undefined', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        protocolProfileBehavior: 'random'
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: undefined
+                })).to.be.undefined;
+            });
+
+            it('without disableBodyPruning: false & sendBodyWithGetRequests: true', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        protocolProfileBehavior: 'random'
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: true
+                })).to.be.undefined;
+            });
+
+            it('without disableBodyPruning: false & sendBodyWithGetRequests: false', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'raw',
+                        raw: 'foo=bar',
+                        protocolProfileBehavior: 'random'
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    sendBodyWithGetRequests: false
+                })).to.be.undefined;
+            });
         });
 
         describe('request bodies with special keywords', function () {
