@@ -1,7 +1,7 @@
 var net = require('net'),
     sinon = require('sinon');
 
-describe.only('request body', function () {
+describe('request body', function () {
     var server,
         testrun,
         PORT = 5050,
