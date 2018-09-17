@@ -8,20 +8,22 @@ var expect = require('expect.js'),
 describe('requester util', function () {
     describe('.getRequestOptions', function () {
         it('should use http as the default protocol', function () {
-            var request = new sdk.Request({
-                url: 'postman-echo.com/post',
-                method: 'POST',
-                header: [{
-                    key: 'alpha',
-                    value: 'foo'
-                }],
-                body: {
-                    mode: 'raw',
-                    raw: '{"alpha": "foo"}'
+            var item = new sdk.Item({
+                request: {
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    body: {
+                        mode: 'raw',
+                        raw: '{"alpha": "foo"}'
+                    }
                 }
             });
 
-            expect(requesterCore.getRequestOptions(request, {})).to.eql({
+            expect(requesterCore.getRequestOptions(item, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -45,16 +47,18 @@ describe('requester util', function () {
         });
 
         it('should use https where applicable', function () {
-            var request = new sdk.Request({
-                url: 'https://postman-echo.com',
-                method: 'GET',
-                header: [{
-                    key: 'alpha',
-                    value: 'foo'
-                }]
+            var item = new sdk.Item({
+                request: {
+                    url: 'https://postman-echo.com',
+                    method: 'GET',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }]
+                }
             });
 
-            expect(requesterCore.getRequestOptions(request, {})).to.eql({
+            expect(requesterCore.getRequestOptions(item, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -76,16 +80,16 @@ describe('requester util', function () {
         });
 
         it('should override lookup function for localhost', function () {
-            var request = new sdk.Request({
-                url: 'http://localhost:8080/random/path'
+            var item = new sdk.Item({
+                request: {url: 'http://localhost:8080/random/path'}
             });
 
-            expect(requesterCore.getRequestOptions(request, {}).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(item, {}).lookup).to.be.a('function');
         });
 
         it('should override lookup function for restricted addresses', function () {
-            var request = new sdk.Request({
-                    url: 'http://postman-echo.com/get'
+            var item = new sdk.Item({
+                    request: {url: 'http://postman-echo.com/get'}
                 }),
                 options = {
                     network: {
@@ -95,12 +99,12 @@ describe('requester util', function () {
                     }
                 };
 
-            expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(item, options).lookup).to.be.a('function');
         });
 
         it('should override lookup function for hosts', function () {
-            var request = new sdk.Request({
-                    url: 'http://postman-echo.com/get'
+            var item = new sdk.Item({
+                    request: {url: 'http://postman-echo.com/get'}
                 }),
                 options = {
                     network: {
@@ -110,7 +114,7 @@ describe('requester util', function () {
                     }
                 };
 
-            expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(item, options).lookup).to.be.a('function');
         });
     });
 
@@ -234,84 +238,6 @@ describe('requester util', function () {
             })).to.be.undefined;
         });
 
-        it('should not bail out on GET requests with protocolProfileBehavior: "disable-body-pruning"', function () {
-            var request = new sdk.Request({
-                url: 'postman-echo.com/get',
-                body: {
-                    mode: 'formdata',
-                    formdata: [{
-                        key: 'foo',
-                        value: 'bar'
-                    }],
-                    protocolProfileBehavior: 'disable-body-pruning'
-                }
-            });
-
-            expect(request.body.protocolProfileBehavior).to.equal('disable-body-pruning');
-            expect(requesterCore.getRequestBody(request)).to.eql({
-                formData: {foo: 'bar'}
-            });
-        });
-
-        it('should bail out on GET requests with unknown protocolProfileBehavior', function () {
-            var request = new sdk.Request({
-                url: 'postman-echo.com/get',
-                body: {
-                    mode: 'formdata',
-                    formdata: [{
-                        key: 'foo',
-                        value: 'bar'
-                    }],
-                    protocolProfileBehavior: 'random'
-                }
-            });
-
-            expect(request.body.protocolProfileBehavior).to.be.undefined;
-            expect(requesterCore.getRequestBody(request)).to.be.undefined;
-        });
-
-        it('should not bail out on POST requests with protocolProfileBehavior: "disable-body-pruning"', function () {
-            var request = new sdk.Request({
-                url: 'postman-echo.com/post',
-                method: 'POST',
-                body: {
-                    mode: 'formdata',
-                    formdata: [{
-                        key: 'foo',
-                        value: 'bar'
-                    }],
-                    protocolProfileBehavior: 'disable-body-pruning'
-                }
-            });
-
-            expect(request.body.protocolProfileBehavior).to.equal('disable-body-pruning');
-            expect(requesterCore.getRequestBody(request)).to.eql({
-                formData: {foo: 'bar'}
-            });
-        });
-
-        it('should give protocolProfileBehavior higher precedence than sendBodyWithGetRequests', function () {
-            var request = new sdk.Request({
-                url: 'postman-echo.com/post',
-                method: 'GET',
-                body: {
-                    mode: 'formdata',
-                    formdata: [{
-                        key: 'foo',
-                        value: 'bar'
-                    }],
-                    protocolProfileBehavior: 'disable-body-pruning'
-                }
-            });
-
-            expect(request.body.protocolProfileBehavior).to.equal('disable-body-pruning');
-            expect(requesterCore.getRequestBody(request, {
-                sendBodyWithGetRequests: false
-            })).to.eql({
-                formData: {foo: 'bar'}
-            });
-        });
-
         it('should handle raw request bodies correctly ', function () {
             var request = new sdk.Request({
                 url: 'postman-echo.com/post',
@@ -409,6 +335,92 @@ describe('requester util', function () {
             expect(requesterCore.getRequestBody(request)).to.be(undefined);
         });
 
+        describe('with protocolProfileBehavior', function () {
+            it('should bail out on GET requests with disableBodyPruning: false', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'formdata',
+                        formdata: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: false
+                    }
+                })).to.be.undefined;
+            });
+
+            it('should not bail out on GET requests with disableBodyPruning: true', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'formdata',
+                        formdata: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: true
+                    }
+                })).to.eql({
+                    formData: {foo: 'bar'}
+                });
+            });
+
+            it('should not bail out on POST requests with disableBodyPruning: true', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'formdata',
+                        formdata: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: true
+                    }
+                })).to.eql({
+                    formData: {foo: 'bar'}
+                });
+            });
+
+            it('should not bail out on POST requests with disableBodyPruning: false', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'formdata',
+                        formdata: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: false
+                    }
+                })).to.eql({
+                    formData: {foo: 'bar'}
+                });
+            });
+        });
+
         // make sure protocolProfileBehavior has higher precedence than sendBodyWithGetRequests
         // @todo cleanup this when sendBodyWithGetRequests support is dropped.
         describe('should not bail out', function () {
@@ -417,12 +429,14 @@ describe('requester util', function () {
                     url: 'postman-echo.com/get',
                     body: {
                         mode: 'raw',
-                        raw: 'foo=bar',
-                        protocolProfileBehavior: 'disable-body-pruning'
+                        raw: 'foo=bar'
                     }
                 });
 
                 expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: true
+                    },
                     sendBodyWithGetRequests: undefined
                 })).to.eql({body: 'foo=bar'});
             });
@@ -432,12 +446,14 @@ describe('requester util', function () {
                     url: 'postman-echo.com/get',
                     body: {
                         mode: 'raw',
-                        raw: 'foo=bar',
-                        protocolProfileBehavior: 'disable-body-pruning'
+                        raw: 'foo=bar'
                     }
                 });
 
                 expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: true
+                    },
                     sendBodyWithGetRequests: true
                 })).to.eql({body: 'foo=bar'});
             });
@@ -447,12 +463,14 @@ describe('requester util', function () {
                     url: 'postman-echo.com/get',
                     body: {
                         mode: 'raw',
-                        raw: 'foo=bar',
-                        protocolProfileBehavior: 'disable-body-pruning'
+                        raw: 'foo=bar'
                     }
                 });
 
                 expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: true
+                    },
                     sendBodyWithGetRequests: false
                 })).to.eql({body: 'foo=bar'});
             });
@@ -464,12 +482,14 @@ describe('requester util', function () {
                     url: 'postman-echo.com/get',
                     body: {
                         mode: 'raw',
-                        raw: 'foo=bar',
-                        protocolProfileBehavior: 'random'
+                        raw: 'foo=bar'
                     }
                 });
 
                 expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: false
+                    },
                     sendBodyWithGetRequests: undefined
                 })).to.be.undefined;
             });
@@ -479,12 +499,14 @@ describe('requester util', function () {
                     url: 'postman-echo.com/get',
                     body: {
                         mode: 'raw',
-                        raw: 'foo=bar',
-                        protocolProfileBehavior: 'random'
+                        raw: 'foo=bar'
                     }
                 });
 
                 expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: false
+                    },
                     sendBodyWithGetRequests: true
                 })).to.be.undefined;
             });
@@ -500,6 +522,9 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: false
+                    },
                     sendBodyWithGetRequests: false
                 })).to.be.undefined;
             });

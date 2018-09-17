@@ -1,7 +1,7 @@
 var net = require('net'),
     sinon = require('sinon');
 
-describe('request body', function () {
+describe('protocolProfileBehavior', function () {
     var server,
         testrun,
         PORT = 5050,
@@ -25,7 +25,7 @@ describe('request body', function () {
         server.close(done);
     });
 
-    describe('with protocolProfileBehavior: "disable-body-pruning"', function () {
+    describe('with disableBodyPruning: true', function () {
         before(function (done) {
             this.run({
                 collection: {
@@ -35,9 +35,11 @@ describe('request body', function () {
                             method: 'GET',
                             body: {
                                 mode: 'raw',
-                                raw: 'foo=bar',
-                                protocolProfileBehavior: 'disable-body-pruning'
+                                raw: 'foo=bar'
                             }
+                        },
+                        protocolProfileBehavior: {
+                            disableBodyPruning: true
                         }
                     }]
                 }
@@ -61,13 +63,7 @@ describe('request body', function () {
             sinon.assert.calledOnce(testrun.response);
             sinon.assert.calledWith(testrun.response.getCall(0), null);
 
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2].stream.toString();
-
-            expect(request).to.have.property('method', 'GET');
-            expect(request).to.have.property('body');
-            expect(request.body).to.have.property('protocolProfileBehavior', 'disable-body-pruning');
-            expect(request.body).to.have.property('raw', 'foo=bar');
+            var response = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(response).to.contain('GET / HTTP/1.1');
             expect(response).to.contain('Content-Type: text/plain');
@@ -75,7 +71,7 @@ describe('request body', function () {
         });
     });
 
-    describe('with protocolProfileBehavior: "random"', function () {
+    describe('with disableBodyPruning: false', function () {
         before(function (done) {
             this.run({
                 collection: {
@@ -85,9 +81,11 @@ describe('request body', function () {
                             method: 'GET',
                             body: {
                                 mode: 'raw',
-                                raw: 'foo=bar',
-                                protocolProfileBehavior: 'random'
+                                raw: 'foo=bar'
                             }
+                        },
+                        protocolProfileBehavior: {
+                            disableBodyPruning: false
                         }
                     }]
                 }
@@ -111,13 +109,7 @@ describe('request body', function () {
             sinon.assert.calledOnce(testrun.response);
             sinon.assert.calledWith(testrun.response.getCall(0), null);
 
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2].stream.toString();
-
-            expect(request).to.have.property('method', 'GET');
-            expect(request).to.have.property('body');
-            expect(request.body).to.have.property('protocolProfileBehavior', undefined);
-            expect(request.body).to.have.property('raw', 'foo=bar');
+            var response = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(response).to.contain('GET / HTTP/1.1');
             expect(response).to.not.contain('Content-Type');
@@ -125,7 +117,7 @@ describe('request body', function () {
         });
     });
 
-    describe('with protocolProfileBehavior: undefined', function () {
+    describe('with disableBodyPruning: undefined', function () {
         before(function (done) {
             this.run({
                 collection: {
@@ -160,13 +152,7 @@ describe('request body', function () {
             sinon.assert.calledOnce(testrun.response);
             sinon.assert.calledWith(testrun.response.getCall(0), null);
 
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2].stream.toString();
-
-            expect(request).to.have.property('method', 'GET');
-            expect(request).to.have.property('body');
-            expect(request.body).to.have.property('protocolProfileBehavior', undefined);
-            expect(request.body).to.have.property('raw', 'foo=bar');
+            var response = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(response).to.contain('GET / HTTP/1.1');
             expect(response).to.not.contain('Content-Type');
