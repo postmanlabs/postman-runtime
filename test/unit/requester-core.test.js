@@ -85,7 +85,7 @@ describe('requester util', function () {
 
         it('should override lookup function for restricted addresses', function () {
             var request = new sdk.Request({
-                    request: {url: 'http://postman-echo.com/get'}
+                    url: 'http://postman-echo.com/get'
                 }),
                 options = {
                     network: {
@@ -100,7 +100,7 @@ describe('requester util', function () {
 
         it('should override lookup function for hosts', function () {
             var request = new sdk.Request({
-                    request: {url: 'http://postman-echo.com/get'}
+                    url: 'http://postman-echo.com/get'
                 }),
                 options = {
                     network: {
