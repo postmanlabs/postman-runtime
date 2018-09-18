@@ -8,22 +8,20 @@ var expect = require('expect.js'),
 describe('requester util', function () {
     describe('.getRequestOptions', function () {
         it('should use http as the default protocol', function () {
-            var item = new sdk.Item({
-                request: {
-                    url: 'postman-echo.com/post',
-                    method: 'POST',
-                    header: [{
-                        key: 'alpha',
-                        value: 'foo'
-                    }],
-                    body: {
-                        mode: 'raw',
-                        raw: '{"alpha": "foo"}'
-                    }
+            var request = new sdk.Request({
+                url: 'postman-echo.com/post',
+                method: 'POST',
+                header: [{
+                    key: 'alpha',
+                    value: 'foo'
+                }],
+                body: {
+                    mode: 'raw',
+                    raw: '{"alpha": "foo"}'
                 }
             });
 
-            expect(requesterCore.getRequestOptions(item, {})).to.eql({
+            expect(requesterCore.getRequestOptions(request, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -47,18 +45,16 @@ describe('requester util', function () {
         });
 
         it('should use https where applicable', function () {
-            var item = new sdk.Item({
-                request: {
-                    url: 'https://postman-echo.com',
-                    method: 'GET',
-                    header: [{
-                        key: 'alpha',
-                        value: 'foo'
-                    }]
-                }
+            var request = new sdk.Request({
+                url: 'https://postman-echo.com',
+                method: 'GET',
+                header: [{
+                    key: 'alpha',
+                    value: 'foo'
+                }]
             });
 
-            expect(requesterCore.getRequestOptions(item, {})).to.eql({
+            expect(requesterCore.getRequestOptions(request, {})).to.eql({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -80,15 +76,15 @@ describe('requester util', function () {
         });
 
         it('should override lookup function for localhost', function () {
-            var item = new sdk.Item({
-                request: {url: 'http://localhost:8080/random/path'}
+            var request = new sdk.Request({
+                url: 'http://localhost:8080/random/path'
             });
 
-            expect(requesterCore.getRequestOptions(item, {}).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(request, {}).lookup).to.be.a('function');
         });
 
         it('should override lookup function for restricted addresses', function () {
-            var item = new sdk.Item({
+            var request = new sdk.Request({
                     request: {url: 'http://postman-echo.com/get'}
                 }),
                 options = {
@@ -99,11 +95,11 @@ describe('requester util', function () {
                     }
                 };
 
-            expect(requesterCore.getRequestOptions(item, options).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
         });
 
         it('should override lookup function for hosts', function () {
-            var item = new sdk.Item({
+            var request = new sdk.Request({
                     request: {url: 'http://postman-echo.com/get'}
                 }),
                 options = {
@@ -114,7 +110,7 @@ describe('requester util', function () {
                     }
                 };
 
-            expect(requesterCore.getRequestOptions(item, options).lookup).to.be.a('function');
+            expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
         });
     });
 
