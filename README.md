@@ -62,7 +62,7 @@ runner.run(collection, {
     entrypoint: {
         // execute a folder/request using id or name
         execute: 'folderName',
-        // idOrName in case of execute and path in case of path 
+        // idOrName in case of execute and path in case of path
         // is chosen to specify the folder/request to be executed
         lookupStrategy: 'path',
         // execute a folder/request using a path
@@ -91,9 +91,6 @@ runner.run(collection, {
 
         // Enable or disable certificate verification (only supported on Node, ignored in the browser)
         strictSSL: false,
-
-        // Enable sending of bodies with GET requests (only supported on Node, ignored in the browser)
-        sendBodyWithGetRequests: true,
 
         // network related options
         network: {

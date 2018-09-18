@@ -200,23 +200,6 @@ describe('requester util', function () {
             });
         });
 
-        it('should not bail out on GET requests for sendBodyWithGetRequests', function () {
-            var request = new sdk.Request({
-                url: 'postman-echo.com/get',
-                body: {
-                    mode: 'formdata',
-                    formdata: [{
-                        key: 'foo',
-                        value: 'bar'
-                    }]
-                }
-            });
-
-            expect(requesterCore.getRequestBody(request, {sendBodyWithGetRequests: true})).to.eql({
-                formData: {foo: 'bar'}
-            });
-        });
-
         it('should handle raw request bodies correctly ', function () {
             var request = new sdk.Request({
                 url: 'postman-echo.com/post',
