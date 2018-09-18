@@ -37,7 +37,7 @@
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.6",
     "inherits": "2.0.3",
-    "lodash": "4.17.10",
+    "lodash": "4.17.11",
     "node-oauth1": "1.2.2",
     "postman-collection": "git://github.com/postmanlabs/postman-collection.git#develop",
     "postman-request": "2.86.1-postman.1",
