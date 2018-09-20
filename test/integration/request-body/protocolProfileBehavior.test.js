@@ -60,6 +60,10 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
+            after(function () {
+                testrun = rawRequest = null;
+            });
+
             it('should complete the run', function () {
                 expect(testrun).be.ok();
                 sinon.assert.calledOnce(testrun.start);
@@ -107,6 +111,10 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
+            after(function () {
+                testrun = rawRequest = null;
+            });
+
             it('should complete the run', function () {
                 expect(testrun).be.ok();
                 sinon.assert.calledOnce(testrun.start);
@@ -152,6 +160,10 @@ describe('protocolProfileBehavior', function () {
                     testrun = results;
                     done(err);
                 });
+            });
+
+            after(function () {
+                testrun = rawRequest = null;
             });
 
             it('should complete the run', function () {
@@ -203,6 +215,10 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
+            after(function () {
+                testrun = rawRequest = null;
+            });
+
             it('should complete the run', function () {
                 expect(testrun).be.ok();
                 sinon.assert.calledOnce(testrun.start);
@@ -247,6 +263,10 @@ describe('protocolProfileBehavior', function () {
                     testrun = results;
                     done(err);
                 });
+            });
+
+            after(function () {
+                testrun = rawRequest = null;
             });
 
             it('should complete the run', function () {
@@ -295,6 +315,10 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
+            after(function () {
+                testrun = rawRequest = null;
+            });
+
             it('should complete the run', function () {
                 expect(testrun).be.ok();
                 sinon.assert.calledOnce(testrun.start);
@@ -341,6 +365,10 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
+            after(function () {
+                testrun = rawRequest = null;
+            });
+
             it('should complete the run', function () {
                 expect(testrun).be.ok();
                 sinon.assert.calledOnce(testrun.start);
@@ -384,6 +412,10 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
+            after(function () {
+                testrun = rawRequest = null;
+            });
+
             it('should complete the run', function () {
                 expect(testrun).be.ok();
                 sinon.assert.calledOnce(testrun.start);
@@ -425,6 +457,10 @@ describe('protocolProfileBehavior', function () {
                     testrun = results;
                     done(err);
                 });
+            });
+
+            after(function () {
+                testrun = rawRequest = null;
             });
 
             it('should complete the run', function () {
