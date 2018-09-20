@@ -13,7 +13,7 @@ describe('protocolProfileBehavior', function () {
         // Node's `http` server won't parse body for GET method.
         server = net.createServer(function (socket) {
             socket.on('data', function (chunk) {
-                var raw = chunk.toString(); // Request Message: [POSTMAN / HTTP/1.1 ...]
+                rawRequest = chunk.toString(); // Request Message: [POSTMAN / HTTP/1.1 ...]
                 socket.write('HTTP/1.1 200 ok\r\n');
                 socket.write('Content-Type: text/plain\r\n\r\n');
 
@@ -22,14 +22,11 @@ describe('protocolProfileBehavior', function () {
                 // @note http-parser will blow up if body is sent for HEAD request.
                 // RFC-7231: The HEAD method is identical to GET except that the
                 //           server MUST NOT send a message body in the response.
-                if (!raw.startsWith('HEAD / HTTP/1.1')) {
-                    socket.write(raw);
+                if (!rawRequest.startsWith('HEAD / HTTP/1.1')) {
+                    socket.write(rawRequest);
                 }
 
                 socket.end();
-
-                // store raw request message for testing HEAD requests.
-                rawRequest = raw;
             });
         }).listen(PORT, done);
     });
