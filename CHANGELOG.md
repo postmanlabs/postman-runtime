@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### v7.4.0 (September 21, 2018)
+* Updated dependencies :arrow_up:
+* #636 Added support for `disabled` property in request body
+* #640 Dropped support for `sendBodyWithGetRequests` requester option
+
 #### v7.3.0 (August 21, 2018)
 * Updated dependencies :arrow_up:
 * #627 Removed NSP and associated apparatus :fire:

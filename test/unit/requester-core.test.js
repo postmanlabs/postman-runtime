@@ -200,23 +200,6 @@ describe('requester util', function () {
             });
         });
 
-        it('should not bail out on GET requests for sendBodyWithGetRequests', function () {
-            var request = new sdk.Request({
-                url: 'postman-echo.com/get',
-                body: {
-                    mode: 'formdata',
-                    formdata: [{
-                        key: 'foo',
-                        value: 'bar'
-                    }]
-                }
-            });
-
-            expect(requesterCore.getRequestBody(request, {sendBodyWithGetRequests: true})).to.eql({
-                formData: {foo: 'bar'}
-            });
-        });
-
         it('should handle raw request bodies correctly ', function () {
             var request = new sdk.Request({
                 url: 'postman-echo.com/post',
@@ -287,6 +270,20 @@ describe('requester util', function () {
             expect(requesterCore.getRequestBody(request)).to.have.property('body');
         });
 
+        it('should handle disabled request bodies correctly ', function () {
+            var request = new sdk.Request({
+                url: 'postman-echo.com/post',
+                method: 'POST',
+                body: {
+                    disabled: true,
+                    mode: 'raw',
+                    raw: '{"beta":"bar"}'
+                }
+            });
+
+            expect(requesterCore.getRequestBody(request)).to.be.undefined;
+        });
+
         it('should handle arbitrary request bodies correctly', function () {
             var request = new sdk.Request({
                 url: 'postman-echo.com/post',
@@ -298,6 +295,92 @@ describe('requester util', function () {
             });
 
             expect(requesterCore.getRequestBody(request)).to.be(undefined);
+        });
+
+        describe('with protocolProfileBehavior', function () {
+            it('should bail out on GET requests with disableBodyPruning: false', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'formdata',
+                        formdata: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: false
+                    }
+                })).to.be.undefined;
+            });
+
+            it('should not bail out on GET requests with disableBodyPruning: true', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/get',
+                    body: {
+                        mode: 'formdata',
+                        formdata: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: true
+                    }
+                })).to.eql({
+                    formData: {foo: 'bar'}
+                });
+            });
+
+            it('should not bail out on POST requests with disableBodyPruning: true', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'formdata',
+                        formdata: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: true
+                    }
+                })).to.eql({
+                    formData: {foo: 'bar'}
+                });
+            });
+
+            it('should not bail out on POST requests with disableBodyPruning: false', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'formdata',
+                        formdata: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request, {
+                    protocolProfileBehavior: {
+                        disableBodyPruning: false
+                    }
+                })).to.eql({
+                    formData: {foo: 'bar'}
+                });
+            });
         });
 
         describe('request bodies with special keywords', function () {
