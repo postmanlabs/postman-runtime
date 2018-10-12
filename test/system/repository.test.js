@@ -69,7 +69,9 @@ describe('project repository', function () {
 
             // Hawk library v6.0.2+ uses ES2017 and is not compatible with Node <8.
             it('hawk version', function () {
-                expect(json.dependencies.hawk).to.equal('6.0.2');
+                expect(json.dependencies).to.deep.include({
+                    hawk: '6.0.2'
+                });
             });
 
             it('should point to a valid semver', function () {
