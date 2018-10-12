@@ -1,10 +1,8 @@
-/* global describe, it */
-var expect = require('expect.js');
+var fs = require('fs'),
+    yaml = require('js-yaml');
 
 describe('travis.yml', function () {
-    var fs = require('fs'),
-        yaml = require('js-yaml'),
-        travisYAML,
+    var travisYAML,
         packageFile,
         travisYAMLError;
 
@@ -18,17 +16,17 @@ describe('travis.yml', function () {
     // No try-catch here, any errors will be caught by the package.json tests.
     packageFile = JSON.parse(fs.readFileSync('package.json').toString());
 
-    it('must exist', function (done) {
+    it('should exist', function (done) {
         fs.stat('.travis.yml', done);
     });
 
     it('must be a valid yml', function () {
-        expect(travisYAMLError && travisYAMLError.message || travisYAMLError).to.not.be.ok();
+        expect(travisYAMLError && travisYAMLError.message || travisYAMLError).to.be.undefined;
     });
 
     describe('structure', function () {
         it('language must be set to node', function () {
-            expect(travisYAML.language).to.be('node_js');
+            expect(travisYAML.language).to.equal('node_js');
             expect(travisYAML.node_js).to.eql(['4', '6', '8']);
         });
 
