@@ -5,6 +5,7 @@ require('colors');
 var async = require('async'),
     fs = require('fs'),
     path = require('path'),
+    expect = require('chai').expect,
     Mocha = require('mocha'),
 
     SPEC_SOURCE_DIR = './test/system';
@@ -28,8 +29,17 @@ module.exports = function (exit) {
                 });
 
                 // start the mocha run
-                mocha.run(next);
-                mocha = null; // cleanup
+                global.expect = expect; // for easy reference
+
+                mocha.run(function (err) {
+                    // clear references and overrides
+                    delete global.expect;
+
+                    err && console.error(err.stack || err);
+                    next(err ? 1 : 0);
+                });
+                // cleanup
+                mocha = null;
             });
         }
     ], exit);
