@@ -1,8 +1,7 @@
 var _ = require('lodash'),
-    expect = require('expect.js'),
+    expect = require('chai').expect,
     AuthLoader = require('../../lib/authorizer').AuthLoader;
 
-/* global describe, it */
 describe('Auth Loader', function () {
     afterEach(function () {
         AuthLoader.removeHandler('fake');
@@ -31,14 +30,18 @@ describe('Auth Loader', function () {
                     post: _.noop
                 },
                 authType = 'fake';
-            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'pre'), authType)
-                .to.throwError(/does not have a "pre" function/);
-            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'init'), authType)
-                .to.throwError(/does not have an "init" function/);
-            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'sign'), authType)
-                .to.throwError(/does not have a "sign" function/);
-            expect(AuthLoader.addHandler).withArgs(_.omit(FakeAuth, 'post'), authType)
-                .to.throwError(/does not have a "post" function/);
+            expect(function () {
+                AuthLoader.addHandler(_.omit(FakeAuth, 'pre'), authType);
+            }).to.throw(/does not have a "pre" function/);
+            expect(function () {
+                AuthLoader.addHandler(_.omit(FakeAuth, 'init'), authType);
+            }).to.throw(/does not have an "init" function/);
+            expect(function () {
+                AuthLoader.addHandler(_.omit(FakeAuth, 'sign'), authType);
+            }).to.throw(/does not have a "sign" function/);
+            expect(function () {
+                AuthLoader.addHandler(_.omit(FakeAuth, 'post'), authType);
+            }).to.throw(/does not have a "post" function/);
         });
     });
 
@@ -64,8 +67,10 @@ describe('Auth Loader', function () {
         it('should return undefined if no Handler is found for a type', function () {
             var handler;
 
-            expect(AuthLoader.getHandler).withArgs('fake').to.not.throwException();
-            expect(handler).to.be(undefined);
+            expect(function() {
+                AuthLoader.getHandler('fake');
+            }).to.not.throw();
+            expect(handler).to.be.undefined;
         });
     });
 
@@ -82,11 +87,13 @@ describe('Auth Loader', function () {
             AuthLoader.addHandler(FakeAuth, authType);
             AuthLoader.removeHandler(authType);
 
-            expect(AuthLoader.handlers).to.not.have.property(authType);
+            expect(AuthLoader.handlers).to.not.have.property('authType');
         });
 
         it('should not throw for missing handler', function () {
-            expect(AuthLoader.removeHandler).withArgs('fake').to.not.throwException();
+            expect(function () {
+                AuthLoader.removeHandler('fake');
+            }).to.not.throw();
         });
     });
 });

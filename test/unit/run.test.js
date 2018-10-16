@@ -1,26 +1,28 @@
-/* global describe, it, before */
-
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('run', function () {
     var Run = require('../../lib/runner/run.js');
 
-    it('module must expose a constructor', function () {
+    it('module should expose a constructor', function () {
         expect(Run).to.be.a('function');
-        expect(Run).withArgs().to.not.throwError();
-        expect(Run).withArgs({}).to.not.throwError();
-        expect(new Run()).to.be.a(Run);
+        expect(Run).to.not.throw();
+        expect(function () {
+            Run({});
+        }).to.not.throw();
+        expect(new Run()).to.be.an.instanceOf(Run);
     });
 
     describe.skip('seeking', function () {
         describe('with no item', function () {
-            it('must not seek when no item present', function (done) {
+            it('should not seek when no item present', function (done) {
                 var run = new Run();
 
-                expect(run.seek.bind(run)).withArgs(0, 0, function (err) {
-                    expect(err).to.be.ok();
-                    done();
-                }).to.not.throwError();
+                expect(function () {
+                    run.seek.bind(run)(0, 0, function (err) {
+                        expect(err).to.be.ok;
+                        done();
+                    });
+                }).to.not.throw();
             });
         });
 
@@ -33,22 +35,26 @@ describe('run', function () {
                 });
             });
 
-            it('must seek once forward', function (done) {
-                expect(run.seek.bind(run)).withArgs(0, 0, function (err, position, cycle) {
-                    expect(err).to.not.be.ok();
-                    expect(position).to.be(0);
-                    expect(cycle).to.be(0);
-                    done();
-                }).to.not.throwError();
+            it('should seek once forward', function (done) {
+                expect(function () {
+                    run.seek.bind(run)(0, 0, function (err, position, cycle) {
+                        expect(err).to.not.be.ok;
+                        expect(position).to.equal(0);
+                        expect(cycle).to.equal(0);
+                        done();
+                    });
+                }).to.not.throw();
             });
 
-            it('must not seek the second time', function (done) {
-                expect(run.seek.bind(run)).withArgs(1, 0, function (err, position, cycle) {
-                    expect(err).to.be.ok();
-                    expect(position).to.be(0);
-                    expect(cycle).to.be(0);
-                    done();
-                }).to.not.throwError();
+            it('should not seek the second time', function (done) {
+                expect(function () {
+                    run.seek.bind(run)(1, 0, function (err, position, cycle) {
+                        expect(err).to.be.ok;
+                        expect(position).to.equal(0);
+                        expect(cycle).to.equal(0);
+                        done();
+                    });
+                }).to.not.throw();
             });
         });
 
@@ -61,56 +67,66 @@ describe('run', function () {
                 });
             });
 
-            it('must seek once forward', function (done) {
-                expect(run.seek.bind(run)).withArgs(0, 0, function (err, position, cycle) {
-                    expect(err).to.not.be.ok();
-                    expect(position).to.be(0);
-                    expect(cycle).to.be(0);
-                    done();
-                }).to.not.throwError();
+            it('should seek once forward', function (done) {
+                expect(function () {
+                    run.seek.bind(run)(0, 0, function (err, position, cycle) {
+                        expect(err).to.not.be.ok;
+                        expect(position).to.equal(0);
+                        expect(cycle).to.equal(0);
+                        done();
+                    });
+                }).to.not.throw();
             });
 
-            it('must seek forward the second time', function (done) {
-                expect(run.seek.bind(run)).withArgs(1, 0, function (err, position, cycle) {
-                    expect(err).to.not.be.ok();
-                    expect(position).to.be(1);
-                    expect(cycle).to.be(0);
-                    done();
-                }).to.not.throwError();
+            it('should seek forward the second time', function (done) {
+                expect(function () {
+                    run.seek.bind(run)(1, 0, function (err, position, cycle) {
+                        expect(err).to.not.be.ok;
+                        expect(position).to.equal(1);
+                        expect(cycle).to.equal(0);
+                        done();
+                    });
+                }).to.not.throw();
             });
 
-            it('must not seek the third time', function (done) {
-                expect(run.seek.bind(run)).withArgs(2, 0, function (err, position, cycle) {
-                    expect(err).to.be.ok();
-                    expect(position).to.be(1);
-                    expect(cycle).to.be(0);
-                    done();
-                }).to.not.throwError();
+            it('should not seek the third time', function (done) {
+                expect(function () {
+                    run.seek.bind(run)(2, 0, function (err, position, cycle) {
+                        expect(err).to.be.ok;
+                        expect(position).to.equal(1);
+                        expect(cycle).to.equal(0);
+                        done();
+                    });
+                }).to.not.throw();
             });
 
-            it('must not seek to an arbitrary positive item', function (done) {
-                expect(run.seek.bind(run)).withArgs(108, 0, function (err, position, cycle) {
-                    expect(err).to.be.ok();
-                    expect(position).to.be(1);
-                    expect(cycle).to.be(0);
-                    done();
-                }).to.not.throwError();
+            it('should not seek to an arbitrary positive item', function (done) {
+                expect(function () {
+                    run.seek.bind(run)(108, 0, function (err, position, cycle) {
+                        expect(err).to.be.ok;
+                        expect(position).to.equal(1);
+                        expect(cycle).to.equal(0);
+                        done();
+                    });
+                }).to.not.throw();
             });
 
-            it('must not seek to an arbitrary negative item', function (done) {
-                expect(run.seek.bind(run)).withArgs(-108, 0, function (err, position, cycle) {
-                    expect(err).to.be.ok();
-                    expect(position).to.be(1);
-                    expect(cycle).to.be(0);
-                    done();
-                }).to.not.throwError();
+            it('should not seek to an arbitrary negative item', function (done) {
+                expect(function () {
+                    run.seek.bind(run)(-108, 0, function (err, position, cycle) {
+                        expect(err).to.be.ok;
+                        expect(position).to.equal(1);
+                        expect(cycle).to.equal(0);
+                        done();
+                    });
+                }).to.not.throw();
             });
 
-            it('must not seek to a garbage item', function (done) {
+            it('should not seek to a garbage item', function (done) {
                 run.seek(NaN, 0, function (err, position, cycle) {
-                    expect(err).to.be.ok();
-                    expect(position).to.be(1);
-                    expect(cycle).to.be(0);
+                    expect(err).to.be.ok;
+                    expect(position).to.equal(1);
+                    expect(cycle).to.equal(0);
                     done();
                 });
             });

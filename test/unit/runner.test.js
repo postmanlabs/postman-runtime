@@ -1,17 +1,16 @@
-/* global describe, it */
-var expect = require('expect.js'),
+var expect = require('chai').expect,
     Runner = require('../../lib/runner/'),
     sdk = require('postman-collection');
 
 describe('runner', function () {
     describe('Run', function () {
-        it('must be a constructor', function () {
+        it('should be a constructor', function () {
             expect(function () {
                 return new Runner();
-            }).withArgs().to.not.throwError();
+            }).to.not.throw();
         });
 
-        it('must expose the run method', function () {
+        it('should expose the run method', function () {
             var runner = new Runner();
             expect(runner.run).to.be.a('function');
         });
@@ -35,43 +34,43 @@ describe('runner', function () {
             });
 
             describe('invalid entrypoint', function () {
-                it('must bail out if options.abortOnError is set with entrypoint as string', function (done) {
+                it('should bail out if options.abortOnError is set with entrypoint as string', function (done) {
                     var runner = new Runner();
 
                     runner.run(collection, {
                         entrypoint: {execute: 'random'},
                         abortOnError: true
                     }, function (err, run) {
-                        expect(err.message).to.be('Unable to find a folder or request: random');
-                        expect(run).to.not.be.ok();
+                        expect(err.message).to.equal('Unable to find a folder or request: random');
+                        expect(run).to.be.undefined;
 
                         done();
                     });
                 });
 
-                it('must bail out if options.abortOnError is set with entrypoint as object', function (done) {
+                it('should bail out if options.abortOnError is set with entrypoint as object', function (done) {
                     var runner = new Runner();
 
                     runner.run(collection, {
                         entrypoint: {execute: 'random'},
                         abortOnError: true
                     }, function (err, run) {
-                        expect(err.message).to.be('Unable to find a folder or request: random');
-                        expect(run).to.not.be.ok();
+                        expect(err.message).to.equal('Unable to find a folder or request: random');
+                        expect(run).to.be.undefined;
 
                         done();
                     });
                 });
 
-                it('must NOT bail out if options.abortOnError is not set', function (done) {
+                it('should NOT bail out if options.abortOnError is not set', function (done) {
                     var runner = new Runner();
 
                     runner.run(collection, {
                         entrypoint: 'random'
                     }, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
+                        expect(run).to.be.ok;
                         expect(run.start).to.be.a('function');
                         done();
                     });
@@ -83,9 +82,11 @@ describe('runner', function () {
                     var runner = new Runner();
 
                     runner.run('random', {}, function (err, run) {
-                        expect(err).to.be(null);
-                        expect(run).to.be.ok();
-                        expect(run.state.items).to.eql([]);
+                        expect(err).to.be.null;
+                        expect(run).to.be.ok;
+                        expect(run).to.deep.nested.include({
+                            'state.items': []
+                        });
 
                         done();
                     });
@@ -97,9 +98,9 @@ describe('runner', function () {
                     var runner = new Runner();
 
                     runner.run(collection, 'random', function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
+                        expect(run).to.be.ok;
                         expect(run.start).to.be.a('function');
                         done();
                     });
@@ -113,9 +114,9 @@ describe('runner', function () {
                     runner.run(collection, {
                         globals: new sdk.VariableScope({}, [{key: 'beta', value: 'bar'}])
                     }, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
+                        expect(run).to.be.ok;
                         expect(run.start).to.be.a('function');
                         done();
                     });
@@ -138,12 +139,14 @@ describe('runner', function () {
                     });
 
                     runner.run(collection, {}, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(runnerTimeout);
-                        expect(run.options.timeout.script).to.be(runnerTimeout);
-                        expect(run.options.timeout.request).to.be(Infinity);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': runnerTimeout,
+                            'timeout.script': runnerTimeout,
+                            'timeout.request': Infinity
+                        });
                         done();
                     });
                 });
@@ -157,12 +160,14 @@ describe('runner', function () {
                             script: runTimeout
                         }
                     }, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(runTimeout);
-                        expect(run.options.timeout.script).to.be(runTimeout);
-                        expect(run.options.timeout.request).to.be(Infinity);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': runTimeout,
+                            'timeout.script': runTimeout,
+                            'timeout.request': Infinity
+                        });
                         done();
                     });
                 });
@@ -185,12 +190,14 @@ describe('runner', function () {
                             script: runTimeout
                         }
                     }, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(runnerTimeout);
-                        expect(run.options.timeout.script).to.be(runnerTimeout);
-                        expect(run.options.timeout.request).to.be(runnerTimeout);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': runnerTimeout,
+                            'timeout.script': runnerTimeout,
+                            'timeout.request': runnerTimeout
+                        });
                         done();
                     });
                 });
@@ -199,12 +206,14 @@ describe('runner', function () {
                     var runner = new Runner();
 
                     runner.run(collection, {}, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(defaultGlobalTimeout);
-                        expect(run.options.timeout.script).to.be(Infinity);
-                        expect(run.options.timeout.request).to.be(Infinity);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': defaultGlobalTimeout,
+                            'timeout.script': Infinity,
+                            'timeout.request': Infinity
+                        });
                         done();
                     });
                 });
@@ -219,12 +228,14 @@ describe('runner', function () {
                             request: undefined
                         }
                     }, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(defaultGlobalTimeout);
-                        expect(run.options.timeout.script).to.be(Infinity);
-                        expect(run.options.timeout.request).to.be(Infinity);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': defaultGlobalTimeout,
+                            'timeout.script': Infinity,
+                            'timeout.request': Infinity
+                        });
                         done();
                     });
                 });
@@ -237,10 +248,12 @@ describe('runner', function () {
                     });
 
                     runner.run(collection, {}, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(Infinity);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': Infinity
+                        });
                         done();
                     });
                 });
@@ -253,10 +266,12 @@ describe('runner', function () {
                     });
 
                     runner.run(collection, {}, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(Infinity);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': Infinity
+                        });
                         done();
                     });
                 });
@@ -269,10 +284,12 @@ describe('runner', function () {
                     });
 
                     runner.run(collection, {}, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(defaultGlobalTimeout);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': defaultGlobalTimeout
+                        });
                         done();
                     });
                 });
@@ -285,12 +302,14 @@ describe('runner', function () {
                     });
 
                     runner.run(collection, {}, function (err, run) {
-                        expect(err).to.not.be.ok();
+                        expect(err).to.be.null;
 
-                        expect(run).to.be.ok();
-                        expect(run.options.timeout.global).to.be(100);
-                        expect(run.options.timeout.script).to.be(120);
-                        expect(run.options.timeout.request).to.be(180000);
+                        expect(run).to.be.ok;
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': 100,
+                            'timeout.script': 120,
+                            'timeout.request': 180000
+                        });
                         done();
                     });
                 });

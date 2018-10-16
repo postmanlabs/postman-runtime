@@ -1,4 +1,4 @@
-var expect = require('expect.js'),
+var expect = require('chai').expect,
     sdk = require('postman-collection'),
     _ = require('lodash'),
 
@@ -7,30 +7,29 @@ var expect = require('expect.js'),
     Request = sdk.Request,
     rawRequests = require('../fixtures/auth-requests');
 
-/* global describe, it */
 describe('.authorizeRequest (Static function)', function () {
-    it('must authorize a request statically', function () {
+    it('should authorize a request statically', function () {
         var request = new Request(rawRequests.basic);
 
         authorizeRequest(request, function (err, signedRequest) {
             var headers = signedRequest.headers.all(),
                 authHeader = headers[0];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(authHeader.toString()).to.eql('Authorization: Basic YWJoaWppdDprYW5l');
         });
     });
 
-    it('must return without any error when auth is not present in the request', function () {
+    it('should return without any error when auth is not present in the request', function () {
         var request = new Request(_.omit(rawRequests.basic, 'auth'));
 
         authorizeRequest(request, function (err, signedRequest) {
-            expect(err).to.be(undefined);
-            expect(signedRequest).to.be(undefined);
+            expect(err).to.be.undefined;
+            expect(signedRequest).to.be.undefined;
         });
     });
 
-    it('must return error when handler is not found for a given auth', function () {
+    it('should return error when handler is not found for a given auth', function () {
         var fakeAuth = {
                 type: 'fake',
                 fake: {
@@ -41,9 +40,9 @@ describe('.authorizeRequest (Static function)', function () {
             request = new Request(_.assign({}, rawRequests.basic, {auth: fakeAuth}));
 
         authorizeRequest(request, function (err, signedRequest) {
-            expect(err).not.to.be(undefined);
-            expect(err.message).to.be('runtime~authorizeRequest: could not find handler for auth type fake');
-            expect(signedRequest).to.be(undefined);
+            expect(err).not.to.be.undefined;
+            expect(err.message).to.equal('runtime~authorizeRequest: could not find handler for auth type fake');
+            expect(signedRequest).to.be.undefined;
         });
     });
 });

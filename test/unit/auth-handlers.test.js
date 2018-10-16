@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    expect = require('expect.js'),
+    expect = require('chai').expect,
     btoa = require('btoa'),
     aws4 = require('aws4'),
     sdk = require('postman-collection'),
@@ -10,7 +10,6 @@ var _ = require('lodash'),
     Url = sdk.Url,
     rawRequests = require('../fixtures/auth-requests');
 
-/* global describe, it */
 describe('Auth Handler:', function () {
     describe('noauth', function () {
         it('should work correctly', function () {
@@ -58,11 +57,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
 
             authHeader = headers[0];
             expect(authHeader.toString()).to.eql(expectedAuthHeader);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('should return without signing the request when token is missing', function () {
@@ -80,7 +79,7 @@ describe('Auth Handler:', function () {
 
                 handler.sign(authInterface, request, _.noop);
 
-                expect(request.headers.all().length).to.eql(0);
+                expect(request.headers.all()).to.be.an('array').that.is.empty;
             });
         });
     });
@@ -100,11 +99,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
             headers = request.headers.all();
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
 
             authHeader = headers[0];
             expect(authHeader.toString()).to.eql(expectedAuthHeader);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('should use default values for the missing parameters', function () {
@@ -119,7 +118,7 @@ describe('Auth Handler:', function () {
             handler = AuthLoader.getHandler(request.auth.type);
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.eql([
+            expect(request.headers.toJSON()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa('foo:'), system: true}
             ]);
 
@@ -129,7 +128,7 @@ describe('Auth Handler:', function () {
             handler = AuthLoader.getHandler(request.auth.type);
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.eql([
+            expect(request.headers.toJSON()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa(':foo'), system: true}
             ]);
 
@@ -139,7 +138,7 @@ describe('Auth Handler:', function () {
             handler = AuthLoader.getHandler(request.auth.type);
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.eql([
+            expect(request.headers.toJSON()).to.eql([
                 {key: 'Authorization', value: 'Basic ' + btoa(':'), system: true}
             ]);
         });
@@ -162,11 +161,11 @@ describe('Auth Handler:', function () {
                 'algorithm="MD5", response="63db383a0f03744cfd45fe15de8dbe9d", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
             authHeader = headers[0];
 
             expect(authHeader.toString()).to.eql(expectedHeader);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('Auth header must be added (algorithm="MD5", qop="auth")', function () {
@@ -193,11 +192,11 @@ describe('Auth Handler:', function () {
                 'response="f83809617b00766c6f9840256eb1199e", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
             authHeader = headers[0];
 
             expect(authHeader.toString()).to.eql(expectedHeader);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('Auth header must be added (algorithm="MD5", qop="auth-int")', function () {
@@ -224,11 +223,11 @@ describe('Auth Handler:', function () {
                 'response="65d355634828a04d3a73717dc810a4bf", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
             authHeader = headers[0];
 
             expect(authHeader.toString()).to.eql(expectedHeader);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('Auth header must be added (algorithm="MD5-sess", qop="")', function () {
@@ -255,11 +254,11 @@ describe('Auth Handler:', function () {
                 'response="3bf3901b3461fe15de194fa866154c21", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
             authHeader = headers[0];
 
             expect(authHeader.toString()).to.eql(expectedHeader);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('Auth header must be added (algorithm="MD5-sess", qop="auth")', function () {
@@ -287,11 +286,11 @@ describe('Auth Handler:', function () {
                 'response="52aa69a8b63d81b51e2d02ecebaa705e", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
             authHeader = headers[0];
 
             expect(authHeader.toString()).to.eql(expectedHeader);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('Auth header must be added (algorithm="MD5-sess", qop="auth-int")', function () {
@@ -319,11 +318,11 @@ describe('Auth Handler:', function () {
                 'response="eb2ec4193a936809d035976f5f20cc65", opaque="5ccc069c403ebaf9f0171e9517f40e"';
             authHeader;
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
             authHeader = headers[0];
 
             expect(authHeader.toString()).to.eql(expectedHeader);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('Auth header must have uri with query params in case of request with the same', function () {
@@ -351,7 +350,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty();
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
             expect(request.toJSON()).to.eql({
                 url: {
@@ -424,10 +423,10 @@ describe('Auth Handler:', function () {
             authHeader;
             authHeaderValueKeys;
 
-            expect(headers.length).to.eql(1);
+            expect(headers).to.have.lengthOf(1);
             authHeader = headers[0];
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
-            expect(authHeader.key).to.be('Authorization');
+            expect(authHeader.key).to.equal('Authorization');
             authHeaderValueKeys = authHeader.value.split(',').map((val) => {
                 return val.split('=')[0];
             });
@@ -440,7 +439,7 @@ describe('Auth Handler:', function () {
                 'oauth_version',
                 'oauth_signature'
             ]);
-            expect(authHeader.system).to.be(true);
+            expect(authHeader.system).to.be.true;
         });
 
         it('should bail out if the auth params are invalid', function () {
@@ -451,7 +450,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.have.length(0);
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
         });
 
         it('should apply sensible defaults where applicable', function () {
@@ -487,7 +486,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty();
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
 
             expect(request.auth.parameters().toObject()).to
                 .eql({
@@ -532,14 +531,14 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty();
-            expect(request.url.query.reference).to.have.keys([
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+            expect(request.url.query.reference).to.deep.include.keys([
                 'oauth_consumer_key', 'oauth_token', 'oauth_signature_method', 'oauth_timestamp', 'oauth_nonce',
                 'oauth_version', 'oauth_signature'
             ]);
             // All the query paramters added by runtime must have `system: true` property
             _.forEach(request.url.query.members, function (param) {
-                expect(param.system).to.be(true);
+                expect(param.system).to.be.true;
             });
             expect(request.auth.parameters().toObject()).to
                 .eql({
@@ -578,8 +577,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all().length).to.be(1);
-            expect(request.headers.all()[0]).to.eql({
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
                 system: true
@@ -603,9 +602,9 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all().length).to.be(0);
-            expect(request.url.query.all().length).to.be(1);
-            expect(request.url.query.all()[0]).to.eql({
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+            expect(request.url.query.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.url.query.toJSON()[0]).to.eql({
                 key: 'access_token',
                 value: requestObj.auth.oauth2.accessToken,
                 system: true
@@ -629,8 +628,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all().length).to.be(0);
-            expect(request.url.query.all().length).to.be(0);
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+            expect(request.url.query.all()).to.be.an('array').that.is.empty;
         });
 
         it('should default the token type to "Bearer"', function () {
@@ -650,8 +649,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all().length).to.be(1);
-            expect(request.headers.all()[0]).to.eql({
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
                 system: true
@@ -675,8 +674,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all().length).to.be(1);
-            expect(request.headers.all()[0]).to.eql({
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
                 system: true
@@ -691,8 +690,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all().length).to.be(1);
-            expect(request.headers.all()[0]).to.eql({
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
                 system: true
@@ -716,8 +715,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all().length).to.be(0);
-            expect(request.url.query.all().length).to.be(0);
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+            expect(request.url.query.all()).to.be.an('array').that.is.empty;
         });
 
         it('should remove user defined Authorization header and query param for addTokenTo: header', function () {
@@ -900,12 +899,13 @@ describe('Auth Handler:', function () {
             // Ensure that the required headers have been added.
             // todo stricter tests?
 
-            expect(headers).to.have.property('authorization', expectedSignedReq.headers.Authorization);
-            expect(headers).to.have.property('content-type', request.getHeaders({
-                ignoreCase: true
-            })['content-type']);
-            expect(headers).to.have.property('x-amz-date');
-            expect(headers).to.have.property('x-amz-security-token');
+            expect(headers).to.deep.include({
+                authorization: expectedSignedReq.headers.Authorization,
+                'content-type': request.getHeaders({
+                    ignoreCase: true
+                })['content-type']
+            });
+            expect(headers).to.include.keys(['x-amz-date', 'x-amz-security-token']);
         });
 
         it('should use sensible defaults where applicable', function () {
@@ -930,11 +930,10 @@ describe('Auth Handler:', function () {
                 ignoreCase: true
             });
 
-            expect(headers).to.have.property('authorization');
+            expect(headers).to.include.keys(['authorization', 'x-amz-date']);
             expect(headers).to.have.property('content-type', request.getHeaders({
                 ignoreCase: true
             })['content-type']);
-            expect(headers).to.have.property('x-amz-date');
             expect(request.auth.parameters().toObject()).to.eql({
                 auto: true,
                 id: 'awsSigV4',
@@ -966,11 +965,10 @@ describe('Auth Handler:', function () {
                 ignoreCase: true
             });
 
-            expect(headers).to.have.property('authorization');
+            expect(headers).to.include.keys(['authorization', 'x-amz-date']);
             expect(headers).to.have.property('content-type', request.getHeaders({
                 ignoreCase: true
             })['content-type']);
-            expect(headers).to.have.property('x-amz-date');
             expect(request.auth.parameters().toObject()).to.eql({
                 auto: true,
                 id: 'awsSigV4',
@@ -1024,7 +1022,7 @@ describe('Auth Handler:', function () {
             // Original request should not have the timestamp and nonce
             expect(headerBefore).to.be.eql('');
 
-            expect(request.auth).to.be.ok();
+            expect(request.auth).to.be.ok;
             expect(_.get(nonceMatch, 1)).to.be.a('string');
             expect(_.parseInt(_.get(tsMatch, 1))).to.be.a('number');
         });
@@ -1038,12 +1036,12 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             // Original request should not have the timestamp and nonce
-            expect(_.get(rawRequests.hawk, 'auth.hawk.nonce')).to.not.be.ok();
-            expect(_.get(rawRequests.hawk, 'auth.hawk.timestamp')).to.not.be.ok();
+            expect(_.get(rawRequests.hawk, 'auth.hawk.nonce')).to.not.be.ok;
+            expect(_.get(rawRequests.hawk, 'auth.hawk.timestamp')).to.not.be.ok;
 
-            expect(request.auth).to.be.ok();
-            expect(_.get(request, 'auth.hawk.nonce')).to.not.be.ok();
-            expect(_.get(request, 'auth.hawk.timestamp')).to.not.be.ok();
+            expect(request.auth).to.be.ok;
+            expect(_.get(request, 'auth.hawk.nonce')).to.not.be.ok;
+            expect(_.get(request, 'auth.hawk.timestamp')).to.not.be.ok;
         });
     });
 

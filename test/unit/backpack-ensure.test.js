@@ -1,5 +1,4 @@
-/* global describe, it */
-var expect = require('expect.js'),
+var expect = require('chai').expect,
     sinon = require('sinon');
 
 describe('backpack.ensure', function () {
@@ -8,12 +7,12 @@ describe('backpack.ensure', function () {
     it('should return a function if the original argument is a function and not otherwise', function () {
         var fn = function () { return 1; };
 
-        expect(ensure(fn)).be(fn);
-        expect(ensure('blah')).be(undefined);
-        expect(ensure(1234)).be(undefined);
+        expect(ensure(fn)).to.equal(fn);
+        expect(ensure('blah')).to.be.undefined;
+        expect(ensure(1234)).to.be.undefined;
     });
 
-    it('must execute original function that was ensured', function () {
+    it('should execute original function that was ensured', function () {
         var fn = sinon.spy(),
             ensured = ensure(fn);
 
@@ -24,7 +23,7 @@ describe('backpack.ensure', function () {
         sinon.assert.calledWith(fn, 'hello');
     });
 
-    it('must bind the function to a context', function () {
+    it('should bind the function to a context', function () {
         var fn = sinon.spy(),
             ctx = {},
             ensured = ensure(fn, ctx);

@@ -1,6 +1,4 @@
-/* global describe, it */
-
-var expect = require('expect.js'),
+var expect = require('chai').expect,
     sdk = require('postman-collection'),
     runtimeVersion = require('../../package').version,
     requesterCore = require('../../lib/requester/core');
@@ -133,7 +131,7 @@ describe('requester util', function () {
     describe('.getRequestHeaders', function () {
         it('should handle invalid input correctly', function () {
             var result = requesterCore.getRequestHeaders({});
-            expect(result).to.be(undefined);
+            expect(result).to.be.undefined;
         });
 
         it('should correctly fetch request headers from a sdk Request instance', function () {
@@ -166,7 +164,7 @@ describe('requester util', function () {
                 body: {mode: 'formdata'}
             });
 
-            expect(requesterCore.getRequestBody(request)).to.be(undefined);
+            expect(requesterCore.getRequestBody(request)).to.be.undefined;
         });
 
         it('should correctly handle missing bodies', function () {
@@ -175,7 +173,7 @@ describe('requester util', function () {
                 method: 'POST'
             });
 
-            expect(requesterCore.getRequestBody(request)).to.be(undefined);
+            expect(requesterCore.getRequestBody(request)).to.be.undefined;
         });
 
         it('should correctly handle missing request methods', function () {
@@ -294,7 +292,7 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterCore.getRequestBody(request)).to.be(undefined);
+            expect(requesterCore.getRequestBody(request)).to.be.undefined;
         });
 
         describe('with protocolProfileBehavior', function () {
@@ -492,7 +490,7 @@ describe('requester util', function () {
                         }),
                         requestBody = requesterCore.getRequestBody(request);
 
-                    expect(requestBody.formData).to.only.have.keys('userData', 'userFile');
+                    expect(requestBody.formData).to.have.all.keys(['userData', 'userFile']);
                     expect(requestBody.formData.userData).to.eql({
                         value: '{"name": "userName"}',
                         options: {contentType: 'application/json'}
@@ -540,7 +538,7 @@ describe('requester util', function () {
                         }),
                         requestBody = requesterCore.getRequestBody(request);
 
-                    expect(requestBody.formData).to.only.have.keys('foo');
+                    expect(requestBody.formData).to.have.all.keys(['foo']);
                 });
             });
         });
@@ -548,14 +546,14 @@ describe('requester util', function () {
 
     describe('.jsonifyResponse', function () {
         it('should handle falsy input correctly', function () {
-            expect(requesterCore.jsonifyResponse()).to.be(undefined);
+            expect(requesterCore.jsonifyResponse()).to.be.undefined;
         });
     });
 
     describe('.arrayPairsToObject', function () {
         it('should bail out for non-arrays', function () {
             var result = requesterCore.arrayPairsToObject('random');
-            expect(result).to.be(undefined);
+            expect(result).to.be.undefined;
         });
 
         it('should correctly convert an array of pairs to an object', function () {
