@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('basic auth', function () {
     var testrun,
         runOptions = {
@@ -36,24 +38,30 @@ describe('basic auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent the request once', function () {
-            expect(testrun.request.callCount).to.be(1);
+        it('should have sent the request once', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
 
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3],
                 response = testrun.request.firstCall.args[2];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
-            expect(response.code).to.eql(200);
+            expect(response).to.have.property('code', 200);
         });
     });
 
@@ -75,24 +83,30 @@ describe('basic auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent the request once', function () {
-            expect(testrun.request.callCount).to.be(1);
+        it('should have sent the request once', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
 
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.lastCall.args[3],
                 response = testrun.request.lastCall.args[2];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
-            expect(response.code).to.eql(401);
+            expect(response).to.have.property('code', 401);
         });
     });
 });
