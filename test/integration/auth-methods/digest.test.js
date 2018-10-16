@@ -480,7 +480,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(1).args[3],
                 authHeader = request.headers.get('authorization');
 
-            expect(authHeader).to.match(/qop=auth-int/)
+            expect(authHeader).to.match(/qop=auth-int/);
         });
     });
 });
