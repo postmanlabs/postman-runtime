@@ -151,9 +151,7 @@ describe('Runner', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -272,8 +270,8 @@ describe('Runner', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
-                            expect(response.status).to.equal('OK');
+                            expect(response).to.have.property('code', 200);
+                            expect(response).to.have.property('status', 'OK');
                             expect(request).to.be.ok;
                         });
                     },
@@ -281,7 +279,7 @@ describe('Runner', function () {
                         check(function () {
                             expect(err).to.be.null;
 
-                            expect(testables.started).to.be.true;
+                            expect(testables).to.have.property('started', true);
 
                             // Ensure that we ran (and completed two iterations)
                             expect(testables).to.deep.include({
