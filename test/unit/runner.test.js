@@ -142,9 +142,11 @@ describe('runner', function () {
                         expect(err).to.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(runnerTimeout);
-                        expect(run.options.timeout.script).to.equal(runnerTimeout);
-                        expect(run.options.timeout.request).to.equal(Infinity);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': runnerTimeout,
+                            'timeout.script': runnerTimeout,
+                            'timeout.request': Infinity
+                        });
                         done();
                     });
                 });
@@ -161,9 +163,11 @@ describe('runner', function () {
                         expect(err).to.be.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(runTimeout);
-                        expect(run.options.timeout.script).to.equal(runTimeout);
-                        expect(run.options.timeout.request).to.equal(Infinity);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': runTimeout,
+                            'timeout.script': runTimeout,
+                            'timeout.request': Infinity
+                        });
                         done();
                     });
                 });
@@ -189,9 +193,11 @@ describe('runner', function () {
                         expect(err).to.be.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(runnerTimeout);
-                        expect(run.options.timeout.script).to.equal(runnerTimeout);
-                        expect(run.options.timeout.request).to.equal(runnerTimeout);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': runnerTimeout,
+                            'timeout.script': runnerTimeout,
+                            'timeout.request': runnerTimeout
+                        });
                         done();
                     });
                 });
@@ -203,9 +209,11 @@ describe('runner', function () {
                         expect(err).to.be.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(defaultGlobalTimeout);
-                        expect(run.options.timeout.script).to.equal(Infinity);
-                        expect(run.options.timeout.request).to.equal(Infinity);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': defaultGlobalTimeout,
+                            'timeout.script': Infinity,
+                            'timeout.request': Infinity
+                        });
                         done();
                     });
                 });
@@ -223,9 +231,11 @@ describe('runner', function () {
                         expect(err).to.be.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(defaultGlobalTimeout);
-                        expect(run.options.timeout.script).to.equal(Infinity);
-                        expect(run.options.timeout.request).to.equal(Infinity);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': defaultGlobalTimeout,
+                            'timeout.script': Infinity,
+                            'timeout.request': Infinity
+                        });
                         done();
                     });
                 });
@@ -241,7 +251,9 @@ describe('runner', function () {
                         expect(err).to.be.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(Infinity);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': Infinity
+                        });
                         done();
                     });
                 });
@@ -257,7 +269,9 @@ describe('runner', function () {
                         expect(err).to.be.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(Infinity);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': Infinity
+                        });
                         done();
                     });
                 });
@@ -273,7 +287,9 @@ describe('runner', function () {
                         expect(err).to.be.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(defaultGlobalTimeout);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': defaultGlobalTimeout
+                        });
                         done();
                     });
                 });
@@ -289,9 +305,11 @@ describe('runner', function () {
                         expect(err).to.be.null;
 
                         expect(run).to.be.ok;
-                        expect(run.options.timeout.global).to.equal(100);
-                        expect(run.options.timeout.script).to.equal(120);
-                        expect(run.options.timeout.request).to.equal(180000);
+                        expect(run).to.have.property('options').that.nested.include({
+                            'timeout.global': 100,
+                            'timeout.script': 120,
+                            'timeout.request': 180000
+                        });
                         done();
                     });
                 });
