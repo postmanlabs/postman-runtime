@@ -79,7 +79,7 @@ describe('Auth Handler:', function () {
 
                 handler.sign(authInterface, request, _.noop);
 
-                expect(request.headers.all()).to.have.lengthOf(0);
+                expect(request.headers.all()).to.be.an('array').that.is.empty;
             });
         });
     });
@@ -350,7 +350,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty;
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
             // Since Nonce and Timestamp have to be generated at runtime, cannot assert anything beyond this.
             expect(request.toJSON()).to.eql({
                 url: {
@@ -450,7 +450,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.have.lengthOf(0);
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
         });
 
         it('should apply sensible defaults where applicable', function () {
@@ -486,7 +486,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty;
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
 
             expect(request.auth.parameters().toObject()).to
                 .eql({
@@ -531,8 +531,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.be.empty;
-            expect(request.url.query.reference).to.include.keys([
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+            expect(request.url.query.reference).to.deep.include.keys([
                 'oauth_consumer_key', 'oauth_token', 'oauth_signature_method', 'oauth_timestamp', 'oauth_nonce',
                 'oauth_version', 'oauth_signature'
             ]);
@@ -577,7 +577,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.have.lengthOf(1);
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
             expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
@@ -602,8 +602,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.have.lengthOf(0);
-            expect(request.url.query.all()).to.have.lengthOf(1);
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+            expect(request.url.query.all()).to.be.an('array').that.has.lengthOf(1);
             expect(request.url.query.toJSON()[0]).to.eql({
                 key: 'access_token',
                 value: requestObj.auth.oauth2.accessToken,
@@ -628,8 +628,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.have.lengthOf(0);
-            expect(request.url.query.all()).to.have.lengthOf(0);
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+            expect(request.url.query.all()).to.be.an('array').that.is.empty;
         });
 
         it('should default the token type to "Bearer"', function () {
@@ -649,7 +649,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.have.lengthOf(1);
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
             expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
@@ -674,7 +674,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.have.lengthOf(1);
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
             expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
@@ -690,7 +690,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all().length).to.equal(1);
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
             expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
@@ -715,8 +715,8 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.all()).to.have.lengthOf(0);
-            expect(request.url.query.all()).to.have.lengthOf(0);
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+            expect(request.url.query.all()).to.be.an('array').that.is.empty;
         });
 
         it('should remove user defined Authorization header and query param for addTokenTo: header', function () {
@@ -1036,12 +1036,12 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             // Original request should not have the timestamp and nonce
-            expect(_.get(rawRequests.hawk, 'auth.hawk.nonce')).to.be.undefined;
-            expect(_.get(rawRequests.hawk, 'auth.hawk.timestamp')).to.be.undefined;
+            expect(_.get(rawRequests.hawk, 'auth.hawk.nonce')).to.not.be.ok;
+            expect(_.get(rawRequests.hawk, 'auth.hawk.timestamp')).to.not.be.ok;
 
             expect(request.auth).to.be.ok;
-            expect(_.get(request, 'auth.hawk.nonce')).to.be.undefined;
-            expect(_.get(request, 'auth.hawk.timestamp')).to.be.undefined;
+            expect(_.get(request, 'auth.hawk.nonce')).to.not.be.ok;
+            expect(_.get(request, 'auth.hawk.timestamp')).to.not.be.ok;
         });
     });
 
