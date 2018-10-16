@@ -22,7 +22,7 @@ describe('backpack.timeback', function () {
         expect(function () {
             timeback(function (err) {
                 expect(err).to.be.ok;
-                expect(err && err.message).to.equal('callback timed out');
+                expect(err).to.have.property('message', 'callback timed out');
                 expect(Date.now() - now).to.be.greaterThan(9);
                 done();
             }, 10);
