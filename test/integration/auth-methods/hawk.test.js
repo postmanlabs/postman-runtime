@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('hawk auth', function () {
     var testrun;
 
@@ -33,43 +35,53 @@ describe('hawk auth', function () {
         });
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.callCount).to.be(1);
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'done.callCount': 1
+        });
         testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.callCount).be(1);
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'start.callCount': 1
+        });
     });
 
-    it('must have sent the request once', function () {
-        expect(testrun.request.callCount).to.be(1);
+    it('should have sent the request once', function () {
+        expect(testrun).to.nested.include({
+            'request.callCount': 1
+        });
 
         var request = testrun.request.getCall(0).args[3],
             response = testrun.request.getCall(0).args[2];
 
         expect(request.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
-        expect(response.code).to.eql(200);
+        expect(response).to.have.property('code', 200);
     });
 
-    it('must have sent one request internally', function () {
-        expect(testrun.io.callCount).to.be(1);
+    it('should have sent one request internally', function () {
+        expect(testrun).to.nested.include({
+            'io.callCount': 1
+        });
 
         var firstError = testrun.io.firstCall.args[0],
             firstRequest = testrun.io.firstCall.args[4],
             firstResponse = testrun.io.firstCall.args[3];
 
-        expect(firstError).to.be(null);
+        expect(firstError).to.be.null;
         expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
-        expect(firstResponse.code).to.eql(200);
+        expect(firstResponse).to.have.property('code', 200);
     });
 
-    it('must have passed the hawk authorization', function () {
-        expect(testrun.request.callCount).to.be(1);
+    it('should have passed the hawk authorization', function () {
+        expect(testrun).to.nested.include({
+            'request.callCount': 1
+        });
 
         var request = testrun.request.getCall(0).args[3],
             response = testrun.request.getCall(0).args[2];
 
         expect(request.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
-        expect(response.code).to.eql(200);
+        expect(response).to.have.property('code', 200);
     });
 });

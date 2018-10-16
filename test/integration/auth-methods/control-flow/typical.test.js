@@ -1,4 +1,5 @@
 var sinon = require('sinon'),
+    expect = require('chai').expect,
     AuthLoader = require('../../../../lib/authorizer/index').AuthLoader;
 
 describe('auth control flow', function () {
@@ -56,30 +57,38 @@ describe('auth control flow', function () {
             AuthLoader.removeHandler('fake');
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
-            expect(testrun.io.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1,
+                'io.callCount': 1
+            });
         });
 
-        it('must have sent the request once', function () {
-            expect(testrun.request.callCount).to.be(1);
+        it('should have sent the request once', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
 
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
-        it('must call sign and post, not init', function () {
-            expect(handlerSpies.pre.callCount).to.be(1);
-            expect(handlerSpies.init.callCount).to.be(0);
-            expect(handlerSpies.post.callCount).to.be(1);
-            expect(handlerSpies.sign.callCount).to.be(1);
+        it('should call sign and post, not init', function () {
+            expect(handlerSpies).to.nested.include({
+                'pre.callCount': 1,
+                'init.callCount': 0,
+                'sign.callCount': 1,
+                'post.callCount': 1
+            });
         });
     });
 
@@ -119,30 +128,38 @@ describe('auth control flow', function () {
             AuthLoader.removeHandler('fake');
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
-            expect(testrun.io.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1,
+                'io.callCount': 1
+            });
         });
 
-        it('must have sent the request once', function () {
-            expect(testrun.request.callCount).to.be(1);
+        it('should have sent the request once', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
 
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
-        it('must skip signing', function () {
-            expect(handlerSpies.pre.callCount).to.be(1);
-            expect(handlerSpies.init.callCount).to.be(0);
-            expect(handlerSpies.sign.callCount).to.be(0);
-            expect(handlerSpies.post.callCount).to.be(1);
+        it('should skip signing', function () {
+            expect(handlerSpies).to.nested.include({
+                'pre.callCount': 1,
+                'init.callCount': 0,
+                'sign.callCount': 0,
+                'post.callCount': 1
+            });
         });
     });
 });

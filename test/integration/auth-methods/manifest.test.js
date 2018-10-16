@@ -1,4 +1,5 @@
 var _ = require('lodash'),
+    expect = require('chai').expect,
     Ajv = require('ajv'),
     ajv = new Ajv(),
     AuthLoader = require('../../../lib/authorizer').AuthLoader,
@@ -11,7 +12,7 @@ describe('manifest', function () {
             ajv.validate(manifestSchema, value.manifest);
 
             // this gives meaningful assertions for failures than asserting on boolean return
-            expect(ajv.errors).to.be(null);
+            expect(ajv).to.have.property('errors', null);
         });
     });
 });
