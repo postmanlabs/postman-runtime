@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    expect = require('expect.js'),
+    expect = require('chai').expect,
     runtime = require('../../index'),
     sdk = require('postman-collection');
 
@@ -108,28 +108,30 @@ describe('Option', function () {
             }, function (err, run) {
                 var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
-                expect(err).to.be(null);
+                expect(err).to.be.null;
                 run.start({
                     console: function (cursor, level, msg1, msg2) {
                         check(function () {
                             expect(cursor.ref).to.eql(runStore.ref);
-                            expect(level).to.be('log');
-                            expect(msg1).to.be('yo');
-                            expect(msg2).to.be('I am running!');
+                            expect(level).to.equal('log');
+                            expect(msg1).to.equal('yo');
+                            expect(msg2).to.equal('I am running!');
                             testables.console = true;
                         });
                     },
                     start: function (err, cursor) {
                         check(function () {
-                            expect(err).to.be(null);
-                            expect(cursor).to.have.property('position', 0);
-                            expect(cursor).to.have.property('iteration', 0);
-                            expect(cursor).to.have.property('length', 3);
-                            expect(cursor).to.have.property('cycles', 2);
-                            expect(cursor).to.have.property('eof', false);
-                            expect(cursor).to.have.property('empty', false);
-                            expect(cursor).to.have.property('bof', true);
-                            expect(cursor).to.have.property('cr', false);
+                            expect(err).to.be.null;
+                            expect(cursor).to.deep.include({
+                                position: 0,
+                                iteration: 0,
+                                length: 3,
+                                cycles: 2,
+                                eof: false,
+                                empty: false,
+                                bof: true,
+                                cr: false
+                            });
                             expect(cursor).to.have.property('ref');
 
                             // Set this to true, and verify at the end, so that the test will fail even if this
@@ -139,7 +141,7 @@ describe('Option', function () {
                     },
                     beforeIteration: function (err, cursor) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             testables.iterationsStarted.push(cursor.iteration);
                             runStore.iteration = cursor.iteration;
@@ -147,159 +149,179 @@ describe('Option', function () {
                     },
                     iteration: function (err, cursor) {
                         check(function () {
-                            expect(err).to.be(null);
-                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(err).to.be.null;
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
                     },
                     beforeItem: function (err, cursor, item) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
                             testables.itemsStarted[cursor.iteration].push(item);
                             runStore.position = cursor.position;
                             runStore.ref = cursor.ref;
 
-                            expect(item.name).to.not.be('Third Request');
+                            expect(item.name).to.not.equal('Third Request');
                         });
                     },
                     item: function (err, cursor, item) {
                         check(function () {
-                            expect(err).to.be(null);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(err).to.be.null;
+                            expect(cursor).to.deep.include({
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
                             testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
                             testables.itemsComplete[cursor.iteration].push(item);
 
-                            expect(item.name).to.not.be('Third Request');
+                            expect(item.name).to.not.equal('Third Request');
                         });
                     },
                     beforePrerequest: function (err, cursor, events, item) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
                             if (item.name === 'Second Request') {
-                                expect(events.length).to.be(1);
+                                expect(events).to.have.lengthOf(1);
                             }
                             else {
-                                expect(events.length).to.be(0);
+                                expect(events).to.be.empty;
                             }
 
-                            expect(item.name).to.not.be('Third Request');
+                            expect(item.name).to.not.equal('Third Request');
                         });
                     },
                     prerequest: function (err, cursor, results, item) {
                         check(function () {
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
-                            expect(item.name).to.not.be('Third Request');
+                            expect(item.name).to.not.equal('Third Request');
                         });
                     },
                     beforeTest: function (err, cursor, events, item) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
                             // This collection has no pre-request scripts
-                            expect(events.length).to.be(1);
+                            expect(events).to.have.lengthOf(1);
 
                             // This should never be called for the
                             // second request.
                             if (cursor.iteration === 1) {
-                                expect(item.name).to.not.be('Second Request');
+                                expect(item.name).to.not.equal('Second Request');
                             }
 
-                            expect(item.name).to.not.be('Third Request');
+                            expect(item.name).to.not.equal('Third Request');
                         });
                     },
                     test: function (err, cursor, results, item) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
                             var result = results[0],
                                 scriptResult = results[0];
-                            expect(result.error).to.be(undefined);
+                            expect(result.error).to.be.undefined;
 
-                            expect(scriptResult.result.target).to.eql('test');
+                            expect(scriptResult).to.deep.nested.include({
+                                'result.target': 'test'
+                            });
 
                             // This should never be called for the
                             // second request.
                             if (cursor.iteration === 1) {
-                                expect(item.name).to.not.be('Second Request');
+                                expect(item.name).to.not.equal('Second Request');
                             }
 
-                            expect(item.name).to.not.be('Third Request');
+                            expect(item.name).to.not.equal('Third Request');
                         });
                     },
                     beforeRequest: function (err, cursor, request, item) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
-                            expect(item.name).to.not.be('Third Request');
+                            expect(item.name).to.not.equal('Third Request');
                         });
                     },
                     request: function (err, cursor, response, request, item) {
                         check(function () {
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
-                            expect(request).to.be.ok();
-                            expect(request.url.toString()).to.be.ok();
+                            expect(request).to.be.ok;
+                            expect(request.url.toString()).to.be.ok;
 
                             if (item.name === 'Second Request') {
-                                expect(err.message).to.be('getaddrinfo ENOTFOUND somenonexistantdomain ' +
+                                expect(err).to.have.property('message', 'getaddrinfo ENOTFOUND somenonexistantdomain ' +
                                     'somenonexistantdomain:443');
                                 return;
                             }
-                            expect(err).to.be(null);
-                            expect(response.code).to.be(200);
+                            expect(err).to.be.null;
+                            expect(response).to.have.property('code', 200);
 
-                            expect(item.name).to.not.be('Third Request');
+                            expect(item.name).to.not.equal('Third Request');
                         });
                     },
                     done: function (err) {
-                        expect(err).to.be(null);
+                        expect(err).to.be.null;
 
-                        expect(testables.started).to.be(true);
-                        expect(testables.console).to.be(true);
+                        expect(testables).to.deep.include({
+                            started: true,
+                            console: true
+                        });
 
                         // Ensure that we ran (and completed three iterations)
                         // The second iteration should be stopped at the second request.
-                        expect(testables.iterationsStarted).to.eql([0, 1]);
-                        expect(testables.iterationsComplete).to.eql([0, 1]);
+                        expect(testables).to.deep.include({
+                            iterationsStarted: [0, 1],
+                            iterationsComplete: [0, 1]
+                        });
 
                         // First iteration
-                        expect(testables.itemsStarted[0].length).to.be(2);
-                        expect(testables.itemsComplete[0].length).to.be(2);
+                        expect(testables.itemsStarted[0]).to.have.lengthOf(2);
+                        expect(testables.itemsComplete[0]).to.have.lengthOf(2);
                         expect(_.map(testables.itemsStarted[0], 'name')).to.eql([
                             'First Request', 'Second Request'
                         ]);
@@ -308,8 +330,8 @@ describe('Option', function () {
                         ]);
 
                         // Second Iteration
-                        expect(testables.itemsStarted[1].length).to.be(2);
-                        expect(testables.itemsComplete[1].length).to.be(2);
+                        expect(testables.itemsStarted[1]).to.have.lengthOf(2);
+                        expect(testables.itemsComplete[1]).to.have.lengthOf(2);
                         expect(_.map(testables.itemsStarted[1], 'name')).to.eql([
                             'First Request', 'Second Request'
                         ]);
