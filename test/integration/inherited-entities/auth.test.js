@@ -1,4 +1,5 @@
-var _ = require('lodash');
+var _ = require('lodash'),
+    expect = require('chai').expect;
 
 describe('Inherited Auth', function () {
     var testrun,
@@ -49,26 +50,32 @@ describe('Inherited Auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent the request twice', function () {
-            expect(testrun.request.callCount).to.be(2);
+        it('should have sent the request twice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 2
+            });
 
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3],
                 response1 = testrun.request.firstCall.args[2],
                 response2 = testrun.request.secondCall.args[2];
 
-            expect(err).to.be(null);
-            expect(request.url.toString()).to.be('https://postman-echo.com/digest-auth');
-            expect(response1.code).to.be(401);
-            expect(response2.code).to.be(200);
+            expect(err).to.be.null;
+            expect(request.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(response1).to.have.property('code', 401);
+            expect(response2).to.have.property('code', 200);
         });
     });
 
@@ -118,17 +125,23 @@ describe('Inherited Auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have inherited auth for both requests', function () {
+        it('should have inherited auth for both requests', function () {
             // the second req should reuse the nonce and realm from the 1st req's response
-            expect(testrun.request.callCount).to.be(3);
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
 
             var err1 = testrun.request.firstCall.args[0],
                 request1 = testrun.request.firstCall.args[3],
@@ -138,14 +151,14 @@ describe('Inherited Auth', function () {
                 request2 = testrun.request.secondCall.args[3],
                 response3 = testrun.request.thirdCall.args[2];
 
-            expect(err1).to.be(null);
-            expect(request1.url.toString()).to.be('https://postman-echo.com/digest-auth');
-            expect(response1.code).to.be(401);
-            expect(response2.code).to.be(200);
+            expect(err1).to.be.null;
+            expect(request1.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(response1).to.have.property('code', 401);
+            expect(response2).to.have.property('code', 200);
 
-            expect(err2).to.be(null);
-            expect(request2.url.toString()).to.be('https://postman-echo.com/digest-auth');
-            expect(response3.code).to.be(200);
+            expect(err2).to.be.null;
+            expect(request2.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(response3).to.have.property('code', 200);
         });
     });
 
@@ -195,17 +208,23 @@ describe('Inherited Auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must inherited auth for both requests', function () {
+        it('should inherited auth for both requests', function () {
             // the second req should reuse the nonce and realm from the 1st req's response
-            expect(testrun.request.callCount).to.be(3);
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
 
             var err1 = testrun.request.firstCall.args[0],
                 err2 = testrun.request.secondCall.args[0],
@@ -215,13 +234,13 @@ describe('Inherited Auth', function () {
                 response2 = testrun.request.secondCall.args[2],
                 response3 = testrun.request.thirdCall.args[2];
 
-            expect(err1).to.be(null);
-            expect(err2).to.be(null);
-            expect(request1.url.toString()).to.be('https://postman-echo.com/digest-auth');
-            expect(request2.url.toString()).to.be('https://postman-echo.com/digest-auth');
-            expect(response1.code).to.be(401);
-            expect(response2.code).to.be(200);
-            expect(response3.code).to.be(200);
+            expect(err1).to.be.null;
+            expect(err2).to.be.null;
+            expect(request1.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request2.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(response1).to.have.property('code', 401);
+            expect(response2).to.have.property('code', 200);
+            expect(response3).to.have.property('code', 200);
         });
     });
 
@@ -268,26 +287,32 @@ describe('Inherited Auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent the request twice', function () {
-            expect(testrun.request.callCount).to.be(2);
+        it('should have sent the request twice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 2
+            });
 
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3],
                 response1 = testrun.request.firstCall.args[2],
                 response2 = testrun.request.secondCall.args[2];
 
-            expect(err).to.be(null);
-            expect(request.url.toString()).to.be('https://postman-echo.com/digest-auth');
-            expect(response1.code).to.be(401);
-            expect(response2.code).to.be(200);
+            expect(err).to.be.null;
+            expect(request.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(response1).to.have.property('code', 401);
+            expect(response2).to.have.property('code', 200);
         });
     });
 });
