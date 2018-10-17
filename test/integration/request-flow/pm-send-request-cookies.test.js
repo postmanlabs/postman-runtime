@@ -44,10 +44,10 @@ describe('cookie sandbox request interaction', function () {
 
                 it('should have completed the run', function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun.done.calledOnce).to.be.ok;
                     expect(testrun.done.getCall(0).args[0]).to.be.null;
-                    expect(testrun.start.calledOnce).to.be.ok;
                     expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
                         'io.calledOnce': true,
                         'request.calledOnce': true
                     });
@@ -106,10 +106,10 @@ describe('cookie sandbox request interaction', function () {
 
                 it('should have completed the run', function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun.done.calledOnce).to.be.ok;
                     expect(testrun.done.getCall(0).args[0]).to.be.null;
-                    expect(testrun.start.calledOnce).to.be.ok;
                     expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
                         'io.calledOnce': true,
                         'request.calledOnce': true
                     });
@@ -121,7 +121,9 @@ describe('cookie sandbox request interaction', function () {
                         resOne = testrun.request.firstCall.args[2];
 
                     expect(reqOne.headers.reference).to.not.have.property('cookie');
-                    expect(resOne.cookies.reference).to.eql({foo: 'bar'});
+                    expect(resOne).to.deep.nested.include({
+                        'cookies.reference': {foo: 'bar'}
+                    });
                 });
             });
         });
@@ -177,10 +179,10 @@ describe('cookie sandbox request interaction', function () {
 
                 it('should have completed the run', function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun.done.calledOnce).to.be.ok;
                     expect(testrun.done.getCall(0).args[0]).to.be.null;
-                    expect(testrun.start.calledOnce).to.be.ok;
                     expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
                         'io.calledTwice': true,
                         'request.calledTwice': true
                     });
@@ -191,13 +193,16 @@ describe('cookie sandbox request interaction', function () {
                         reqTwo = testrun.request.firstCall.args[3],
                         resOne = testrun.io.firstCall.args[3];
 
-                    expect(reqOne.headers.reference.cookie.value).to.not.include('foo=bar');
-                    expect(reqTwo.headers.reference.cookie.value).to.not.include('foo=bar');
+                    // eslint-disable-next-line max-len
+                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
+                    // eslint-disable-next-line max-len
+                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
 
                     expect(resOne.json()).to.eql({cookies: {}});
                     expect(testrun.request.secondCall.args[2].json()).to.eql({cookies: {foo: 'bar'}});
 
-                    expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', 'foo=bar;'))).to.be.true;
+                    // eslint-disable-next-line max-len
+                    expect(resOne).to.have.nested.property('headers.reference.set-cookie.value').that.does.not.include('foo=bar;');
                 });
             });
 
@@ -248,10 +253,10 @@ describe('cookie sandbox request interaction', function () {
 
                 it('should have completed the run', function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun.done.calledOnce).to.be.ok;
                     expect(testrun.done.getCall(0).args[0]).to.be.null;
-                    expect(testrun.start.calledOnce).to.be.ok;
                     expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
                         'io.calledTwice': true,
                         'request.calledTwice': true
                     });
@@ -262,8 +267,8 @@ describe('cookie sandbox request interaction', function () {
                         reqTwo = testrun.request.secondCall.args[3],
                         resOne = testrun.io.firstCall.args[3];
 
-                    expect(reqOne.headers.reference.cookie.value).to.include('foo=bar');
-                    expect(reqTwo.headers.reference.cookie.value).to.include('foo=bar');
+                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
+                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
 
                     expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
                     expect(testrun.request.secondCall.args[2].json()).to.eql({cookies: {foo: 'bar'}});
@@ -324,10 +329,10 @@ describe('cookie sandbox request interaction', function () {
 
                 it('should have completed the run', function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun.done.calledOnce).to.be.ok;
                     expect(testrun.done.getCall(0).args[0]).to.be.null;
-                    expect(testrun.start.calledOnce).to.be.ok;
                     expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
                         'io.calledTwice': true,
                         'request.calledTwice': true
                     });
@@ -342,7 +347,8 @@ describe('cookie sandbox request interaction', function () {
                     expect(reqOne).to.have.property('headers').that.nested.include({
                         'reference.cookie.value': 'foo=bar'
                     });
-                    expect(reqTwo.headers.reference.cookie.value).to.not.include('foo=bar');
+                    // eslint-disable-next-line max-len
+                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
 
                     expect(resOne.headers.reference['set-cookie'].value).to.not.include('foo=bar');
 
@@ -400,10 +406,10 @@ describe('cookie sandbox request interaction', function () {
 
                 it('should have completed the run', function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun.done.calledOnce).to.be.ok;
                     expect(testrun.done.getCall(0).args[0]).to.be.null;
-                    expect(testrun.start.calledOnce).to.be.ok;
                     expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
                         'io.calledTwice': true,
                         'request.calledTwice': true
                     });
@@ -415,8 +421,9 @@ describe('cookie sandbox request interaction', function () {
                         resOne = testrun.request.firstCall.args[2],
                         resTwo = testrun.io.secondCall.args[3];
 
-                    expect(reqOne.headers.reference.cookie.value).to.include('foo=bar;');
-                    expect(reqTwo.headers.reference.cookie.value).to.not.include('foo=bar');
+                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar;');
+                    // eslint-disable-next-line max-len
+                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
                     expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
                     expect(resTwo.json()).to.eql({cookies: {}});
 
@@ -470,10 +477,10 @@ describe('cookie sandbox request interaction', function () {
 
                 it('should have completed the run', function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun.done.calledOnce).to.be.ok;
                     expect(testrun.done.getCall(0).args[0]).to.be.null;
-                    expect(testrun.start.calledOnce).to.be.ok;
                     expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
                         'io.calledTwice': true,
                         'request.calledTwice': true
                     });
@@ -485,14 +492,14 @@ describe('cookie sandbox request interaction', function () {
                         reqTwo = testrun.io.secondCall.args[4],
                         resTwo = testrun.io.secondCall.args[3];
 
-                    expect(reqOne.headers.reference.cookie.value).to.include('foo=bar;');
+                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
                     expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
 
                     expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
                     expect(resTwo.json()).to.eql({cookies: {foo: 'bar'}});
 
-                    expect(reqTwo.headers.reference.cookie.value).to.include('foo=bar;');
+                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar;');
                     expect(!_.includes(_.get(resTwo, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
                 });
