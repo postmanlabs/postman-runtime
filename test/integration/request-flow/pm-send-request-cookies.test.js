@@ -492,7 +492,7 @@ describe('cookie sandbox request interaction', function () {
                         reqTwo = testrun.io.secondCall.args[4],
                         resTwo = testrun.io.secondCall.args[3];
 
-                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
+                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar;');
                     expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
 
