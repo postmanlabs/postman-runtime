@@ -2,7 +2,7 @@ var fs = require('fs'),
     expect = require('chai').expect,
     sinon = require('sinon');
 
-describe.only('file upload in request body', function () {
+describe('file upload in request body', function () {
     var testrun;
 
     describe('with mode formdata & file', function () {
