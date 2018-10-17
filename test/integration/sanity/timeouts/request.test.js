@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('request timeout', function () {
     var testrun;
 
@@ -18,14 +20,18 @@ describe('request timeout', function () {
     });
 
     it('should throw an error because of timeout', function () {
-        expect(testrun.request.calledOnce).to.be.ok();
+        expect(testrun).to.nested.include({
+            'request.calledOnce': true
+        });
 
         var err = testrun.request.firstCall.args[0];
 
-        expect(err.code).to.eql('ESOCKETTIMEDOUT');
+        expect(err).to.have.property('code', 'ESOCKETTIMEDOUT');
     });
 
     it('should call the test event even if the request has timed out', function () {
-        expect(testrun.test.calledOnce).to.be.ok();
+        expect(testrun).to.nested.include({
+            'test.calledOnce': true
+        });
     });
 });
