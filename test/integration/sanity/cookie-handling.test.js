@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('cookies', function () {
     var _ = require('lodash'),
         testrun;
@@ -31,27 +33,31 @@ describe('cookies', function () {
         });
     });
 
-    it('must have run the test script successfully', function () {
-        expect(testrun).be.ok();
-        expect(testrun.test.calledTwice).be.ok();
+    it('should have run the test script successfully', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'test.calledTwice': true
+        });
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
+        expect(testrun.test.getCall(0).args[0]).to.be.null;
         expect(_.find(testrun.test.getCall(0).args[2][0].result.cookies, {name: 'foo'})).to.have
             .property('value', 'bar');
         expect(_.get(testrun.test.getCall(0).args[2], '0.result.request.headers.reference.cookie.value')).to
             .match(/foo=bar;/);
 
-        expect(testrun.test.getCall(1).args[0]).to.be(null);
+        expect(testrun.test.getCall(1).args[0]).to.be.null;
         expect(_.find(testrun.test.getCall(1).args[2][0].result.cookies, {name: 'foo'})).to.have
             .property('value', 'bar');
         expect(_.get(testrun.test.getCall(1).args[2], '0.result.request.headers.reference.cookie.value')).to
             .match(/foo=bar;/);
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });
