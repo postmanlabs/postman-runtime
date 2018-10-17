@@ -1,5 +1,5 @@
 var sinon = require('sinon'),
-    AuthLoader = require('../../../lib/authorizer/index').AuthLoader,
+    AuthLoader = require('../../../lib/authorizer').AuthLoader,
     expect = require('chai').expect;
 
 describe('intermediate requests from auth', function () {
