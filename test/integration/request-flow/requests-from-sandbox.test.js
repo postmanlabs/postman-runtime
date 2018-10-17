@@ -410,7 +410,7 @@ describe('requests from sandbox', function() {
                 response = testrun.io.firstCall.args[3],
                 trace = testrun.io.firstCall.args[2];
 
-            expect(error).to.to.be.ok;
+            expect(error).to.be.ok
             expect(error).to.have.property('code', 'ENOTFOUND');
 
             expect(request.url.toString()).to.eql(sandboxRequestUrl);
@@ -483,7 +483,7 @@ describe('requests from sandbox', function() {
 
                                     pm.sendRequest(myreq, function(err, _response) {
                                         pm.test('request was sent from sandbox', function () {
-                                            pm.expect(_response).to.to.be.ok;
+                                            pm.expect(_response).to.be.ok
                                         });
                                     });
                                     `
@@ -503,7 +503,7 @@ describe('requests from sandbox', function() {
             it('should send a warning', function () {
                 var warning = testrun.console.firstCall;
 
-                expect(testrun).to.to.be.ok;
+                expect(testrun).to.be.ok
                 expect(warning.args[1]).to.eql('warn');
                 expect(warning.args[2]).to.eql('uploading files from scripts is not allowed');
             });
@@ -545,7 +545,7 @@ describe('requests from sandbox', function() {
 
                                     pm.sendRequest(myreq, function(err, _response) {
                                         pm.test('request was sent from sandbox', function () {
-                                            pm.expect(_response).to.to.be.ok;
+                                            pm.expect(_response).to.be.ok
                                         });
                                     });
                                     `
@@ -565,7 +565,7 @@ describe('requests from sandbox', function() {
             it('should send a warning', function () {
                 var warning = testrun.console.firstCall;
 
-                expect(testrun).to.to.be.ok;
+                expect(testrun).to.be.ok
                 expect(warning.args[1]).to.eql('warn');
                 expect(warning.args[2]).to.eql('uploading files from scripts is not allowed');
             });
