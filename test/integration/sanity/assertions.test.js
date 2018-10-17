@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('assertions', function () {
     describe('from `pm.test`', function () {
         var testrun;
@@ -29,37 +31,46 @@ describe('assertions', function () {
             });
         });
 
-        it('must have started and completed the test run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.start.calledOnce).be.ok();
-            expect(testrun.request.calledOnce).be.ok();
-            expect(testrun.script.calledOnce).be.ok();
-            expect(testrun.assertion.calledTwice).be.ok();
-            expect(testrun.test.calledOnce).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
+        it('should have started and completed the test run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'start.calledOnce': true,
+                'request.calledOnce': true,
+                'script.calledOnce': true,
+                'assertion.calledTwice': true,
+                'test.calledOnce': true,
+                'done.calledOnce': true
+            });
         });
 
-        it('must receive response with the query param sent', function () {
+        it('should receive response with the query param sent', function () {
             var response = testrun.request.getCall(0).args[2];
 
-            expect(testrun.request.calledOnce).be.ok(); // one request
-            expect(response.json()).be.ok();
-            expect(response.json().args).be.ok();
-            expect(response.json().args).have.property('testvar', 'test-var-value');
+            expect(testrun).to.nested.include({ // one request
+                'request.calledOnce': true
+            });
+            expect(response.json()).to.be.ok;
+            expect(response.json().args).to.be.ok;
+            expect(response.json()).to.nested.include({
+                'args.testvar': 'test-var-value'
+            });
         });
 
         it('should have bubbled error to `script` callback', function () {
-            expect(testrun.script.getCall(0).args[0]).be.ok();
+            expect(testrun.script.getCall(0).args[0]).to.be.ok;
             expect(testrun.script.getCall(0).args[0]).have.property('message', 'this test will force fail');
         });
 
-        it('must bubble up assertion', function () {
-            expect(testrun.assertion.getCall(0).args[1][0]).have.property('passed', true);
-            expect(testrun.assertion.getCall(0).args[1][0]).have.property('error', null);
-            expect(testrun.assertion.getCall(1).args[1][0]).have.property('passed', false);
-            expect(testrun.assertion.getCall(1).args[1][0]).have.property('error');
-            expect(testrun.assertion.getCall(1).args[1][0].error).have.property('name', 'Error');
-            expect(testrun.assertion.getCall(1).args[1][0].error).have.property('message', 'I am an error!');
+        it('should bubble up assertion', function () {
+            expect(testrun.assertion.getCall(0).args[1][0]).to.deep.include({
+                passed: true,
+                error: null
+            });
+            expect(testrun.assertion.getCall(1).args[1][0]).to.nested.include({
+                passed: false,
+                'error.name': 'Error',
+                'error.message': 'I am an error!'
+            });
 
         });
     });
@@ -87,29 +98,34 @@ describe('assertions', function () {
             });
         });
 
-        it('must have started and completed the test run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.start.calledOnce).be.ok();
-            expect(testrun.request.calledOnce).be.ok();
-            expect(testrun.script.calledOnce).be.ok();
-            expect(testrun.assertion.callCount).be(1);
-            expect(testrun.test.calledOnce).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
+        it('should have started and completed the test run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'start.calledOnce': true,
+                'request.calledOnce': true,
+                'script.calledOnce': true,
+                'assertion.callCount': 1,
+                'test.calledOnce': true,
+                'done.calledOnce': true
+            });
+
         });
 
         it('should have bubbled error to `script` callback', function () {
-            expect(testrun.script.getCall(0).args[0]).be.ok();
+            expect(testrun.script.getCall(0).args[0]).to.be.ok;
             expect(testrun.script.getCall(0).args[0]).have.property('message', 'fail');
         });
 
-        it('must bubble up assertion', function () {
-            expect(testrun.assertion.getCall(0).args[1][0]).have.property('passed', true);
-            expect(testrun.assertion.getCall(0).args[1][0]).have.property('error', null);
-            expect(testrun.assertion.getCall(0).args[1][1]).have.property('passed', false);
-            expect(testrun.assertion.getCall(0).args[1][1]).have.property('error');
-            expect(testrun.assertion.getCall(0).args[1][1].error).have.property('name', 'AssertionError');
-            expect(testrun.assertion.getCall(0).args[1][1].error)
-                .have.property('message', 'expected false to be truthy');
+        it('should bubble up assertion', function () {
+            expect(testrun.assertion.getCall(0).args[1][0]).to.deep.include({
+                passed: true,
+                error: null
+            });
+            expect(testrun.assertion.getCall(0).args[1][1]).to.nested.include({
+                passed: false,
+                'error.name': 'AssertionError',
+                'error.message': 'expected false to be truthy'
+            });
         });
     });
 });
