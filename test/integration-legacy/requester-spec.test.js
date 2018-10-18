@@ -98,9 +98,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -219,7 +217,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(302);
+                            expect(response).to.have.property('code', 302);
                             expect(request).to.be.ok;
                         });
                     },
@@ -325,9 +323,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -446,7 +442,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
                         });
                     },
@@ -547,9 +543,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -658,7 +652,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -763,9 +757,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -874,7 +866,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -978,9 +970,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -1089,7 +1079,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -1202,9 +1192,7 @@ describe('Requester', function () {
                 iteration: function (err, cursor) {
                     check(function () {
                         expect(err).to.be.null;
-                        expect(cursor).to.deep.include({
-                            iteration: runStore.iteration
-                        });
+                        expect(cursor).to.have.property('iteration', runStore.iteration);
 
                         testables.iterationsComplete.push(cursor.iteration);
                     });
@@ -1315,7 +1303,7 @@ describe('Requester', function () {
                         expect(body).to.nested.include({
                             'headers.xx': 'yy, zz'
                         });
-                        expect(response.code).to.equal(200);
+                        expect(response).to.have.property('code', 200);
                         expect(request).to.be.ok;
                     });
                 },
@@ -1424,9 +1412,7 @@ describe('Requester', function () {
                 iteration: function (err, cursor) {
                     check(function () {
                         expect(err).to.be.null;
-                        expect(cursor).to.deep.include({
-                            iteration: runStore.iteration
-                        });
+                        expect(cursor).to.have.property('iteration', runStore.iteration);
 
                         testables.iterationsComplete.push(cursor.iteration);
                     });
@@ -1537,7 +1523,7 @@ describe('Requester', function () {
                         expect(body).to.deep.nested.include({
                             'form.xx': ['yy', 'zz']
                         });
-                        expect(response.code).to.equal(200);
+                        expect(response).to.have.property('code', 200);
                         expect(request).to.be.ok;
                     });
                 },
@@ -1652,9 +1638,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -1763,7 +1747,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -1886,9 +1870,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -1997,7 +1979,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -2119,9 +2101,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -2230,7 +2210,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -2351,9 +2331,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -2462,7 +2440,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -2580,9 +2558,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -2691,7 +2667,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -2802,9 +2778,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -2913,7 +2887,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             var body = response.json();
@@ -3031,9 +3005,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -3142,7 +3114,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(201);
+                            expect(response).to.have.property('code', 201);
                             expect(request).to.be.ok;
                         });
                     },
@@ -3283,9 +3255,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -3393,7 +3363,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(401);
+                            expect(response).to.have.property('code', 401);
                             expect(response.text()).to.equal('unauthorized\n');
                             expect(request).to.be.ok;
                         });
@@ -3507,9 +3477,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -3632,7 +3600,7 @@ describe('Requester', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
                         });
                     },
@@ -3743,9 +3711,7 @@ describe('Requester', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -4015,9 +3981,7 @@ describe('Requester', function () {
                         iteration: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be.null;
-                                expect(cursor).to.deep.include({
-                                    iteration: runStore.iteration
-                                });
+                                expect(cursor).to.have.property('iteration', runStore.iteration);
 
                                 testables.iterationsComplete.push(cursor.iteration);
                             });
@@ -4124,7 +4088,7 @@ describe('Requester', function () {
                                     ref: runStore.ref
                                 });
 
-                                expect(response.code).to.equal(200);
+                                expect(response).to.have.property('code', 200);
                                 expect(response.text()).to.equal('thisisadeflatedresponse');
                                 expect(request).to.be.ok;
                             });
@@ -4260,9 +4224,7 @@ describe('Requester', function () {
                         iteration: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be.null;
-                                expect(cursor).to.deep.include({
-                                    iteration: runStore.iteration
-                                });
+                                expect(cursor).to.have.property('iteration', runStore.iteration);
 
                                 testables.iterationsComplete.push(cursor.iteration);
                             });
@@ -4369,7 +4331,7 @@ describe('Requester', function () {
                                     ref: runStore.ref
                                 });
 
-                                expect(response.code).to.equal(200);
+                                expect(response).to.have.property('code', 200);
                                 expect(response.text()).to.equal('thisisadeflatedresponsetoo');
                                 expect(request).to.be.ok;
                             });
@@ -4514,9 +4476,7 @@ describe('Requester', function () {
                         iteration: function (err, cursor) {
                             check(function () {
                                 expect(err).to.be.null;
-                                expect(cursor).to.deep.include({
-                                    iteration: runStore.iteration
-                                });
+                                expect(cursor).to.have.property('iteration', runStore.iteration);
 
                                 testables.iterationsComplete.push(cursor.iteration);
                             });
@@ -4626,7 +4586,7 @@ describe('Requester', function () {
                                     ref: runStore.ref
                                 });
 
-                                expect(response.code).to.equal(200);
+                                expect(response).to.have.property('code', 200);
                                 expect(response.text()).to.equal('thisisagzippedresponse');
                                 expect(request).to.be.ok;
                             });

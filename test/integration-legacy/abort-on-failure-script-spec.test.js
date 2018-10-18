@@ -133,9 +133,7 @@ describe('Option', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -247,7 +245,7 @@ describe('Option', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
                         });
                     },
@@ -259,7 +257,7 @@ describe('Option', function () {
                             message: 'fail'
                         });
 
-                        expect(testables.started).to.be.true;
+                        expect(testables).to.have.property('started', true);
 
                         // We started the first iteration and encountered a failure in the first request
                         expect(testables).to.deep.include({

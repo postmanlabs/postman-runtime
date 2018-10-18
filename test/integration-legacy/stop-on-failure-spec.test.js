@@ -133,9 +133,7 @@ describe('Option', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -244,7 +242,7 @@ describe('Option', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
                         });
                     },
@@ -252,11 +250,13 @@ describe('Option', function () {
                         // Should Error
                         expect(error).to.be.null;
 
-                        expect(testables.started).to.be.true;
+                        expect(testables).to.have.property('started', true);
 
                         // We started the first iteration and encountered a failure in the first request
-                        expect(testables.iterationsStarted).to.eql([0]);
-                        expect(testables.iterationsComplete).to.eql([0]);
+                        expect(testables).to.deep.include({
+                            iterationsStarted: [0],
+                            iterationsComplete: [0]
+                        });
 
                         // First iteration
                         expect(testables.itemsStarted[0]).to.have.lengthOf(1);
@@ -417,9 +417,7 @@ describe('Option', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -566,7 +564,7 @@ describe('Option', function () {
                                 ref: runStore.ref
                             });
 
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
                             expect(request).to.be.ok;
 
                             // Since pre-request throws an error in the second
@@ -580,7 +578,7 @@ describe('Option', function () {
                     done: function (err) {
                         expect(err).to.be.null;
 
-                        expect(testables.started).to.be.true;
+                        expect(testables).to.have.property('started', true);
 
                         // Ensure that we ran (and completed three iterations)
                         // The second iteration should be stopped at the second request.
@@ -753,9 +751,7 @@ describe('Option', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -813,7 +809,7 @@ describe('Option', function () {
                             // The second request throws in the second iteration.
                             if (cursor.iteration === 1 && item.name === 'Second Request') {
                                 expect(results[0].error).to.be.ok;
-                                expect(results[0]).to.deep.nested.include({
+                                expect(results).to.deep.nested.include({
                                     'error.message': 'omg!'
                                 });
                                 return;
