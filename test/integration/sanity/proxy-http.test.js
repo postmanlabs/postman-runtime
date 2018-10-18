@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('proxy', function () {
     var _ = require('lodash'),
         ProxyConfigList = require('postman-collection').ProxyConfigList,
@@ -40,22 +42,24 @@ describe('proxy', function () {
         });
     });
 
-    it('must have started and completed the test run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have started and completed the test run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 
-    it('must receive response from the proxy', function () {
+    it('should receive response from the proxy', function () {
         var response = testrun.request.getCall(0).args[2].json(),
             request = testrun.request.getCall(0).args[3];
 
-        expect(testrun.request.calledOnce).be.ok(); // one request
+        expect(testrun.request.calledOnce).to.be.ok; // one request
         // proxy info added back to request
         expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
         expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
         expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpRequest);
-        expect(_.get(response, 'headers.x-postman-proxy')).to.be('true');
+        expect(_.get(response, 'headers.x-postman-proxy')).to.equal('true');
     });
 
     after(function () {
