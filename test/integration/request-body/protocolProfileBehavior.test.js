@@ -1,5 +1,6 @@
 var net = require('net'),
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    expect = require('chai').expect;
 
 describe('protocolProfileBehavior', function () {
     var server,
@@ -65,7 +66,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -80,10 +81,8 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                expect(response).to.contain('GET / HTTP/1.1');
-                expect(response).to.contain('Content-Type: text/plain');
-                expect(response).to.contain('content-length: 7');
-                expect(response).to.contain('foo=bar');
+                // eslint-disable-next-line max-len
+                expect(response).to.include('GET / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
             });
         });
 
@@ -116,7 +115,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -131,10 +130,8 @@ describe('protocolProfileBehavior', function () {
 
                 var response = rawRequest; // raw request message for this request
 
-                expect(response).to.contain('HEAD / HTTP/1.1');
-                expect(response).to.contain('Content-Type: text/plain');
-                expect(response).to.contain('content-length: 7');
-                expect(response).to.contain('foo=bar');
+                // eslint-disable-next-line max-len
+                expect(response).to.include('HEAD / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
             });
         });
 
@@ -167,7 +164,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -182,10 +179,8 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                expect(response).to.contain('POSTMAN / HTTP/1.1');
-                expect(response).to.contain('Content-Type: text/plain');
-                expect(response).to.contain('content-length: 7');
-                expect(response).to.contain('foo=bar');
+                // eslint-disable-next-line max-len
+                expect(response).to.include('POSTMAN / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
             });
         });
     });
@@ -220,7 +215,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -235,9 +230,9 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                expect(response).to.contain('GET / HTTP/1.1');
-                expect(response).to.not.contain('Content-Type');
-                expect(response).to.not.contain('foo=bar');
+                expect(response).to.include('GET / HTTP/1.1');
+                expect(response).to.not.include('Content-Type');
+                expect(response).to.not.include('foo=bar');
             });
         });
 
@@ -270,7 +265,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -285,9 +280,9 @@ describe('protocolProfileBehavior', function () {
 
                 var response = rawRequest; // raw request message for this request
 
-                expect(response).to.contain('HEAD / HTTP/1.1');
-                expect(response).to.not.contain('Content-Type');
-                expect(response).to.not.contain('foo=bar');
+                expect(response).to.include('HEAD / HTTP/1.1');
+                expect(response).to.not.include('Content-Type');
+                expect(response).to.not.include('foo=bar');
             });
         });
 
@@ -320,7 +315,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -335,10 +330,8 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                expect(response).to.contain('POSTMAN / HTTP/1.1');
-                expect(response).to.contain('Content-Type: text/plain');
-                expect(response).to.contain('content-length: 7');
-                expect(response).to.contain('foo=bar');
+                // eslint-disable-next-line max-len
+                expect(response).to.include('POSTMAN / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
             });
         });
     });
@@ -370,7 +363,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -385,9 +378,9 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                expect(response).to.contain('GET / HTTP/1.1');
-                expect(response).to.not.contain('Content-Type');
-                expect(response).to.not.contain('foo=bar');
+                expect(response).to.include('GET / HTTP/1.1');
+                expect(response).to.not.include('Content-Type');
+                expect(response).to.not.include('foo=bar');
             });
         });
 
@@ -417,7 +410,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -432,9 +425,9 @@ describe('protocolProfileBehavior', function () {
 
                 var response = rawRequest; // raw request message for this request
 
-                expect(response).to.contain('HEAD / HTTP/1.1');
-                expect(response).to.not.contain('Content-Type');
-                expect(response).to.not.contain('foo=bar');
+                expect(response).to.include('HEAD / HTTP/1.1');
+                expect(response).to.not.include('Content-Type');
+                expect(response).to.not.include('foo=bar');
             });
         });
 
@@ -464,7 +457,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -479,10 +472,8 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                expect(response).to.contain('POSTMAN / HTTP/1.1');
-                expect(response).to.contain('Content-Type: text/plain');
-                expect(response).to.contain('content-length: 7');
-                expect(response).to.contain('foo=bar');
+                // eslint-disable-next-line max-len
+                expect(response).to.include('POSTMAN / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
             });
         });
     });
