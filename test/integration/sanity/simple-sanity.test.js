@@ -40,8 +40,6 @@ describe('sanity test', function () {
         var response = testrun.request.getCall(0).args[2];
 
         expect(testrun.request.calledOnce).to.be.ok; // one request
-        expect(response.json()).to.be.ok;
-        expect(response.json().args).to.be.ok;
         expect(response.json()).to.have.nested.property('args.testvar', 'test-var-value');
     });
 });
