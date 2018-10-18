@@ -1,8 +1,7 @@
 var expect = require('chai').expect;
 
 describe('proxy configuration vars', function () {
-    var _ = require('lodash'),
-        proxy = require('http-proxy'),
+    var proxy = require('http-proxy'),
 
         server,
         port = 9090,
@@ -57,7 +56,7 @@ describe('proxy configuration vars', function () {
             var response = testrun.request.getCall(0).args[2].json();
 
             expect(testrun.request.calledOnce).to.be.ok; // one request
-            expect(_.get(response, 'headers.x-postman-proxy')).to.equal('true');
+            expect(response).to.have.nested.property('headers.x-postman-proxy', 'true');
         });
     });
 
@@ -95,7 +94,7 @@ describe('proxy configuration vars', function () {
             var response = testrun.request.getCall(0).args[2].json();
 
             expect(testrun.request.calledOnce).to.be.ok; // one request
-            expect(_.get(response, 'headers.x-postman-proxy')).to.equal('true');
+            expect(response).to.have.nested.property('headers.x-postman-proxy', 'true');
         });
     });
 });
