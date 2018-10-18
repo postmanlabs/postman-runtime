@@ -43,8 +43,8 @@ describe('Dynamic Variables', function () {
             expect(sent.body.urlencoded).to.be.ok;
 
             param = sent.body.urlencoded.idx(0);
-            expect(param.value)
-                .to.match(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/i);
+            expect(param).to.have.property('value')
+                .that.match(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/i);
         });
 
         it('should have completed the run', function () {
