@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('HEAD requests', function () {
     var testrun;
 
@@ -30,21 +32,29 @@ describe('HEAD requests', function () {
         });
     });
 
-    it('must have completed the HEAD requests successfully', function () {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledTwice).be.ok();
+    it('should have completed the HEAD requests successfully', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'request.calledTwice': true
+        });
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
-        expect(testrun.request.getCall(0).args[2].code).to.be(200);
+        expect(testrun.request.getCall(0)).to.nested.include({
+            'args[0]': null,
+            'args[2].code': 200
+        });
 
-        expect(testrun.request.getCall(1).args[0]).to.be(null);
-        expect(testrun.request.getCall(1).args[2].code).to.be(200);
+        expect(testrun.request.getCall(1)).to.nested.include({
+            'args[0]': null,
+            'args[2].code': 200
+        });
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });
