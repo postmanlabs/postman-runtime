@@ -41,8 +41,8 @@ describe('Distinct random number generation', function () {
         secondParam = secondUrl.query.idx(0);
 
         // Ensure that both params are integers
-        expect(_.isInteger(_.parseInt(firstParam.value, 10))).to.be.true;
-        expect(_.isInteger(_.parseInt(secondParam.value, 10))).to.be.true;
+        expect(_.parseInt(firstParam.value, 10)).to.be.a('number');
+        expect(_.parseInt(secondParam.value, 10)).to.be.a('number');
     });
 
     it('should have generated different random integers for both requests', function () {
