@@ -121,7 +121,7 @@ describe('systemProxy', function () {
             });
         });
 
-        it.only('should not use the proxy to fetch response', function () {
+        it('should not use the proxy to fetch response', function () {
             var response = testrun.request.getCall(0).args[2].json(),
                 request = testrun.request.getCall(0).args[3];
 
