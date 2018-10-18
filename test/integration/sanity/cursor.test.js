@@ -142,17 +142,17 @@ describe('cursor', function () {
                 'secondCall.args[1].eventId': 'my-test-event-4',
                 'secondCall.args[1].scriptId': 'my-test-script-4'
             });
-            expect(testrun).to.have.property('request').that.nested.include({
-                'secondCall.args[1].eventId': 'my-test-event-4',
-                'secondCall.args[1].scriptId': 'my-test-script-4'
+            expect(testrun).to.have.nested.property('request.secondCall.args[1]').that.deep.include({
+                eventId: 'my-test-event-4',
+                scriptId: 'my-test-script-4'
             });
         });
 
         it('should have scriptId and eventId in synchronous errors', function () {
-            expect(testrun).to.have.property('script').that.nested.include({
-                'thirdCall.args[0].message': 'error from sync script',
-                'thirdCall.args[1].eventId': 'my-test-event-3',
-                'thirdCall.args[1].scriptId': 'my-test-script-3'
+            expect(testrun).to.have.nested.property('script.thirdCall').that.nested.include({
+                'args[0].message': 'error from sync script',
+                'args[1].eventId': 'my-test-event-3',
+                'args[1].scriptId': 'my-test-script-3'
             });
         });
 
