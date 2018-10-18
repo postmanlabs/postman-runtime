@@ -1,9 +1,8 @@
-var expect = require('chai').expect;
+var proxy = require('http-proxy'),
+    expect = require('chai').expect;
 
 describe('proxy configuration vars', function () {
-    var proxy = require('http-proxy'),
-
-        server,
+    var server,
         port = 9090,
         proxyHost = 'localhost',
         proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + port;
