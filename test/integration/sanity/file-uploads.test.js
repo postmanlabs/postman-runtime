@@ -1,5 +1,6 @@
 var fs = require('fs'),
     _ = require('lodash'),
+    expect = require('chai').expect,
     sinon = require('sinon');
 
 describe('File uploads', function () {
@@ -52,7 +53,7 @@ describe('File uploads', function () {
     });
 
     it('should complete the run', function () {
-        expect(testrun).be.ok();
+        expect(testrun).to.be.ok;
         sinon.assert.calledOnce(testrun.start);
         sinon.assert.calledOnce(testrun.done);
         sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -62,8 +63,10 @@ describe('File uploads', function () {
         var assertions = testrun.assertion.getCall(0).args[1];
         sinon.assert.calledTwice(testrun.test);
         sinon.assert.calledWith(testrun.test.getCall(0), null);
-        expect(assertions[0]).to.have.property('name', 'File contents are valid');
-        expect(assertions[0]).to.have.property('passed', true);
+        expect(assertions[0]).to.deep.include({
+            name: 'File contents are valid',
+            passed: true
+        });
     });
 
     it('should upload the files in binary and formdata mode correctly', function () {
