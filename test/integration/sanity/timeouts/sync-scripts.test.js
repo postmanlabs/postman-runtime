@@ -42,9 +42,9 @@ describe('synchronous script timeouts', function () {
 
         it('should handle script timeouts correctly', function () {
             expect(testrun).to.be.ok;
-            expect(testrun).to.nested.include({
-                'prerequest.callCount': 1,
-                'prerequest.firstCall.args[0]': null
+            expect(testrun).to.have.property('prerequest').that.nested.include({
+                callCount: 1,
+                'firstCall.args[0]': null
             });
             expect(testrun).to.have.nested.property('prerequest.firstCall.args[2][0]')
                 .that.does.not.have.property('error');
@@ -92,9 +92,9 @@ describe('synchronous script timeouts', function () {
 
         it('should handle script timeouts correctly', function () {
             expect(testrun).to.be.ok;
-            expect(testrun).to.nested.include({
-                'prerequest.callCount': 1,
-                'prerequest.firstCall.args[0]': null
+            expect(testrun).to.have.property('prerequest').that.nested.include({
+                callCount: 1,
+                'firstCall.args[0]': null
             });
             expect(testrun).to.have.nested.property('prerequest.firstCall.args[2][0]').that.not.have.property('error');
         });
@@ -153,10 +153,10 @@ describe('synchronous script timeouts', function () {
                 // @todo done callback is called before the actual script execution timeout
                 setTimeout(function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun).to.nested.include({
-                        'prerequest.callCount': 1,
-                        'prerequest.firstCall.args[0]': null,
-                        'prerequest.firstCall.args[2][0].error.message': 'sandbox: synchronous script execution timeout'
+                    expect(testrun).to.have.property('prerequest').that.nested.include({
+                        callCount: 1,
+                        'firstCall.args[0]': null,
+                        'firstCall.args[2][0].error.message': 'sandbox: synchronous script execution timeout'
                     });
                     done();
                 }, 3000);
@@ -206,10 +206,10 @@ describe('synchronous script timeouts', function () {
                 // @todo done callback is called before the actual script execution timeout
                 setTimeout(function () {
                     expect(testrun).to.be.ok;
-                    expect(testrun).to.nested.include({
-                        'prerequest.callCount': 1,
-                        'prerequest.firstCall.args[0]': null,
-                        'prerequest.firstCall.args[2][0].error.message': 'sandbox: synchronous script execution timeout'
+                    expect(testrun).to.have.property('prerequest').that.nested.include({
+                        callCount: 1,
+                        'firstCall.args[0]': null,
+                        'firstCall.args[2][0].error.message': 'sandbox: synchronous script execution timeout'
                     });
                     done();
                 }, 3000);
