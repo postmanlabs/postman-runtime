@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('variable replacement', function() {
     var testrun;
 
@@ -31,35 +33,39 @@ describe('variable replacement', function() {
         });
     });
 
-    it('must have sent the request successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
-        expect(testrun.prerequest.calledOnce).be.ok();
-        expect(testrun.request.calledOnce).be.ok();
+    it('should have sent the request successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'test.calledOnce': true,
+            'prerequest.calledOnce': true,
+            'request.calledOnce': true
+        });
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(testrun.request.getCall(0).args[0]).to.be.null;
     });
 
-    it('must have substituted the available variable correctly', function () {
+    it('should have substituted the available variable correctly', function () {
         var response = testrun.request.getCall(0).args[2],
             args = response.json().args;
 
-        expect(args).to.be.ok();
-        expect(args.var).to.eql('replaced');
+        expect(args).to.be.ok;
+        expect(args).to.have.property('var', 'replaced');
     });
 
-    it('must have not substituted the variable whose value is not set', function () {
+    it('should have not substituted the variable whose value is not set', function () {
         var response = testrun.request.getCall(0).args[2],
             args = response.json().args;
 
-        expect(args).to.be.ok();
-        expect(args.novar).to.eql('{{novar}}');
+        expect(args).to.be.ok;
+        expect(args).to.have.deep.property('novar', '{{novar}}');
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

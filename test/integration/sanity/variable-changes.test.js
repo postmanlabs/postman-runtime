@@ -1,4 +1,5 @@
-var sdk = require('postman-collection');
+var sdk = require('postman-collection'),
+    expect = require('chai').expect;
 
 describe('variable changes', function() {
     var testrun;
@@ -33,48 +34,54 @@ describe('variable changes', function() {
         });
     });
 
-    it('must have sent the request successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledOnce).be.ok();
+    it('should have sent the request successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'request.calledOnce': true
+        });
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(testrun.request.getCall(0).args[0]).to.be.null;
     });
 
-    it('must have triggered the script event twice', function () {
-        expect(testrun.script.calledTwice).to.be.ok();
+    it('should have triggered the script event twice', function () {
+        expect(testrun).to.nested.include({
+            'script.calledTwice': true
+        });
     });
 
-    it('must have provided variable-scope objects in the events', function () {
+    it('should have provided variable-scope objects in the events', function () {
         var prerequest = testrun.script.firstCall.args[2],
             test = testrun.script.secondCall.args[2];
 
-        expect(sdk.VariableScope.isVariableScope(prerequest.environment)).to.be(true);
-        expect(sdk.VariableScope.isVariableScope(prerequest.globals)).to.be(true);
+        expect(sdk.VariableScope.isVariableScope(prerequest.environment)).to.be.true;
+        expect(sdk.VariableScope.isVariableScope(prerequest.globals)).to.be.true;
 
-        expect(sdk.VariableScope.isVariableScope(test.environment)).to.be(true);
-        expect(sdk.VariableScope.isVariableScope(test.globals)).to.be(true);
+        expect(sdk.VariableScope.isVariableScope(test.environment)).to.be.true;
+        expect(sdk.VariableScope.isVariableScope(test.globals)).to.be.true;
     });
 
-    it('must have provided variable changes in the scripts', function () {
+    it('should have provided variable changes in the scripts', function () {
         var prerequest = testrun.script.firstCall.args[2];
 
-        expect(prerequest.environment.mutations.count()).to.be(1);
-        expect(prerequest.globals.mutations.count()).to.be(1);
-        expect(prerequest._variables.mutations.count()).to.be(1);
+        expect(prerequest.environment.mutations.count()).to.equal(1);
+        expect(prerequest.globals.mutations.count()).to.equal(1);
+        expect(prerequest._variables.mutations.count()).to.equal(1);
     });
 
-    it('must not contain the variable changes from previous script executions', function () {
+    it('should not contain the variable changes from previous script executions', function () {
         var test = testrun.script.secondCall.args[2];
 
-        expect(test.environment.mutations.count()).to.be(1);
-        expect(test.globals.mutations.count()).to.be(0);
-        expect(test._variables.mutations.count()).to.be(0);
+        expect(test.environment.mutations.count()).to.equal(1);
+        expect(test.globals.mutations.count()).to.equal(0);
+        expect(test._variables.mutations.count()).to.equal(0);
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

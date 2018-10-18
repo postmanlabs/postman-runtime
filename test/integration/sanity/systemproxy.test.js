@@ -1,6 +1,6 @@
-var _ = require('lodash'),
-    proxy = require('http-proxy'),
+var proxy = require('http-proxy'),
     sinon = require('sinon'),
+    expect = require('chai').expect,
     sdk = require('postman-collection');
 
 describe('systemProxy', function () {
@@ -48,17 +48,21 @@ describe('systemProxy', function () {
             });
         });
 
-        it('must have started and completed the test run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
-            expect(testrun.start.calledOnce).be.ok();
+        it('should have started and completed the test run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
         });
 
-        it('must receive response from the proxy', function () {
+        it('should receive response from the proxy', function () {
             var response = testrun.request.getCall(0).args[2].json(),
                 request = testrun.request.getCall(0).args[3];
 
-            expect(testrun.request.calledOnce).be.ok(); // one request
+            expect(testrun).to.nested.include({ // one request
+                'test.calledOnce': true
+            });
             // proxy info added back to request
             expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
             expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
@@ -67,7 +71,7 @@ describe('systemProxy', function () {
             // The above checks do not confirm that the correct proxy url was used.
             // So confirming by testing that the correct proxy server was only called
             sinon.assert.calledOnce(systemProxySpy);
-            expect(_.get(response, 'headers.x-postman-proxy')).to.be('true');
+            expect(response).to.have.nested.property('headers.x-postman-proxy', 'true');
         });
 
         after(function () {
@@ -109,21 +113,25 @@ describe('systemProxy', function () {
             });
         });
 
-        it('must have started and completed the test run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
-            expect(testrun.start.calledOnce).be.ok();
+        it('should have started and completed the test run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
         });
 
-        it('must not use the proxy to fetch response', function () {
+        it('should not use the proxy to fetch response', function () {
             var response = testrun.request.getCall(0).args[2].json(),
                 request = testrun.request.getCall(0).args[3];
 
-            expect(testrun.request.calledOnce).be.ok(); // one request
+            expect(testrun).to.nested.include({ // one request
+                'request.calledOnce': true
+            });
             // proxy info added back to request
-            expect(request.proxy).to.not.be.ok();
+            expect(request.proxy).to.not.be.ok;
             sinon.assert.notCalled(systemProxySpy);
-            expect(_.get(response, 'headers.x-postman-proxy')).to.not.be.ok();
+            expect(response).to.not.have.nested.property('headers.x-postman-proxy');
         });
 
         after(function () {
@@ -196,17 +204,21 @@ describe('systemProxy', function () {
             });
         });
 
-        it('must have started and completed the test run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
-            expect(testrun.start.calledOnce).be.ok();
+        it('should have started and completed the test run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
         });
 
-        it('must resolve proxy from the static proxy list', function () {
+        it('should resolve proxy from the static proxy list', function () {
             var response = testrun.request.getCall(0).args[2].json(),
                 request = testrun.request.getCall(0).args[3];
 
-            expect(testrun.request.calledOnce).be.ok(); // one request
+            expect(testrun).to.nested.include({ // one request
+                'test.calledOnce': true
+            });
             // proxy info added back to request
             expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
             expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
@@ -216,7 +228,7 @@ describe('systemProxy', function () {
             // So confirming by testing that the correct proxy server was only called
             sinon.assert.calledOnce(globalProxySpy);
             sinon.assert.notCalled(systemProxySpy);
-            expect(_.get(response, 'headers.x-postman-proxy')).to.be('true');
+            expect(response).to.have.nested.property('headers.x-postman-proxy', 'true');
         });
 
         after(function () {

@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('UVM allowed globals', function () {
     var testrun,
         globals = ['isNaN', 'SyntaxError', 'ArrayBuffer', 'JSON', 'unescape', 'URIError', 'TypeError', 'WeakSet',
@@ -41,17 +43,21 @@ describe('UVM allowed globals', function () {
         });
     });
 
-    it('must have started and completed the test run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have started and completed the test run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 
-    it('must have run the test script, and had no extra globals', function () {
-        expect(testrun.console.calledOnce).be.ok();
+    it('should have run the test script, and had no extra globals', function () {
+        expect(testrun).to.nested.include({
+            'console.calledOnce': true
+        });
 
         var args = testrun.console.getCall(0).args;
-        expect(args[1]).to.be('log');
+        expect(args[1]).to.equal('log');
         expect(args[2].sort()).to.eql(globals.sort());
     });
 });

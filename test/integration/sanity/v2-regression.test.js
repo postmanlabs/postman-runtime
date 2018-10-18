@@ -1,7 +1,8 @@
-describe('V2 regressions', function() {
-    var request = require('postman-request'),
+var request = require('postman-request'),
+    expect = require('chai').expect;
 
-        testrun;
+describe('V2 regressions', function() {
+    var testrun;
 
     before(function(done) {
         this.run({
@@ -55,32 +56,36 @@ describe('V2 regressions', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.test.calledThrice).be.ok();
+    it('should have run the test script successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'test.calledThrice': true
+        });
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
+        expect(testrun.test.getCall(0).args[0]).to.be.null;
         expect(testrun.assertion.getCall(0).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
             {error: null, index: 1, passed: true, skipped: false, name: 'foo1 cookie is present in the response body'}
         ]);
 
-        expect(testrun.test.getCall(1).args[0]).to.be(null);
+        expect(testrun.test.getCall(1).args[0]).to.be.null;
         expect(testrun.assertion.getCall(1).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
         ]);
 
-        expect(testrun.test.getCall(2).args[0]).to.be(null);
+        expect(testrun.test.getCall(2).args[0]).to.be.null;
         expect(testrun.assertion.getCall(2).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
             {error: null, index: 1, passed: true, skipped: false, name: 'Disabled header is absent'}
         ]);
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

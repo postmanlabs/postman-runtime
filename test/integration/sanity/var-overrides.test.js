@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('Variable overrides', function() {
     var testrun;
 
@@ -86,18 +88,22 @@ describe('Variable overrides', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.test.calledTwice).be.ok();
+    it('should have run the test script successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'test.calledTwice': true
+        });
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(testrun.test.getCall(1).args[0]).to.be(null);
+        expect(testrun.test.getCall(0).args[0]).to.be.null;
+        expect(testrun.test.getCall(1).args[0]).to.be.null;
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });
