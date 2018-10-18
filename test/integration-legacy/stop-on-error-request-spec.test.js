@@ -150,9 +150,7 @@ describe('Option', function () {
                     iteration: function (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
-                            expect(cursor).to.deep.include({
-                                iteration: runStore.iteration
-                            });
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
@@ -256,7 +254,9 @@ describe('Option', function () {
                                 scriptResult = results[0];
                             expect(result.error).to.be.undefined;
 
-                            expect(scriptResult.result.target).to.eql('test');
+                            expect(scriptResult).to.deep.nested.include({
+                                'result.target': 'test'
+                            });
 
                             // This should never be called for the
                             // second request.
@@ -299,7 +299,7 @@ describe('Option', function () {
                                 return;
                             }
                             expect(err).to.be.null;
-                            expect(response.code).to.equal(200);
+                            expect(response).to.have.property('code', 200);
 
                             expect(item.name).to.not.equal('Third Request');
                         });
