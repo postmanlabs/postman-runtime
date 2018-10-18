@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('GZIP encoding', function() {
     var testrun;
 
@@ -14,21 +16,25 @@ describe('GZIP encoding', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledOnce).be.ok();
+    it('should have run the test script successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'request.calledOnce': true
+        });
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(testrun.request.getCall(0).args[0]).to.be.null;
 
         var response = testrun.request.getCall(0).args[2];
-        expect(response.code).to.eql(200);
+        expect(response).to.have.property('code', 200);
         expect(response.json()).to.have.property('gzipped', true);
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

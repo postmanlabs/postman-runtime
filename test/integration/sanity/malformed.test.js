@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('malformation', function () {
     var _ = require('lodash'),
         testrun;
@@ -22,18 +24,20 @@ describe('malformation', function () {
         });
     });
 
-    it('must handle malformed globals and environments correctly', function () {
-        expect(testrun).be.ok();
+    it('should handle malformed globals and environments correctly', function () {
+        expect(testrun).to.be.ok;
         var result = _.get(testrun.test.getCall(0).args[2], '0.result', {});
 
         expect(_.invoke(result, 'globals.values.all')).to.eql([]);
         expect(_.invoke(result, 'environment.values.all')).to.eql([]);
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

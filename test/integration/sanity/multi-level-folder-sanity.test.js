@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('sanity test', function () {
     var testrun;
 
@@ -84,20 +86,24 @@ describe('sanity test', function () {
         });
     });
 
-    it('must have started and completed the test run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have started and completed the test run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 
-    it('must must run all requests in the correct order', function () {
+    it('should must run all requests in the correct order', function () {
         var expectedOrder = ['F1.R1', 'F1.R2', 'F1.R3', 'F2.F3.R1', 'F2.R1', 'R1'];
 
         expectedOrder.forEach(function (expectedName, index) {
             var request = testrun.item.getCall(index).args[2];
 
-            expect(request).be.ok();
-            expect(request.name).to.be(expectedName);
+            expect(request).to.be.ok;
+            expect(request).to.deep.include({
+                name: expectedName
+            });
         });
     });
 });
