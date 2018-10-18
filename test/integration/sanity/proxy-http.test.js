@@ -1,8 +1,7 @@
 var expect = require('chai').expect;
 
 describe('proxy', function () {
-    var _ = require('lodash'),
-        ProxyConfigList = require('postman-collection').ProxyConfigList,
+    var ProxyConfigList = require('postman-collection').ProxyConfigList,
         proxy = require('http-proxy'),
 
         server,
@@ -59,7 +58,7 @@ describe('proxy', function () {
         expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
         expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
         expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpRequest);
-        expect(_.get(response, 'headers.x-postman-proxy')).to.equal('true');
+        expect(response).to.have.nested.property('headers.x-postman-proxy', 'true');
     });
 
     after(function () {
