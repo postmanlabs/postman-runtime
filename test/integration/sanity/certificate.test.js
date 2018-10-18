@@ -168,7 +168,9 @@ describe('certificates', function () {
         });
 
         it('should trigger a console warning', function () {
-            expect(testrun.console.calledTwice).to.be.ok;
+            expect(testrun).to.nested.include({
+                'console.calledTwice': true
+            });
 
             var call1 = testrun.console.firstCall.args,
                 call2 = testrun.console.secondCall.args;
