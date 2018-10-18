@@ -1,4 +1,4 @@
-var AuthLoader = require('../../../lib/authorizer/index').AuthLoader,
+var AuthLoader = require('../../../lib/authorizer').AuthLoader,
     expect = require('chai').expect;
 
 describe('unhandled errors in request send', function() {
