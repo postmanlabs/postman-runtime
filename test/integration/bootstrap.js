@@ -1,6 +1,6 @@
 var _ = require('lodash'),
     sinon = require('sinon'),
-    expect = require('expect.js'),
+    expect = require('chai').expect,
     Collection = require('postman-collection').Collection,
     Runner = require('../../index.js').Runner,
 
