@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('restricted addresses', function() {
     var testrun;
 
@@ -29,54 +31,60 @@ describe('restricted addresses', function() {
         });
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 
-    it('must not send request for hosts in restricted IP addresses', function() {
-        expect(testrun).be.ok();
+    it('should not send request for hosts in restricted IP addresses', function() {
+        expect(testrun).to.be.ok;
         var response = testrun.response.getCall(0).args[2];
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(testrun.request.firstCall.args[0])
-            .to.have.property('message', 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254');
-        expect(response).to.be(undefined);
+        expect(testrun).to.have.property('request').that.nested.include({
+            'firstCall.args[0].message': 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254'
+        });
+        expect(response).to.be.undefined;
     });
 
-    it('must not send request for hosts that resolve to restricted IP addresses (normal DNS lookup)', function() {
-        expect(testrun).be.ok();
+    it('should not send request for hosts that resolve to restricted IP addresses (normal DNS lookup)', function() {
+        expect(testrun).to.be.ok;
         var response = testrun.response.getCall(1).args[2];
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(testrun.request.firstCall.args[0])
-            .to.have.property('message', 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254');
-        expect(response).to.be(undefined);
+        expect(testrun).to.have.property('request').that.nested.include({
+            'firstCall.args[0].message': 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254'
+        });
+        expect(response).to.be.undefined;
     });
 
-    it('must not send request for hosts that resolve to restricted IP addresses (hosts file DNS lookup)', function() {
-        expect(testrun).be.ok();
+    it('should not send request for hosts that resolve to restricted IP addresses (hosts file DNS lookup)', function() {
+        expect(testrun).to.be.ok;
         var response = testrun.response.getCall(2).args[2];
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(testrun.request.firstCall.args[0])
-            .to.have.property('message', 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254');
-        expect(response).to.be(undefined);
+        expect(testrun).to.have.property('request').that.nested.include({
+            'firstCall.args[0].message': 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254'
+        });
+        expect(response).to.be.undefined;
     });
 
-    it('must not send request for redirects that resolve to restricted IP addresses', function() {
-        expect(testrun).be.ok();
+    it('should not send request for redirects that resolve to restricted IP addresses', function() {
+        expect(testrun).to.be.ok;
         var response = testrun.response.getCall(3).args[2];
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(testrun.request.firstCall.args[0])
-            .to.have.property('message', 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254');
-        expect(response).to.be(undefined);
+        expect(testrun).to.have.property('request').that.nested.include({
+            'firstCall.args[0].message': 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254'
+        });
+        expect(response).to.be.undefined;
     });
 });
