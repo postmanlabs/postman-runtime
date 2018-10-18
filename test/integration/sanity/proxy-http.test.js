@@ -1,10 +1,9 @@
-var expect = require('chai').expect;
+var ProxyConfigList = require('postman-collection').ProxyConfigList,
+    proxy = require('http-proxy'),
+    expect = require('chai').expect;
 
 describe('proxy', function () {
-    var ProxyConfigList = require('postman-collection').ProxyConfigList,
-        proxy = require('http-proxy'),
-
-        server,
+    var server,
         testrun,
         port = 9090,
         proxyHost = 'localhost',
