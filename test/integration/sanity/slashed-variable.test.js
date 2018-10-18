@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('Slashed variables', function() {
     var testrun;
 
@@ -18,29 +20,35 @@ describe('Slashed variables', function() {
         });
     });
 
-    it('must have sent the request successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledOnce).be.ok();
+    it('should have sent the request successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'request.calledOnce': true
+        });
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(testrun.request.getCall(0).args[0]).to.be.null;
     });
 
-    it('must have resolved the variables', function() {
+    it('should have resolved the variables', function() {
         var response = testrun.request.getCall(0).args[2],
             query;
 
-        expect(response.code).to.eql(200);
+        expect(response).to.have.property('code', 200);
 
         query = response.json().args;
 
-        expect(query).to.have.property('foo', 'alpha');
-        expect(query).to.have.property('bar', 'beta');
+        expect(query).to.deep.include({
+            foo: 'alpha',
+            bar: 'beta'
+        });
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });
