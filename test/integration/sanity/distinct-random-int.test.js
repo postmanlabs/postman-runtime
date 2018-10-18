@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('Distinct random number generation', function () {
     var _ = require('lodash'),
         testrun;
@@ -17,38 +19,40 @@ describe('Distinct random number generation', function () {
         });
     });
 
-    it('must have sent two requests successfully', function () {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledTwice).be.ok();
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
-        expect(testrun.request.getCall(1).args[0]).to.be(null);
+    it('should have sent two requests successfully', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'request.calledTwice': true
+        });
+        expect(testrun.request.getCall(0).args[0]).to.be.null;
+        expect(testrun.request.getCall(1).args[0]).to.be.null;
     });
 
-    it('must have substituted the {{$randomInt}} variable in both requests', function () {
+    it('should have substituted the {{$randomInt}} variable in both requests', function () {
         var firstUrl = _.get(testrun.request.getCall(0), 'args[3].url'),
             secondUrl = _.get(testrun.request.getCall(1), 'args[3].url'),
             firstParam,
             secondParam;
 
-        expect(firstUrl).to.be.ok();
-        expect(secondUrl).to.be.ok();
+        expect(firstUrl).to.be.ok;
+        expect(secondUrl).to.be.ok;
 
         firstParam = firstUrl.query.idx(0);
         secondParam = secondUrl.query.idx(0);
 
         // Ensure that both params are integers
-        expect(_.isInteger(_.parseInt(firstParam.value, 10))).to.eql(true);
-        expect(_.isInteger(_.parseInt(secondParam.value, 10))).to.eql(true);
+        expect(_.parseInt(firstParam.value, 10)).to.be.a('number');
+        expect(_.parseInt(secondParam.value, 10)).to.be.a('number');
     });
 
-    it('must have generated different random integers for both requests', function () {
+    it('should have generated different random integers for both requests', function () {
         var firstUrl = _.get(testrun.request.getCall(0), 'args[3].url'),
             secondUrl = _.get(testrun.request.getCall(1), 'args[3].url'),
             firstParam,
             secondParam;
 
-        expect(firstUrl).to.be.ok();
-        expect(secondUrl).to.be.ok();
+        expect(firstUrl).to.be.ok;
+        expect(secondUrl).to.be.ok;
 
         firstParam = firstUrl.query.idx(0);
         secondParam = secondUrl.query.idx(0);
@@ -57,10 +61,12 @@ describe('Distinct random number generation', function () {
         expect(firstParam.value).to.not.equal(secondParam.value);
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });
