@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('econnrefused', function () {
     var _ = require('lodash'),
         testrun;
@@ -18,15 +20,17 @@ describe('econnrefused', function () {
         });
     });
 
-    it('must handle ECONNREFUSED correctly', function () {
-        expect(testrun).be.ok();
-        expect(_.get(testrun.request.getCall(0).args, '0.code')).to.be('ECONNREFUSED');
+    it('should handle ECONNREFUSED correctly', function () {
+        expect(testrun).to.be.ok;
+        expect(_.get(testrun.request.getCall(0).args, '0.code')).to.equal('ECONNREFUSED');
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });
