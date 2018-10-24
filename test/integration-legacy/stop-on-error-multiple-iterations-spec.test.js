@@ -28,7 +28,7 @@ describe('Option', function () {
                                     }
                                 }
                             ],
-                            'request': 'http://postman-echo.com/get'
+                            'request': 'https://postman-echo.com/get'
                         },
                         {
                             'name': 'Second Request',

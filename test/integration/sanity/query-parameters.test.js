@@ -7,7 +7,7 @@ describe('query parameters', function () {
         this.run({
             collection: {
                 item: [
-                    {request: 'http://postman-echo.com/get?a=обязательный&c=d'}
+                    {request: 'https://postman-echo.com/get?a=обязательный&c=d'}
                 ]
             },
             environment: {

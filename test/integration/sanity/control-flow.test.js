@@ -19,7 +19,7 @@ describe('Control Flow', function () {
             collection: {
                 item: [{
                     request: {
-                        url: 'http://postman-echo.com/get',
+                        url: 'https://postman-echo.com/get',
                         method: 'GET'
                     }
                 }]

@@ -26,7 +26,7 @@ describe('data variable replacement', function() {
                         }
                     }],
                     request: {
-                        url: 'http://postman-echo.com/post',
+                        url: 'https://postman-echo.com/post',
                         method: 'POST',
                         body: {
                             mode: 'formdata',

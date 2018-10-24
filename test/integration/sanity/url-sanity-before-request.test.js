@@ -22,7 +22,7 @@ describe('url', function () {
                     }
                 },
                 globals: {
-                    values: [{key: 'url', value: 'http://postman-echo.com'}]
+                    values: [{key: 'url', value: 'https://postman-echo.com'}]
                 }
             }, function (err, results) {
                 testrun = results;
@@ -46,7 +46,7 @@ describe('url', function () {
             });
             expect(request).to.be.ok;
             expect(request.url.host).to.not.match(/^http:\/\/.*/);
-            expect(request.url.toString()).eql('http://postman-echo.com/get');
+            expect(request.url.toString()).eql('https://postman-echo.com/get');
             expect(request).to.have.property('method', 'GET');
         });
 

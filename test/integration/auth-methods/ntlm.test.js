@@ -35,7 +35,7 @@ describe('NTLM', function () {
                 collection: {
                     item: {
                         request: {
-                            url: 'http://postman-echo.com/digest'
+                            url: 'https://postman-echo.com/digest'
                         }
                     }
                 }

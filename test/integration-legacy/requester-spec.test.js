@@ -473,7 +473,7 @@ describe('Requester', function () {
                             'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
                             'name': 'First Request',
                             'request': {
-                                'url': 'http://postman-echo.com/post',
+                                'url': 'https://postman-echo.com/post',
                                 'method': 'POST',
                                 'body': {
                                     'mode': 'raw',
@@ -687,7 +687,7 @@ describe('Requester', function () {
                             'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
                             'name': 'First Request',
                             'request': {
-                                'url': 'http://postman-echo.com/post',
+                                'url': 'https://postman-echo.com/post',
                                 'method': 'POST',
                                 'body': {
                                     'mode': 'urlencoded',
@@ -900,7 +900,7 @@ describe('Requester', function () {
                             'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
                             'name': 'First Request',
                             'request': {
-                                'url': 'http://postman-echo.com/post',
+                                'url': 'https://postman-echo.com/post',
                                 'method': 'POST',
                                 'body': {
                                     'mode': 'formdata',
@@ -1116,7 +1116,7 @@ describe('Requester', function () {
                         'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
                         'name': 'First Request',
                         'request': {
-                            'url': 'http://postman-echo.com/headers',
+                            'url': 'https://postman-echo.com/headers',
                             'method': 'GET',
                             'header': [
                                 {
@@ -1561,7 +1561,7 @@ describe('Requester', function () {
                             'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
                             'name': 'First Request',
                             'request': {
-                                'url': 'http://postman-echo.com/post',
+                                'url': 'https://postman-echo.com/post',
                                 'method': 'POST',
                                 'body': {
                                     'mode': 'formdata',
@@ -1782,7 +1782,7 @@ describe('Requester', function () {
                             'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
                             'name': 'First Request',
                             'request': {
-                                'url': 'http://postman-echo.com/post',
+                                'url': 'https://postman-echo.com/post',
                                 'method': 'POST',
                                 'body': {
                                     'mode': 'formdata',
@@ -2014,7 +2014,7 @@ describe('Requester', function () {
                             'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
                             'name': 'First Request',
                             'request': {
-                                'url': 'http://postman-echo.com/post',
+                                'url': 'https://postman-echo.com/post',
                                 'method': 'POST',
                                 'body': {
                                     'mode': 'formdata',
@@ -2245,7 +2245,7 @@ describe('Requester', function () {
                             'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
                             'name': 'First Request',
                             'request': {
-                                'url': 'http://postman-echo.com/post',
+                                'url': 'https://postman-echo.com/post',
                                 'method': 'POST',
                                 'body': {
                                     'mode': 'formdata',
