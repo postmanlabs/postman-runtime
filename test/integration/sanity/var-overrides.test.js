@@ -22,7 +22,7 @@ describe('Variable overrides', function() {
                     {key: 'hKey', value: 'abhijit3', type: 'text', name: 'hKey', enabled: true},
                     {key: 'hburl', value: 'posts', type: 'text', name: 'hburl', enabled: true},
                     {key: 'tempKey', value: 'abhijit', type: 'text', name: 'tempKey', enabled: true},
-                    {key: 'url', value: 'http://postman-echo.com', type: 'text', name: 'url', enabled: true},
+                    {key: 'url', value: 'https://postman-echo.com', type: 'text', name: 'url', enabled: true},
                     {key: 'env', value: 'env2', type: 'text', name: 'env', enabled: true},
                     {key: 'data', value: 'env2', type: 'text', name: 'data', enabled: true}
                 ]

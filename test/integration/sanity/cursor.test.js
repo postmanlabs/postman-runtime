@@ -46,7 +46,7 @@ describe('cursor', function () {
                                 id: 'my-test-script-4',
                                 type: 'text/javascript',
                                 exec: [
-                                    'pm.sendRequest("http://postman-echo.com", function () {})'
+                                    'pm.sendRequest("https://postman-echo.com", function () {})'
                                 ]
                             }
                         }, {
@@ -62,7 +62,7 @@ describe('cursor', function () {
                                 ]
                             }
                         }],
-                        request: 'http://postman-echo.com/get?foo=bar'
+                        request: 'https://postman-echo.com/get?foo=bar'
                     }]
                 }
             }, function (err, results) {
