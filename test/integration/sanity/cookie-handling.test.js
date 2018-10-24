@@ -15,7 +15,7 @@ describe('cookies', function () {
                             exec: ['tests["working"] = postman.getResponseCookie("foo").value === "bar"']
                         }
                     }],
-                    request: 'http://postman-echo.com/cookies/set?foo=bar'
+                    request: 'https://postman-echo.com/cookies/set?foo=bar'
                 }, {
                     event: [{
                         listen: 'test',
@@ -24,7 +24,7 @@ describe('cookies', function () {
                             exec: ['tests["working"] = postman.getResponseCookie("foo").value === "bar"']
                         }
                     }],
-                    request: 'http://postman-echo.com/cookies/get'
+                    request: 'https://postman-echo.com/cookies/get'
                 }]
             }
         }, function (err, results) {
