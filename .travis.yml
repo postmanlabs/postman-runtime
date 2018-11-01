@@ -1,8 +1,14 @@
 language: node_js
+
+os:
+  - linux
+  - windows
+
 node_js:
-- '4'
-- '6'
-- '8'
+  - '4'
+  - '6'
+  - '8'
+
 before_install:
 - echo "$TRAVIS_TAG" "$TRAVIS_PULL_REQUEST";
 - |
