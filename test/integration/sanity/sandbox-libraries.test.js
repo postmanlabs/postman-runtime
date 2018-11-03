@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('Sandbox libraries', function() {
     var _ = require('lodash'),
         testrun;
@@ -201,12 +203,14 @@ describe('Sandbox libraries', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.test.callCount).be(11);
-        expect(testrun.assertion.callCount).be(10);
+    it('should have run the test script successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'test.callCount': 11,
+            'assertion.callCount': 10
+        });
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
+        expect(testrun.test.getCall(0).args[0]).to.be.null;
         expect(testrun.assertion.getCall(0).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'xml2Json'},
             {error: null, index: 1, passed: true, skipped: false, name: 'GetResponseHeader'},
@@ -219,7 +223,7 @@ describe('Sandbox libraries', function() {
         ]);
 
 
-        expect(testrun.test.getCall(1).args[0]).to.be(null);
+        expect(testrun.test.getCall(1).args[0]).to.be.null;
         expect(testrun.assertion.getCall(1).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
             {error: null, index: 1, passed: true, skipped: false, name: 'Correct GUID'},
@@ -232,44 +236,46 @@ describe('Sandbox libraries', function() {
         ]);
 
         _.range(2, 5).forEach(function(index) { // generates a range [2, 4], and checks the tests on those indices
-            expect(testrun.test.getCall(index).args[0]).to.be(null);
+            expect(testrun.test.getCall(index).args[0]).to.be.null;
             expect(testrun.assertion.getCall(index).args[1]).to.eql([
                 {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
             ]);
         });
 
-        expect(testrun.test.getCall(5).args[0]).to.be(null);
+        expect(testrun.test.getCall(5).args[0]).to.be.null;
         expect(testrun.assertion.getCall(5).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
             {error: null, index: 1, passed: true, skipped: false, name: 'Body is correct'}
         ]);
 
-        expect(testrun.test.getCall(6).args[0]).to.be(null);
+        expect(testrun.test.getCall(6).args[0]).to.be.null;
         expect(testrun.assertion.getCall(6).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
             {error: null, index: 1, passed: true, skipped: false, name: 'Body is correct'}
         ]);
 
-        expect(testrun.test.getCall(7).args[0]).to.be(null);
+        expect(testrun.test.getCall(7).args[0]).to.be.null;
         expect(testrun.assertion.getCall(7).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
         ]);
 
-        expect(testrun.test.getCall(8).args[0]).to.be(null);
+        expect(testrun.test.getCall(8).args[0]).to.be.null;
         expect(testrun.assertion.getCall(8).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Correct auth header'}
         ]);
 
-        expect(testrun.test.getCall(9).args[0]).to.be(null);
+        expect(testrun.test.getCall(9).args[0]).to.be.null;
         expect(testrun.assertion.getCall(9).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Authenticated'}
         ]);
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('data variable replacement', function() {
     var testrun;
 
@@ -24,7 +26,7 @@ describe('data variable replacement', function() {
                         }
                     }],
                     request: {
-                        url: 'http://postman-echo.com/post',
+                        url: 'https://postman-echo.com/post',
                         method: 'POST',
                         body: {
                             mode: 'formdata',
@@ -42,51 +44,71 @@ describe('data variable replacement', function() {
         });
     });
 
-    it('must have run two iterations', function() {
-        expect(testrun).be.ok();
-        expect(testrun.iteration.calledTwice).be.ok();
-        expect(testrun.request.calledTwice).be.ok();
+    it('should have run two iterations', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'iteration.calledTwice': true,
+            'request.calledTwice': true
+        });
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
-        expect(testrun.request.getCall(1).args[0]).to.be(null);
+        expect(testrun.request.getCall(0).args[0]).to.be.null;
+        expect(testrun.request.getCall(1).args[0]).to.be.null;
     });
 
-    it('must use a consistent format for request.data', function() {
-        expect(testrun).be.ok();
+    it('should use a consistent format for request.data', function() {
+        expect(testrun).to.be.ok;
 
         // prerequest script checks
-        expect(testrun.prerequest.calledTwice).be.ok();
-        expect(testrun.prerequest.getCall(0).args[0]).to.be(null);
-        expect(testrun.prerequest.getCall(1).args[0]).to.be(null);
-        expect(testrun.prerequest.getCall(0).args[2][0].result.data).to.eql({dataVar: 'value1'});
-        expect(testrun.prerequest.getCall(1).args[2][0].result.data).to.eql({dataVar: 'value2'});
+        expect(testrun).to.nested.include({
+            'prerequest.calledTwice': true
+        });
+        expect(testrun.prerequest.getCall(0)).to.deep.nested.include({
+            'args[0]': null,
+            'args[2][0].result.data': {dataVar: 'value1'}
+        });
+        expect(testrun.prerequest.getCall(1)).to.deep.nested.include({
+            'args[0]': null,
+            'args[2][0].result.data': {dataVar: 'value2'}
+        });
 
         // test script checks
-        expect(testrun.test.calledTwice).be.ok();
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
-        expect(testrun.test.getCall(1).args[0]).to.be(null);
-        expect(testrun.test.getCall(0).args[2][0].result.data).to.eql({dataVar: 'value1'});
-        expect(testrun.test.getCall(1).args[2][0].result.data).to.eql({dataVar: 'value2'});
+        expect(testrun).to.nested.include({
+            'test.calledTwice': true
+        });
+        expect(testrun.test.getCall(0)).to.deep.nested.include({
+            'args[0]': null,
+            'args[2][0].result.data': {dataVar: 'value1'}
+        });
+        expect(testrun.test.getCall(1)).to.deep.nested.include({
+            'args[0]': null,
+            'args[2][0].result.data': {dataVar: 'value2'}
+        });
     });
 
-    it('must have substituted the data variables', function() {
-        expect(testrun).be.ok();
+    it('should have substituted the data variables', function() {
+        expect(testrun).to.be.ok;
 
         var firstResponse = testrun.request.getCall(0).args[2],
             firstBody = firstResponse.json(),
             secondResponse = testrun.request.getCall(1).args[2],
             secondBody = secondResponse.json();
 
-        expect(firstBody.form).to.have.property('a', 'value1');
-        expect(firstBody.form).to.have.property('b', '0');
-        expect(secondBody.form).to.have.property('a', 'value2');
-        expect(secondBody.form).to.have.property('b', '1');
+        expect(firstBody).to.nested.include({
+            'form.a': 'value1',
+            'form.b': '0'
+        });
+        expect(secondBody).to.nested.include({
+            'form.a': 'value2',
+            'form.b': '1'
+        });
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

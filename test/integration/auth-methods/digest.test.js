@@ -1,4 +1,4 @@
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('digest auth', function () {
     var testrun;
@@ -48,17 +48,23 @@ describe('digest auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent two requests internally', function () {
-            expect(testrun.io.callCount).to.be(2);
-            expect(testrun.request.callCount).to.be(2);
+        it('should have sent two requests internally', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 2,
+                'io.callCount': 2
+            });
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
@@ -67,37 +73,37 @@ describe('digest auth', function () {
                 secondRequest = testrun.io.secondCall.args[4],
                 secondResponse = testrun.io.secondCall.args[3];
 
-            expect(firstError).to.be(null);
-            expect(secondError).to.be(null);
+            expect(firstError).to.be.null;
+            expect(secondError).to.be.null;
 
             expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(firstResponse.code).to.eql(401);
+            expect(firstResponse).to.have.property('code', 401);
 
             expect(secondRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(secondResponse.code).to.eql(200);
+            expect(secondResponse).to.have.property('code', 200);
         });
 
-        it('must have failed the digest authorization in first attempt', function () {
+        it('should have failed the digest authorization in first attempt', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
             expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(response.code).to.eql(401);
+            expect(response).to.have.property('code', 401);
         });
 
-        it('must have passed the digest authorization in second attempt', function () {
+        it('should have passed the digest authorization in second attempt', function () {
             var request = testrun.request.getCall(1).args[3],
                 response = testrun.request.getCall(1).args[2];
 
             expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(response.code).to.eql(200);
+            expect(response).to.have.property('code', 200);
         });
 
-        it('must have taken the qop value from the server\'s response', function () {
+        it('should have taken the qop value from the server\'s response', function () {
             var request = testrun.request.getCall(1).args[3],
                 authHeader = request.headers.get('authorization');
 
-            expect(authHeader.match(/qop=auth/)).to.be.ok();
+            expect(authHeader).to.match(/qop=auth/);
         });
     });
 
@@ -139,17 +145,23 @@ describe('digest auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent two requests internally', function () {
-            expect(testrun.io.callCount).to.be(2);
-            expect(testrun.request.callCount).to.be(2);
+        it('should have sent two requests internally', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
@@ -158,30 +170,30 @@ describe('digest auth', function () {
                 secondRequest = testrun.io.secondCall.args[4],
                 secondResponse = testrun.io.secondCall.args[3];
 
-            expect(firstError).to.be(null);
-            expect(secondError).to.be(null);
+            expect(firstError).to.be.null;
+            expect(secondError).to.be.null;
 
             expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(firstResponse.code).to.eql(401);
+            expect(firstResponse).to.have.property('code', 401);
 
             expect(secondRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(secondResponse.code).to.eql(200);
+            expect(secondResponse).to.have.property('code', 200);
         });
 
-        it('must have failed the digest authorization in first attempt', function () {
+        it('should have failed the digest authorization in first attempt', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
             expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(response.code).to.eql(401);
+            expect(response).to.have.property('code', 401);
         });
 
-        it('must have passed the digest authorization in second attempt', function () {
+        it('should have passed the digest authorization in second attempt', function () {
             var request = testrun.request.getCall(1).args[3],
                 response = testrun.request.getCall(1).args[2];
 
             expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(response.code).to.eql(200);
+            expect(response).to.have.property('code', 200);
         });
     });
 
@@ -223,25 +235,31 @@ describe('digest auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent only one request', function () {
-            expect(testrun.io.callCount).to.be(1);
-            expect(testrun.request.callCount).to.be(1);
+        it('should have sent only one request', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 1,
+                'request.callCount': 1
+            });
 
             var err = testrun.io.firstCall.args[0],
                 request = testrun.io.firstCall.args[4],
                 response = testrun.io.firstCall.args[3];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
-            expect(response.code).to.eql(401);
+            expect(response).to.have.property('code', 401);
         });
     });
 
@@ -282,27 +300,33 @@ describe('digest auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have tried twice', function () {
-            expect(testrun.io.callCount).to.be(2);
-            expect(testrun.request.callCount).to.be(2);
+        it('should have tried twice', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
                 firstResponse = testrun.io.firstCall.args[3],
                 secondResponse = testrun.io.secondCall.args[3];
 
-            expect(firstError).to.be(null);
-            expect(secondError).to.be(null);
-            expect(firstResponse.code).to.eql(401);
-            expect(secondResponse.code).to.eql(401);
+            expect(firstError).to.be.null;
+            expect(secondError).to.be.null;
+            expect(firstResponse).to.have.property('code', 401);
+            expect(secondResponse).to.have.property('code', 401);
         });
     });
 
@@ -348,23 +372,29 @@ describe('digest auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must try only once', function () {
-            expect(testrun.io.callCount).to.be(1);
-            expect(testrun.request.callCount).to.be(1);
+        it('should try only once', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 1,
+                'request.callCount': 1
+            });
 
             var firstError = testrun.io.firstCall.args[0],
                 firstResponse = testrun.io.firstCall.args[3];
 
-            expect(firstError).to.be(null);
-            expect(firstResponse.code).to.eql(401);
+            expect(firstError).to.be.null;
+            expect(firstResponse).to.have.property('code', 401);
         });
     });
 
@@ -405,46 +435,52 @@ describe('digest auth', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent two requests internally', function () {
-            expect(testrun.io.callCount).to.be(2);
-            expect(testrun.request.callCount).to.be(2);
+        it('should have sent two requests internally', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
                 firstResponse = testrun.io.firstCall.args[3],
                 secondResponse = testrun.io.secondCall.args[3];
 
-            expect(firstError).to.be(null);
-            expect(secondError).to.be(null);
-            expect(firstResponse.code).to.eql(401);
-            expect(secondResponse.code).to.eql(200);
+            expect(firstError).to.be.null;
+            expect(secondError).to.be.null;
+            expect(firstResponse).to.have.property('code', 401);
+            expect(secondResponse).to.have.property('code', 200);
         });
 
-        it('must have failed the digest authorization in first attempt', function () {
+        it('should have failed the digest authorization in first attempt', function () {
             var response = testrun.request.getCall(0).args[2];
 
-            expect(response.code).to.eql(401);
+            expect(response).to.have.property('code', 401);
         });
 
-        it('must have passed the digest authorization in second attempt', function () {
+        it('should have passed the digest authorization in second attempt', function () {
             var response = testrun.request.getCall(1).args[2];
 
-            expect(response.code).to.eql(200);
+            expect(response).to.have.property('code', 200);
         });
 
-        it('must have taken the qop value from the server\'s response', function () {
+        it('should have taken the qop value from the server\'s response', function () {
             var request = testrun.request.getCall(1).args[3],
                 authHeader = request.headers.get('authorization');
 
-            expect(authHeader.match(/qop=auth-int/)).to.be.ok();
+            expect(authHeader).to.match(/qop=auth-int/);
         });
     });
 });

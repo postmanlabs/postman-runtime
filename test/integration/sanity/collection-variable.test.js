@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('Collection Variables', function() {
     var testrun;
 
@@ -53,36 +55,42 @@ describe('Collection Variables', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
+    it('should have run the test script successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'test.calledOnce': true
+        });
+        expect(testrun.test.getCall(0).args[0]).to.be.null;
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 
-    it('must be resolved in request URL', function() {
+    it('should be resolved in request URL', function() {
         var url = testrun.request.getCall(0).args[3].url.toString();
 
-        expect(url).to.be('https://postman-echo.com/basic-auth');
+        expect(url).to.equal('https://postman-echo.com/basic-auth');
     });
 
-    it('must be resolved in request auth', function() {
+    it('should be resolved in request auth', function() {
         var request = testrun.response.getCall(0).args[3],
             response = testrun.response.getCall(0).args[2],
             auth = request.auth.parameters().toObject();
 
-        expect(auth).to.have.property('username', 'postman');
-        expect(auth).to.have.property('password', 'password');
-        expect(response.code).to.be(200);
+        expect(auth).to.deep.include({
+            username: 'postman',
+            password: 'password'
+        });
+        expect(response).to.have.property('code', 200);
     });
 
-    it('must be resolved in test and prerequest scripts', function() {
+    it('should be resolved in test and prerequest scripts', function() {
         var testConsoleArgs = testrun.console.getCall(1).args.slice(2),
             prConsoleArgs = testrun.console.getCall(0).args.slice(2),
             variables = {
@@ -93,9 +101,7 @@ describe('Collection Variables', function() {
                 'pass': 'password'
             };
 
-        expect(prConsoleArgs[0]).to.be('test');
-        expect(prConsoleArgs[1]).to.eql(variables);
-        expect(testConsoleArgs[0]).to.be('test');
-        expect(testConsoleArgs[1]).to.eql(variables);
+        expect(prConsoleArgs).to.deep.include.members(['test', variables]);
+        expect(testConsoleArgs).to.deep.include.members(['test', variables]);
     });
 });

@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('synchronous script timeouts', function () {
     describe('not breached', function () {
         var testrun;
@@ -30,17 +32,22 @@ describe('synchronous script timeouts', function () {
         });
 
         it('should have completed the run', function () {
-            expect(testrun).to.be.ok();
-            expect(testrun.done.callCount).to.be(1);
-            expect(testrun.done.firstCall.args[0]).to.not.be.ok();
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun).to.be.ok;
+            expect(testrun.done.firstCall.args[0]).to.not.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1,
+                'start.callCount': 1
+            });
         });
 
         it('should handle script timeouts correctly', function () {
-            expect(testrun).to.be.ok();
-            expect(testrun.prerequest.callCount).to.be(1);
-            expect(testrun.prerequest.firstCall.args[0]).to.be(null);
-            expect(testrun.prerequest.firstCall.args[2][0]).to.not.have.property('error');
+            expect(testrun).to.be.ok;
+            expect(testrun).to.have.property('prerequest').that.nested.include({
+                callCount: 1,
+                'firstCall.args[0]': null
+            });
+            expect(testrun).to.have.nested.property('prerequest.firstCall.args[2][0]')
+                .that.does.not.have.property('error');
         });
     });
 
@@ -75,17 +82,21 @@ describe('synchronous script timeouts', function () {
         });
 
         it('should completed the run', function () {
-            expect(testrun).to.be.ok();
-            expect(testrun.done.callCount).to.be(1);
-            expect(testrun.done.firstCall.args[0]).to.not.be.ok();
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun).to.be.ok;
+            expect(testrun.done.firstCall.args[0]).to.not.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1,
+                'start.callCount': 1
+            });
         });
 
         it('should handle script timeouts correctly', function () {
-            expect(testrun).to.be.ok();
-            expect(testrun.prerequest.callCount).to.be(1);
-            expect(testrun.prerequest.firstCall.args[0]).to.be(null);
-            expect(testrun.prerequest.firstCall.args[2][0]).to.not.have.property('error');
+            expect(testrun).to.be.ok;
+            expect(testrun).to.have.property('prerequest').that.nested.include({
+                callCount: 1,
+                'firstCall.args[0]': null
+            });
+            expect(testrun).to.have.nested.property('prerequest.firstCall.args[2][0]').that.not.have.property('error');
         });
     });
 
@@ -121,30 +132,32 @@ describe('synchronous script timeouts', function () {
             });
 
             it('should completed the run', function () {
-                expect(testrun).to.be.ok();
+                expect(testrun).to.be.ok;
                 // expect(testrun.done.callCount).to.be(1); // @todo this is coming 2
-                expect(testrun.start.callCount).to.be(1);
+                expect(testrun).to.nested.include({
+                    'start.callCount': 1
+                });
 
                 // @todo global timeout sets up two setTimeouts(timeback & sandbox) and,
                 // due to sync script its not predictable which timeout callback will be executed first.
                 var err = testrun.done.firstCall.args[0],
                     knownErrMsg = ['Script execution timed out.', 'callback timed out'];
 
-                expect(err).to.be.ok();
+                expect(err).to.be.ok;
                 expect(err).to.have.property('message');
-                expect(knownErrMsg).to.contain(err.message);
+                expect(knownErrMsg).to.include(err.message);
             });
 
             // @todo ensure prerequest callback is called on timeout
             it.skip('should handle script timeouts correctly', function (done) {
                 // @todo done callback is called before the actual script execution timeout
                 setTimeout(function () {
-                    expect(testrun).to.be.ok();
-                    expect(testrun.prerequest.callCount).to.be(1);
-
-                    expect(testrun.prerequest.firstCall.args[0]).to.be(null);
-                    expect(testrun.prerequest.firstCall.args[2][0].error).to.have.property('message',
-                        'sandbox: synchronous script execution timeout');
+                    expect(testrun).to.be.ok;
+                    expect(testrun).to.have.property('prerequest').that.nested.include({
+                        callCount: 1,
+                        'firstCall.args[0]': null,
+                        'firstCall.args[2][0].error.message': 'sandbox: synchronous script execution timeout'
+                    });
                     done();
                 }, 3000);
             });
@@ -181,21 +194,23 @@ describe('synchronous script timeouts', function () {
             });
 
             it('should completed the run', function () {
-                expect(testrun).to.be.ok();
-                expect(testrun.done.callCount).to.be(1);
-                expect(testrun.start.callCount).to.be(1);
-                expect(testrun.done.firstCall.args[0]).to.have.property('message', 'Script execution timed out.');
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.callCount': 1,
+                    'start.callCount': 1,
+                    'done.firstCall.args[0].message': 'Script execution timed out.'
+                });
             });
 
             it('should handle script timeouts correctly', function (done) {
                 // @todo done callback is called before the actual script execution timeout
                 setTimeout(function () {
-                    expect(testrun).to.be.ok();
-                    expect(testrun.prerequest.callCount).to.be(1);
-
-                    expect(testrun.prerequest.firstCall.args[0]).to.be(null);
-                    expect(testrun.prerequest.firstCall.args[2][0].error).to.have.property('message',
-                        'sandbox: synchronous script execution timeout');
+                    expect(testrun).to.be.ok;
+                    expect(testrun).to.have.property('prerequest').that.nested.include({
+                        callCount: 1,
+                        'firstCall.args[0]': null,
+                        'firstCall.args[2][0].error.message': 'sandbox: synchronous script execution timeout'
+                    });
                     done();
                 }, 3000);
             });

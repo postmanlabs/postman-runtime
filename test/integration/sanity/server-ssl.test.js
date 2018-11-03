@@ -1,6 +1,7 @@
+var expect = require('chai').expect;
+
 describe('SSL', function () {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function (done) {
         this.run({
@@ -18,15 +19,17 @@ describe('SSL', function () {
         });
     });
 
-    it('must handle server side SSL errors correctly correctly', function () {
-        expect(testrun).be.ok();
-        expect(_.get(testrun.request.getCall(0).args, '0.code')).to.be('CERT_HAS_EXPIRED');
+    it('should handle server side SSL errors correctly correctly', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.request.getCall(0)).to.have.nested.property('args[0].code', 'CERT_HAS_EXPIRED');
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

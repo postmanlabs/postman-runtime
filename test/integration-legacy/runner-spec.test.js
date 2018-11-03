@@ -1,9 +1,8 @@
 var _ = require('lodash'),
-    expect = require('expect.js'),
+    expect = require('chai').expect,
     runtime = require('../../index'),
     sdk = require('postman-collection');
 
-/* global describe, it */
 describe('Runner', function () {
     describe('Set Next Request', function () {
         it('should be able to jump to the middle of a collection', function (mochaDone) {
@@ -119,19 +118,21 @@ describe('Runner', function () {
             }, function (err, run) {
                 var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
-                expect(err).to.be(null);
+                expect(err).to.be.null;
                 run.start({
                     start: function (err, cursor) {
                         check(function () {
-                            expect(err).to.be(null);
-                            expect(cursor).to.have.property('position', 0);
-                            expect(cursor).to.have.property('iteration', 0);
-                            expect(cursor).to.have.property('length', 3);
-                            expect(cursor).to.have.property('cycles', 2);
-                            expect(cursor).to.have.property('eof', false);
-                            expect(cursor).to.have.property('empty', false);
-                            expect(cursor).to.have.property('bof', true);
-                            expect(cursor).to.have.property('cr', false);
+                            expect(err).to.be.null;
+                            expect(cursor).to.deep.include({
+                                position: 0,
+                                iteration: 0,
+                                length: 3,
+                                cycles: 2,
+                                eof: false,
+                                empty: false,
+                                bof: true,
+                                cr: false
+                            });
                             expect(cursor).to.have.property('ref');
 
                             // Set this to true, and verify at the end, so that the test will fail even if this
@@ -141,7 +142,7 @@ describe('Runner', function () {
                     },
                     beforeIteration: function (err, cursor) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             testables.iterationsStarted.push(cursor.iteration);
                             runStore.iteration = cursor.iteration;
@@ -149,15 +150,15 @@ describe('Runner', function () {
                     },
                     iteration: function (err, cursor) {
                         check(function () {
-                            expect(err).to.be(null);
-                            expect(cursor.iteration).to.eql(runStore.iteration);
+                            expect(err).to.be.null;
+                            expect(cursor).to.have.property('iteration', runStore.iteration);
 
                             testables.iterationsComplete.push(cursor.iteration);
                         });
                     },
                     beforeItem: function (err, cursor, item) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             testables.itemsStarted[cursor.iteration] = testables.itemsStarted[cursor.iteration] || [];
                             testables.itemsStarted[cursor.iteration].push(item);
@@ -167,9 +168,11 @@ describe('Runner', function () {
                     },
                     item: function (err, cursor, item) {
                         check(function () {
-                            expect(err).to.be(null);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(err).to.be.null;
+                            expect(cursor).to.deep.include({
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
                             testables.itemsComplete[cursor.iteration] = testables.itemsComplete[cursor.iteration] || [];
                             testables.itemsComplete[cursor.iteration].push(item);
@@ -177,99 +180,115 @@ describe('Runner', function () {
                     },
                     beforePrerequest: function (err, cursor, events) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
-                            expect(events.length).to.be(0);
+                            expect(events).to.be.empty;
                         });
                     },
                     prerequest: function (err, cursor, results) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
                             // This collection has no pre-request scripts
-                            expect(results.length).to.be(0);
+                            expect(results).to.be.empty;
                         });
                     },
                     beforeTest: function (err, cursor, events) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
                             // This collection has no pre-request scripts
-                            expect(events.length).to.be(1);
+                            expect(events).to.have.lengthOf(1);
                         });
                     },
                     test: function (err, cursor, results) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
                             // This collection has no pre-request scripts
-                            expect(results.length).to.be(1);
+                            expect(results).to.have.lengthOf(1);
 
                             var result = results[0],
                                 scriptResult = results[0];
-                            expect(result.error).to.be(undefined);
+                            expect(result.error).to.be.undefined;
 
-                            expect(scriptResult.result.target).to.eql('test');
+                            expect(scriptResult).to.deep.nested.include({
+                                'result.target': 'test'
+                            });
                         });
                     },
                     beforeRequest: function (err, cursor) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
                         });
                     },
                     request: function (err, cursor, response, request) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
-                            expect(request.url.toString()).to.be.ok();
+                            expect(request.url.toString()).to.be.ok;
 
                             // Sanity
-                            expect(cursor.iteration).to.eql(runStore.iteration);
-                            expect(cursor.position).to.eql(runStore.position);
-                            expect(cursor.ref).to.eql(runStore.ref);
+                            expect(cursor).to.deep.include({
+                                iteration: runStore.iteration,
+                                position: runStore.position,
+                                ref: runStore.ref
+                            });
 
-                            expect(response.code).to.be(200);
-                            expect(response.status).to.be('OK');
-                            expect(request).to.be.ok();
+                            expect(response).to.have.property('code', 200);
+                            expect(response).to.have.property('status', 'OK');
+                            expect(request).to.be.ok;
                         });
                     },
                     done: function (err) {
                         check(function () {
-                            expect(err).to.be(null);
+                            expect(err).to.be.null;
 
-                            expect(testables.started).to.be(true);
+                            expect(testables).to.have.property('started', true);
 
                             // Ensure that we ran (and completed two iterations)
-                            expect(testables.iterationsStarted).to.eql([0, 1]);
-                            expect(testables.iterationsComplete).to.eql([0, 1]);
+                            expect(testables).to.deep.include({
+                                iterationsStarted: [0, 1],
+                                iterationsComplete: [0, 1]
+                            });
 
-                            expect(testables.itemsStarted[0].length).to.be(4);
-                            expect(testables.itemsComplete[0].length).to.be(4);
+                            expect(testables.itemsStarted[0]).to.have.lengthOf(4);
+                            expect(testables.itemsComplete[0]).to.have.lengthOf(4);
                             expect(_.map(testables.itemsStarted[0], 'name')).to.eql([
                                 'post', 'method', 'html', 'method'
                             ]);
@@ -277,8 +296,8 @@ describe('Runner', function () {
                                 'post', 'method', 'html', 'method'
                             ]);
 
-                            expect(testables.itemsStarted[1].length).to.be(4);
-                            expect(testables.itemsComplete[1].length).to.be(4);
+                            expect(testables.itemsStarted[1]).to.have.lengthOf(4);
+                            expect(testables.itemsComplete[1]).to.have.lengthOf(4);
                             expect(_.map(testables.itemsStarted[1], 'name')).to.eql([
                                 'post', 'method', 'html', 'method'
                             ]);
@@ -287,8 +306,10 @@ describe('Runner', function () {
                             ]);
 
                             // Expect the end position to be correct
-                            expect(runStore.iteration).to.be(1);
-                            expect(runStore.position).to.be(2);
+                            expect(runStore).to.deep.include({
+                                iteration: 1,
+                                position: 2
+                            });
                             !errored && mochaDone();
                         });
                     }

@@ -1,5 +1,6 @@
 var fs = require('fs'),
     net = require('net'),
+    expect = require('chai').expect,
     sinon = require('sinon');
 
 describe('http methods', function () {
@@ -45,7 +46,7 @@ describe('http methods', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -65,7 +66,7 @@ describe('http methods', function () {
             expect(request).to.have.property('method', 'GET');
 
             // method received at server
-            expect(response).to.contain('GET / HTTP/1.1');
+            expect(response).to.include('GET / HTTP/1.1');
         });
     });
 
@@ -87,7 +88,7 @@ describe('http methods', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -107,7 +108,7 @@ describe('http methods', function () {
             expect(request).to.have.property('method', 'POSTMAN');
 
             // method received at server
-            expect(response).to.contain('POSTMAN / HTTP/1.1');
+            expect(response).to.include('POSTMAN / HTTP/1.1');
         });
 
         describe('with request body', function () {
@@ -133,7 +134,7 @@ describe('http methods', function () {
                 });
 
                 it('should complete the run', function () {
-                    expect(testrun).be.ok();
+                    expect(testrun).to.be.ok;
                     sinon.assert.calledOnce(testrun.start);
                     sinon.assert.calledOnce(testrun.done);
                     sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -153,8 +154,8 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.contain('Content-Type: text/plain');
-                    expect(response).to.contain('foo=bar');
+                    expect(response).to.include('Content-Type: text/plain');
+                    expect(response).to.include('foo=bar');
                 });
             });
 
@@ -183,7 +184,7 @@ describe('http methods', function () {
                 });
 
                 it('should complete the run', function () {
-                    expect(testrun).be.ok();
+                    expect(testrun).to.be.ok;
                     sinon.assert.calledOnce(testrun.start);
                     sinon.assert.calledOnce(testrun.done);
                     sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -203,8 +204,8 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.contain('content-type: application/x-www-form-urlencoded');
-                    expect(response).to.contain('foo=bar');
+                    expect(response).to.include('content-type: application/x-www-form-urlencoded');
+                    expect(response).to.include('foo=bar');
                 });
             });
 
@@ -233,7 +234,7 @@ describe('http methods', function () {
                 });
 
                 it('should complete the run', function () {
-                    expect(testrun).be.ok();
+                    expect(testrun).to.be.ok;
                     sinon.assert.calledOnce(testrun.start);
                     sinon.assert.calledOnce(testrun.done);
                     sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -253,8 +254,8 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.contain('content-type: multipart/form-data');
-                    expect(response).to.contain('name="foo"\r\n\r\nbar');
+                    expect(response).to.include('content-type: multipart/form-data');
+                    expect(response).to.include('name="foo"\r\n\r\nbar');
                 });
             });
 
@@ -283,7 +284,7 @@ describe('http methods', function () {
                 });
 
                 it('should complete the run', function () {
-                    expect(testrun).be.ok();
+                    expect(testrun).to.be.ok;
                     sinon.assert.calledOnce(testrun.start);
                     sinon.assert.calledOnce(testrun.done);
                     sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -303,8 +304,8 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.contain('Content-Type: text/plain');
-                    expect(response).to.contain('{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
+                    expect(response).to.include('Content-Type: text/plain');
+                    expect(response).to.include('{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
                 });
             });
         });
@@ -325,7 +326,7 @@ describe('http methods', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -345,7 +346,7 @@ describe('http methods', function () {
             expect(request).to.have.property('method', 'GET');
 
             // method received at server
-            expect(response).to.contain('GET / HTTP/1.1');
+            expect(response).to.include('GET / HTTP/1.1');
         });
     });
 
@@ -367,7 +368,7 @@ describe('http methods', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -387,7 +388,7 @@ describe('http methods', function () {
             expect(request).to.have.property('method', '12345');
 
             // method received at server
-            expect(response).to.contain('12345 / HTTP/1.1');
+            expect(response).to.include('12345 / HTTP/1.1');
         });
     });
 });

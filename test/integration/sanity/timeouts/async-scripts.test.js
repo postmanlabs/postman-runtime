@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('asynchronous script timeouts', function () {
     var testrun;
 
@@ -25,19 +27,23 @@ describe('asynchronous script timeouts', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.calledOnce).be.ok();
-            expect(testrun.done.firstCall.args[0]).to.not.be.ok();
-            expect(testrun.start.calledOnce).be.ok();
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.firstCall.args[0]).to.not.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
         });
 
-        it('must handle script timeouts correctly', function () {
-            expect(testrun).to.be.ok();
-            expect(testrun.prerequest.callCount).to.be(1);
-
-            expect(testrun.prerequest.firstCall.args[0]).to.be(null);
-            expect(testrun.prerequest.firstCall.args[2][0]).to.not.have.property('error');
+        it('should handle script timeouts correctly', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.have.property('prerequest').that.nested.include({
+                callCount: 1,
+                'firstCall.args[0]': null
+            });
+            expect(testrun).to.have.nested.property('prerequest.firstCall.args[2][0]')
+                .that.does.not.have.property('error');
         });
     });
 
@@ -66,20 +72,22 @@ describe('asynchronous script timeouts', function () {
                 });
             });
 
-            it('must have completed the run', function () {
-                expect(testrun).be.ok();
-                expect(testrun.done.calledOnce).be.ok();
-                expect(testrun.done.firstCall.args[0]).to.not.be.ok();
-                expect(testrun.start.calledOnce).be.ok();
+            it('should have completed the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun.done.firstCall.args[0]).to.not.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true
+                });
             });
 
-            it('must handle script timeouts correctly', function () {
-                expect(testrun).to.be.ok();
-                expect(testrun.prerequest.callCount).to.be(1);
-
-                expect(testrun.prerequest.firstCall.args[0]).to.be(null);
-                expect(testrun.prerequest.firstCall.args[2][0].error).to.have.property('message',
-                    'sandbox: asynchronous script execution timeout');
+            it('should handle script timeouts correctly', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.have.property('prerequest').that.nested.include({
+                    callCount: 1,
+                    'firstCall.args[0]': null,
+                    'firstCall.args[2][0].error.message': 'sandbox: asynchronous script execution timeout'
+                });
             });
         });
 
@@ -113,12 +121,14 @@ describe('asynchronous script timeouts', function () {
 
             it('should throw an error because of timeout', function () {
                 // prerequest or any other event which was supposed to be called after, won't be called
-                expect(testrun.prerequest.calledOnce).to.not.be.ok();
-                expect(testrun.done.calledOnce).to.be.ok();
+                expect(testrun).to.nested.include({
+                    'prerequest.calledOnce': false,
+                    'done.calledOnce': true
+                });
 
                 var err = testrun.done.firstCall.args[0];
 
-                expect(err).to.be.ok();
+                expect(err).to.be.ok;
                 expect(err).to.have.property('message', 'callback timed out');
             });
 
@@ -128,7 +138,9 @@ describe('asynchronous script timeouts', function () {
                 setTimeout(function () {
                     var consoleCountsBefore = testrun.console.callCount;
                     setTimeout(function() {
-                        expect(testrun.console.callCount).to.be(consoleCountsBefore);
+                        expect(testrun).to.nested.include({
+                            'console.callCount': consoleCountsBefore
+                        });
                         done();
                     }, 2000);
                 }, 2000);

@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('sandbox test for `undefined` test values', function () {
     var testrun;
 
@@ -30,21 +32,28 @@ describe('sandbox test for `undefined` test values', function () {
         });
     });
 
-    it('must have started and completed the test run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have started and completed the test run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 
-    it('must have run the test script, and replaced `undefined` with `false`', function () {
+    it('should have run the test script, and replaced `undefined` with `false`', function () {
         var assertions = testrun.assertion.getCall(0).args[1];
 
-        expect(assertions[0]).to.have.property('name', 'undefined');
-        // this was set to undefined in the test script, but should be changed to false here.
-        expect(assertions[0]).to.have.property('passed', false);
-        expect(assertions[1]).to.have.property('name', 'true');
-        expect(assertions[1]).to.have.property('passed', true);
-        expect(assertions[2]).to.have.property('name', 'false');
-        expect(assertions[2]).to.have.property('passed', false);
+        expect(assertions[0]).to.deep.include({
+            name: 'undefined',
+            passed: false // this was set to undefined in the test script, but should be changed to false here.
+        });
+        expect(assertions[1]).to.deep.include({
+            name: 'true',
+            passed: true
+        });
+        expect(assertions[2]).to.deep.include({
+            name: 'false',
+            passed: false
+        });
     });
 });

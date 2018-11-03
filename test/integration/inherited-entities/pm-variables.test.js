@@ -1,4 +1,5 @@
-var _ = require('lodash');
+var _ = require('lodash'),
+    expect = require('chai').expect;
 
 describe('pm.variables', function () {
     var testRun,
@@ -75,7 +76,7 @@ describe('pm.variables', function () {
             });
         });
 
-        it('must be honoured in scripts', function () {
+        it('should be honoured in scripts', function () {
             var consoleLogs = testRun.console.getCall(0).args.slice(2)
                 .concat(testRun.console.getCall(1).args.slice(2))
                 .concat(testRun.console.getCall(2).args.slice(2))
@@ -91,18 +92,20 @@ describe('pm.variables', function () {
             });
         });
 
-        it('must be honoured in request URL', function () {
+        it('should be honoured in request URL', function () {
             var url = testRun.request.getCall(0).args[3].url.toString(),
                 expectedParam = 'global-value-1:coll-value-2:env-value-3:data-value-4';
 
-            expect(url).to.be('https://postman-echo.com/get?param=' + expectedParam);
+            expect(url).to.equal('https://postman-echo.com/get?param=' + expectedParam);
         });
 
-        it('must be honoured in auth', function () {
+        it('should be honoured in auth', function () {
             var response = testRun.response.getCall(0).args[2],
                 expectedToken = 'global-value-1:coll-value-2:env-value-3:data-value-4';
 
-            expect(response.json().headers).to.have.property('authorization', 'Bearer ' + expectedToken);
+            expect(response.json()).to.deep.nested.include({
+                'headers.authorization': 'Bearer ' + expectedToken
+            });
         });
     });
 
@@ -202,7 +205,7 @@ describe('pm.variables', function () {
             });
         });
 
-        it('must persist any changes accross scripts', function () {
+        it('should persist any changes accross scripts', function () {
             var collPreConsole = testRun.console.getCall(0).args.slice(2),
                 itemPreConsole = testRun.console.getCall(1).args.slice(2),
                 collTestConsole = testRun.console.getCall(2).args.slice(2),
@@ -210,63 +213,77 @@ describe('pm.variables', function () {
                 item2PreConsole = testRun.console.getCall(5).args.slice(2),
                 item2TestConsole = testRun.console.getCall(7).args.slice(2);
 
-            expect(collPreConsole[0]).to.be('collection pre');
-            expect(collPreConsole[1]).to.eql({
-                'key-1': 'modified-1',
-                'key-2': 'modified-1',
-                'key-3': 'env-value-3',
-                'key-4': 'data-value-4'
-            });
+            expect(collPreConsole).to.deep.include.ordered.members([
+                'collection pre',
+                {
+                    'key-1': 'modified-1',
+                    'key-2': 'modified-1',
+                    'key-3': 'env-value-3',
+                    'key-4': 'data-value-4'
+                }
+            ]);
 
-            expect(itemPreConsole[0]).to.be('item 1 pre');
-            expect(itemPreConsole[1]).to.eql({
-                'key-1': 'modified-1',
-                'key-2': 'modified-2',
-                'key-3': 'modified-2',
-                'key-4': 'data-value-4'
-            });
+            expect(itemPreConsole).to.deep.include.ordered.members([
+                'item 1 pre',
+                {
+                    'key-1': 'modified-1',
+                    'key-2': 'modified-2',
+                    'key-3': 'modified-2',
+                    'key-4': 'data-value-4'
+                }
+            ]);
 
-            expect(collTestConsole[0]).to.be('collection test');
-            expect(collTestConsole[1]).to.eql({
-                'key-1': 'modified-1',
-                'key-2': 'modified-2',
-                'key-3': 'modified-3',
-                'key-4': 'modified-3'
-            });
+            expect(collTestConsole).to.deep.include.ordered.members([
+                'collection test',
+                {
+                    'key-1': 'modified-1',
+                    'key-2': 'modified-2',
+                    'key-3': 'modified-3',
+                    'key-4': 'modified-3'
+                }
+            ]);
 
-            expect(itemTestConsole[0]).to.be('item 1 test');
-            expect(itemTestConsole[1]).to.eql({
-                'key-1': 'modified-1',
-                'key-2': 'modified-2',
-                'key-3': 'modified-3',
-                'key-4': 'modified-4'
-            });
+            expect(itemTestConsole).to.deep.include.ordered.members([
+                'item 1 test',
+                {
+                    'key-1': 'modified-1',
+                    'key-2': 'modified-2',
+                    'key-3': 'modified-3',
+                    'key-4': 'modified-4'
+                }
+            ]);
 
-            expect(item2PreConsole[0]).to.be('item 2 pre');
-            expect(item2PreConsole[1]).to.eql({
-                'key-1': 'modified-1',
-                'key-2': 'modified-1',
-                'key-3': 'modified-3',
-                'key-4': 'modified-4'
-            });
+            expect(item2PreConsole).to.deep.include.ordered.members([
+                'item 2 pre',
+                {
+                    'key-1': 'modified-1',
+                    'key-2': 'modified-1',
+                    'key-3': 'modified-3',
+                    'key-4': 'modified-4'
+                }
+            ]);
 
-            expect(item2TestConsole[0]).to.be('item 2 test');
-            expect(item2TestConsole[1]).to.eql({
-                'key-1': 'modified-1',
-                'key-2': 'modified-1',
-                'key-3': 'modified-3',
-                'key-4': 'modified-3'
-            });
+            expect(item2TestConsole).to.deep.include.ordered.members([
+                'item 2 test',
+                {
+                    'key-1': 'modified-1',
+                    'key-2': 'modified-1',
+                    'key-3': 'modified-3',
+                    'key-4': 'modified-3'
+                }
+            ]);
         });
 
-        it('must must not update global, environment or collection variables', function () {
+        it('should must not update global, environment or collection variables', function () {
             // collect the 2 prerequest events and 2 test events in one array. Same assertions will be applied
             var events = testRun.test.getCall(0).args[2].concat(testRun.prerequest.getCall(0).args[2]);
 
-            expect(events).to.have.length(4);
+            expect(events).to.have.lengthOf(4);
             events.forEach(function(event) {
-                expect(event.result.data).to.eql({
-                    'key-4': 'data-value-4'
+                expect(event).to.deep.nested.include({
+                    'result.data': {
+                        'key-4': 'data-value-4'
+                    }
                 });
                 expect(event.result.environment.toObject()).to.eql({
                     'key-3': 'env-value-3',
@@ -283,36 +300,42 @@ describe('pm.variables', function () {
             });
         });
 
-        it('must be resolved in request URL', function() {
+        it('should be resolved in request URL', function() {
             var url1 = testRun.request.getCall(0).args[3].url.toString(),
                 url2 = testRun.request.getCall(1).args[3].url.toString(),
                 expectedToken1 = 'modified-1:modified-2:modified-2:data-value-4',
                 expectedToken2 = 'modified-1:modified-1:modified-3:modified-4';
 
-            expect(url1).to.be('https://postman-echo.com/get?param=' + expectedToken1);
-            expect(url2).to.be('https://postman-echo.com/get?param=' + expectedToken2);
+            expect(url1).to.equal('https://postman-echo.com/get?param=' + expectedToken1);
+            expect(url2).to.equal('https://postman-echo.com/get?param=' + expectedToken2);
         });
 
-        it('must be resolved in request auth', function() {
+        it('should be resolved in request auth', function() {
             var response1 = testRun.response.getCall(0).args[2],
                 response2 = testRun.response.getCall(1).args[2],
                 expectedToken1 = 'modified-1:modified-2:modified-2:data-value-4',
                 expectedToken2 = 'modified-1:modified-1:modified-3:modified-4';
 
-            expect(response1.json().headers).to.have.property('authorization', 'Bearer ' + expectedToken1);
-            expect(response2.json().headers).to.have.property('authorization', 'Bearer ' + expectedToken2);
+            expect(response1.json()).to.deep.nested.include({
+                'headers.authorization': 'Bearer ' + expectedToken1
+            });
+            expect(response2.json()).to.deep.nested.include({
+                'headers.authorization': 'Bearer ' + expectedToken2
+            });
         });
 
-        it('must be able to unset variables', function () {
+        it('should be able to unset variables', function () {
             var item2TestConsoleAfter = testRun.console.getCall(8).args.slice(2);
 
-            expect(item2TestConsoleAfter[0]).to.be('item 2 test after unsetting');
-            expect(item2TestConsoleAfter[1]).to.eql({
-                'key-1': 'global-value-1',
-                'key-2': 'coll-value-2',
-                'key-3': 'env-value-3',
-                'key-4': 'data-value-4'
-            });
+            expect(item2TestConsoleAfter).to.deep.include.ordered.members([
+                'item 2 test after unsetting',
+                {
+                    'key-1': 'global-value-1',
+                    'key-2': 'coll-value-2',
+                    'key-3': 'env-value-3',
+                    'key-4': 'data-value-4'
+                }
+            ]);
         });
     });
 });

@@ -1,9 +1,9 @@
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('cursor resolution', function () {
     var Run = require('../../lib/runner/run.js');
 
-    it('must resolve to the item specified', function () {
+    it('should resolve to the item specified', function () {
         var run = new Run({
             items: [{id: 'one'}, {id: 'two'}, {id: 'three'}]
         });
@@ -15,21 +15,21 @@ describe('cursor resolution', function () {
         });
     });
 
-    it('must return undefined for an item not found', function () {
+    it('should return undefined for an item not found', function () {
         var run = new Run({
             items: [{id: 'one'}, {id: 'two'}, {id: 'three'}]
         });
 
         expect(run.resolveCursor({
             position: 12
-        })).to.not.be.ok();
+        })).to.be.undefined;
     });
 
-    it('must return undefined for a missing cursor', function () {
+    it('should return undefined for a missing cursor', function () {
         var run = new Run({
             items: [{id: 'one'}, {id: 'two'}, {id: 'three'}]
         });
 
-        expect(run.resolveCursor()).to.not.be.ok();
+        expect(run.resolveCursor()).to.be.undefined;
     });
 });

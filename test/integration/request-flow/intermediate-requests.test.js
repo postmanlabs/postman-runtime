@@ -1,5 +1,6 @@
 var sinon = require('sinon'),
-    AuthLoader = require('../../../lib/authorizer/index').AuthLoader;
+    AuthLoader = require('../../../lib/authorizer').AuthLoader,
+    expect = require('chai').expect;
 
 describe('intermediate requests from auth', function () {
     var runOptions = {
@@ -58,47 +59,57 @@ describe('intermediate requests from auth', function () {
             AuthLoader.removeHandler('fake');
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent two requests in total', function () {
-            expect(testrun.request.callCount).to.be(2);
-            expect(testrun.io.callCount).to.be(2);
+        it('should have sent two requests in total', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
         });
 
-        it('must have sent the original request', function () {
+        it('should have sent the original request', function () {
             var err = testrun.response.firstCall.args[0],
                 cursor = testrun.response.firstCall.args[1],
                 request = testrun.response.firstCall.args[3];
 
-            expect(err).to.be(null);
-            expect(cursor).to.have.keys('ref', 'httpRequestId');
+            expect(err).to.be.null;
+            expect(cursor).to.include.keys(['ref', 'httpRequestId']);
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
-        it('must have sent the intermediate request', function () {
+        it('should have sent the intermediate request', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be(null);
-            expect(request.url.toString()).to.be('https://postman-echo.com/get');
+            expect(err).to.be.null;
+            expect(request.url.toString()).to.equal('https://postman-echo.com/get');
         });
 
-        it('must have the right trace', function () {
-            expect(testrun.io.firstCall.args[2]).to.have.property('source', 'fake.auth');
-            expect(testrun.io.secondCall.args[2]).to.have.property('source', 'collection');
+        it('should have the right trace', function () {
+            expect(testrun).to.have.property('io').that.nested.include({
+                'firstCall.args[2].source': 'fake.auth',
+                'secondCall.args[2].source': 'collection'
+            });
         });
 
-        it('must have followed auth control flow', function () {
-            expect(handlerSpies.pre.callCount).to.be(2);
-            expect(handlerSpies.init.callCount).to.be(1);
-            expect(handlerSpies.sign.callCount).to.be(1);
-            expect(handlerSpies.post.callCount).to.be(1);
+        it('should have followed auth control flow', function () {
+            expect(handlerSpies).to.nested.include({
+                'pre.callCount': 2,
+                'init.callCount': 1,
+                'sign.callCount': 1,
+                'post.callCount': 1
+            });
         });
     });
 
@@ -140,42 +151,50 @@ describe('intermediate requests from auth', function () {
             AuthLoader.removeHandler('fake');
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent two requests in total', function () {
-            expect(testrun.request.callCount).to.be(2);
-            expect(testrun.io.callCount).to.be(2);
+        it('should have sent two requests in total', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
         });
 
-        it('must have sent the original request', function () {
+        it('should have sent the original request', function () {
             var err = testrun.response.firstCall.args[0],
                 request = testrun.response.firstCall.args[3];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
-        it('must have sent the intermediate request', function () {
+        it('should have sent the intermediate request', function () {
             var err = testrun.request.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(request.url.toString()).to.eql('https://postman-echo.com/get');
             // @todo: add trace to cursor and enable this test
-            // expect(cursor.trace.source).to.be('fake.auth');
+            // expect(cursor.trace.source).to.equal('fake.auth');
         });
 
-        it('must have followed auth control flow', function () {
-            expect(handlerSpies.pre.callCount).to.be(2);
-            expect(handlerSpies.init.callCount).to.be(1);
-            expect(handlerSpies.sign.callCount).to.be(1);
-            expect(handlerSpies.post.callCount).to.be(1);
+        it('should have followed auth control flow', function () {
+            expect(handlerSpies).to.nested.include({
+                'pre.callCount': 2,
+                'init.callCount': 1,
+                'sign.callCount': 1,
+                'post.callCount': 1
+            });
         });
     });
 
@@ -217,28 +236,34 @@ describe('intermediate requests from auth', function () {
             AuthLoader.removeHandler('fake');
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent two requests in total', function () {
-            expect(testrun.request.callCount).to.be(2);
-            expect(testrun.io.callCount).to.be(2);
+        it('should have sent two requests in total', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
         });
 
-        it('must have sent the original request', function () {
+        it('should have sent the original request', function () {
             var err = testrun.response.firstCall.args[0],
                 request = testrun.response.firstCall.args[3];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
-        it('must have sent the intermediate request, and passed error', function () {
+        it('should have sent the intermediate request, and passed error', function () {
             var err = testrun.request.firstCall.args[0],
                 ioErr = testrun.io.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
@@ -248,11 +273,13 @@ describe('intermediate requests from auth', function () {
             expect(request.url.toString()).to.eql('https://bla/blabla');
         });
 
-        it('must have followed auth control flow', function () {
-            expect(handlerSpies.pre.callCount).to.be(1);
-            expect(handlerSpies.init.callCount).to.be(0);
-            expect(handlerSpies.sign.callCount).to.be(0);
-            expect(handlerSpies.post.callCount).to.be(1);
+        it('should have followed auth control flow', function () {
+            expect(handlerSpies).to.nested.include({
+                'pre.callCount': 1,
+                'init.callCount': 0,
+                'sign.callCount': 0,
+                'post.callCount': 1
+            });
         });
     });
 
@@ -286,29 +313,33 @@ describe('intermediate requests from auth', function () {
             AuthLoader.removeHandler('fake');
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have bubbled with max count error', function () {
+        it('should have bubbled with max count error', function () {
             var err = testrun.console.lastCall.args[2];
 
-            expect(err).to.contain('runtime: maximum intermediate request limit exceeded');
+            expect(err).to.include('runtime: maximum intermediate request limit exceeded');
         });
 
-        it('must complete the request with the last response', function () {
+        it('should complete the request with the last response', function () {
             var reqErr = testrun.request.lastCall.args[0],
                 resErr = testrun.response.lastCall.args[0],
                 response = testrun.response.lastCall.args[2];
 
-            expect(reqErr).to.be(null);
-            expect(resErr).to.be(null);
-            expect(response.code).to.be(401);
-            expect(response.text()).to.contain('Unauthorized');
+            expect(reqErr).to.be.null;
+            expect(resErr).to.be.null;
+            expect(response).to.have.property('code', 401);
+            expect(response.text()).to.include('Unauthorized');
         });
     });
 });

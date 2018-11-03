@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('bearer token', function () {
     var testrun,
         TOKEN = 'abcd1234',
@@ -33,21 +35,28 @@ describe('bearer token', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent the request once', function () {
-            expect(testrun.request.callCount).to.be(1);
+        it('should have sent the request once', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
 
             var response = testrun.request.firstCall.args[2];
 
-            expect(response.json()).to.have.property('headers');
-            expect(response.json().headers).to.have.property('authorization', 'Bearer ' + TOKEN);
+            expect(response.json()).to.nested.include({
+                'headers.authorization': 'Bearer ' + TOKEN
+            });
         });
     });
 

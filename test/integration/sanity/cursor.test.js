@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 // @todo: Move httpRequestId test and other cursor tests in this spec
 describe('cursor', function () {
     var testrun;
@@ -25,7 +27,7 @@ describe('cursor', function () {
                                 exec: [
                                     'console.log("hello");',
                                     'pm.test("just another test, nothing special", function () {',
-                                    '    pm.expect(true).to.ok;',
+                                    '    pm.expect(true).to.be.ok;',
                                     '});'
                                 ]
                             }
@@ -44,7 +46,7 @@ describe('cursor', function () {
                                 id: 'my-test-script-4',
                                 type: 'text/javascript',
                                 exec: [
-                                    'pm.sendRequest("http://postman-echo.com", function () {})'
+                                    'pm.sendRequest("https://postman-echo.com", function () {})'
                                 ]
                             }
                         }, {
@@ -60,7 +62,7 @@ describe('cursor', function () {
                                 ]
                             }
                         }],
-                        request: 'http://postman-echo.com/get?foo=bar'
+                        request: 'https://postman-echo.com/get?foo=bar'
                     }]
                 }
             }, function (err, results) {
@@ -69,73 +71,101 @@ describe('cursor', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1,
+                'start.callCount': 1
+            });
         });
 
-        it('must have scriptId and eventId in script events', function () {
-            expect(testrun.beforeScript.callCount).to.be(5);
+        it('should have scriptId and eventId in script events', function () {
+            expect(testrun).to.nested.include({
+                'beforeScript.callCount': 5
+            });
 
             // check for uniqueness
-            expect(testrun.beforeScript.firstCall.args[1]).to.have.property('eventId', 'my-test-event-1');
-            expect(testrun.beforeScript.firstCall.args[1]).to.have.property('scriptId', 'my-test-script-1');
-            expect(testrun.script.secondCall.args[1]).to.have.property('eventId', 'my-test-event-2');
-            expect(testrun.script.secondCall.args[1]).to.have.property('scriptId', 'my-test-script-2');
-            expect(testrun.script.thirdCall.args[1]).to.have.property('eventId', 'my-test-event-3');
-            expect(testrun.script.thirdCall.args[1]).to.have.property('scriptId', 'my-test-script-3');
-            expect(testrun.script.getCall(3).args[1]).to.have.property('eventId', 'my-test-event-4');
-            expect(testrun.script.getCall(3).args[1]).to.have.property('scriptId', 'my-test-script-4');
-            expect(testrun.script.getCall(4).args[1]).to.have.property('eventId', 'my-test-event-5');
-            expect(testrun.script.getCall(4).args[1]).to.have.property('scriptId', 'my-test-script-5');
+            expect(testrun).to.have.nested.property('beforeScript.firstCall.args[1]').that.deep.include({
+                eventId: 'my-test-event-1',
+                scriptId: 'my-test-script-1'
+            });
+            expect(testrun).to.have.nested.property('script.secondCall.args[1]').that.deep.include({
+                eventId: 'my-test-event-2',
+                scriptId: 'my-test-script-2'
+            });
+            expect(testrun).to.have.nested.property('script.thirdCall.args[1]').that.deep.include({
+                eventId: 'my-test-event-3',
+                scriptId: 'my-test-script-3'
+            });
+            expect(testrun.script.getCall(3).args[1]).to.deep.include({
+                eventId: 'my-test-event-4',
+                scriptId: 'my-test-script-4'
+            });
+            expect(testrun.script.getCall(4).args[1]).to.deep.include({
+                eventId: 'my-test-event-5',
+                scriptId: 'my-test-script-5'
+            });
 
             // check for leak
-            expect(testrun.beforeTest.firstCall.args[1]).to.not.have.property('scriptId');
-            expect(testrun.beforeTest.firstCall.args[1]).to.not.have.property('eventId');
-            expect(testrun.test.firstCall.args[1]).to.not.have.property('scriptId');
-            expect(testrun.test.firstCall.args[1]).to.not.have.property('eventId');
+            expect(testrun).to.have.nested.property('beforeTest.firstCall.args[1]')
+                .that.does.not.have.property('scriptId');
+            expect(testrun).to.have.nested.property('beforeTest.firstCall.args[1]')
+                .that.does.not.have.property('eventId');
+            expect(testrun).to.have.nested.property('test.firstCall.args[1]').that.does.not.have.property('scriptId');
+            expect(testrun).to.have.nested.property('test.firstCall.args[1]').that.does.not.have.property('eventId');
         });
 
-        it('must have scriptId and eventId in console statements from scripts', function () {
-            expect(testrun.console.callCount).to.be(2);
-            expect(testrun.console.firstCall.args[2]).to.be('hello from up here');
-            expect(testrun.console.firstCall.args[0]).to.have.property('eventId', 'my-test-event-1');
-            expect(testrun.console.firstCall.args[0]).to.have.property('scriptId', 'my-test-script-1');
-            expect(testrun.console.secondCall.args[2]).to.be('hello');
-            expect(testrun.console.secondCall.args[0]).to.have.property('eventId', 'my-test-event-2');
-            expect(testrun.console.secondCall.args[0]).to.have.property('scriptId', 'my-test-script-2');
+        it('should have scriptId and eventId in console statements from scripts', function () {
+            expect(testrun).to.have.property('console').that.nested.include({
+                callCount: 2,
+                'firstCall.args[2]': 'hello from up here',
+                'firstCall.args[0].eventId': 'my-test-event-1',
+                'firstCall.args[0].scriptId': 'my-test-script-1',
+                'secondCall.args[2]': 'hello',
+                'secondCall.args[0].eventId': 'my-test-event-2',
+                'secondCall.args[0].scriptId': 'my-test-script-2'
+            });
         });
 
-        it('must have scriptId and eventId in assertion events', function () {
-            expect(testrun.assertion.callCount).to.be(1);
-            expect(testrun.assertion.firstCall.args[0]).to.have.property('eventId', 'my-test-event-2');
-            expect(testrun.assertion.firstCall.args[0]).to.have.property('scriptId', 'my-test-script-2');
+        it('should have scriptId and eventId in assertion events', function () {
+            expect(testrun).to.have.property('assertion').that.nested.include({
+                callCount: 1,
+                'firstCall.args[0].eventId': 'my-test-event-2',
+                'firstCall.args[0].scriptId': 'my-test-script-2'
+            });
         });
 
-        it('must have scriptId and eventId in request events for pm.sendRequest', function () {
-            expect(testrun.io.callCount).to.be(2);
-            expect(testrun.io.secondCall.args[1]).to.have.property('eventId', 'my-test-event-4');
-            expect(testrun.io.secondCall.args[1]).to.have.property('scriptId', 'my-test-script-4');
-            expect(testrun.request.secondCall.args[1]).to.have.property('eventId', 'my-test-event-4');
-            expect(testrun.request.secondCall.args[1]).to.have.property('scriptId', 'my-test-script-4');
+        it('should have scriptId and eventId in request events for pm.sendRequest', function () {
+            expect(testrun).to.have.property('io').that.nested.include({
+                callCount: 2,
+                'secondCall.args[1].eventId': 'my-test-event-4',
+                'secondCall.args[1].scriptId': 'my-test-script-4'
+            });
+            expect(testrun).to.have.nested.property('request.secondCall.args[1]').that.deep.include({
+                eventId: 'my-test-event-4',
+                scriptId: 'my-test-script-4'
+            });
         });
 
-        it('must have scriptId and eventId in synchronous errors', function () {
-            expect(testrun.script.thirdCall.args[0]).to.have.property('message', 'error from sync script');
-            expect(testrun.script.thirdCall.args[1]).to.have.property('eventId', 'my-test-event-3');
-            expect(testrun.script.thirdCall.args[1]).to.have.property('scriptId', 'my-test-script-3');
+        it('should have scriptId and eventId in synchronous errors', function () {
+            expect(testrun).to.have.nested.property('script.thirdCall').that.nested.include({
+                'args[0].message': 'error from sync script',
+                'args[1].eventId': 'my-test-event-3',
+                'args[1].scriptId': 'my-test-script-3'
+            });
         });
 
-        it('must have scriptId and eventId in exception callback for errors(sync and async)', function () {
-            expect(testrun.exception.callCount).to.be(2);
-            expect(testrun.exception.firstCall.args[1]).to.have.property('message', 'error from sync script');
-            expect(testrun.exception.firstCall.args[0]).to.have.property('eventId', 'my-test-event-3');
-            expect(testrun.exception.firstCall.args[0]).to.have.property('scriptId', 'my-test-script-3');
-            expect(testrun.exception.secondCall.args[1]).to.have.property('message', 'error from async script');
-            expect(testrun.exception.secondCall.args[0]).to.have.property('eventId', 'my-test-event-5');
-            expect(testrun.exception.secondCall.args[0]).to.have.property('scriptId', 'my-test-script-5');
+        it('should have scriptId and eventId in exception callback for errors(sync and async)', function () {
+            expect(testrun).to.have.property('exception').that.nested.include({
+                callCount: 2,
+                'firstCall.args[1].message': 'error from sync script',
+                'firstCall.args[0].eventId': 'my-test-event-3',
+                'firstCall.args[0].scriptId': 'my-test-script-3',
+                'secondCall.args[1].message': 'error from async script',
+                'secondCall.args[0].eventId': 'my-test-event-5',
+                'secondCall.args[0].scriptId': 'my-test-script-5'
+            });
         });
     });
 });

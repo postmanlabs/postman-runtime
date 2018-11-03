@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('Sugar.js', function() {
     var testrun;
 
@@ -44,11 +46,13 @@ describe('Sugar.js', function() {
         });
     });
 
-    it('must have run the test script successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.test.calledOnce).be.ok();
+    it('should have run the test script successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'test.calledOnce': true
+        });
 
-        expect(testrun.test.getCall(0).args[0]).to.be(null);
+        expect(testrun.test.getCall(0).args[0]).to.be.null;
         expect(testrun.assertion.getCall(0).args[1]).to.eql([
             {error: null, index: 0, passed: true, skipped: false, name: 'Array prototype none'},
             {error: null, index: 1, passed: true, skipped: false, name: 'Array prototype any'},
@@ -80,10 +84,12 @@ describe('Sugar.js', function() {
         ]);
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

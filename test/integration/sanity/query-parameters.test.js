@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('query parameters', function () {
     var testrun;
 
@@ -5,7 +7,7 @@ describe('query parameters', function () {
         this.run({
             collection: {
                 item: [
-                    {request: 'http://postman-echo.com/get?a=обязательный&c=d'}
+                    {request: 'https://postman-echo.com/get?a=обязательный&c=d'}
                 ]
             },
             environment: {
@@ -17,26 +19,32 @@ describe('query parameters', function () {
         });
     });
 
-    it('must have started and completed the test run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have started and completed the test run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 
-    it('must resolve variable and send request', function () {
+    it('should resolve variable and send request', function () {
         var request = testrun.beforeRequest.getCall(0).args[2];
 
-        expect(testrun.beforeRequest.calledOnce).be.ok(); // one request
-        expect(request).be.ok();
-        expect(request.method).be('GET');
+        expect(testrun).to.nested.include({ // one request
+            'beforeRequest.calledOnce': true
+        });
+        expect(request).to.be.ok;
+        expect(request).to.have.property('method', 'GET');
     });
 
-    it('must receive response with the query param sent', function () {
+    it('should receive response with the query param sent', function () {
         var response = testrun.request.getCall(0).args[2];
 
-        expect(testrun.request.calledOnce).be.ok(); // one request
-        expect(response.json()).be.ok();
-        expect(response.json().args).be.ok();
-        expect(response.json().args).have.property('a', 'обязательный');
+        expect(testrun).to.nested.include({ // one request
+            'request.calledOnce': true
+        });
+        expect(response.json()).to.be.ok;
+        expect(response.json().args).to.be.ok;
+        expect(response.json()).to.have.nested.property('args.a', 'обязательный');
     });
 });

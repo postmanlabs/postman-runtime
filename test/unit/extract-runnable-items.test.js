@@ -1,4 +1,4 @@
-var expect = require('expect.js'),
+var expect = require('chai').expect,
     extractRunnableItems = require('../../lib/runner/extract-runnable-items').extractRunnableItems,
     sdk = require('postman-collection'),
     _ = require('lodash');
@@ -54,7 +54,7 @@ describe('extractRunnableItems', function () {
     describe('without entrypoint', function () {
         it('should return all items on collection', function (done) {
             extractRunnableItems(collection, null, function (err, runnableItems, entrypoint) {
-                expect(err).to.be(null);
+                expect(err).to.be.null;
                 expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1', 'F2.R1', 'R1']);
                 expect(entrypoint).to.have.property('name', 'Collection C1');
                 done();
@@ -65,9 +65,9 @@ describe('extractRunnableItems', function () {
     describe('invalid entrypoint', function () {
         it('should handle invalid entry points as string', function (done) {
             extractRunnableItems(collection, 'random', function (err, runnableItems, entrypoint) {
-                expect(err).to.be(null);
+                expect(err).to.be.null;
                 expect(runnableItems).to.eql([]);
-                expect(entrypoint).to.be(undefined);
+                expect(entrypoint).to.be.undefined;
                 done();
             });
         });
@@ -80,8 +80,8 @@ describe('extractRunnableItems', function () {
                     expect(err).to.have.property(
                         'message', 'runtime~extractRunnableItems: Invalid entrypoint lookupStrategy'
                     );
-                    expect(runnableItems).to.be(undefined);
-                    expect(entrypoint).to.be(undefined);
+                    expect(runnableItems).to.be.undefined;
+                    expect(entrypoint).to.be.undefined;
                     done();
                 }
             );
@@ -97,9 +97,9 @@ describe('extractRunnableItems', function () {
                     path: ['random_path']
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(runnableItems).to.eql([]);
-                    expect(entrypoint).to.be(undefined);
+                    expect(entrypoint).to.be.undefined;
                     done();
                 }
             );
@@ -110,7 +110,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'ID6', lookupStrategy: 'path'},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['R1']);
                     expect(entrypoint).to.have.property('name', 'R1');
                     done();
@@ -123,7 +123,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'ID3', lookupStrategy: 'path', path: ['ID1']},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
                     expect(entrypoint).to.have.property('name', 'F1.R1');
                     done();
@@ -136,7 +136,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'ID1', lookupStrategy: 'path'},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
                     expect(entrypoint).to.have.property('name', 'F1');
                     done();
@@ -149,7 +149,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'ID4', lookupStrategy: 'path', path: ['ID1']},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.F1.R1']);
                     expect(entrypoint).to.have.property('name', 'F1.F1');
                     done();
@@ -166,9 +166,9 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'idOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(runnableItems).to.eql([]);
-                    expect(entrypoint).to.be(undefined);
+                    expect(entrypoint).to.be.undefined;
                     done();
                 }
             );
@@ -179,7 +179,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'ID2'},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F2.R1']);
                     expect(entrypoint).to.eql(collection.items.members[1]);
                     done();
@@ -192,7 +192,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'ID2', lookupStrategy: 'idOrName'},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F2.R1']);
                     expect(entrypoint).to.eql(collection.items.members[1]);
                     done();
@@ -205,7 +205,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'ID3', lookupStrategy: 'idOrName'},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(runnableItems).to.have.length(1);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
                     expect(entrypoint).to.have.property('name', 'F1.R1');
@@ -219,7 +219,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'F1', lookupStrategy: 'idOrName'},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
                     expect(entrypoint).to.eql(collection.items.members[0]);
                     done();
@@ -232,7 +232,7 @@ describe('extractRunnableItems', function () {
                 collection,
                 {execute: 'F1.R1', lookupStrategy: 'idOrName'},
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(runnableItems).to.have.length(1);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
                     expect(entrypoint).to.have.property('name', 'F1.R1');
@@ -248,7 +248,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'idOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(runnableItems).to.have.length(1);
                     expect(_.map(runnableItems, 'id')).to.eql(['ID1']);
                     expect(entrypoint).to.have.property('name', 'R1');
@@ -266,9 +266,9 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(runnableItems).to.eql([]);
-                    expect(entrypoint).to.be(undefined);
+                    expect(entrypoint).to.be.undefined;
                     done();
                 }
             );
@@ -281,9 +281,9 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(runnableItems).to.eql([]);
-                    expect(entrypoint).to.be(undefined);
+                    expect(entrypoint).to.be.undefined;
                     done();
                 }
             );
@@ -296,7 +296,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F2.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -311,7 +311,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1', 'F2.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -326,7 +326,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -341,7 +341,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1', 'R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -356,7 +356,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -371,7 +371,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1', 'F2.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -386,8 +386,8 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(runnableItems).to.have.length(1);
+                    expect(err).to.be.null;
+                    expect(runnableItems).to.have.lengthOf(1);
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -402,7 +402,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F2.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -417,7 +417,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1', 'F2.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -432,7 +432,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1', 'F2.R1', 'R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -447,7 +447,7 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
+                    expect(err).to.be.null;
                     expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
                     expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
@@ -462,8 +462,8 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(runnableItems).to.have.length(1);
+                    expect(err).to.be.null;
+                    expect(runnableItems).to.have.lengthOf(1);
                     expect(_.map(runnableItems, 'id')).to.eql(['ID1']);
                     expect(entrypoint).to.have.property('name', 'Collection C2');
                     done();
@@ -478,8 +478,8 @@ describe('extractRunnableItems', function () {
                     lookupStrategy: 'multipleIdOrName'
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be(null);
-                    expect(runnableItems).to.have.length(1);
+                    expect(err).to.be.null;
+                    expect(runnableItems).to.have.lengthOf(1);
                     expect(_.map(runnableItems, 'id')).to.eql(['ID1']);
                     expect(entrypoint).to.have.property('name', 'Collection C2');
                     done();

@@ -1,4 +1,5 @@
-var dns = require('dns');
+var dns = require('dns'),
+    expect = require('chai').expect;
 
 describe('DNS lookup', function() {
     var testrun;
@@ -33,19 +34,23 @@ describe('DNS lookup', function() {
         });
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 
-    it('must have used the provided hostIpMap for resolving hostname', function() {
-        expect(testrun.response.getCall(0).args[0]).to.be(null);
+    it('should have used the provided hostIpMap for resolving hostname', function() {
+        expect(testrun.response.getCall(0).args[0]).to.be.null;
 
         var response = testrun.response.firstCall.args[2];
 
-        expect(response.code).to.be(200);
-        expect(response.json().args).to.eql({foo: 'bar'});
+        expect(response).to.have.property('code', 200);
+        expect(response.json()).to.deep.include({
+            args: {foo: 'bar'}
+        });
     });
 });

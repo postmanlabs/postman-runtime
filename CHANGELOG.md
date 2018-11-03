@@ -1,5 +1,12 @@
 # Postman Runtime Changelog
 
+#### v7.4.1 (November 4, 2018)
+* #665 Corrected `postman-collection` reference to a precise version: 3.3.0
+* #664 Switched to Travis for Windows builds
+* Updated dependencies
+* #662 Added `.gitattributes` to enforce consistent line endings for `.js` files.
+* Migrated tests to use `chai.expect` assertions
+
 #### v7.4.0 (September 21, 2018)
 * Updated dependencies :arrow_up:
 * #636 Added support for `disabled` property in request body

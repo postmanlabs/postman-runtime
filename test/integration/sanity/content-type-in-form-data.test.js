@@ -1,5 +1,6 @@
 var fs = require('fs'),
     http = require('http'),
+    expect = require('chai').expect,
     sinon = require('sinon');
 
 describe('content-type', function () {
@@ -96,7 +97,7 @@ describe('content-type', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -110,7 +111,9 @@ describe('content-type', function () {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             // content-type sent to server in request
-            expect(request.body.formdata.members[0]).to.have.property('contentType', undefined);
+            expect(request).to.have.property('body').that.nested.include({
+                'formdata.members[0].contentType': undefined
+            });
 
             // content-type received at server
             expect(JSON.parse(response)[0]).to.have.property('contentType', 'application/octet-stream');
@@ -144,7 +147,7 @@ describe('content-type', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -158,7 +161,9 @@ describe('content-type', function () {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             // content-type sent to server in request
-            expect(request.body.formdata.members[0]).to.have.property('contentType', 'application/json');
+            expect(request).to.have.property('body').that.nested.include({
+                'formdata.members[0].contentType': 'application/json'
+            });
 
             // content-type received at server
             expect(JSON.parse(response)[0]).to.have.property('contentType', 'application/json');
@@ -206,7 +211,7 @@ describe('content-type', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -218,8 +223,10 @@ describe('content-type', function () {
             sinon.assert.calledOnce(testrun.test);
             sinon.assert.calledWith(testrun.test.getCall(0), null);
 
-            expect(assertions[0]).to.have.property('name', 'content-type');
-            expect(assertions[0]).to.have.property('passed', true);
+            expect(assertions[0]).to.deep.include({
+                name: 'content-type',
+                passed: true
+            });
         });
 
         it('should upload the file with provided content-type in formdata', function () {
@@ -230,7 +237,9 @@ describe('content-type', function () {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             // content-type sent to server in request
-            expect(request.body.formdata.members[0]).to.have.property('contentType', 'text/csv');
+            expect(request).to.have.property('body').that.nested.include({
+                'formdata.members[0].contentType': 'text/csv'
+            });
 
             // content-type received at server
             expect(JSON.parse(response)[0]).to.have.property('contentType', 'text/csv');

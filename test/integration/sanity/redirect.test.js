@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('redirects', function() {
     var testrun;
 
@@ -15,23 +17,27 @@ describe('redirects', function() {
         });
     });
 
-    it('must have sent the request successfully', function() {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledOnce).be.ok();
+    it('should have sent the request successfully', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({ // one request
+            'request.calledOnce': true
+        });
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(testrun.request.getCall(0).args[0]).to.be.null;
     });
 
-    it('must not have followed the redirect', function() {
+    it('should not have followed the redirect', function() {
         var response = testrun.request.getCall(0).args[2];
 
-        expect(response.code).to.eql(302);
+        expect(response).to.have.property('code', 302);
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

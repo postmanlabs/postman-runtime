@@ -1,4 +1,4 @@
-var expect = require('expect.js'),
+var expect = require('chai').expect,
     _ = require('lodash');
 
 describe('NTLM', function () {
@@ -35,7 +35,7 @@ describe('NTLM', function () {
                 collection: {
                     item: {
                         request: {
-                            url: 'http://postman-echo.com/digest'
+                            url: 'https://postman-echo.com/digest'
                         }
                     }
                 }
@@ -64,20 +64,26 @@ describe('NTLM', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must bail out after sending one request', function () {
-            expect(testrun.request.callCount).to.be(1);
+        it('should bail out after sending one request', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
 
             var err = testrun.request.firstCall.args[0];
 
-            expect(err).to.be(null);
+            expect(err).to.be.null;
         });
     });
 
@@ -108,22 +114,28 @@ describe('NTLM', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent the request thrice', function () {
-            expect(testrun.request.callCount).to.be(3);
+        it('should have sent the request thrice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
 
             var err = testrun.request.firstCall.args[0],
                 response = testrun.request.firstCall.args[2];
 
-            expect(err).to.be(null);
-            expect(response.code).to.eql(401);
+            expect(err).to.be.null;
+            expect(response).to.have.property('code', 401);
         });
     });
 
@@ -165,22 +177,28 @@ describe('NTLM', function () {
             });
         });
 
-        it('must have completed the run', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent the request only once', function () {
-            expect(testrun.request.callCount).to.be(1);
+        it('should have sent the request only once', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
 
             var err = testrun.request.firstCall.args[0],
                 response = testrun.request.firstCall.args[2];
 
-            expect(err).to.be(null);
-            expect(response.code).to.eql(401);
+            expect(err).to.be.null;
+            expect(response).to.have.property('code', 401);
         });
     });
 
@@ -211,22 +229,28 @@ describe('NTLM', function () {
             });
         });
 
-        it('must have completed the run successfully', function () {
-            expect(testrun).be.ok();
-            expect(testrun.done.callCount).to.be(1);
+        it('should have completed the run successfully', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
             testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-            expect(testrun.done.getCall(0).args[0]).to.be(null);
-            expect(testrun.start.callCount).to.be(1);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
         });
 
-        it('must have sent the request thrice', function () {
-            expect(testrun.request.callCount).to.be(3);
+        it('should have sent the request thrice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
 
             var err = testrun.request.thirdCall.args[0],
                 response = testrun.request.thirdCall.args[2];
 
-            expect(err).to.be(null);
-            expect(response.code).to.eql(200);
+            expect(err).to.be.null;
+            expect(response).to.have.property('code', 200);
         });
     });
 

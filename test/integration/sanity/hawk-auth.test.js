@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('Hawk authentication', function () {
     var testrun;
 
@@ -21,7 +23,7 @@ describe('Hawk authentication', function () {
                                 timestamp: ''
                             }
                         },
-                        url: 'http://postman-echo.com/auth/hawk',
+                        url: 'https://postman-echo.com/auth/hawk',
                         method: 'GET'
                     }
                 }]
@@ -32,21 +34,25 @@ describe('Hawk authentication', function () {
         });
     });
 
-    it('must have authorized successfully', function () {
-        expect(testrun).be.ok();
-        expect(testrun.request.calledOnce).be.ok();
+    it('should have authorized successfully', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'request.calledOnce': true
+        });
 
-        expect(testrun.request.getCall(0).args[0]).to.be(null);
+        expect(testrun.request.getCall(0).args[0]).to.be.null;
 
         var response = testrun.request.getCall(0).args[2];
-        expect(response.code).to.eql(200);
-        expect(response.json().message).to.eql('Hawk Authentication Successful');
+        expect(response).to.have.property('code', 200);
+        expect(response.json()).to.have.property('message', 'Hawk Authentication Successful');
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

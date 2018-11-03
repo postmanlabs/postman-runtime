@@ -1,21 +1,22 @@
-/* global describe, it */
-var expect = require('expect.js'),
+var expect = require('chai').expect,
     sinon = require('sinon');
 
 describe('backpack.multiback', function () {
     var multiback = require('../../lib/backpack').multiback;
 
     it('function must exist', function () {
-        expect(multiback).to.be.ok();
+        expect(multiback).to.be.ok;
         expect(multiback).to.be.a('function');
     });
 
-    it('must accept empty flags and a callback', function () {
-        expect(multiback).withArgs([], function () { return 1; }).to.not.throwException();
+    it('should accept empty flags and a callback', function () {
+        expect(function() {
+            multiback([], function () { return 1; });
+        }).to.not.throw();
         expect(multiback([], function () { return 1; })).to.be.a('function');
     });
 
-    it('must execute callback on first try when no flags', function (done) {
+    it('should execute callback on first try when no flags', function (done) {
         var callback = sinon.spy(setImmediate.bind(this, done));
 
         done = multiback([], callback);
@@ -25,12 +26,12 @@ describe('backpack.multiback', function () {
         sinon.assert.calledOnce(callback);
     });
 
-    it('must execute callback on first flag', function (done) {
+    it('should execute callback on first flag', function (done) {
         done = multiback(['flag1'], done);
         done(null, 'flag1', true);
     });
 
-    it('must execute callback when all flags are truthy', function (done) {
+    it('should execute callback when all flags are truthy', function (done) {
         var callback = sinon.spy(setImmediate.bind(this, done));
 
         done = multiback(['flag1', 'flag2'], callback);
@@ -43,9 +44,9 @@ describe('backpack.multiback', function () {
         sinon.assert.calledOnce(callback);
     });
 
-    it('must early call on error and callback only once', function (done) {
+    it('should early call on error and callback only once', function (done) {
         var callback = sinon.spy(function (err) {
-                expect(err).be(true);
+                expect(err).to.be.true;
                 setImmediate(done); // to wait for last expects
             }),
             flagback;
@@ -75,8 +76,8 @@ describe('backpack.multiback', function () {
 
     it('should not pass a definitive set of arguments on error', function (done) {
         var callback = sinon.spy(function (err, res) {
-                expect(err).be('err');
-                expect(res).be(undefined);
+                expect(err).to.equal('err');
+                expect(res).to.be.undefined;
                 setImmediate(done); // to wait for last expects
             }),
             flagback;

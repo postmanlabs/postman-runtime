@@ -1,3 +1,5 @@
+var expect = require('chai').expect;
+
 describe('oauth 1', function () {
     var testrun;
 
@@ -34,43 +36,43 @@ describe('oauth 1', function () {
         });
     });
 
-    it('must have completed the run', function () {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.calledOnce).to.be.ok;
         testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
-        expect(testrun.done.getCall(0).args[0]).to.be(null);
-        expect(testrun.start.calledOnce).be.ok();
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun.start.calledOnce).to.be.ok;
     });
 
-    it('must have sent the request once', function () {
-        expect(testrun.request.calledOnce).be.ok();
+    it('should have sent the request once', function () {
+        expect(testrun.request.calledOnce).to.be.ok;
 
         var request = testrun.request.getCall(0).args[3],
             response = testrun.request.getCall(0).args[2];
 
         expect(request.url.toString()).to.eql('https://postman-echo.com/oauth1');
-        expect(response.code).to.eql(200);
+        expect(response).to.have.property('code', 200);
     });
 
-    it('must have sent one request internally', function () {
-        expect(testrun.io.calledOnce).be.ok();
+    it('should have sent one request internally', function () {
+        expect(testrun.io.calledOnce).to.be.ok;
 
         var firstError = testrun.io.firstCall.args[0],
             firstRequest = testrun.io.firstCall.args[4],
             firstResponse = testrun.io.firstCall.args[3];
 
-        expect(firstError).to.be(null);
+        expect(firstError).to.be.null;
         expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/oauth1');
-        expect(firstResponse.code).to.eql(200);
+        expect(firstResponse).to.have.property('code', 200);
     });
 
-    it('must have passed OAuth 1 authorization', function () {
-        expect(testrun.request.calledOnce).be.ok();
+    it('should have passed OAuth 1 authorization', function () {
+        expect(testrun.request.calledOnce).to.be.ok;
 
         var request = testrun.request.getCall(0).args[3],
             response = testrun.request.getCall(0).args[2];
 
         expect(request.url.toString()).to.eql('https://postman-echo.com/oauth1');
-        expect(response.code).to.eql(200);
+        expect(response).to.have.property('code', 200);
     });
 });

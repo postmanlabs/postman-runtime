@@ -1,4 +1,5 @@
-var AuthLoader = require('../../../lib/authorizer/index').AuthLoader;
+var AuthLoader = require('../../../lib/authorizer').AuthLoader,
+    expect = require('chai').expect;
 
 describe('unhandled errors in request send', function() {
     var testrun;
@@ -49,19 +50,23 @@ describe('unhandled errors in request send', function() {
         }, 'fake');
     });
 
-    it('must not call request or response callback for unhandled errors', function() {
-        expect(testrun).be.ok();
-        expect(testrun.request.callCount).to.be(0);
-        expect(testrun.response.callCount).to.be(0);
+    it('should not call request or response callback for unhandled errors', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'request.callCount': 0,
+            'response.callCount': 0
+        });
     });
 
-    it('must have bubbled to done and error callback when abortOnError is set', function() {
-        expect(testrun.done.getCall(0).args[0]).to.have.property('message', 'deal with it');
+    it('should have bubbled to done and error callback when abortOnError is set', function() {
+        expect(testrun.done.getCall(0)).to.have.nested.property('args[0].message', 'deal with it');
     });
 
-    it('must have completed the run', function() {
-        expect(testrun).be.ok();
-        expect(testrun.done.calledOnce).be.ok();
-        expect(testrun.start.calledOnce).be.ok();
+    it('should have completed the run', function() {
+        expect(testrun).to.be.ok;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
     });
 });

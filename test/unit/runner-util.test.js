@@ -1,14 +1,12 @@
-/* global describe, it */
-
 var sinon = require('sinon'),
-    expect = require('expect.js'),
+    expect = require('chai').expect,
     runnerUtil = require('../../lib/runner/util');
 
 describe('runner util', function () {
     describe('.safeCall', function () {
         it('should not throw an error if a non function is passed', function () {
             var err = runnerUtil.safeCall('not a function');
-            expect(err).to.be(undefined);
+            expect(err).to.be.undefined;
         });
 
         it('should pass arguments correctly', function () {
@@ -18,12 +16,14 @@ describe('runner util', function () {
 
             err = runnerUtil.safeCall(func, {alpha: 'foo'}, 'bar', 'baz');
 
-            expect(err).to.be(undefined);
-            expect(func.calledOnce).to.be(true);
+            expect(err).to.be.undefined;
+            expect(func.calledOnce).to.be.true;
 
             call = func.getCall(0);
-            expect(call.thisValue).to.eql({alpha: 'foo'});
-            expect(call.args).to.eql(['bar', 'baz']);
+            expect(call).to.deep.include({
+                thisValue: {alpha: 'foo'},
+                args: ['bar', 'baz']
+            });
         });
 
         it('should pass a default global context correctly', function () {
@@ -33,12 +33,14 @@ describe('runner util', function () {
 
             err = runnerUtil.safeCall(func);
 
-            expect(err).to.be(undefined);
-            expect(func.calledOnce).to.be(true);
+            expect(err).to.be.undefined;
+            expect(func.calledOnce).to.be.true;
 
             call = func.getCall(0);
-            expect(call.args).to.eql([]);
-            expect(call.thisValue).to.eql(global);
+            expect(call).to.deep.include({
+                thisValue: global,
+                args: []
+            });
         });
 
         it('should correctly handle functions that throw errors', function () {
@@ -48,12 +50,14 @@ describe('runner util', function () {
 
             err = runnerUtil.safeCall(func);
 
-            expect(err).to.be.ok();
-            expect(func.calledOnce).to.be(true);
+            expect(err).to.be.ok;
+            expect(func.calledOnce).to.be.true;
 
             call = func.getCall(0);
-            expect(call.args).to.eql([]);
-            expect(call.thisValue).to.eql(global);
+            expect(call).to.deep.include({
+                thisValue: global,
+                args: []
+            });
         });
     });
 

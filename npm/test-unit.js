@@ -10,6 +10,8 @@ require('colors');
 // set directories and files for test and coverage report
 var path = require('path'),
 
+    expect = require('chai').expect,
+
     IS_WINDOWS = (/^win/).test(process.platform),
     COV_REPORT_PATH = '.coverage',
     REPORT_PATH = path.join('.tmp', 'report.xml'),
@@ -31,6 +33,8 @@ module.exports = function (exit) {
 
     mkdir('-p', '.tmp');
     test('-d', COV_REPORT_PATH) && rm('-rf', COV_REPORT_PATH) && mkdir('-p', COV_REPORT_PATH);
+
+    global.expect = expect;
 
     // windows istanbul and mocha commands need some special attention.
     if (IS_WINDOWS) {

@@ -1,4 +1,5 @@
 var fs = require('fs'),
+    expect = require('chai').expect,
     sinon = require('sinon');
 
 describe('file upload in request body', function () {
@@ -40,7 +41,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -53,7 +54,9 @@ describe('file upload in request body', function () {
             var resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
             expect(resp.files).to.have.property('upload-file.json');
-            expect(resp.headers).to.have.property('content-length', '253');
+            expect(resp).to.nested.include({
+                'headers.content-length': '253'
+            });
             expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
         });
 
@@ -62,8 +65,10 @@ describe('file upload in request body', function () {
 
             var resp = JSON.parse(testrun.response.getCall(1).args[2].stream.toString());
 
-            expect(resp.data).to.equal('{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
-            expect(resp.headers).to.have.property('content-length', '33');
+            expect(resp).to.have.property('data', '{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
+            expect(resp).to.nested.include({
+                'headers.content-length': '33'
+            });
             expect(resp.headers['content-type']).to.equal('text/plain');
         });
     });
@@ -97,7 +102,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -148,7 +153,7 @@ describe('file upload in request body', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -162,11 +167,15 @@ describe('file upload in request body', function () {
                     resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
                 // make sure file is not loaded if body is disabled
-                expect(req.body).to.have.property('disabled', true);
+                expect(req).to.nested.include({
+                    'body.disabled': true
+                });
                 expect(req.body.file).to.not.have.property('content');
 
-                expect(resp.data).to.eql({});
-                expect(resp.headers).to.have.property('content-length', '0');
+                expect(resp).to.deep.nested.include({
+                    'headers.content-length': '0',
+                    data: {}
+                });
             });
         });
 
@@ -196,7 +205,7 @@ describe('file upload in request body', function () {
             });
 
             it('should complete the run', function () {
-                expect(testrun).be.ok();
+                expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
                 sinon.assert.calledOnce(testrun.done);
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -210,11 +219,15 @@ describe('file upload in request body', function () {
                     resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
                 // make sure file is loaded
-                expect(req.body).to.have.property('disabled', false);
+                expect(req).to.nested.include({
+                    'body.disabled': false
+                });
                 expect(req.body.file).to.have.property('content');
 
-                expect(resp.data).to.equal('{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
-                expect(resp.headers).to.have.property('content-length', '33');
+                expect(resp).to.deep.nested.include({
+                    'headers.content-length': '33',
+                    data: '{\n\t"key1":"value1",\n\t"key2": 2\n}\n'
+                });
                 expect(resp.headers['content-type']).to.equal('text/plain');
             });
         });
@@ -248,7 +261,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -302,7 +315,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -346,7 +359,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -389,7 +402,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -436,7 +449,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -449,7 +462,9 @@ describe('file upload in request body', function () {
             var resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
             expect(resp.files).to.have.property('upload-file.json');
-            expect(resp.headers).to.have.property('content-length', '253');
+            expect(resp).to.deep.nested.include({
+                'headers.content-length': '253'
+            });
             expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
         });
     });
@@ -476,7 +491,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
@@ -514,7 +529,7 @@ describe('file upload in request body', function () {
         });
 
         it('should complete the run', function () {
-            expect(testrun).be.ok();
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
