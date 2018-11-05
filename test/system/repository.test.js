@@ -67,13 +67,6 @@ describe('project repository', function () {
                 expect(json.dependencies).to.be.an('object');
             });
 
-            // Hawk library v6.0.2+ uses ES2017 and is not compatible with Node <8.
-            it('hawk version', function () {
-                expect(json.dependencies).to.deep.include({
-                    hawk: '6.0.2'
-                });
-            });
-
             it('should point to a valid semver', function () {
                 var packages = _.without(Object.keys(json.dependencies),
                     // These are trusted packages
