@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### v7.4.2 (November 7, 2018)
+* #667 Swapped dependency on hawk for request provided implementation
+* Updated dependencies
+* Switched over to Travis for Windows builds
+
 #### v7.4.1 (November 4, 2018)
 * #665 Corrected `postman-collection` reference to a precise version: 3.3.0
 * #664 Switched to Travis for Windows builds
