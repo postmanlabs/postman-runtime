@@ -37,6 +37,9 @@ describe('requester util', function () {
                 strictSSL: undefined,
                 followRedirect: undefined,
                 followAllRedirects: undefined,
+                followOriginalHttpMethod: undefined,
+                maxRedirects: undefined,
+                removeRefererHeader: undefined,
                 encoding: null,
                 agentOptions: {keepAlive: undefined}
             });
@@ -68,6 +71,9 @@ describe('requester util', function () {
                 strictSSL: undefined,
                 followRedirect: undefined,
                 followAllRedirects: undefined,
+                followOriginalHttpMethod: undefined,
+                maxRedirects: undefined,
+                removeRefererHeader: undefined,
                 encoding: null,
                 agentOptions: {keepAlive: undefined}
             });
