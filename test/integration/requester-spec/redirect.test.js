@@ -25,11 +25,11 @@ describe('Requester Spec: redirect', function () {
                 hops = parseInt(req.url.substring(1)) - 1;
 
                 // redirect until all hops are covered
-                res.writeHead(302, {'Location': hops > 0 ? `/${hops}` : '/'});
+                res.writeHead(302, {location: hops > 0 ? `/${hops}` : '/'});
                 res.end();
             }
             else {
-                res.writeHead(200, {'Content-Type': 'text/plain'});
+                res.writeHead(200, {'content-type': 'text/plain'});
                 res.end('okay');
             }
         }).listen(PORT, done);
@@ -324,6 +324,9 @@ describe('Requester Spec: redirect', function () {
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledOnce(testrun.response);
         });
 
         it('should follow maximum 10 redirects by default and throw error after that', function () {
@@ -367,6 +370,12 @@ describe('Requester Spec: redirect', function () {
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
         });
 
         it('should follow all the redirects with maxRedirects set', function () {
