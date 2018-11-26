@@ -1,4 +1,7 @@
 # Postman Runtime Changelog
+#### v7.5.0 (unreleased)
+* #670 Added requester options to configure redirects behavior
+* Updated dependencies
 
 #### v7.4.2 (November 7, 2018)
 * #667 Swapped dependency on hawk for request provided implementation
