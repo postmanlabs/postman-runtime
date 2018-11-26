@@ -13,6 +13,7 @@ describe('Requester Spec: redirect', function () {
         server = http.createServer(function (req, res) {
             var hops;
 
+            // keep track of all the requests made during redirects.
             hits.push({
                 url: req.url,
                 method: req.method,
