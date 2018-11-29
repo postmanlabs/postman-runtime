@@ -139,14 +139,14 @@ describe('Requester Spec: redirect', function () {
         });
     });
 
-    describe('with removeRefererHeader: false', function () {
+    describe('with removeRefererHeaderOnRedirect: false', function () {
         var URL = HOST + '/1';
 
         before(function (done) {
             hits = [];
             this.run({
                 requester: {
-                    removeRefererHeader: false
+                    removeRefererHeaderOnRedirect: false
                 },
                 collection: {
                     item: [{
@@ -191,7 +191,7 @@ describe('Requester Spec: redirect', function () {
         });
     });
 
-    describe('with removeRefererHeader: true', function () {
+    describe('with removeRefererHeaderOnRedirect: true', function () {
         var URL = HOST + '/1';
 
         describe('should not have referer header', function () {
@@ -199,7 +199,7 @@ describe('Requester Spec: redirect', function () {
                 hits = [];
                 this.run({
                     requester: {
-                        removeRefererHeader: true
+                        removeRefererHeaderOnRedirect: true
                     },
                     collection: {
                         item: [{
@@ -229,7 +229,7 @@ describe('Requester Spec: redirect', function () {
                 sinon.assert.calledWith(testrun.response.getCall(0), null);
             });
 
-            it('should not have referer header when removeRefererHeader is true', function () {
+            it('should not have referer header when removeRefererHeaderOnRedirect is true', function () {
                 var response = testrun.response.getCall(0).args[2];
 
                 expect(response).to.have.property('code', 200);
@@ -249,7 +249,7 @@ describe('Requester Spec: redirect', function () {
                 hits = [];
                 this.run({
                     requester: {
-                        removeRefererHeader: true
+                        removeRefererHeaderOnRedirect: true
                     },
                     collection: {
                         item: [{
