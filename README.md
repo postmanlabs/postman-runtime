@@ -96,7 +96,7 @@ runner.run(collection, {
         maxRedirects: 10,
 
         // Removes the `referer` header when a redirect happens (only supported on Node, ignored in the browser)
-        removeRefererHeader: false,
+        removeRefererHeaderOnRedirect: false,
 
         // Enable or disable certificate verification (only supported on Node, ignored in the browser)
         strictSSL: false,

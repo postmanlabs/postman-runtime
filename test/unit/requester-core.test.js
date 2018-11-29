@@ -39,7 +39,7 @@ describe('requester util', function () {
                 followAllRedirects: undefined,
                 followOriginalHttpMethod: undefined,
                 maxRedirects: undefined,
-                removeRefererHeader: undefined,
+                removeRefererHeaderOnRedirect: undefined,
                 encoding: null,
                 agentOptions: {keepAlive: undefined}
             });
@@ -73,7 +73,7 @@ describe('requester util', function () {
                 followAllRedirects: undefined,
                 followOriginalHttpMethod: undefined,
                 maxRedirects: undefined,
-                removeRefererHeader: undefined,
+                removeRefererHeaderOnRedirect: undefined,
                 encoding: null,
                 agentOptions: {keepAlive: undefined}
             });
