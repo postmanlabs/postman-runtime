@@ -81,8 +81,10 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                // eslint-disable-next-line max-len
-                expect(response).to.include('GET / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
+                expect(response).to.include('GET / HTTP/1.1')
+                    .and.include('Content-Type: text/plain')
+                    .and.include('content-length: 7')
+                    .and.include('foo=bar');
             });
         });
 
@@ -130,8 +132,10 @@ describe('protocolProfileBehavior', function () {
 
                 var response = rawRequest; // raw request message for this request
 
-                // eslint-disable-next-line max-len
-                expect(response).to.include('HEAD / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
+                expect(response).to.include('HEAD / HTTP/1.1')
+                    .and.include('Content-Type: text/plain')
+                    .and.include('content-length: 7')
+                    .and.include('foo=bar');
             });
         });
 
@@ -179,8 +183,10 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                // eslint-disable-next-line max-len
-                expect(response).to.include('POSTMAN / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
+                expect(response).to.include('POSTMAN / HTTP/1.1')
+                    .and.include('Content-Type: text/plain')
+                    .and.include('content-length: 7')
+                    .and.include('foo=bar');
             });
         });
     });
@@ -330,8 +336,10 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                // eslint-disable-next-line max-len
-                expect(response).to.include('POSTMAN / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
+                expect(response).to.include('POSTMAN / HTTP/1.1')
+                    .and.include('Content-Type: text/plain')
+                    .and.include('content-length: 7')
+                    .and.include('foo=bar');
             });
         });
     });
@@ -472,8 +480,10 @@ describe('protocolProfileBehavior', function () {
 
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
-                // eslint-disable-next-line max-len
-                expect(response).to.include('POSTMAN / HTTP/1.1', 'Content-Type: text/plain', 'content-length: 7', 'foo=bar');
+                expect(response).to.include('POSTMAN / HTTP/1.1')
+                    .and.include('Content-Type: text/plain')
+                    .and.include('content-length: 7')
+                    .and.include('foo=bar');
             });
         });
     });
