@@ -189,6 +189,62 @@ describe('protocolProfileBehavior', function () {
                     .and.include('foo=bar');
             });
         });
+
+        describe('HTTP GET + Inherit Protocol Profile Behavior', function () {
+            before(function (done) {
+                this.run({
+                    collection: {
+                        item: [{
+                            item: [{
+                                request: {
+                                    url: URL,
+                                    method: 'GET',
+                                    body: {
+                                        mode: 'raw',
+                                        raw: 'foo=bar'
+                                    }
+                                }
+                            }],
+                            protocolProfileBehavior: {
+                                disableBodyPruning: true
+                            }
+                        }],
+                        protocolProfileBehavior: {
+                            disableBodyPruning: false
+                        }
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            after(function () {
+                testrun = rawRequest = null;
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                sinon.assert.calledOnce(testrun.start);
+                sinon.assert.calledOnce(testrun.done);
+                sinon.assert.calledWith(testrun.done.getCall(0), null);
+            });
+
+            it('should send body with GET method', function () {
+                sinon.assert.calledOnce(testrun.request);
+                sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+                sinon.assert.calledOnce(testrun.response);
+                sinon.assert.calledWith(testrun.response.getCall(0), null);
+
+                var response = testrun.request.getCall(0).args[2].stream.toString();
+
+                expect(response).to.include('GET / HTTP/1.1')
+                    .and.include('Content-Type: text/plain')
+                    .and.include('content-length: 7')
+                    .and.include('foo=bar');
+            });
+        });
     });
 
     describe('with disableBodyPruning: false', function () {
