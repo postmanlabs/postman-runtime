@@ -163,9 +163,9 @@ describe('redirects', function() {
             expect(response).to.have.property('code', 200);
             expect(response.stream.toString())
                 .to.include('Content-Disposition: form-data; name="key1"')
-                .and.include('POSTMAN')
+                .and.include('POSTMAN') // form-param `key1` value
                 .and.include('Content-Disposition: form-data; name="fileName"; filename="upload-csv"')
-                .and.include('key,value\n1,2\n3,4');
+                .and.include('key,value'); // file content
         });
     });
 
@@ -218,9 +218,9 @@ describe('redirects', function() {
             expect(response).to.have.property('code', 200);
             expect(response.stream.toString())
                 .to.include('Content-Disposition: form-data; name="key1"')
-                .and.include('POSTMAN')
+                .and.include('POSTMAN') // form-param `key1` value
                 .and.include('Content-Disposition: form-data; name="fileName"; filename="upload-csv"')
-                .and.include('key,value\n1,2\n3,4');
+                .and.include('key,value'); // file content
         });
     });
 });
