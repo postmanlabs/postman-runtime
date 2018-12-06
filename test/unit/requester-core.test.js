@@ -37,6 +37,9 @@ describe('requester util', function () {
                 strictSSL: undefined,
                 followRedirect: undefined,
                 followAllRedirects: undefined,
+                followOriginalHttpMethod: undefined,
+                maxRedirects: undefined,
+                removeRefererHeader: undefined,
                 encoding: null,
                 agentOptions: {keepAlive: undefined}
             });
@@ -68,6 +71,9 @@ describe('requester util', function () {
                 strictSSL: undefined,
                 followRedirect: undefined,
                 followAllRedirects: undefined,
+                followOriginalHttpMethod: undefined,
+                maxRedirects: undefined,
+                removeRefererHeader: undefined,
                 encoding: null,
                 agentOptions: {keepAlive: undefined}
             });
@@ -109,6 +115,46 @@ describe('requester util', function () {
                 };
 
             expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
+        });
+
+        it('should override default options with protocolProfileBehavior', function () {
+            var request = new sdk.Request(),
+                defaultOptions = {
+                    strictSSL: true,
+                    followRedirects: false,
+                    followOriginalHttpMethod: false,
+                    maxRedirects: 10,
+                    removeRefererHeaderOnRedirect: false
+                },
+                protocolProfileBehavior = {
+                    strictSSL: false,
+                    followRedirects: true,
+                    followOriginalHttpMethod: true,
+                    maxRedirects: 15,
+                    removeRefererHeaderOnRedirect: true
+                };
+
+            expect(requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior)).to.eql({
+                headers: {
+                    'User-Agent': 'PostmanRuntime/' + runtimeVersion,
+                    Accept: '*/*',
+                    Host: ''
+                },
+                url: 'http://',
+                method: 'GET',
+                jar: true,
+                timeout: undefined,
+                gzip: true,
+                useQuerystring: true,
+                strictSSL: false,
+                followRedirect: true,
+                followAllRedirects: true,
+                followOriginalHttpMethod: true,
+                maxRedirects: 15,
+                removeRefererHeader: true,
+                encoding: null,
+                agentOptions: {keepAlive: undefined}
+            });
         });
     });
 
@@ -309,9 +355,7 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
-                    protocolProfileBehavior: {
-                        disableBodyPruning: false
-                    }
+                    disableBodyPruning: false
                 })).to.be.undefined;
             });
 
@@ -328,9 +372,7 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
-                    protocolProfileBehavior: {
-                        disableBodyPruning: true
-                    }
+                    disableBodyPruning: true
                 })).to.eql({
                     formData: {foo: 'bar'}
                 });
@@ -350,9 +392,7 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
-                    protocolProfileBehavior: {
-                        disableBodyPruning: true
-                    }
+                    disableBodyPruning: true
                 })).to.eql({
                     formData: {foo: 'bar'}
                 });
@@ -372,9 +412,7 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
-                    protocolProfileBehavior: {
-                        disableBodyPruning: false
-                    }
+                    disableBodyPruning: false
                 })).to.eql({
                     formData: {foo: 'bar'}
                 });

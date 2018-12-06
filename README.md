@@ -89,6 +89,15 @@ runner.run(collection, {
         // Controls redirect behavior (only supported on Node, ignored in the browser)
         followRedirects: true,
 
+        // Redirect with the original HTTP method (only supported on Node, ignored in the browser)
+        followOriginalHttpMethod: false,
+
+        // Maximum number of redirects to follow (only supported on Node, ignored in the browser)
+        maxRedirects: 10,
+
+        // Removes the `referer` header when a redirect happens (only supported on Node, ignored in the browser)
+        removeRefererHeaderOnRedirect: false,
+
         // Enable or disable certificate verification (only supported on Node, ignored in the browser)
         strictSSL: false,
 
