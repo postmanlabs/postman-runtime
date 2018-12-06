@@ -315,9 +315,7 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
-                    protocolProfileBehavior: {
-                        disableBodyPruning: false
-                    }
+                    disableBodyPruning: false
                 })).to.be.undefined;
             });
 
@@ -334,9 +332,7 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
-                    protocolProfileBehavior: {
-                        disableBodyPruning: true
-                    }
+                    disableBodyPruning: true
                 })).to.eql({
                     formData: {foo: 'bar'}
                 });
@@ -356,9 +352,7 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
-                    protocolProfileBehavior: {
-                        disableBodyPruning: true
-                    }
+                    disableBodyPruning: true
                 })).to.eql({
                     formData: {foo: 'bar'}
                 });
@@ -378,9 +372,7 @@ describe('requester util', function () {
                 });
 
                 expect(requesterCore.getRequestBody(request, {
-                    protocolProfileBehavior: {
-                        disableBodyPruning: false
-                    }
+                    disableBodyPruning: false
                 })).to.eql({
                     formData: {foo: 'bar'}
                 });
