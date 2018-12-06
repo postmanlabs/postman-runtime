@@ -1,5 +1,5 @@
 # Postman Runtime Changelog
-#### v7.5.0
+#### v7.5.0 (December 6, 2018)
 * #670 Added requester options to configure redirects behavior
 * #675 Inherit protocolProfileBehavior from parent ItemGroup(s)
 * #678 Added support for protocolProfileBehavior to override following requester options:
