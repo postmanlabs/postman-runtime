@@ -1,6 +1,7 @@
-var expect = require('chai').expect,
+var fs = require('fs'),
     http = require('http'),
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    expect = require('chai').expect;
 
 describe('redirects', function() {
     var testrun,
@@ -47,13 +48,17 @@ describe('redirects', function() {
             });
         });
 
-        it('should have sent the request successfully', function() {
+        it('should complete the run', function () {
             expect(testrun).to.be.ok;
-            expect(testrun).to.nested.include({ // one request
-                'request.calledOnce': true
-            });
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
 
-            expect(testrun.request.getCall(0).args[0]).to.be.null;
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
         });
 
         it('should not have followed the redirect', function() {
@@ -61,20 +66,58 @@ describe('redirects', function() {
 
             expect(response).to.have.property('code', 302);
         });
+    });
 
-        it('should have completed the run', function() {
-            expect(testrun).to.be.ok;
-            expect(testrun.done.getCall(0).args[0]).to.be.null;
-            expect(testrun).to.nested.include({
-                'done.calledOnce': true,
-                'start.calledOnce': true
+    describe('301 redirect', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: URL + '/redirect/301',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    type: 'text',
+                                    key: 'key1',
+                                    value: 'POSTMAN'
+                                }]
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
             });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should drop body on 301 redirect', function () {
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.stream.toString()).to.be.empty;
         });
     });
 
     describe('307 redirect', function () {
         before(function (done) {
             this.run({
+                fileResolver: fs,
                 collection: {
                     item: [{
                         request: {
@@ -86,6 +129,10 @@ describe('redirects', function() {
                                     type: 'text',
                                     key: 'key1',
                                     value: 'POSTMAN'
+                                }, {
+                                    key: 'fileName',
+                                    src: 'test/fixtures/upload-csv',
+                                    type: 'file'
                                 }]
                             }
                         }
@@ -114,15 +161,18 @@ describe('redirects', function() {
             var response = testrun.request.getCall(0).args[2];
 
             expect(response).to.have.property('code', 200);
-            expect(response.stream.toString()).to.include('Content-Disposition: form-data')
-                .and.include('name="key1"')
-                .and.include('POSTMAN');
+            expect(response.stream.toString())
+                .to.include('Content-Disposition: form-data; name="key1"')
+                .and.include('POSTMAN')
+                .and.include('Content-Disposition: form-data; name="fileName"; filename="upload-csv"')
+                .and.include('key,value\n1,2\n3,4');
         });
     });
 
     describe('308 redirect', function () {
         before(function (done) {
             this.run({
+                fileResolver: fs,
                 collection: {
                     item: [{
                         request: {
@@ -134,6 +184,10 @@ describe('redirects', function() {
                                     type: 'text',
                                     key: 'key1',
                                     value: 'POSTMAN'
+                                }, {
+                                    key: 'fileName',
+                                    src: 'test/fixtures/upload-csv',
+                                    type: 'file'
                                 }]
                             }
                         }
@@ -162,9 +216,11 @@ describe('redirects', function() {
             var response = testrun.request.getCall(0).args[2];
 
             expect(response).to.have.property('code', 200);
-            expect(response.stream.toString()).to.include('Content-Disposition: form-data')
-                .and.include('name="key1"')
-                .and.include('POSTMAN');
+            expect(response.stream.toString())
+                .to.include('Content-Disposition: form-data; name="key1"')
+                .and.include('POSTMAN')
+                .and.include('Content-Disposition: form-data; name="fileName"; filename="upload-csv"')
+                .and.include('key,value\n1,2\n3,4');
         });
     });
 });
