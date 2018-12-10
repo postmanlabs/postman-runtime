@@ -6,7 +6,6 @@ These are used to remove the dependency of agent specific configurations to make
 
 The behavior can be protocol specific or requester options. Currently supported protocol profile behaviors are:
 
-
 - `strictSSL`<br/>
 Enable or disable certificate verification.
 
@@ -22,10 +21,8 @@ Control request body pruning for following methods: ```GET, COPY, HEAD, PURGE, U
 - `followOriginalHttpMethod`<br/>
 Redirect with the original HTTP method, by default redirects with HTTP method GET.
 
-
 - `removeRefererHeaderOnRedirect`<br/>
 Removes the `referer` header when a redirect happens.
-
 
 **A collection with protocol profile behaviors:**
 ```javascript
