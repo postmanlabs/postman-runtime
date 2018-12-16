@@ -79,6 +79,47 @@ describe('requester util', function () {
             });
         });
 
+        it('should accept URL in uppercase', function () {
+            var request = new sdk.Request({
+                url: 'HTTP://POSTMAN-ECHO.COM/POST',
+                method: 'POST',
+                header: [{
+                    key: 'alpha',
+                    value: 'foo'
+                }],
+                body: {
+                    mode: 'raw',
+                    raw: '{"alpha": "foo"}'
+                }
+            });
+
+            expect(requesterCore.getRequestOptions(request, {})).to.eql({
+                headers: {
+                    alpha: 'foo',
+                    'User-Agent': 'PostmanRuntime/' + runtimeVersion,
+                    'Content-Type': 'text/plain',
+                    Accept: '*/*',
+                    Host: 'POSTMAN-ECHO.COM'
+                },
+                body: '{"alpha": "foo"}',
+                url: 'HTTP://POSTMAN-ECHO.COM/POST',
+                method: 'POST',
+                jar: true,
+                timeout: undefined,
+                gzip: true,
+                useQuerystring: true,
+                strictSSL: undefined,
+                followRedirect: undefined,
+                followAllRedirects: undefined,
+                followOriginalHttpMethod: undefined,
+                maxRedirects: undefined,
+                removeRefererHeader: undefined,
+                encoding: null,
+                agentOptions: {keepAlive: undefined}
+            });
+        });
+
+
         it('should override lookup function for localhost', function () {
             var request = new sdk.Request({
                 url: 'http://localhost:8080/random/path'
