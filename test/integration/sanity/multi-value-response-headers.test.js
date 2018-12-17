@@ -1,10 +1,10 @@
-var expect = require('chai').expect;
+var _ = require('lodash'),
+    http = require('http'),
+    expect = require('chai').expect,
+    enableServerDestroy = require('server-destroy');
 
 describe('multi valued headers', function () {
-    var _ = require('lodash'),
-        http = require('http'),
-
-        server,
+    var server,
         testrun;
 
     before(function (done) {
@@ -18,6 +18,8 @@ describe('multi valued headers', function () {
         });
 
         server.listen(0, 'localhost');
+
+        enableServerDestroy(server);
 
         server.on('listening', function () {
             port = server.address().port;
@@ -54,7 +56,7 @@ describe('multi valued headers', function () {
         expect(response.text()).to.equal('worked');
     });
 
-    after(function () {
-        server.close();
+    after(function (done) {
+        server.destroy(done);
     });
 });

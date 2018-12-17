@@ -1,7 +1,8 @@
 var fs = require('fs'),
     net = require('net'),
+    sinon = require('sinon'),
     expect = require('chai').expect,
-    sinon = require('sinon');
+    enableServerDestroy = require('server-destroy');
 
 describe('http methods', function () {
     var server,
@@ -15,17 +16,28 @@ describe('http methods', function () {
         // https://github.com/nodejs/http-parser/blob/master/http_parser.h#L163
         server = net.createServer(function (socket) {
             socket.on('data', function (chunk) {
-                var raw = chunk.toString(); // Request Message: [POSTMAN / HTTP/1.1 ...]
-                socket.write('HTTP/1.1 200 ok\r\n');
-                socket.write('Content-Type: text/plain\r\n\r\n');
-                socket.write(raw); // respond with raw request message
-                socket.end();
+                // this avoids multiple writes when form-data is received in multiple chunks
+                if (!this.gotData) {
+                    this.gotData = true;
+
+                    socket.write('HTTP/1.1 200 ok\r\n');
+                    socket.write('Content-Type: text/plain\r\n\r\n');
+
+                    // wait until all the data is received, before closing the connection
+                    setTimeout(function () {
+                        socket.end();
+                    }, 500);
+                }
+
+                // respond with raw request message
+                socket.write(chunk.toString());
             });
         }).listen(PORT, done);
+        enableServerDestroy(server);
     });
 
     after(function (done) {
-        server.close(done);
+        server.destroy(done);
     });
 
     describe('standard (GET)', function () {
@@ -35,7 +47,8 @@ describe('http methods', function () {
                     item: [{
                         request: {
                             url: URL,
-                            method: 'GET'
+                            method: 'GET',
+                            header: [{key: 'Connection', value: 'close'}]
                         }
                     }]
                 }
