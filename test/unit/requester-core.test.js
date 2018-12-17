@@ -78,47 +78,88 @@ describe('requester util', function () {
                 agentOptions: {keepAlive: undefined}
             });
         });
-
-        it('should accept URL in uppercase', function () {
-            var request = new sdk.Request({
-                url: 'HTTP://POSTMAN-ECHO.COM/POST',
-                method: 'POST',
-                header: [{
-                    key: 'alpha',
-                    value: 'foo'
-                }],
-                body: {
-                    mode: 'raw',
-                    raw: '{"alpha": "foo"}'
-                }
+        describe('Should accept URL irrespective of the case', function() {
+            it('should accept URL in uppercase', function () {
+                var request = new sdk.Request({
+                    url: 'HTTP://POSTMAN-ECHO.COM/POST',
+                    method: 'POST',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    body: {
+                        mode: 'raw',
+                        raw: '{"alpha": "foo"}'
+                    }
+                });
+    
+                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HTTP://POSTMAN-ECHO.COM/POST');
             });
-
-            expect(requesterCore.getRequestOptions(request, {})).to.eql({
-                headers: {
-                    alpha: 'foo',
-                    'User-Agent': 'PostmanRuntime/' + runtimeVersion,
-                    'Content-Type': 'text/plain',
-                    Accept: '*/*',
-                    Host: 'POSTMAN-ECHO.COM'
-                },
-                body: '{"alpha": "foo"}',
-                url: 'HTTP://POSTMAN-ECHO.COM/POST',
-                method: 'POST',
-                jar: true,
-                timeout: undefined,
-                gzip: true,
-                useQuerystring: true,
-                strictSSL: undefined,
-                followRedirect: undefined,
-                followAllRedirects: undefined,
-                followOriginalHttpMethod: undefined,
-                maxRedirects: undefined,
-                removeRefererHeader: undefined,
-                encoding: null,
-                agentOptions: {keepAlive: undefined}
+            it('should accept URL in lowercase', function () {
+                var request = new sdk.Request({
+                    url: 'http://postman-echo.com/post',
+                    method: 'POST',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    body: {
+                        mode: 'raw',
+                        raw: '{"alpha": "foo"}'
+                    }
+                });
+    
+                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('http://postman-echo.com/post');
+            });
+            it('should accept URL in mixed case : Http:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'Http://postman-echo.com/post',
+                    method: 'POST',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    body: {
+                        mode: 'raw',
+                        raw: '{"alpha": "foo"}'
+                    }
+                });
+    
+                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('Http://postman-echo.com/post');
+            });
+            it('should accept URL in mixed case : HtTp:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'HtTp://postman-echo.com/post',
+                    method: 'POST',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    body: {
+                        mode: 'raw',
+                        raw: '{"alpha": "foo"}'
+                    }
+                });
+    
+                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HtTp://postman-echo.com/post');
+            });
+            it('should accept secure http url in mixed case : HttPs:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'HttPs://postman-echo.com',
+                    method: 'GET',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    body: {
+                        mode: 'raw',
+                        raw: '{"alpha": "foo"}'
+                    }
+                });
+    
+                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HttPs://postman-echo.com');
             });
         });
-
 
         it('should override lookup function for localhost', function () {
             var request = new sdk.Request({
