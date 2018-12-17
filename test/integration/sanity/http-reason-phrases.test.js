@@ -1,9 +1,9 @@
-var expect = require('chai').expect;
+var http = require('http'),
+    expect = require('chai').expect,
+    enableServerDestroy = require('server-destroy');
 
 describe('http reasons', function () {
-    var http = require('http'),
-
-        server,
+    var server,
         testrun;
 
     before(function (done) {
@@ -31,6 +31,8 @@ describe('http reasons', function () {
         });
 
         server.listen(0, 'localhost');
+
+        enableServerDestroy(server);
     });
 
     it('should have started and completed the test run', function () {
@@ -55,7 +57,7 @@ describe('http reasons', function () {
         });
     });
 
-    after(function () {
-        server.close();
+    after(function (done) {
+        server.destroy(done);
     });
 });

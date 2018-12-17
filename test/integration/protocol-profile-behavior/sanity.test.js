@@ -4,6 +4,7 @@ var fs = require('fs'),
     https = require('https'),
     sinon = require('sinon'),
     expect = require('chai').expect,
+    enableServerDestroy = require('server-destroy'),
     CertificateList = require('postman-collection').CertificateList;
 
 describe('protocolProfileBehavior', function () {
@@ -37,10 +38,11 @@ describe('protocolProfileBehavior', function () {
                 res.end('okay');
             }
         }).listen(PORT, done);
+        enableServerDestroy(server);
     });
 
     after(function (done) {
-        server.close(done);
+        server.destroy(done);
     });
 
     describe('with followRedirects: false', function () {
@@ -469,6 +471,8 @@ describe('protocolProfileBehavior', function () {
 
             sslServer.listen(port, 'localhost');
 
+            enableServerDestroy(sslServer);
+
             this.run({
                 collection: {
                     item: {
@@ -490,8 +494,8 @@ describe('protocolProfileBehavior', function () {
             });
         });
 
-        after(function () {
-            sslServer.close();
+        after(function (done) {
+            sslServer.destroy(done);
         });
 
         it('should complete the run', function () {
