@@ -78,6 +78,7 @@ describe('requester util', function () {
                 agentOptions: {keepAlive: undefined}
             });
         });
+
         describe('Should accept URL irrespective of the case', function() {
             it('should accept URL in uppercase', function () {
                 var request = new sdk.Request({
@@ -92,9 +93,10 @@ describe('requester util', function () {
                         raw: '{"alpha": "foo"}'
                     }
                 });
-    
+
                 expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HTTP://POSTMAN-ECHO.COM/POST');
             });
+
             it('should accept URL in lowercase', function () {
                 var request = new sdk.Request({
                     url: 'http://postman-echo.com/post',
@@ -108,9 +110,10 @@ describe('requester util', function () {
                         raw: '{"alpha": "foo"}'
                     }
                 });
-    
+
                 expect(requesterCore.getRequestOptions(request, {}).url).to.eql('http://postman-echo.com/post');
             });
+
             it('should accept URL in mixed case : Http:// ..', function () {
                 var request = new sdk.Request({
                     url: 'Http://postman-echo.com/post',
@@ -124,9 +127,9 @@ describe('requester util', function () {
                         raw: '{"alpha": "foo"}'
                     }
                 });
-    
                 expect(requesterCore.getRequestOptions(request, {}).url).to.eql('Http://postman-echo.com/post');
             });
+
             it('should accept URL in mixed case : HtTp:// ..', function () {
                 var request = new sdk.Request({
                     url: 'HtTp://postman-echo.com/post',
@@ -140,9 +143,9 @@ describe('requester util', function () {
                         raw: '{"alpha": "foo"}'
                     }
                 });
-    
                 expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HtTp://postman-echo.com/post');
             });
+
             it('should accept secure http url in mixed case : HttPs:// ..', function () {
                 var request = new sdk.Request({
                     url: 'HttPs://postman-echo.com',
@@ -156,7 +159,6 @@ describe('requester util', function () {
                         raw: '{"alpha": "foo"}'
                     }
                 });
-    
                 expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HttPs://postman-echo.com');
             });
         });
