@@ -1,6 +1,7 @@
 var http = require('http'),
     sinon = require('sinon'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    enableServerDestroy = require('server-destroy');
 
 describe('Requester Spec: redirect', function () {
     var server,
@@ -33,10 +34,11 @@ describe('Requester Spec: redirect', function () {
                 res.end('okay');
             }
         }).listen(PORT, done);
+        enableServerDestroy(server);
     });
 
     after(function (done) {
-        server.close(done);
+        server.destroy(done);
     });
 
     describe('with followOriginalHttpMethod: false', function () {

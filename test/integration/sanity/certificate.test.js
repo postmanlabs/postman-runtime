@@ -1,13 +1,12 @@
-var expect = require('chai').expect;
+var fs = require('fs'),
+    path = require('path'),
+    https = require('https'),
+    expect = require('chai').expect,
+    enableServerDestroy = require('server-destroy'),
+    CertificateList = require('postman-collection').CertificateList;
 
 describe('certificates', function () {
-    var fs = require('fs'),
-        path = require('path'),
-        CertificateList = require('postman-collection').CertificateList,
-        https = require('https'),
-
-        certificateId = 'test-certificate',
-
+    var certificateId = 'test-certificate',
         server,
         testrun;
 
@@ -49,6 +48,8 @@ describe('certificates', function () {
 
             server.listen(port, 'localhost');
 
+            enableServerDestroy(server);
+
             this.run({
                 collection: {
                     item: {
@@ -88,8 +89,8 @@ describe('certificates', function () {
             });
         });
 
-        after(function () {
-            server.close();
+        after(function (done) {
+            server.destroy(done);
         });
     });
 
@@ -129,6 +130,8 @@ describe('certificates', function () {
             });
 
             server.listen(port, 'localhost');
+
+            enableServerDestroy(server);
 
             this.run({
                 collection: {
@@ -184,8 +187,8 @@ describe('certificates', function () {
             expect(call2[2]).to.match(/^certificate ("key"|"cert") load error:/);
         });
 
-        after(function () {
-            server.close();
+        after(function (done) {
+            server.destroy(done);
         });
     });
 });

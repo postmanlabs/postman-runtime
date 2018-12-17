@@ -1,6 +1,7 @@
 var net = require('net'),
     sinon = require('sinon'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    enableServerDestroy = require('server-destroy');
 
 describe('protocolProfileBehavior', function () {
     var server,
@@ -30,10 +31,11 @@ describe('protocolProfileBehavior', function () {
                 socket.end();
             });
         }).listen(PORT, done);
+        enableServerDestroy(server);
     });
 
     after(function (done) {
-        server.close(done);
+        server.destroy(done);
     });
 
     describe('with disableBodyPruning: true', function () {
