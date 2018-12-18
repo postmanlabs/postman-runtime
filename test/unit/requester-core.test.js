@@ -83,83 +83,48 @@ describe('requester util', function () {
             it('should accept URL in uppercase', function () {
                 var request = new sdk.Request({
                     url: 'HTTP://POSTMAN-ECHO.COM/POST',
-                    method: 'POST',
-                    header: [{
-                        key: 'alpha',
-                        value: 'foo'
-                    }],
-                    body: {
-                        mode: 'raw',
-                        raw: '{"alpha": "foo"}'
-                    }
+                    method: 'POST'
                 });
 
-                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HTTP://POSTMAN-ECHO.COM/POST');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HTTP://POSTMAN-ECHO.COM/POST');
             });
 
             it('should accept URL in lowercase', function () {
                 var request = new sdk.Request({
                     url: 'http://postman-echo.com/post',
-                    method: 'POST',
-                    header: [{
-                        key: 'alpha',
-                        value: 'foo'
-                    }],
-                    body: {
-                        mode: 'raw',
-                        raw: '{"alpha": "foo"}'
-                    }
+                    method: 'POST'
                 });
 
-                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('http://postman-echo.com/post');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'http://postman-echo.com/post');
             });
 
             it('should accept URL in mixed case : Http:// ..', function () {
                 var request = new sdk.Request({
                     url: 'Http://postman-echo.com/post',
-                    method: 'POST',
-                    header: [{
-                        key: 'alpha',
-                        value: 'foo'
-                    }],
-                    body: {
-                        mode: 'raw',
-                        raw: '{"alpha": "foo"}'
-                    }
+                    method: 'POST'
                 });
-                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('Http://postman-echo.com/post');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'Http://postman-echo.com/post');
             });
 
             it('should accept URL in mixed case : HtTp:// ..', function () {
                 var request = new sdk.Request({
                     url: 'HtTp://postman-echo.com/post',
-                    method: 'POST',
-                    header: [{
-                        key: 'alpha',
-                        value: 'foo'
-                    }],
-                    body: {
-                        mode: 'raw',
-                        raw: '{"alpha": "foo"}'
-                    }
+                    method: 'POST'
                 });
-                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HtTp://postman-echo.com/post');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HtTp://postman-echo.com/post');
             });
 
             it('should accept secure http url in mixed case : HttPs:// ..', function () {
                 var request = new sdk.Request({
                     url: 'HttPs://postman-echo.com',
-                    method: 'GET',
-                    header: [{
-                        key: 'alpha',
-                        value: 'foo'
-                    }],
-                    body: {
-                        mode: 'raw',
-                        raw: '{"alpha": "foo"}'
-                    }
+                    method: 'GET'
                 });
-                expect(requesterCore.getRequestOptions(request, {}).url).to.eql('HttPs://postman-echo.com');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HttPs://postman-echo.com');
             });
         });
 
