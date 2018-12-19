@@ -1,19 +1,16 @@
-var expect = require('chai').expect;
-describe('Different case url', function() {
+var expect = require('chai').expect,
+    sinon = require('sinon');
 
-    describe('Lowercase', function() {
-        var testrun;
+describe('different case url', function() {
+    var testrun;
+    describe('lowercase', function() {
         before(function(done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
                             url: 'http://postman-echo.com/post',
-                            method: 'POST',
-                            body: {
-                                mode: 'raw',
-                                raw: ''
-                            }
+                            method: 'POST'
                         }
                     }]
                 }
@@ -23,25 +20,28 @@ describe('Different case url', function() {
             });
         });
 
-        it('Should process request when url is in lowercase', function() {
+        it('should process request when url is in lowercase', function() {
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+
             expect(testrun.response.getCall(0).args[2]).to.have.property('code', 200);
-            expect(testrun.response.getCall(0).args[3].url.toString()).eql('http://postman-echo.com/post');
+            expect(testrun.response.getCall(0).args[2].stream.toString()).to.include('https://postman-echo.com/post');
         });
     });
 
-    describe('Uppercase', function() {
-        var testrun;
+    describe('uppercase', function() {
         before(function(done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
                             url: 'HTTP://POSTMAN-ECHO.COM/POST',
-                            method: 'POST',
-                            body: {
-                                mode: 'raw',
-                                raw: ''
-                            }
+                            method: 'POST'
                         }
                     }]
                 }
@@ -51,25 +51,28 @@ describe('Different case url', function() {
             });
         });
 
-        it('Should process request when url is in uppercase', function() {
+        it('should process request when url is in uppercase', function() {
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+
             expect(testrun.response.getCall(0).args[2]).to.have.property('code', 200);
-            expect(testrun.response.getCall(0).args[3].url.toString()).eql('HTTP://POSTMAN-ECHO.COM/POST');
+            expect(testrun.response.getCall(0).args[2].stream.toString()).to.include('https://postman-echo.com/POST');
         });
     });
 
-    describe('Mixed Case', function() {
-        var testrun;
+    describe('mixed Case', function() {
         before(function(done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
                             url: 'HtTp://POSTMAN-ECHO.COM/POST',
-                            method: 'POST',
-                            body: {
-                                mode: 'raw',
-                                raw: ''
-                            }
+                            method: 'POST'
                         }
                     }]
                 }
@@ -79,26 +82,31 @@ describe('Different case url', function() {
             });
         });
 
-        it('Should process request when url is in mixed case', function() {
+        it('should process request when url is in mixed case', function() {
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+
             expect(testrun.response.getCall(0).args[2]).to.have.property('code', 200);
-            expect(testrun.response.getCall(0).args[3].url.toString()).eql('HtTp://POSTMAN-ECHO.COM/POST');
+            expect(testrun.response.getCall(0).args[2].stream.toString()).to.include('https://postman-echo.com/POST');
+
         });
     });
 
 
-    describe('Mixed Case with https', function() {
-        var testrun;
+    describe('mixed Case with https', function() {
         before(function(done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
                             url: 'HtTpS://POsTMaN-ecHo.cOm/PosT',
-                            method: 'POST',
-                            body: {
-                                mode: 'raw',
-                                raw: ''
-                            }
+                            method: 'POST'
                         }
                     }]
                 }
@@ -108,9 +116,19 @@ describe('Different case url', function() {
             });
         });
 
-        it('Should process https request when url is in mixed case : HtTpS://...', function() {
+        it('should process https request when url is in mixed case : HtTpS://...', function() {
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+
             expect(testrun.response.getCall(0).args[2]).to.have.property('code', 200);
-            expect(testrun.response.getCall(0).args[3].url.toString()).eql('HtTpS://POsTMaN-ecHo.cOm/PosT');
+            expect(testrun.response.getCall(0).args[2].stream.toString()).to.include('https://postman-echo.com/PosT');
+
         });
     });
 

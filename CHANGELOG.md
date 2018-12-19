@@ -1,6 +1,6 @@
 # Postman Runtime Changelog
-### v7.6.0 (Unreleased)
-* #690 Fixed a bug that caused request in any case other than lowercase to fail :bug:
+#### v7.6.0 (Unreleased)
+* #690 Fixed a bug that caused request with protocol in any case other than lowercase to fail :bug:
 
 #### v7.5.0 (December 6, 2018)
 * #670 Added requester options to configure redirects behavior
