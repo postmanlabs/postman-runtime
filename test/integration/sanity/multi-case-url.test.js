@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     sinon = require('sinon');
 
-describe('different case url', function() {
+describe.only('different case url', function() {
     var testrun;
     describe('lowercase', function() {
         before(function(done) {
