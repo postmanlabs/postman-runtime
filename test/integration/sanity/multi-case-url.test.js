@@ -1,18 +1,23 @@
 var expect = require('chai').expect,
     sinon = require('sinon');
 
-describe('different case url', function() {
+describe('request url', function() {
     var testrun;
-    describe('lowercase', function() {
+
+    describe('with lowercase', function() {
         before(function(done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
-                            url: 'http://postman-echo.com/post',
+                            url: 'http://postman-echo.com/post?name=postman',
                             method: 'POST'
-                        }
-                    }]
+                        }},
+                    {
+                        request: {
+                            url: 'https://postman-echo.com/post?name=postman',
+                            method: 'POST'
+                        }}]
                 }
             }, function(err, result) {
                 testrun = result;
@@ -20,30 +25,72 @@ describe('different case url', function() {
             });
         });
 
-        it('should process request when url is in lowercase', function() {
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledTwice(testrun.request);
+            sinon.assert.calledTwice(testrun.response);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
-            sinon.assert.calledOnce(testrun.request);
+        });
+
+        it('should process the http request', function() {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
-            sinon.assert.calledOnce(testrun.response);
             sinon.assert.calledWith(testrun.response.getCall(0), null);
 
             expect(testrun.response.getCall(0).args[2]).to.have.property('code', 200);
-            expect(testrun.response.getCall(0).args[2].stream.toString()).to.include('https://postman-echo.com/post');
+        });
+
+        it('should process the https request', function() {
+            sinon.assert.calledWith(testrun.request.getCall(1), null);
+            sinon.assert.calledWith(testrun.response.getCall(1), null);
+
+            expect(testrun.response.getCall(1).args[2]).to.have.property('code', 200);
+        });
+
+        it('should normalise the protocol and hostname for http', function() {
+            var response = testrun.response.getCall(0).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('https://postman-echo.com');
+        });
+
+        it('should normalise the protocol and hostname for https', function() {
+            var response = testrun.response.getCall(1).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('https://postman-echo.com');
+        });
+
+        it('should maintain the case sensitivity of path and query parameters for http', function() {
+            var response = testrun.response.getCall(0).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('/post?name=postman');
+        });
+
+        it('should maintain the case sensitivity of path and query parameters for https', function() {
+            var response = testrun.response.getCall(1).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('/post?name=postman');
         });
     });
 
-    describe('uppercase', function() {
+    describe('with uppercase', function() {
         before(function(done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
-                            url: 'HTTP://POSTMAN-ECHO.COM/POST',
+                            url: 'HTTP://POSTMAN-ECHO.COM/POST?NAME=POSTMAN',
                             method: 'POST'
-                        }
-                    }]
+                        }},
+                    {
+                        request: {
+                            url: 'HTTPS://POSTMAN-ECHO.COM/POST?NAME=POSTMAN',
+                            method: 'POST'
+                        }}]
                 }
             }, function(err, result) {
                 testrun = result;
@@ -51,30 +98,72 @@ describe('different case url', function() {
             });
         });
 
-        it('should process request when url is in uppercase', function() {
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledTwice(testrun.request);
+            sinon.assert.calledTwice(testrun.response);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
-            sinon.assert.calledOnce(testrun.request);
+        });
+
+        it('should process the http request', function() {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
-            sinon.assert.calledOnce(testrun.response);
             sinon.assert.calledWith(testrun.response.getCall(0), null);
 
             expect(testrun.response.getCall(0).args[2]).to.have.property('code', 200);
-            expect(testrun.response.getCall(0).args[2].stream.toString()).to.include('https://postman-echo.com/POST');
+        });
+
+        it('should process the https request', function() {
+            sinon.assert.calledWith(testrun.request.getCall(1), null);
+            sinon.assert.calledWith(testrun.response.getCall(1), null);
+
+            expect(testrun.response.getCall(1).args[2]).to.have.property('code', 200);
+        });
+
+        it('should normalise the protocol and hostname for http', function() {
+            var response = testrun.response.getCall(0).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('https://postman-echo.com');
+        });
+
+        it('should normalise the protocol and hostname for https', function() {
+            var response = testrun.response.getCall(1).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('https://postman-echo.com');
+        });
+
+        it('should maintain the case sensitivity of path and query parameters for http', function() {
+            var response = testrun.response.getCall(0).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('/POST?NAME=POSTMAN');
+        });
+
+        it('should maintain the case sensitivity of path and query parameters for https', function() {
+            var response = testrun.response.getCall(1).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('/POST?NAME=POSTMAN');
         });
     });
 
-    describe('mixed Case', function() {
+    describe('with mixed case', function() {
         before(function(done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
-                            url: 'HtTp://POSTMAN-ECHO.COM/POST',
+                            url: 'HttP://POsTmaN-ecHo.CoM/PoST?NamE=PosTMaN',
                             method: 'POST'
-                        }
-                    }]
+                        }},
+                    {
+                        request: {
+                            url: 'htTpS://POsTmaN-eChO.Com/Post?NaMe=PostMaN',
+                            method: 'POST'
+                        }}]
                 }
             }, function(err, result) {
                 testrun = result;
@@ -82,54 +171,56 @@ describe('different case url', function() {
             });
         });
 
-        it('should process request when url is in mixed case', function() {
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledTwice(testrun.request);
+            sinon.assert.calledTwice(testrun.response);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
-            sinon.assert.calledWith(testrun.done.getCall(0), null);
-            sinon.assert.calledOnce(testrun.request);
+        });
+
+        it('should process the http request', function() {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
-            sinon.assert.calledOnce(testrun.response);
             sinon.assert.calledWith(testrun.response.getCall(0), null);
 
             expect(testrun.response.getCall(0).args[2]).to.have.property('code', 200);
-            expect(testrun.response.getCall(0).args[2].stream.toString()).to.include('https://postman-echo.com/POST');
+        });
 
+        it('should process the https request', function() {
+            sinon.assert.calledWith(testrun.request.getCall(1), null);
+            sinon.assert.calledWith(testrun.response.getCall(1), null);
+
+            expect(testrun.response.getCall(1).args[2]).to.have.property('code', 200);
+        });
+
+        it('should normalise the protocol and hostname for http', function() {
+            var response = testrun.response.getCall(0).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('https://postman-echo.com');
+        });
+
+        it('should normalise the protocol and hostname for https', function() {
+            var response = testrun.response.getCall(1).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('https://postman-echo.com');
+        });
+
+        it('should maintain the case sensitivity of path and query parameters for http', function() {
+            var response = testrun.response.getCall(0).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('/PoST?NamE=PosTMaN');
+        });
+
+        it('should maintain the case sensitivity of path and query parameters for https', function() {
+            var response = testrun.response.getCall(1).args[2].stream.toString();
+
+            expect(JSON.parse(response)).to.have.property('url')
+                .that.have.string('/Post?NaMe=PostMaN');
         });
     });
-
-
-    describe('mixed Case with https', function() {
-        before(function(done) {
-            this.run({
-                collection: {
-                    item: [{
-                        request: {
-                            url: 'HtTpS://POsTMaN-ecHo.cOm/PosT',
-                            method: 'POST'
-                        }
-                    }]
-                }
-            }, function(err, result) {
-                testrun = result;
-                done(err);
-            });
-        });
-
-        it('should process https request when url is in mixed case : HtTpS://...', function() {
-            sinon.assert.calledOnce(testrun.start);
-            sinon.assert.calledOnce(testrun.done);
-            sinon.assert.calledWith(testrun.done.getCall(0), null);
-            sinon.assert.calledWith(testrun.done.getCall(0), null);
-            sinon.assert.calledOnce(testrun.request);
-            sinon.assert.calledWith(testrun.request.getCall(0), null);
-            sinon.assert.calledOnce(testrun.response);
-            sinon.assert.calledWith(testrun.response.getCall(0), null);
-
-            expect(testrun.response.getCall(0).args[2]).to.have.property('code', 200);
-            expect(testrun.response.getCall(0).args[2].stream.toString()).to.include('https://postman-echo.com/PosT');
-
-        });
-    });
-
 });
+
