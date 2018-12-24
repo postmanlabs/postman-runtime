@@ -70,7 +70,7 @@ describe('project repository', function () {
             it('should point to a valid semver', function () {
                 var packages = _.without(Object.keys(json.dependencies),
                     // These are trusted packages
-                    'request', 'postman-collection', 'serialised-error');
+                    'postman-request', 'postman-collection', 'serialised-error');
                 packages.forEach(function (dependencyName) {
                     expect(json.dependencies[dependencyName]).to.match(new RegExp('^((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
                         '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));
