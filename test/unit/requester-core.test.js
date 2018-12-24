@@ -105,6 +105,7 @@ describe('requester util', function () {
                     url: 'Http://postman-echo.com/post',
                     method: 'POST'
                 });
+
                 expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
                     'Http://postman-echo.com/post');
             });
@@ -114,6 +115,7 @@ describe('requester util', function () {
                     url: 'HtTp://postman-echo.com/post',
                     method: 'POST'
                 });
+
                 expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
                     'HtTp://postman-echo.com/post');
             });
@@ -123,6 +125,7 @@ describe('requester util', function () {
                     url: 'HttPs://postman-echo.com',
                     method: 'GET'
                 });
+
                 expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
                     'HttPs://postman-echo.com');
             });
