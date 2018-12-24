@@ -79,6 +79,58 @@ describe('requester util', function () {
             });
         });
 
+        describe('Should accept URL irrespective of the case', function() {
+            it('should accept URL in uppercase', function () {
+                var request = new sdk.Request({
+                    url: 'HTTP://POSTMAN-ECHO.COM/POST',
+                    method: 'POST'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HTTP://POSTMAN-ECHO.COM/POST');
+            });
+
+            it('should accept URL in lowercase', function () {
+                var request = new sdk.Request({
+                    url: 'http://postman-echo.com/post',
+                    method: 'POST'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'http://postman-echo.com/post');
+            });
+
+            it('should accept URL in mixed case : Http:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'Http://postman-echo.com/post',
+                    method: 'POST'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'Http://postman-echo.com/post');
+            });
+
+            it('should accept URL in mixed case : HtTp:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'HtTp://postman-echo.com/post',
+                    method: 'POST'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HtTp://postman-echo.com/post');
+            });
+
+            it('should accept secure http url in mixed case : HttPs:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'HttPs://postman-echo.com',
+                    method: 'GET'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HttPs://postman-echo.com');
+            });
+        });
+
         it('should override lookup function for localhost', function () {
             var request = new sdk.Request({
                 url: 'http://localhost:8080/random/path'

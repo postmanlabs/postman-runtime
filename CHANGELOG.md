@@ -1,6 +1,6 @@
 # Postman Runtime Changelog
-
 #### v7.6.0 (Unreleased)
+* #690 Fixed a bug that caused requests to fail when given url's protocol i.e 'http' or 'https' is not in lowercase :bug:
 * #694 Respect form-data fields ordering
 
 #### v7.5.0 (December 6, 2018)
