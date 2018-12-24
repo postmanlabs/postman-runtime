@@ -49,18 +49,18 @@ describe('request url', function () {
             expect(testrun.response.getCall(1).args[2]).to.have.property('code', 200);
         });
 
-        it('should normalise the protocol and hostname for http', function () {
+        it('should normalise the url for http', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
-            expect(JSON.parse(request)).to.have.property('url')
-                .that.have.string('https://postman-echo.com');
+            expect(JSON.parse(request)).to.have
+                .property('url', 'https://postman-echo.com/post?name=postman');
         });
 
-        it('should normalise the protocol and hostname for https', function () {
+        it('should normalise the url for https', function () {
             var request = testrun.request.getCall(1).args[2].stream.toString();
 
-            expect(JSON.parse(request)).to.have.property('url')
-                .that.have.string('https://postman-echo.com');
+            expect(JSON.parse(request)).to.have
+                .property('url', 'https://postman-echo.com/post?name=postman');
         });
 
         it('should maintain the case sensitivity of path and query parameters for http', function () {
@@ -125,18 +125,18 @@ describe('request url', function () {
             expect(testrun.response.getCall(1).args[2]).to.have.property('code', 200);
         });
 
-        it('should normalise the protocol and hostname for http', function () {
+        it('should normalise the url for http', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
-            expect(JSON.parse(request)).to.have.property('url')
-                .that.have.string('https://postman-echo.com');
+            expect(JSON.parse(request)).to.have
+                .property('url', 'https://postman-echo.com/POST?NAME=POSTMAN');
         });
 
-        it('should normalise the protocol and hostname for https', function () {
+        it('should normalise the url for https', function () {
             var request = testrun.request.getCall(1).args[2].stream.toString();
 
-            expect(JSON.parse(request)).to.have.property('url')
-                .that.have.string('https://postman-echo.com');
+            expect(JSON.parse(request)).to.have
+                .property('url', 'https://postman-echo.com/POST?NAME=POSTMAN');
         });
 
         it('should maintain the case sensitivity of path and query parameters for http', function () {
@@ -201,18 +201,18 @@ describe('request url', function () {
             expect(testrun.response.getCall(1).args[2]).to.have.property('code', 200);
         });
 
-        it('should normalise the protocol and hostname for http', function () {
+        it('should normalise the url for http', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
-            expect(JSON.parse(request)).to.have.property('url')
-                .that.have.string('https://postman-echo.com');
+            expect(JSON.parse(request)).to.have
+                .property('url', 'https://postman-echo.com/PoST?NamE=PosTMaN');
         });
 
-        it('should normalise the protocol and hostname for https', function () {
+        it('should normalise the url for https', function () {
             var request = testrun.request.getCall(1).args[2].stream.toString();
 
-            expect(JSON.parse(request)).to.have.property('url')
-                .that.have.string('https://postman-echo.com');
+            expect(JSON.parse(request)).to.have
+                .property('url', 'https://postman-echo.com/Post?NaMe=PostMaN');
         });
 
         it('should maintain the case sensitivity of path and query parameters for http', function () {
