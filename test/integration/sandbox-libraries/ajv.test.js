@@ -24,14 +24,14 @@ describe('sandbox library - AJV', function () {
                             };
 
                             pm.test("ajv.validate", function () {
-                                var ajv = new Ajv();
+                                var ajv = new Ajv({logger: false});
 
                                 pm.expect(ajv.validate(schema, {alpha: true})).to.be.true;
                                 pm.expect(ajv.validate(schema, {alpha: 123})).to.be.false;
                             });
 
                             pm.test("ajv.compile", function () {
-                                var ajv = new Ajv(),
+                                var ajv = new Ajv({logger: false}),
                                     validate = ajv.compile(schema);
 
                                 pm.expect(validate({alpha: true})).to.be.true;
@@ -88,6 +88,7 @@ describe('sandbox library - AJV', function () {
                             },
 
                             ajv = new Ajv({
+                                logger: false,
                                 loadSchema: function(uri) {
                                     return new Promise(function(resolve, reject) {
                                         setTimeout(function() {
