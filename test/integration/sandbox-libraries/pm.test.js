@@ -23,7 +23,6 @@ describe('sandbox library - pm api', function () {
                                     pm.request.to.not.have.header('Foo-Bar');
                                     pm.request.to.have.header('host');
                                     pm.request.to.be.a.postmanRequestOrResponse;
-
                                 });
 
                                 pm.test("pre-assert response", function () {
