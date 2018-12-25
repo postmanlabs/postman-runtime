@@ -79,6 +79,58 @@ describe('requester util', function () {
             });
         });
 
+        describe('Should accept URL irrespective of the case', function() {
+            it('should accept URL in uppercase', function () {
+                var request = new sdk.Request({
+                    url: 'HTTP://POSTMAN-ECHO.COM/POST',
+                    method: 'POST'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HTTP://POSTMAN-ECHO.COM/POST');
+            });
+
+            it('should accept URL in lowercase', function () {
+                var request = new sdk.Request({
+                    url: 'http://postman-echo.com/post',
+                    method: 'POST'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'http://postman-echo.com/post');
+            });
+
+            it('should accept URL in mixed case : Http:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'Http://postman-echo.com/post',
+                    method: 'POST'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'Http://postman-echo.com/post');
+            });
+
+            it('should accept URL in mixed case : HtTp:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'HtTp://postman-echo.com/post',
+                    method: 'POST'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HtTp://postman-echo.com/post');
+            });
+
+            it('should accept secure http url in mixed case : HttPs:// ..', function () {
+                var request = new sdk.Request({
+                    url: 'HttPs://postman-echo.com',
+                    method: 'GET'
+                });
+
+                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                    'HttPs://postman-echo.com');
+            });
+        });
+
         it('should override lookup function for localhost', function () {
             var request = new sdk.Request({
                 url: 'http://localhost:8080/random/path'
@@ -240,7 +292,7 @@ describe('requester util', function () {
 
             delete request.method;
             expect(requesterCore.getRequestBody(request, {})).to.eql({
-                formData: {foo: 'bar'}
+                formData: [{key: 'foo', value: 'bar'}]
             });
         });
 
@@ -297,7 +349,12 @@ describe('requester util', function () {
             });
 
             expect(requesterCore.getRequestBody(request)).to.eql({
-                formData: {alpha: ['foo', 'other', 'next'], beta: 'bar'}
+                formData: [
+                    {key: 'alpha', value: 'foo'},
+                    {key: 'beta', value: 'bar'},
+                    {key: 'alpha', value: 'other'},
+                    {key: 'alpha', value: 'next'}
+                ]
             });
         });
 
@@ -374,7 +431,7 @@ describe('requester util', function () {
                 expect(requesterCore.getRequestBody(request, {
                     disableBodyPruning: true
                 })).to.eql({
-                    formData: {foo: 'bar'}
+                    formData: [{key: 'foo', value: 'bar'}]
                 });
             });
 
@@ -394,7 +451,7 @@ describe('requester util', function () {
                 expect(requesterCore.getRequestBody(request, {
                     disableBodyPruning: true
                 })).to.eql({
-                    formData: {foo: 'bar'}
+                    formData: [{key: 'foo', value: 'bar'}]
                 });
             });
 
@@ -414,7 +471,7 @@ describe('requester util', function () {
                 expect(requesterCore.getRequestBody(request, {
                     disableBodyPruning: false
                 })).to.eql({
-                    formData: {foo: 'bar'}
+                    formData: [{key: 'foo', value: 'bar'}]
                 });
             });
         });
@@ -435,7 +492,10 @@ describe('requester util', function () {
                     });
 
                     expect(requesterCore.getRequestBody(request)).to.eql({
-                        formData: {constructor: 'builds away!', foo: 'bar'}
+                        formData: [
+                            {key: 'constructor', value: 'builds away!'},
+                            {key: 'foo', value: 'bar'}
+                        ]
                     });
                 });
 
@@ -454,10 +514,11 @@ describe('requester util', function () {
                     });
 
                     expect(requesterCore.getRequestBody(request)).to.eql({
-                        formData: {
-                            constructor: ['I\'ll be back', 'Come with me if you want to live!'],
-                            foo: 'bar'
-                        }
+                        formData: [
+                            {key: 'constructor', value: 'I\'ll be back'},
+                            {key: 'constructor', value: 'Come with me if you want to live!'},
+                            {key: 'foo', value: 'bar'}
+                        ]
                     });
                 });
             });
@@ -528,15 +589,15 @@ describe('requester util', function () {
                         }),
                         requestBody = requesterCore.getRequestBody(request);
 
-                    expect(requestBody.formData).to.have.all.keys(['userData', 'userFile']);
-                    expect(requestBody.formData.userData).to.eql({
+                    expect(requestBody.formData).to.eql([{
+                        key: 'userData',
                         value: '{"name": "userName"}',
                         options: {contentType: 'application/json'}
-                    });
-                    expect(requestBody.formData.userFile).to.eql({
+                    }, {
+                        key: 'userFile',
                         value: '',
                         options: {contentType: 'application/json'}
-                    });
+                    }]);
                 });
 
                 it('should avoid contentType as blank string', function () {
@@ -554,7 +615,7 @@ describe('requester util', function () {
                         }),
                         requestBody = requesterCore.getRequestBody(request);
 
-                    expect(requestBody.formData).to.eql({foo: 'bar'});
+                    expect(requestBody.formData).to.eql([{key: 'foo', value: 'bar'}]);
                 });
 
                 it('should not support fileName & fileLength', function () {
@@ -576,7 +637,7 @@ describe('requester util', function () {
                         }),
                         requestBody = requesterCore.getRequestBody(request);
 
-                    expect(requestBody.formData).to.have.all.keys(['foo']);
+                    expect(requestBody.formData).to.eql([{key: 'foo', value: 'bar'}]);
                 });
             });
         });

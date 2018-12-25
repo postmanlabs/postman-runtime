@@ -1,7 +1,8 @@
 var fs = require('fs'),
     http = require('http'),
     sinon = require('sinon'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    enableServerDestroy = require('server-destroy');
 
 describe('redirects', function() {
     var testrun,
@@ -27,10 +28,11 @@ describe('redirects', function() {
                 res.end(data);
             });
         }).listen(PORT, done);
+        enableServerDestroy(server);
     });
 
     after(function (done) {
-        server.close(done);
+        server.destroy(done);
     });
 
     describe('sanity', function () {

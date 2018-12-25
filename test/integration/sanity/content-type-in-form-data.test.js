@@ -1,7 +1,8 @@
 var fs = require('fs'),
     http = require('http'),
+    sinon = require('sinon'),
     expect = require('chai').expect,
-    sinon = require('sinon');
+    enableServerDestroy = require('server-destroy');
 
 describe('content-type', function () {
     var server,
@@ -64,10 +65,11 @@ describe('content-type', function () {
                 res.end(JSON.stringify(parseRaw(rawBody)));
             });
         }).listen(5050, done);
+        enableServerDestroy(server);
     });
 
     after(function (done) {
-        server.close(done);
+        server.destroy(done);
     });
 
     describe('default', function () {
