@@ -1,5 +1,9 @@
 # Postman Runtime Changelog
 
+#### v7.6.1 (January 3, 2019)
+* Updated `postman-collection` to v3.4.1 which fixes a bug where poly chained variables are not resolved correctly
+* Updated dependencies
+
 #### v7.6.0 (December 25, 2018)
 * #694 Respect form-data fields ordering
 * #690 Fixed a bug that caused requests to fail when URL's protocol is not in lowercase
