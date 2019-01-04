@@ -131,22 +131,16 @@ describe('request headers', function () {
         sinon.assert.calledWith(testrun.response.getCall(1), null);
 
         var response = testrun.response.getCall(1).args[2],
-            requestHeaders = JSON.parse(response.stream);
+            requestHeaders = JSON.parse(response.stream),
+            headerKeys = requestHeaders.map(function (header) { return header.key; });
 
         expect(requestHeaders).to.deep.include({
             key: 'Header-Name-1',
             value: 'value1'
         });
 
-        expect(requestHeaders).to.not.deep.include({
-            key: 'Header-Name-2',
-            value: 'value2'
-        });
-
-        expect(requestHeaders).to.not.deep.include({
-            key: '',
-            value: 'value3'
-        });
+        expect(headerKeys).to.not.include('Header-Name-2');
+        expect(headerKeys).to.not.include('');
     });
 
     it('should handle headers with different cases correctly', function () {
