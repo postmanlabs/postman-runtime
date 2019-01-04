@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### v7.7.0 (unreleased)
+* #707 Avoid executing disabled `prerequest` and `test` scripts.
+* #707 Uses Collection SDK `Request~getHeaders` method to get request headers object.
+* Updated `postman-collection` to v3.4.2 which avoids substitution of disabled variables.
+
 #### v7.6.1 (January 3, 2019)
 * Updated `postman-collection` to v3.4.1 which fixes a bug where poly chained variables are not resolved correctly
 * Updated dependencies
@@ -164,7 +169,7 @@
 * #350 Fixed abort-after-pause :bug:
 * #386 Added support for bearer-token auth :tada:
 * #373 Added response callback :tada:
-* #360 Shifted the auth sign function from the Collection SDK.
+* #360 Shifted the auth sign function from the C.
 * #368 All new auth-interface :tada:
 * #367 Made basic-auth username optional :tada:
 * #366 Documented exception callback :scroll:
@@ -177,7 +182,7 @@
 
 #### v6.2.6 (August 18, 2017)
 * Updated dependencies :arrow_up:
-* Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`. #353, #354
+* Bumped C to `v2.1.1` and Sandbox to `v2.3.1`. #353, #354
 * :lock: Prevented files from being uploaded via `pm.sendRequest` #351
 * Queued `pm.sendRequest` through the request command, emitted the `request` event. #345
 * :scroll: Expanded documentation for the `assertion` event. #342
@@ -191,12 +196,12 @@
 * Fixed a bug that prevented the `Content-Length` header from being set for file uploads in `binary` mode.
 
 #### 6.2.3 (July 5, 2017)
-* Support for updated `ProxyConfig` from Collection SDK v2.0.0
+* Support for updated `ProxyConfig` from C v2.0.0
 * Custom proxies now have higher preference than system proxies
 
 #### 6.2.2 (June 28, 2017)
 * Bumped Postman Sandbox to v2.3.0, which includes support for synchronous csv-parse #298
-* Bumped Postman Collection SDK to v1.2.9, with critical bugfixes. #297
+* Bumped Postman C to v1.2.9, with critical bugfixes. #297
 * Updated other dependencies
 
 #### 6.2.1 (June 23, 2017)
@@ -506,7 +511,7 @@
 * Disabled file uploads if no fileResolver is provided
 * Ensure that URL encoding is done in an XHR compatible way by the request library
 * Allow aborting of individual HTTP requests
-* Parse XHR headers using the Postman Collection SDK
+* Parse XHR headers using the Postman C
 * Updated the SDK version to v0.4.6
 
 #### 2.2.2 (July 25, 2016)
