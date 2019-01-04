@@ -1,4 +1,5 @@
-var http = require('http'),
+var _ = require('lodash'),
+    http = require('http'),
     sinon = require('sinon'),
     expect = require('chai').expect,
     enableServerDestroy = require('server-destroy');
@@ -18,20 +19,9 @@ describe('request headers', function () {
      * @returns {Object[]}
      */
     function parseRawHeaders(rawHeaders) {
-        if (!Array.isArray(rawHeaders)) { return []; }
-
-        var headerList = [],
-            i,
-            ii;
-
-        for (i = 0, ii = rawHeaders.length; i < ii; i += 2) {
-            headerList.push({
-                key: rawHeaders[i],
-                value: rawHeaders[i + 1]
-            });
-        }
-
-        return headerList;
+        return _(rawHeaders).chunk(2).map(([key, value]) => {
+            return {key, value};
+        }).value();
     }
 
     before(function (done) {
