@@ -226,34 +226,6 @@ describe('requester util', function () {
         });
     });
 
-    describe('.getRequestHeaders', function () {
-        it('should handle invalid input correctly', function () {
-            var result = requesterCore.getRequestHeaders({});
-            expect(result).to.be.undefined;
-        });
-
-        it('should correctly fetch request headers from a sdk Request instance', function () {
-            var request = new sdk.Request({
-                    url: 'postman-echo.com',
-                    method: 'GET',
-                    header: [
-                        {key: 'alpha', value: 'foo'},
-                        {key: 'beta', value: 'bar', disabled: true},
-                        {key: 'gamma', value: 'baz'},
-                        {key: 'alpha', value: 'next'},
-                        {key: 'alpha', value: 'other'},
-                        {key: '', value: 'random'}
-                    ]
-                }),
-                headers = requesterCore.getRequestHeaders(request);
-
-            expect(headers).to.eql({
-                alpha: ['foo', 'next', 'other'],
-                gamma: 'baz'
-            });
-        });
-    });
-
     describe('.getRequestBody', function () {
         it('should correctly handle empty bodies', function () {
             var request = new sdk.Request({
