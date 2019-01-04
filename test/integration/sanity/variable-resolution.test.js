@@ -80,6 +80,10 @@ describe('variable resolution', function () {
                 }, {
                     key: 'helloWorld',
                     value: '{{22{{20{{19}}}}}}'
+                }, {
+                    key: '22',
+                    disabled: true,
+                    value: 'disabled-variable'
                 }]
             },
             environment: {
