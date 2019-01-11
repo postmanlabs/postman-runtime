@@ -5,7 +5,8 @@ var net = require('net'),
 describe('request size', function() {
     var server,
         testrun,
-        unicode = '😎',
+        POSTMAN = 'postman',
+        UNICODE = '😎',
         PORT = 5050,
         URL = 'http://localhost:' + PORT;
 
@@ -39,7 +40,7 @@ describe('request size', function() {
                             method: 'POST',
                             body: {
                                 mode: 'raw',
-                                raw: 'POSTMAN'
+                                raw: POSTMAN
                             }
                         }
                     }, {
@@ -48,7 +49,7 @@ describe('request size', function() {
                             method: 'POST',
                             body: {
                                 mode: 'raw',
-                                raw: 'POSTMAN' + unicode
+                                raw: POSTMAN + UNICODE
                             }
                         }
                     }]
@@ -77,36 +78,29 @@ describe('request size', function() {
             'thirdCall.args[0]': null
         });
 
-
         var firstRequestSize = testrun.request.getCall(0).args[3].size,
             secondRequestSize = testrun.request.getCall(1).args[3].size,
             thirdRequestSize = testrun.request.getCall(2).args[3].size,
 
             // raw request payload
-            firstResponse = testrun.request.getCall(0).args[2].stream.toString(),
-            secondResponse = testrun.request.getCall(1).args[2].stream.toString(),
-            thirdResponse = testrun.request.getCall(2).args[2].stream.toString();
+            firstRequestPayload = testrun.request.getCall(0).args[2].stream.toString(),
+            secondRequestPayload = testrun.request.getCall(1).args[2].stream.toString(),
+            thirdRequestPayload = testrun.request.getCall(2).args[2].stream.toString();
 
         expect(firstRequestSize.body).to.equal(0);
         expect(firstRequestSize.header).to.be.greaterThan(0);
-        expect(firstRequestSize).to.deep.include({
-            total: firstRequestSize.body + firstRequestSize.header
-        });
-        expect(Buffer.byteLength(firstResponse)).to.equal(firstRequestSize.total);
+        expect(firstRequestSize.total).to.equal(firstRequestSize.body + firstRequestSize.header);
+        expect(Buffer.byteLength(firstRequestPayload)).to.equal(firstRequestSize.total);
 
-        expect(secondRequestSize.body).to.be.equal(7);
+        expect(secondRequestSize.body).to.be.equal(POSTMAN.length);
         expect(secondRequestSize.header).to.be.greaterThan(0);
-        expect(secondRequestSize).to.deep.include({
-            total: secondRequestSize.body + secondRequestSize.header
-        });
-        expect(Buffer.byteLength(secondResponse)).to.equal(secondRequestSize.total);
+        expect(secondRequestSize.total).to.equal(secondRequestSize.body + secondRequestSize.header);
+        expect(Buffer.byteLength(secondRequestPayload)).to.equal(secondRequestSize.total);
 
-        expect(thirdRequestSize.body).to.be.equal(7 + Buffer.byteLength(unicode));
+        expect(thirdRequestSize.body).to.be.equal(POSTMAN.length + Buffer.byteLength(UNICODE));
         expect(thirdRequestSize.header).to.be.greaterThan(0);
-        expect(thirdRequestSize).to.deep.include({
-            total: thirdRequestSize.body + thirdRequestSize.header
-        });
-        expect(Buffer.byteLength(thirdResponse)).to.equal(thirdRequestSize.total);
+        expect(thirdRequestSize.total).to.equal(thirdRequestSize.body + thirdRequestSize.header);
+        expect(Buffer.byteLength(thirdRequestPayload)).to.equal(thirdRequestSize.total);
     });
 
     it('should have completed the run', function() {
