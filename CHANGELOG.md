@@ -1,6 +1,7 @@
 # Postman Runtime Changelog
 
 #### v7.7.0 (unreleased)
+* #710 Added functionality to bubble up request size in the `request` event
 * #707 Avoid executing disabled `prerequest` and `test` scripts.
 * #707 Uses Collection SDK `Request~getHeaders` method to get request headers object.
 * Updated `postman-collection` to v3.4.2 which avoids substitution of disabled variables.
