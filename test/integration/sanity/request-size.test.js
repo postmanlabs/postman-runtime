@@ -52,6 +52,15 @@ describe('request size', function() {
                                 raw: POSTMAN + UNICODE
                             }
                         }
+                    }, {
+                        request: {
+                            url: URL,
+                            method: 'POST',
+                            body: {
+                                mode: 'raw',
+                                raw: UNICODE
+                            }
+                        }
                     }]
                 }
             }, function (err, results) {
@@ -69,7 +78,7 @@ describe('request size', function() {
     it('should have extracted request size correctly', function() {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
-            'request.calledThrice': true
+            'request.callCount': 4
         });
 
         expect(testrun).to.have.property('request').that.nested.include({
@@ -81,11 +90,13 @@ describe('request size', function() {
         var firstRequestSize = testrun.request.getCall(0).args[3].size,
             secondRequestSize = testrun.request.getCall(1).args[3].size,
             thirdRequestSize = testrun.request.getCall(2).args[3].size,
+            fourthRequestSize = testrun.request.getCall(3).args[3].size,
 
             // raw request payload
             firstRequestPayload = testrun.request.getCall(0).args[2].stream.toString(),
             secondRequestPayload = testrun.request.getCall(1).args[2].stream.toString(),
-            thirdRequestPayload = testrun.request.getCall(2).args[2].stream.toString();
+            thirdRequestPayload = testrun.request.getCall(2).args[2].stream.toString(),
+            fourthRequestPayload = testrun.request.getCall(3).args[2].stream.toString();
 
         expect(firstRequestSize.body).to.equal(0);
         expect(firstRequestSize.header).to.be.greaterThan(0);
@@ -101,6 +112,11 @@ describe('request size', function() {
         expect(thirdRequestSize.header).to.be.greaterThan(0);
         expect(thirdRequestSize.total).to.equal(thirdRequestSize.body + thirdRequestSize.header);
         expect(Buffer.byteLength(thirdRequestPayload)).to.equal(thirdRequestSize.total);
+
+        expect(fourthRequestSize.body).to.be.equal(Buffer.byteLength(UNICODE));
+        expect(fourthRequestSize.header).to.be.greaterThan(0);
+        expect(fourthRequestSize.total).to.equal(fourthRequestSize.body + fourthRequestSize.header);
+        expect(Buffer.byteLength(fourthRequestPayload)).to.equal(fourthRequestSize.total);
     });
 
     it('should have completed the run', function() {
