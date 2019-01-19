@@ -85,7 +85,7 @@ describe('Auth Handler:', function () {
     });
 
     describe('basic', function () {
-        it('Auth header must be added', function () {
+        it('should add the Auth header', function () {
             var request = new Request(rawRequests.basic),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -145,7 +145,7 @@ describe('Auth Handler:', function () {
     });
 
     describe('digest', function () {
-        it('Auth header must be added (algorithm="MD5", qop=""', function () {
+        it('should add the Auth header for (algorithm="MD5", qop=""', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -168,7 +168,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it('Auth header must be added (algorithm="MD5", qop="auth")', function () {
+        it('should add the Auth header for (algorithm="MD5", qop="auth")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -199,7 +199,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it('Auth header must be added (algorithm="MD5", qop="auth-int")', function () {
+        it('should add the Auth header for (algorithm="MD5", qop="auth-int")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -230,7 +230,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it('Auth header must be added (algorithm="MD5-sess", qop="")', function () {
+        it('should add the Auth header for (algorithm="MD5-sess", qop="")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -261,7 +261,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it('Auth header must be added (algorithm="MD5-sess", qop="auth")', function () {
+        it('should add the Auth header for (algorithm="MD5-sess", qop="auth")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -293,7 +293,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it('Auth header must be added (algorithm="MD5-sess", qop="auth-int")', function () {
+        it('should add the Auth header for (algorithm="MD5-sess", qop="auth-int")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -325,7 +325,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it('Auth header must have uri with query params in case of request with the same', function () {
+        it('should add the Auth header with query params in case of request with the same', function () {
             var request = new Request(rawRequests.digestWithQueryParams),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -409,7 +409,7 @@ describe('Auth Handler:', function () {
     });
 
     describe('oauth1', function () {
-        it('Auth header must be added', function () {
+        it('should add the Auth header', function () {
             var request = new Request(rawRequests.oauth1),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -985,7 +985,7 @@ describe('Auth Handler:', function () {
     });
 
     describe('hawk', function () {
-        it('Auth header must be added', function () {
+        it('should add the Auth header', function () {
             var request = new Request(rawRequests.hawk),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -1001,7 +1001,7 @@ describe('Auth Handler:', function () {
             expect(headers).to.have.property('authorization');
         });
 
-        it('Authorized request must contain the generated timestamp and nonce', function () {
+        it('should add the timestamp and nonce to the Authorized request', function () {
             var request = new Request(rawRequests.hawk),
                 clonedRequest = new Request(request.toJSON()), // cloning it so we can assert comparing the two
                 auth = request.auth,

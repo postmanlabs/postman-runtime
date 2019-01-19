@@ -6,6 +6,7 @@ describe('runner util', function () {
     describe('.safeCall', function () {
         it('should not throw an error if a non function is passed', function () {
             var err = runnerUtil.safeCall('not a function');
+
             expect(err).to.be.undefined;
         });
 

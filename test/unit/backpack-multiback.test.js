@@ -4,7 +4,7 @@ var expect = require('chai').expect,
 describe('backpack.multiback', function () {
     var multiback = require('../../lib/backpack').multiback;
 
-    it('function must exist', function () {
+    it('should exist as a function', function () {
         expect(multiback).to.be.ok;
         expect(multiback).to.be.a('function');
     });
@@ -61,7 +61,7 @@ describe('backpack.multiback', function () {
         sinon.assert.calledOnce(callback);
     });
 
-    it('can pass a definitive set of arguments', function (done) {
+    it('should expect a definitive set of arguments', function (done) {
         var callback = sinon.spy(setImmediate.bind(this, done)),
             flagback;
 
