@@ -37,6 +37,7 @@ module.exports = function (exit) {
             }
             catch (e) {
                 console.error(e.stack || e);
+
                 return next(e ? 1 : 0);
             }
 
@@ -45,14 +46,15 @@ module.exports = function (exit) {
             // will be lost, since we are overwriting it.) We silence any output to
             // hide any sensitive credential data that might otherwise be exposed.
 
+            // eslint-disable-next-line no-undef
             config.silent = true; // this is apparently reset after exec
             exec('git push --force "git@github.com:postmanlabs/postman-runtime.git" master:gh-pages', function (code) {
-                console.log('pushed documents to gh-pages');
+                console.info('pushed documents to gh-pages');
                 next(code);
             });
         }
     ], function (code) {
-        console.log(code ?
+        console.info(code ?
             colors.red.bold('\ndocumentation publish failed.') :
             colors.green('\ndocumentation published successfully.'));
         exit(code);

@@ -14,7 +14,7 @@ var path = require('path'),
     TARGET_DIR = path.join('out', 'docs');
 
 module.exports = function (exit) {
-    console.log(colors.yellow.bold('Generating documentation...'));
+    console.info(colors.yellow.bold('Generating documentation...'));
 
     try {
         // clean directory
@@ -22,13 +22,14 @@ module.exports = function (exit) {
     }
     catch (e) {
         console.error(e.stack || e);
+
         return exit(e ? 1 : 0);
     }
 
     exec(`${IS_WINDOWS ? '' : 'node'} ${path.join('node_modules', '.bin', 'jsdoc')}${IS_WINDOWS ? '.cmd' : ''}` +
         ` -c .jsdoc-config.json -u docs lib --query 'pkgVersion=${pkg.version}' -p`, function (code) {
         // output status
-        console.log(code ?
+        console.info(code ?
             colors.red.bold('unable to genereate documentation') :
             ` - documentation created at "${TARGET_DIR}"`);
         exit(code);

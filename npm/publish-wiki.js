@@ -12,7 +12,6 @@ var fs = require('fs'),
     WIKI_VERSION = exec('git describe --always').stdout;
 
 module.exports = function (exit) {
-
     async.series([
         // build the reference MD
         require('./build-wiki'),
@@ -76,6 +75,7 @@ module.exports = function (exit) {
          */
         function (next) {
             // silence terminal output to prevent leaking sensitive information
+            // eslint-disable-next-line no-undef
             config.silent = true;
 
             pushd(WIKI_GIT_PATH);
