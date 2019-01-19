@@ -253,5 +253,4 @@ describe('NTLM', function () {
             expect(response).to.have.property('code', 200);
         });
     });
-
 });

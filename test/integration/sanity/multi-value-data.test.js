@@ -32,6 +32,7 @@ describe('Multi value data', function() {
 
     it('should have run the test script successfully', function() {
         var assertions = testrun.assertion.getCall(0).args[1];
+
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'test.calledOnce': true

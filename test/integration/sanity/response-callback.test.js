@@ -5,7 +5,6 @@ describe('response callback', function () {
     var testrun;
 
     describe('in a collection', function () {
-
         before(function (done) {
             /**
              * A fake auth method which always forces a request to be replayed.
@@ -61,7 +60,6 @@ describe('response callback', function () {
     });
 
     describe('in a collection with replays', function () {
-
         before(function (done) {
             /**
              * A fake auth method which always forces a request to be replayed.

@@ -13,7 +13,7 @@ describe('DNS lookup', function() {
                 return done(err);
             }
 
-            self.run({
+            return self.run({
                 collection: {
                     item: {
                         request: 'http://fakepostman-echo.com/get?foo=bar'

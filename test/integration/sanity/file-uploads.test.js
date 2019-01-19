@@ -61,6 +61,7 @@ describe('File uploads', function () {
 
     it('should run the test script successfully', function () {
         var assertions = testrun.assertion.getCall(0).args[1];
+
         sinon.assert.calledTwice(testrun.test);
         sinon.assert.calledWith(testrun.test.getCall(0), null);
         expect(assertions[0]).to.deep.include({

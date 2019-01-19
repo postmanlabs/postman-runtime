@@ -25,7 +25,7 @@ describe('proxy configuration vars', function () {
         var testrun;
 
         before(function (done) {
-            process.env.http_proxy = proxyUrlForHttpRequest;
+            process.env.http_proxy = proxyUrlForHttpRequest; // eslint-disable-line no-process-env
 
             this.run({
                 collection: {
@@ -40,7 +40,7 @@ describe('proxy configuration vars', function () {
         });
 
         after(function () {
-            delete process.env.http_proxy;
+            delete process.env.http_proxy; // eslint-disable-line no-process-env
         });
 
         it('should have started and completed the test run', function () {
@@ -63,7 +63,7 @@ describe('proxy configuration vars', function () {
         var testrun;
 
         before(function (done) {
-            process.env.HTTP_PROXY = proxyUrlForHttpRequest;
+            process.env.HTTP_PROXY = proxyUrlForHttpRequest; // eslint-disable-line no-process-env
 
             this.run({
                 collection: {
@@ -78,7 +78,7 @@ describe('proxy configuration vars', function () {
         });
 
         after(function () {
-            delete process.env.HTTP_PROXY;
+            delete process.env.HTTP_PROXY; // eslint-disable-line no-process-env
         });
 
         it('should have started and completed the test run', function () {
