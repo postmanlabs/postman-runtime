@@ -252,6 +252,7 @@ describe('Option', function () {
 
                             var result = results[0],
                                 scriptResult = results[0];
+
                             expect(result.error).to.be.undefined;
 
                             expect(scriptResult).to.deep.nested.include({
@@ -296,6 +297,7 @@ describe('Option', function () {
                             if (item.name === 'Second Request') {
                                 expect(err).to.have.property('message', 'getaddrinfo ENOTFOUND somenonexistantdomain ' +
                                     'somenonexistantdomain:443');
+
                                 return;
                             }
                             expect(err).to.be.null;

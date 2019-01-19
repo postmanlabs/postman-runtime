@@ -185,6 +185,7 @@ describe('Requester', function () {
 
                             var result = results[0],
                                 scriptResult = results[0];
+
                             expect(result.error).to.be.undefined;
 
                             expect(scriptResult).to.deep.nested.include({
@@ -410,6 +411,7 @@ describe('Requester', function () {
 
                             var result = results[0],
                                 scriptResult = results[0];
+
                             expect(result.error).to.be.undefined;
 
                             expect(scriptResult).to.deep.nested.include({
@@ -656,6 +658,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(body.data).to.be.empty;
                             expect(body.files).to.be.empty;
@@ -870,6 +873,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(body.data).to.be.empty;
                             expect(body.files).to.be.empty;
@@ -1083,6 +1087,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(body.data).to.be.empty;
                             expect(body.files).to.be.empty;
@@ -1300,6 +1305,7 @@ describe('Requester', function () {
                         });
 
                         var body = response.json();
+
                         expect(body).to.nested.include({
                             'headers.xx': 'yy, zz'
                         });
@@ -1520,6 +1526,7 @@ describe('Requester', function () {
                         });
 
                         var body = response.json();
+
                         expect(body).to.deep.nested.include({
                             'form.xx': ['yy', 'zz']
                         });
@@ -1751,6 +1758,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(body.data).to.be.empty;
                             expect(body.files).to.be.empty;
@@ -1983,6 +1991,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(body.data).to.be.empty;
                             expect(body.files).to.be.empty;
@@ -2214,6 +2223,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(body.data).to.be.empty;
                             expect(body.files).to.include.keys(['one.txt', 'two.txt']);
@@ -2444,6 +2454,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(body.data).to.be.empty;
                             expect(body.files).to.have.property('one.txt');
@@ -2671,6 +2682,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(_.startsWith(body.files['binary-file.png'],
                                 'data:application/octet-stream;base64')).to.be.true;
@@ -2891,6 +2903,7 @@ describe('Requester', function () {
                             expect(request).to.be.ok;
 
                             var body = response.json();
+
                             expect(body.args).to.be.empty;
                             expect(body.data).to.be.empty;
                             expect(body.files).to.be.empty;
@@ -3563,6 +3576,7 @@ describe('Requester', function () {
                             expect(results).to.have.lengthOf(1);
 
                             var scriptResult = results[0];
+
                             expect(scriptResult.error).to.be.undefined;
                             expect(scriptResult).to.deep.nested.include({
                                 'result.target': 'test'
@@ -3798,6 +3812,7 @@ describe('Requester', function () {
 
                             var result = results[0],
                                 scriptResult = results[0];
+
                             expect(result.error).to.be.undefined;
 
                             expect(scriptResult).to.deep.nested.include({

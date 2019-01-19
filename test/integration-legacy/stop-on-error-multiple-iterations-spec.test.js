@@ -192,6 +192,7 @@ describe('Option', function () {
                             });
 
                             var scriptResult = results[0];
+
                             expect(scriptResult).to.deep.nested.include({
                                 'result.target': 'test'
                             });
@@ -200,6 +201,7 @@ describe('Option', function () {
                                 expect(scriptResult).to.deep.nested.include({
                                     'error.message': 'fail'
                                 });
+
                                 return;
                             }
                             expect(scriptResult.error).to.be.undefined;
