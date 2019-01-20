@@ -38,6 +38,13 @@ describe('request size', function() {
                         request: {
                             url: URL,
                             method: 'POST',
+                            header: [{
+                                key: 'duplicate',
+                                value: 'value0'
+                            }, {
+                                key: 'duplicate',
+                                value: 'value1'
+                            }],
                             body: {
                                 mode: 'raw',
                                 raw: POSTMAN
@@ -87,10 +94,10 @@ describe('request size', function() {
             'thirdCall.args[0]': null
         });
 
-        var firstRequestSize = testrun.request.getCall(0).args[3].size,
-            secondRequestSize = testrun.request.getCall(1).args[3].size,
-            thirdRequestSize = testrun.request.getCall(2).args[3].size,
-            fourthRequestSize = testrun.request.getCall(3).args[3].size,
+        var firstRequestSize = testrun.request.getCall(0).args[3].size(),
+            secondRequestSize = testrun.request.getCall(1).args[3].size(),
+            thirdRequestSize = testrun.request.getCall(2).args[3].size(),
+            fourthRequestSize = testrun.request.getCall(3).args[3].size(),
 
             // raw request payload
             firstRequestPayload = testrun.request.getCall(0).args[2].stream.toString(),
