@@ -2,7 +2,7 @@ var net = require('net'),
     expect = require('chai').expect,
     enableServerDestroy = require('server-destroy');
 
-describe('request size', function() {
+describe.only('request size', function() {
     var server,
         testrun,
         POSTMAN = 'postman',
@@ -54,6 +54,17 @@ describe('request size', function() {
                         request: {
                             url: URL,
                             method: 'POST',
+                            header: [{
+                                key: 'disabled',
+                                value: 'value0',
+                                disabled: true
+                            }, {
+                                key: null,
+                                value: 'value0'
+                            }, {
+                                key: 'Connection',
+                                value: 'close'
+                            }],
                             body: {
                                 mode: 'raw',
                                 raw: POSTMAN + UNICODE
