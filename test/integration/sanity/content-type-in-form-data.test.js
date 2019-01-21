@@ -247,5 +247,4 @@ describe('content-type', function () {
             expect(JSON.parse(response)[0]).to.have.property('contentType', 'text/csv');
         });
     });
-
 });

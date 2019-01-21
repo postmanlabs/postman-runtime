@@ -3,6 +3,7 @@ var expect = require('chai').expect;
 describe('assertions', function () {
     describe('from `pm.test`', function () {
         var testrun;
+
         before(function (done) {
             this.run({
                 stopOnFailure: true,
@@ -71,12 +72,12 @@ describe('assertions', function () {
                 'error.name': 'Error',
                 'error.message': 'I am an error!'
             });
-
         });
     });
 
     describe('from legacy `tests`', function () {
         var testrun;
+
         before(function (done) {
             this.run({
                 stopOnFailure: true,
@@ -108,7 +109,6 @@ describe('assertions', function () {
                 'test.calledOnce': true,
                 'done.calledOnce': true
             });
-
         });
 
         it('should have bubbled error to `script` callback', function () {

@@ -624,16 +624,19 @@ describe('requester util', function () {
     describe('.arrayPairsToObject', function () {
         it('should bail out for non-arrays', function () {
             var result = requesterCore.arrayPairsToObject('random');
+
             expect(result).to.be.undefined;
         });
 
         it('should correctly convert an array of pairs to an object', function () {
             var obj = requesterCore.arrayPairsToObject(['a', 'b', 'c', 'd']);
+
             expect(obj).to.eql({a: 'b', c: 'd'});
         });
 
         it('should correctly handle multi valued keys', function () {
             var obj = requesterCore.arrayPairsToObject(['a', 'b', 'c', 'd', 'a', 'e']);
+
             expect(obj).to.eql({a: ['b', 'e'], c: 'd'});
         });
     });

@@ -15,7 +15,8 @@ module.exports = function (exit) {
         mochaReporter = 'spec';
 
     // banner line
-    console.log(`Generating overall code coverage for ${process.env.npm_package_name}...`.yellow.bold);
+    // eslint-disable-next-line no-process-env
+    console.info(`Generating overall code coverage for ${process.env.npm_package_name}...`.yellow.bold);
 
     mkdir('-p', '.tmp');
     test('-d', COV_REPORT_PATH) && rm('-rf', COV_REPORT_PATH) && mkdir('-p', COV_REPORT_PATH);

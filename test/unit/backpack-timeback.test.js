@@ -4,7 +4,7 @@ var expect = require('chai').expect,
 describe('backpack.timeback', function () {
     var timeback = require('../../lib/backpack').timeback;
 
-    it('function should exist', function () {
+    it('should exist as a function', function () {
         expect(timeback).to.be.ok;
         expect(timeback).to.be.a('function');
     });

@@ -198,6 +198,7 @@ describe('pm.variables', function () {
                     }]
                 }
             });
+
             this.run(clonedRunOptions, function (err, results) {
                 testRun = results;
 

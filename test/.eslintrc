@@ -1,32 +1,42 @@
 {
-    "plugins": [
-        "mocha"
-    ],
-    "env": {
-        "mocha": true,
-        "node": true,
-        "es6": true
-    },
-    "globals": {
-        "expect": true
-    },
-    "rules": {
-        "mocha/handle-done-callback": "error",
-        "mocha/max-top-level-suites": "error",
-        "mocha/no-exclusive-tests": "error",
-        "mocha/no-global-tests": "error",
-        "mocha/no-hooks-for-single-case": "off",
-        "mocha/no-hooks": "off",
-        "mocha/no-identical-title": "error",
-        "mocha/no-mocha-arrows": "error",
-        "mocha/no-nested-tests": "error",
-        "mocha/no-pending-tests": "error",
-        "mocha/no-return-and-callback": "error",
-        "mocha/no-sibling-hooks": "error",
-        "mocha/no-skipped-tests": "warn",
-        "mocha/no-synchronous-tests": "off",
-        "mocha/no-top-level-hooks": "off",
-        "mocha/valid-test-description": "off",
-        "mocha/valid-suite-description": "off"
-    }
+  "plugins": [
+    "mocha",
+    "security"
+  ],
+  "env": {
+    "mocha": true
+  },
+  "globals": {
+    "expect": true
+  },
+  "rules": {
+    "mocha/handle-done-callback": "error",
+    "mocha/max-top-level-suites": "error",
+    "mocha/no-exclusive-tests": "error",
+    "mocha/no-global-tests": "error",
+    "mocha/no-hooks-for-single-case": "off",
+    "mocha/no-hooks": "off",
+    "mocha/no-identical-title": "error",
+    "mocha/no-mocha-arrows": "error",
+    "mocha/no-nested-tests": "error",
+    "mocha/no-pending-tests": "error",
+    "mocha/no-return-and-callback": "error",
+    "mocha/no-setup-in-describe": "off",
+    "mocha/no-sibling-hooks": "error",
+    "mocha/no-skipped-tests": "warn",
+    "mocha/no-synchronous-tests": "off",
+    "mocha/no-top-level-hooks": "off",
+    "mocha/no-prefer-arrow-callback": "off",
+    "mocha/valid-suite-description": "error",
+    "mocha/valid-test-description": "error",
+
+    "jsdoc/require-param-type": "off",
+    "jsdoc/require-param-description": "off",
+
+    // Security
+    "security/detect-unsafe-regex": "off",
+    "security/detect-non-literal-regexp": "off",
+    "security/detect-non-literal-fs-filename": "off",
+    "security/detect-non-literal-require": "off"
+  }
 }

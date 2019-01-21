@@ -57,6 +57,7 @@ describe('UVM allowed globals', function () {
         });
 
         var args = testrun.console.getCall(0).args;
+
         expect(args[1]).to.equal('log');
         expect(args[2].sort()).to.eql(globals.sort());
     });
