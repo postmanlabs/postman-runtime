@@ -2,7 +2,7 @@ var net = require('net'),
     expect = require('chai').expect,
     enableServerDestroy = require('server-destroy');
 
-describe.only('request size', function() {
+describe('request size', function() {
     var server,
         testrun,
         POSTMAN = 'postman',
