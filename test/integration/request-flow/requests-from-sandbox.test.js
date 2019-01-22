@@ -469,6 +469,7 @@ describe('requests from sandbox', function() {
 
     describe('with files', function () {
         var testrun;
+
         describe('in binary mode', function () {
             before(function (done) {
                 this.run({

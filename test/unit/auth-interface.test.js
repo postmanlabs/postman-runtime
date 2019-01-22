@@ -23,23 +23,25 @@ describe('AuthInterface', function () {
         }).to.throw(/runtime~createAuthInterface: invalid auth/);
     });
 
-    it('get with single key should return single value', function () {
+    it('should return a single value for get with single key', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
+
         expect(authInterface.get('user')).to.equal(USER);
         expect(authInterface.get('pass')).to.equal(PASS);
         expect(authInterface.get('joker')).to.be.undefined;
     });
 
-    it('get with multiple keys should return object', function () {
+    it('should return an object for get with multiple keys', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
+
         expect(authInterface.get(['user', 'pass', 'nonce', 'joker'])).to.eql(
             new sdk.VariableList(null, CREDENTIALS).toObject()
         );
     });
 
-    it('set with key and value should update the auth', function () {
+    it('should set with key and value and update the auth', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             newUsername = 'bane',
@@ -51,7 +53,7 @@ describe('AuthInterface', function () {
         expect(authInterface.get('pass')).to.equal(newPassword);
     });
 
-    it('set should retain the data type of value', function () {
+    it('should retain the type of the set value', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
 
@@ -69,7 +71,7 @@ describe('AuthInterface', function () {
         expect(authInterface.get('pass')).to.equal(123);
     });
 
-    it('set with an object should update the auth', function () {
+    it('should update the auth when set with an object', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             newUsername = 'bane',
@@ -115,7 +117,7 @@ describe('AuthInterface', function () {
         });
     });
 
-    it('new params should be added with system:true', function () {
+    it('should add new params with system:true', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             joker = 'heath ledger',
@@ -129,7 +131,7 @@ describe('AuthInterface', function () {
         expect(fakeAuth.parameters().one('gordon')).to.have.property('system', true);
     });
 
-    it('set with invalid params should throw', function () {
+    it('should throw on set with invalid params', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             newPassword = 'tom hardy';

@@ -16,7 +16,8 @@ describe('redirects', function() {
 
             // /redirect/<responseCode>
             if ((/^\/redirect\/(\d{3})$/).test(req.url)) {
-                res.writeHead(parseInt(req.url.substr(-3)), {location: '/'});
+                res.writeHead(parseInt(req.url.substr(-3), 10), {location: '/'});
+
                 return res.end();
             }
 

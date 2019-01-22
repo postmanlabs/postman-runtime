@@ -12,7 +12,7 @@ var async = require('async'),
 
 module.exports = function (exit) {
     // banner line
-    console.log('\nRunning system tests using mocha...'.yellow.bold);
+    console.info('\nRunning system tests using mocha...'.yellow.bold);
 
     async.series([
         // run test specs using mocha

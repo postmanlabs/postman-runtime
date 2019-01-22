@@ -41,6 +41,7 @@ describe('Control Flow', function () {
                 'start.calledOnce': true,
                 'abort.calledOnce': true
             });
+
             return done();
         });
         // eslint-disable-next-line handle-callback-err
@@ -60,6 +61,7 @@ describe('Control Flow', function () {
                 'pause.calledOnce': true,
                 'resume.calledOnce': true
             });
+
             return done();
         });
 
@@ -82,6 +84,7 @@ describe('Control Flow', function () {
                 'pause.calledOnce': true,
                 'abort.calledOnce': true
             });
+
             return done();
         });
 

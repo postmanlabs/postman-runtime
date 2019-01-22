@@ -20,12 +20,12 @@ describe('travis.yml', function () {
         fs.stat('.travis.yml', done);
     });
 
-    it('must be a valid yml', function () {
+    it('should be a valid yml', function () {
         expect(travisYAMLError && travisYAMLError.message || travisYAMLError).to.be.undefined;
     });
 
     describe('structure', function () {
-        it('language must be set to node', function () {
+        it('should have the language set to node', function () {
             expect(travisYAML.language).to.equal('node_js');
             expect(travisYAML.node_js).to.eql(['6', '8']);
         });

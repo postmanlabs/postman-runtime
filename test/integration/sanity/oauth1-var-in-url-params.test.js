@@ -50,6 +50,7 @@ describe('OAuth1 var in url params', function() {
         expect(testrun.request.getCall(0).args[0]).to.be.null;
 
         var response = testrun.request.getCall(0).args[2];
+
         expect(response).to.have.property('code', 200);
         expect(response.json()).to.have.property('status', 'pass');
     });

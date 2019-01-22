@@ -4,7 +4,7 @@ var expect = require('chai').expect,
 describe('backpack.normalise', function () {
     var normalise = require('../../lib/backpack').normalise;
 
-    it('function must exist', function () {
+    it('should exist as a function', function () {
         expect(normalise).to.be.ok;
         expect(normalise).to.be.a('function');
     });

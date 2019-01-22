@@ -1,8 +1,7 @@
 var expect = require('chai').expect;
 
 describe('Sandbox libraries', function() {
-    var _ = require('lodash'),
-        testrun;
+    var testrun;
 
     before(function(done) {
         this.run({
@@ -235,7 +234,7 @@ describe('Sandbox libraries', function() {
             {error: null, index: 7, passed: true, skipped: false, name: 'Correct envVar2'}
         ]);
 
-        _.range(2, 5).forEach(function(index) { // generates a range [2, 4], and checks the tests on those indices
+        [2, 3, 4].forEach(function(index) { // generates a range [2, 4], and checks the tests on those indices
             expect(testrun.test.getCall(index).args[0]).to.be.null;
             expect(testrun.assertion.getCall(index).args[1]).to.eql([
                 {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}

@@ -27,7 +27,7 @@ describe('protocolProfileBehavior', function () {
 
             // path: /{n}
             if ((/^\/\d+$/).test(req.url)) {
-                hops = parseInt(req.url.substring(1)) - 1;
+                hops = parseInt(req.url.substring(1), 10) - 1;
 
                 // redirect until all hops are covered
                 res.writeHead(302, {location: hops > 0 ? `/${hops}` : '/'});

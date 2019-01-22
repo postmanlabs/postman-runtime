@@ -571,6 +571,7 @@ describe('UVM', function () {
 
                             var result = results[0],
                                 scriptResult = results[0];
+
                             expect(result.error).to.be.undefined;
                             expect(scriptResult).to.deep.nested.include({
                                 'result.target': 'test'
@@ -828,6 +829,7 @@ describe('UVM', function () {
                             expect(results).to.have.lengthOf(1);
 
                             var scriptResult = results[0];
+
                             expect(scriptResult.error).to.be.undefined;
                             expect(scriptResult).to.deep.nested.include({
                                 'result.target': 'test'
@@ -863,7 +865,7 @@ describe('UVM', function () {
                     },
                     done: function (err) {
                         check(function () {
-                            err && console.log(err.stack);
+                            err && console.error(err.stack);
                             expect(err).to.be.null;
                             !errored && mochaDone();
                         });
@@ -1065,6 +1067,7 @@ describe('UVM', function () {
                             expect(results).to.have.lengthOf(1);
 
                             var scriptResult = results[0];
+
                             expect(scriptResult.error).to.be.undefined;
 
                             // `tests` object is no longer bubbled-up in the results.
@@ -1108,7 +1111,7 @@ describe('UVM', function () {
                     },
                     done: function (err) {
                         check(function () {
-                            err && console.log(err.stack);
+                            err && console.error(err.stack);
                             expect(err).to.be.null;
                             !errored && mochaDone();
                         });

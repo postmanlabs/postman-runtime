@@ -30,6 +30,7 @@ describe('Auth Loader', function () {
                     post: _.noop
                 },
                 authType = 'fake';
+
             expect(function () {
                 AuthLoader.addHandler(_.omit(FakeAuth, 'pre'), authType);
             }).to.throw(/does not have a "pre" function/);

@@ -16,8 +16,8 @@ describe('requests replayed', function () {
                 }]
             }
         };
-    describe('finite times', function () {
 
+    describe('finite times', function () {
         before(function (done) {
             /**
              * A fake auth method which always forces a request to be replayed.
@@ -118,7 +118,6 @@ describe('requests replayed', function () {
     });
 
     describe('finite times with intermediate requests', function () {
-
         before(function (done) {
             /**
              * A fake auth method which always forces a request to be replayed.
@@ -235,7 +234,6 @@ describe('requests replayed', function () {
     });
 
     describe('infinitely', function () {
-
         before(function (done) {
             /**
              * A fake auth method which always forces a request to be replayed.
@@ -304,7 +302,6 @@ describe('requests replayed', function () {
     });
 
     describe('infinitely with infinite intermediate requests', function () {
-
         before(function (done) {
             /**
              * A fake auth method which always forces a request to be replayed.

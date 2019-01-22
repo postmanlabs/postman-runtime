@@ -9,6 +9,6 @@ require('async').series([
     require('./test-integration'),
     require('./test-integration-legacy')
 ], function (code) {
-    !code && console.log('\npostman-runtime tests: all ok!'.green);
+    !code && console.info('\npostman-runtime tests: all ok!'.green);
     exit(code);
 });
