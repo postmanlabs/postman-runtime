@@ -65,11 +65,15 @@ describe('version', function () {
         expect(runtime.version('postman-collection')).to.eql(moduleData.dependencies['postman-collection']);
     });
 
-    it('should return undefined for invalid dependency name', function () {
+    it('should return undefined for dependencies which are not direct dependency of runtime', function () {
         expect(runtime.version('chai-postman')).to.eql(undefined);
     });
 
+    it('should return undefined for dependency that are not from Postman', function () {
+        expect(runtime.version('express')).to.eql(undefined);
+    });
+
     it('should not include nested dependencies', function () {
-        expect(runtime.version('', false)).to.eql(moduleDataNotNested);
+        expect(runtime.version(undefined, false)).to.eql(moduleDataNotNested);
     });
 });
