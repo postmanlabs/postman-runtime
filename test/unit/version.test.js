@@ -1,11 +1,11 @@
-var expect = require('chai').expect;
+var expect = require('chai').expect,
+    runtimePackage = require('../../package.json'),
+    sandboxPackage = require('../../node_modules/postman-sandbox/package.json'),
+    collectionPackage = require('../../node_modules/postman-collection/package.json'),
+    runtime = require('../../');
 
 describe('version', function () {
-    var runtimePackage = require('../../package.json'),
-        sandboxPackage = require('../../node_modules/postman-sandbox/package.json'),
-        collectionPackage = require('../../node_modules/postman-collection/package.json'),
-        runtime = require('../../'),
-        moduleData = {
+    var moduleData = {
             version: runtimePackage.version,
             dependencies: {
                 'postman-collection': {
