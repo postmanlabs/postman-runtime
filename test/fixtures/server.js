@@ -1,4 +1,7 @@
 const net = require('net'),
+    fs = require('fs'),
+    path = require('path'),
+    https = require('https'),
     enableServerDestroy = require('server-destroy');
 
 /**
@@ -67,6 +70,49 @@ function createRawEchoServer () {
     return server;
 }
 
+/**
+ * Simple SSL server for tests. Send
+ *  - 'authorized' to authorized clients.
+ *  - 'unauthorized' to unauthorized clients.
+ *
+ * @param {Boolean} [requestCert=true] - If true, request a certificate from clients that connect
+ *
+ * @example
+ * var s = createSslServer();
+ * s.listen(3000, 'localhost');
+ */
+function createSslServer (requestCert) {
+    (requestCert === undefined) && (requestCert = true);
+
+    var certDataPath = path.join(__dirname, '..', 'integration-legacy', 'data'),
+        serverKeyPath = path.join(certDataPath, 'server-key.pem'),
+        serverCertPath = path.join(certDataPath, 'server-crt.pem'),
+        serverCaPath = path.join(certDataPath, 'ca-crt.pem'),
+
+        server = https.createServer({
+            key: fs.readFileSync(serverKeyPath),
+            cert: fs.readFileSync(serverCertPath),
+            ca: fs.readFileSync(serverCaPath),
+            requestCert: requestCert
+        });
+
+    server.on('request', function (req, res) {
+        if (req.client.authorized) {
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end('authorized\n');
+        }
+        else {
+            res.writeHead(401, {'Content-Type': 'text/plain'});
+            res.end('unauthorized\n');
+        }
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
 module.exports = {
-    createRawEchoServer
+    createRawEchoServer,
+    createSslServer
 };

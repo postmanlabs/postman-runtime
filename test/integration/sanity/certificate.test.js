@@ -1,13 +1,12 @@
 var fs = require('fs'),
     path = require('path'),
-    https = require('https'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy'),
+    server = require('../../fixtures/server'),
     CertificateList = require('postman-collection').CertificateList;
 
 describe('certificates', function () {
     var certificateId = 'test-certificate',
-        server,
+        sslServer,
         testrun;
 
     describe('valid', function () {
@@ -17,10 +16,6 @@ describe('certificates', function () {
                 clientKeyPath = path.join(certDataPath, 'client1-key.pem'),
                 clientCertPath = path.join(certDataPath, 'client1-crt.pem'),
 
-                serverKeyPath = path.join(certDataPath, 'server-key.pem'),
-                serverCertPath = path.join(certDataPath, 'server-crt.pem'),
-                serverCaPath = path.join(certDataPath, 'ca-crt.pem'),
-
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: ['https://localhost:' + port + '/*'],
@@ -28,27 +23,8 @@ describe('certificates', function () {
                     cert: {src: clientCertPath}
                 }]);
 
-            server = https.createServer({
-                key: fs.readFileSync(serverKeyPath),
-                cert: fs.readFileSync(serverCertPath),
-                ca: fs.readFileSync(serverCaPath),
-                requestCert: true
-            });
-
-            server.on('request', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized\n');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized\n');
-                }
-            });
-
-            server.listen(port, 'localhost');
-
-            enableServerDestroy(server);
+            sslServer = server.createSslServer();
+            sslServer.listen(port, 'localhost');
 
             this.run({
                 collection: {
@@ -90,20 +66,15 @@ describe('certificates', function () {
         });
 
         after(function (done) {
-            server.destroy(done);
+            sslServer.destroy(done);
         });
     });
 
     describe('invalid', function () {
         before(function (done) {
             var port = 9090,
-                certDataPath = path.join(__dirname, '..', '..', 'integration-legacy', 'data'),
                 clientKeyPath = path.join('/tmp/non-existent/', 'client1-key.pem'),
                 clientCertPath = path.join('/tmp/non-existent/', 'client1-crt.pem'),
-
-                serverKeyPath = path.join(certDataPath, 'server-key.pem'),
-                serverCertPath = path.join(certDataPath, 'server-crt.pem'),
-                serverCaPath = path.join(certDataPath, 'ca-crt.pem'),
 
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
@@ -112,26 +83,8 @@ describe('certificates', function () {
                     cert: {src: clientCertPath}
                 }]);
 
-            server = https.createServer({
-                key: fs.readFileSync(serverKeyPath),
-                cert: fs.readFileSync(serverCertPath),
-                ca: fs.readFileSync(serverCaPath)
-            });
-
-            server.on('request', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized\n');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized\n');
-                }
-            });
-
-            server.listen(port, 'localhost');
-
-            enableServerDestroy(server);
+            sslServer = server.createSslServer(false);
+            sslServer.listen(port, 'localhost');
 
             this.run({
                 collection: {
@@ -188,7 +141,7 @@ describe('certificates', function () {
         });
 
         after(function (done) {
-            server.destroy(done);
+            sslServer.destroy(done);
         });
     });
 });
