@@ -4,18 +4,18 @@ var fs = require('fs'),
     sinon = require('sinon'),
     expect = require('chai').expect,
     enableServerDestroy = require('server-destroy'),
-    server_module = require('../../fixtures/server'),
+    server = require('../../fixtures/server'),
     CertificateList = require('postman-collection').CertificateList;
 
 describe('protocolProfileBehavior', function () {
-    var server,
+    var redirectServer,
         testrun,
         hits = [],
         PORT = 5050,
         HOST = 'http://localhost:' + PORT;
 
     before(function (done) {
-        server = http.createServer(function (req, res) {
+        redirectServer = http.createServer(function (req, res) {
             var hops;
 
             // keep track of all the requests made during redirects.
@@ -38,11 +38,11 @@ describe('protocolProfileBehavior', function () {
                 res.end('okay');
             }
         }).listen(PORT, done);
-        enableServerDestroy(server);
+        enableServerDestroy(redirectServer);
     });
 
     after(function (done) {
-        server.destroy(done);
+        redirectServer.destroy(done);
     });
 
     describe('with followRedirects: false', function () {
@@ -431,7 +431,7 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with strictSSL', function () {
-        var sslServer = server_module.createSslServer(),
+        var sslServer = server.createSslServer(),
             certificateId = 'test-certificate';
 
         before(function (done) {
