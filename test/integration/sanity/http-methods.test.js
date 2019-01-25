@@ -1,43 +1,21 @@
 var fs = require('fs'),
-    net = require('net'),
     sinon = require('sinon'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+    server = require('../../fixtures/server');
 
 describe('http methods', function () {
-    var server,
-        testrun,
+    var testrun,
         PORT = 5050,
-        URL = 'http://localhost:' + PORT;
+        URL = 'http://localhost:' + PORT,
+        echoServer = server.createRawEchoServer();
 
     before(function (done) {
         // Echo raw request message to handle custom http methods
-        // Node's `http` server won't support custom methods
-        // https://github.com/nodejs/http-parser/blob/master/http_parser.h#L163
-        server = net.createServer(function (socket) {
-            socket.on('data', function (chunk) {
-                // this avoids multiple writes when form-data is received in multiple chunks
-                if (!this.gotData) {
-                    this.gotData = true;
-
-                    socket.write('HTTP/1.1 200 ok\r\n');
-                    socket.write('Content-Type: text/plain\r\n\r\n');
-
-                    // wait until all the data is received, before closing the connection
-                    setTimeout(function () {
-                        socket.end();
-                    }, 500);
-                }
-
-                // respond with raw request message
-                socket.write(chunk.toString());
-            });
-        }).listen(PORT, done);
-        enableServerDestroy(server);
+        echoServer.listen(PORT, done);
     });
 
     after(function (done) {
-        server.destroy(done);
+        echoServer.destroy(done);
     });
 
     describe('standard (GET)', function () {
