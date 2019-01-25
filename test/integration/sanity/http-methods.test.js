@@ -1,14 +1,16 @@
 var fs = require('fs'),
     sinon = require('sinon'),
     expect = require('chai').expect,
-    echoServer = require('../../fixtures/server').createRawEchoServer();
+    server = require('../../fixtures/server');
 
 describe('http methods', function () {
     var testrun,
         PORT = 5050,
-        URL = 'http://localhost:' + PORT;
+        URL = 'http://localhost:' + PORT,
+        echoServer = server.createRawEchoServer();
 
     before(function (done) {
+        // Echo raw request message to handle custom http methods
         echoServer.listen(PORT, done);
     });
 

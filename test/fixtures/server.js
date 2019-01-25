@@ -19,6 +19,11 @@ const net = require('net'),
 function createRawEchoServer () {
     var server;
 
+    // Reasons behiend creating custom echo server:
+    //     - Node's `http` server won't support custom methods
+    //       referenc: https://github.com/nodejs/http-parser/blob/master/http_parser.h#L163
+    //     - Node's `http` server won't parse body for GET method.
+
     server = net.createServer(function (socket) {
         socket.on('data', function (chunk) {
             if (this.data === undefined) {

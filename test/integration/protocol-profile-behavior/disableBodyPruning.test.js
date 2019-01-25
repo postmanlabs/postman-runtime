@@ -1,13 +1,15 @@
 var sinon = require('sinon'),
     expect = require('chai').expect,
-    echoServer = require('../../fixtures/server').createRawEchoServer();
+    server = require('../../fixtures/server');
 
 describe('protocolProfileBehavior', function () {
     var testrun,
         PORT = 5050,
-        URL = 'http://localhost:' + PORT;
+        URL = 'http://localhost:' + PORT,
+        echoServer = server.createRawEchoServer();
 
     before(function (done) {
+        // Echo raw request message to handle body for http methods (GET, HEAD)
         echoServer.listen(PORT, done);
     });
 
@@ -38,10 +40,6 @@ describe('protocolProfileBehavior', function () {
                     testrun = results;
                     done(err);
                 });
-            });
-
-            after(function () {
-                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -91,10 +89,6 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
-            after(function () {
-                testrun = null;
-            });
-
             it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
@@ -110,9 +104,10 @@ describe('protocolProfileBehavior', function () {
                 sinon.assert.calledWith(testrun.response.getCall(0), null);
 
                 // raw request message for this request
-                var response = testrun.request.getCall(0).args[2].headers.get('raw-request');
+                var response = testrun.request.getCall(0).args[2],
+                    rawResponse = response.headers.get('raw-request');
 
-                expect(response).to.include('HEAD / HTTP/1.1')
+                expect(rawResponse).to.include('HEAD / HTTP/1.1')
                     .and.include('Content-Type: text/plain')
                     .and.include('content-length: 7')
                     .and.include('foo=bar');
@@ -141,10 +136,6 @@ describe('protocolProfileBehavior', function () {
                     testrun = results;
                     done(err);
                 });
-            });
-
-            after(function () {
-                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -199,10 +190,6 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
-            after(function () {
-                testrun = null;
-            });
-
             it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
@@ -252,10 +239,6 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
-            after(function () {
-                testrun = null;
-            });
-
             it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
@@ -302,10 +285,6 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
-            after(function () {
-                testrun = null;
-            });
-
             it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
@@ -321,11 +300,12 @@ describe('protocolProfileBehavior', function () {
                 sinon.assert.calledWith(testrun.response.getCall(0), null);
 
                 // raw request message for this request
-                var response = testrun.request.getCall(0).args[2].headers.get('raw-request');
+                var response = testrun.request.getCall(0).args[2],
+                    rawResponse = response.headers.get('raw-request');
 
-                expect(response).to.include('HEAD / HTTP/1.1');
-                expect(response).to.not.include('Content-Type');
-                expect(response).to.not.include('foo=bar');
+                expect(rawResponse).to.include('HEAD / HTTP/1.1');
+                expect(rawResponse).to.not.include('Content-Type');
+                expect(rawResponse).to.not.include('foo=bar');
             });
         });
 
@@ -351,10 +331,6 @@ describe('protocolProfileBehavior', function () {
                     testrun = results;
                     done(err);
                 });
-            });
-
-            after(function () {
-                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -403,10 +379,6 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
-            after(function () {
-                testrun = null;
-            });
-
             it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
@@ -450,10 +422,6 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
-            after(function () {
-                testrun = null;
-            });
-
             it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
@@ -469,11 +437,12 @@ describe('protocolProfileBehavior', function () {
                 sinon.assert.calledWith(testrun.response.getCall(0), null);
 
                 // raw request message for this request
-                var response = testrun.request.getCall(0).args[2].headers.get('raw-request');
+                var response = testrun.request.getCall(0).args[2],
+                    rawResponse = response.headers.get('raw-request');
 
-                expect(response).to.include('HEAD / HTTP/1.1');
-                expect(response).to.not.include('Content-Type');
-                expect(response).to.not.include('foo=bar');
+                expect(rawResponse).to.include('HEAD / HTTP/1.1');
+                expect(rawResponse).to.not.include('Content-Type');
+                expect(rawResponse).to.not.include('foo=bar');
             });
         });
 
@@ -496,10 +465,6 @@ describe('protocolProfileBehavior', function () {
                     testrun = results;
                     done(err);
                 });
-            });
-
-            after(function () {
-                testrun = null;
             });
 
             it('should complete the run', function () {
