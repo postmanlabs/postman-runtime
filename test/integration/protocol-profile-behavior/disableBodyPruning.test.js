@@ -1,41 +1,18 @@
-var net = require('net'),
-    sinon = require('sinon'),
+var sinon = require('sinon'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+    echoServer = require('../../fixtures/server').createRawEchoServer();
 
 describe('protocolProfileBehavior', function () {
-    var server,
-        testrun,
-        rawRequest,
+    var testrun,
         PORT = 5050,
         URL = 'http://localhost:' + PORT;
 
     before(function (done) {
-        // Echo raw request message to handle body for http methods (GET, HEAD)
-        // Node's `http` server won't parse body for GET method.
-        server = net.createServer(function (socket) {
-            socket.on('data', function (chunk) {
-                rawRequest = chunk.toString(); // Request Message: [POSTMAN / HTTP/1.1 ...]
-                socket.write('HTTP/1.1 200 ok\r\n');
-                socket.write('Content-Type: text/plain\r\n\r\n');
-
-                // Respond with raw request message.
-                //
-                // @note http-parser will blow up if body is sent for HEAD request.
-                // RFC-7231: The HEAD method is identical to GET except that the
-                //           server MUST NOT send a message body in the response.
-                if (!rawRequest.startsWith('HEAD / HTTP/1.1')) {
-                    socket.write(rawRequest);
-                }
-
-                socket.end();
-            });
-        }).listen(PORT, done);
-        enableServerDestroy(server);
+        echoServer.listen(PORT, done);
     });
 
     after(function (done) {
-        server.destroy(done);
+        echoServer.destroy(done);
     });
 
     describe('with disableBodyPruning: true', function () {
@@ -64,7 +41,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -115,7 +92,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -132,7 +109,8 @@ describe('protocolProfileBehavior', function () {
                 sinon.assert.calledOnce(testrun.response);
                 sinon.assert.calledWith(testrun.response.getCall(0), null);
 
-                var response = rawRequest; // raw request message for this request
+                // raw request message for this request
+                var response = testrun.request.getCall(0).args[2].headers.get('raw-request');
 
                 expect(response).to.include('HEAD / HTTP/1.1')
                     .and.include('Content-Type: text/plain')
@@ -166,7 +144,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -222,7 +200,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -275,7 +253,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -325,7 +303,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -342,7 +320,8 @@ describe('protocolProfileBehavior', function () {
                 sinon.assert.calledOnce(testrun.response);
                 sinon.assert.calledWith(testrun.response.getCall(0), null);
 
-                var response = rawRequest; // raw request message for this request
+                // raw request message for this request
+                var response = testrun.request.getCall(0).args[2].headers.get('raw-request');
 
                 expect(response).to.include('HEAD / HTTP/1.1');
                 expect(response).to.not.include('Content-Type');
@@ -375,7 +354,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -425,7 +404,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -472,7 +451,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
@@ -489,7 +468,8 @@ describe('protocolProfileBehavior', function () {
                 sinon.assert.calledOnce(testrun.response);
                 sinon.assert.calledWith(testrun.response.getCall(0), null);
 
-                var response = rawRequest; // raw request message for this request
+                // raw request message for this request
+                var response = testrun.request.getCall(0).args[2].headers.get('raw-request');
 
                 expect(response).to.include('HEAD / HTTP/1.1');
                 expect(response).to.not.include('Content-Type');
@@ -519,7 +499,7 @@ describe('protocolProfileBehavior', function () {
             });
 
             after(function () {
-                testrun = rawRequest = null;
+                testrun = null;
             });
 
             it('should complete the run', function () {
