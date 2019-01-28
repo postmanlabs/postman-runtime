@@ -431,8 +431,21 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with strictSSL', function () {
-        var sslServer = server.createSslServer(),
+        var sslServer = server.createSSLServer({
+                requestCert: true
+            }),
             certificateId = 'test-certificate';
+
+        sslServer.on('/', function (req, resp) {
+            if (req.client.authorized) {
+                resp.writeHead(200, {'Content-Type': 'text/plain'});
+                resp.end('authorized\n');
+            }
+            else {
+                resp.writeHead(401, {'Content-Type': 'text/plain'});
+                resp.end('unauthorized\n');
+            }
+        });
 
         before(function (done) {
             var port = 9090,

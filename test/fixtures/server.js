@@ -71,40 +71,42 @@ function createRawEchoServer () {
 }
 
 /**
- * Simple SSL server for tests. Send
- *  - 'authorized' to authorized clients.
- *  - 'unauthorized' to unauthorized clients.
+ * Simple SSL server for tests that emit events with the name of request url path.
  *
- * @param {Boolean} [requestCert=true] - If true, request a certificate from clients that connect
+ * @param {Object} [opts] - Options for https.createServer()
  *
  * @example
- * var s = createSslServer();
+ * var s = createSSLServer();
+ * s.on('/foo', function (req, resp) {
+ *     resp.writeHead(200, {'Content-Type': 'text/plain'});
+ *     resp.end('Hello World');
+ * });
  * s.listen(3000, 'localhost');
  */
-function createSslServer (requestCert) {
-    (requestCert === undefined) && (requestCert = true);
+function createSSLServer (opts) {
+    var i,
+        server,
+        certDataPath = path.join(__dirname, '..', 'integration-legacy', 'data'),
+        options = {
+            'key': path.join(certDataPath, 'server-key.pem'),
+            'cert': path.join(certDataPath, 'server-crt.pem'),
+            'ca': path.join(certDataPath, 'ca-crt.pem')
+        };
 
-    var certDataPath = path.join(__dirname, '..', 'integration-legacy', 'data'),
-        serverKeyPath = path.join(certDataPath, 'server-key.pem'),
-        serverCertPath = path.join(certDataPath, 'server-crt.pem'),
-        serverCaPath = path.join(certDataPath, 'ca-crt.pem'),
-
-        server = https.createServer({
-            key: fs.readFileSync(serverKeyPath),
-            cert: fs.readFileSync(serverCertPath),
-            ca: fs.readFileSync(serverCaPath),
-            requestCert: requestCert
-        });
-
-    server.on('request', function (req, res) {
-        if (req.client.authorized) {
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('authorized\n');
+    if (opts) {
+        for (i in opts) {
+            options[i] = opts[i];
         }
-        else {
-            res.writeHead(401, {'Content-Type': 'text/plain'});
-            res.end('unauthorized\n');
+    }
+
+    for (i in options) {
+        if (i !== 'requestCert' && i !== 'rejectUnauthorized' && i !== 'ciphers') {
+            options[i] = fs.readFileSync(options[i]);
         }
+    }
+
+    server = https.createServer(options, function (req, resp) {
+        server.emit(req.url, req, resp);
     });
 
     enableServerDestroy(server);
@@ -114,5 +116,5 @@ function createSslServer (requestCert) {
 
 module.exports = {
     createRawEchoServer,
-    createSslServer
+    createSSLServer
 };

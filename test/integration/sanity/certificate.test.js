@@ -23,7 +23,21 @@ describe('certificates', function () {
                     cert: {src: clientCertPath}
                 }]);
 
-            sslServer = server.createSslServer();
+            sslServer = server.createSSLServer({
+                requestCert: true
+            });
+
+            sslServer.on('/', function (req, resp) {
+                if (req.client.authorized) {
+                    resp.writeHead(200, {'Content-Type': 'text/plain'});
+                    resp.end('authorized\n');
+                }
+                else {
+                    resp.writeHead(401, {'Content-Type': 'text/plain'});
+                    resp.end('unauthorized\n');
+                }
+            });
+
             sslServer.listen(port, 'localhost');
 
             this.run({
@@ -83,7 +97,19 @@ describe('certificates', function () {
                     cert: {src: clientCertPath}
                 }]);
 
-            sslServer = server.createSslServer(false);
+            sslServer = server.createSSLServer();
+
+            sslServer.on('/', function (req, resp) {
+                if (req.client.authorized) {
+                    resp.writeHead(200, {'Content-Type': 'text/plain'});
+                    resp.end('authorized\n');
+                }
+                else {
+                    resp.writeHead(401, {'Content-Type': 'text/plain'});
+                    resp.end('unauthorized\n');
+                }
+            });
+
             sslServer.listen(port, 'localhost');
 
             this.run({
