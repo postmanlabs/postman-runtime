@@ -93,11 +93,7 @@ function createSSLServer (opts) {
             'ca': path.join(certDataPath, 'ca-crt.pem')
         };
 
-    if (opts) {
-        for (i in opts) {
-            options[i] = opts[i];
-        }
-    }
+    options = Object.assign(options, opts);
 
     for (i in options) {
         if (i !== 'requestCert' && i !== 'rejectUnauthorized' && i !== 'ciphers') {
