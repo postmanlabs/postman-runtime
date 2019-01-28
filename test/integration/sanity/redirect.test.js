@@ -1,39 +1,35 @@
 var fs = require('fs'),
-    http = require('http'),
     sinon = require('sinon'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+    server = require('../../fixtures/server');
 
 describe('redirects', function() {
     var testrun,
-        server,
+        redirectServer,
         PORT = 5050,
         URL = 'http://localhost:' + PORT;
 
     before(function (done) {
-        server = http.createServer(function (req, res) {
+        redirectServer = server.createRedirectServer();
+
+        redirectServer.on('/', function (req, resp) {
             var data = '';
 
-            // /redirect/<responseCode>
-            if ((/^\/redirect\/(\d{3})$/).test(req.url)) {
-                res.writeHead(parseInt(req.url.substr(-3), 10), {location: '/'});
-
-                return res.end();
-            }
-
-
-            req.on('data', function (d) { data += d; });
+            req.on('data', function (d) {
+                data += d;
+            });
 
             req.once('end', function () {
-                res.writeHead(200, {connection: 'close'});
-                res.end(data);
+                resp.writeHead(200, {connection: 'close'});
+                resp.end(data);
             });
-        }).listen(PORT, done);
-        enableServerDestroy(server);
+        });
+
+        redirectServer.listen(PORT, done);
     });
 
     after(function (done) {
-        server.destroy(done);
+        redirectServer.destroy(done);
     });
 
     describe('sanity', function () {
@@ -77,7 +73,7 @@ describe('redirects', function() {
                 collection: {
                     item: [{
                         request: {
-                            url: URL + '/redirect/301',
+                            url: URL + '/1/301',
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -124,7 +120,7 @@ describe('redirects', function() {
                 collection: {
                     item: [{
                         request: {
-                            url: URL + '/redirect/307',
+                            url: URL + '/1/307',
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -179,7 +175,7 @@ describe('redirects', function() {
                 collection: {
                     item: [{
                         request: {
-                            url: URL + '/redirect/308',
+                            url: URL + '/1/308',
                             method: 'POST',
                             body: {
                                 mode: 'formdata',

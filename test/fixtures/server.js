@@ -2,6 +2,7 @@ const net = require('net'),
     fs = require('fs'),
     path = require('path'),
     https = require('https'),
+    http = require('http'),
     enableServerDestroy = require('server-destroy');
 
 /**
@@ -112,7 +113,59 @@ function createSSLServer (opts) {
     return server;
 }
 
+/**
+ * Simple redirect server for tests that emit hit events on each request captured.
+ * Use the URL format: /<urlPath>/<numberOfRedirects>/<responseCode>
+ *
+ * @example
+ * var s = createRedirectServer();
+ * s.on('hit', function (req, resp) {
+ *     console.log(req.location);
+ * });
+ * s.on('/foo', function (req, resp)) {
+ *     // this is called when there is no redirect.
+ * }
+ * s.listen(3000, callback);
+ */
+function createRedirectServer () {
+    var server = http.createServer(function (req, resp) {
+        var urlTokens,
+            numberOfRedirects,
+            responseCode,
+            redirectURL;
+
+        server.emit('hit', req, resp);
+
+        // /<urlPath>/<numberOfRedirects>/<responseCode>
+        if ((/\/\d+\/\d{3}$/).test(req.url)) {
+            urlTokens = req.url.split('/');
+            numberOfRedirects = parseInt(urlTokens[1], 10);
+            responseCode = parseInt(urlTokens[2], 10);
+
+            // redirect until all hops are covered
+            if (numberOfRedirects > 1) {
+                redirectURL = urlTokens.slice(0, -2) + '/' + (numberOfRedirects - 1) + '/' + responseCode;
+            }
+            else {
+                redirectURL = urlTokens.slice(0, -2) + '/';
+            }
+
+            resp.writeHead(responseCode, {location: redirectURL});
+
+            return resp.end();
+        }
+
+        // emit event if this is not a redirect request
+        server.emit(req.url, req, resp);
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
 module.exports = {
     createRawEchoServer,
-    createSSLServer
+    createSSLServer,
+    createRedirectServer
 };
