@@ -1,4 +1,7 @@
 const net = require('net'),
+    fs = require('fs'),
+    path = require('path'),
+    https = require('https'),
     enableServerDestroy = require('server-destroy');
 
 /**
@@ -67,6 +70,49 @@ function createRawEchoServer () {
     return server;
 }
 
+/**
+ * Simple SSL server for tests that emit events with the name of request url path.
+ *
+ * @param {Object} [opts] - Options for https.createServer()
+ *
+ * @example
+ * var s = createSSLServer();
+ * s.on('/foo', function (req, resp) {
+ *     resp.writeHead(200, {'Content-Type': 'text/plain'});
+ *     resp.end('Hello World');
+ * });
+ * s.listen(3000, 'localhost');
+ */
+function createSSLServer (opts) {
+    var i,
+        server,
+        certDataPath = path.join(__dirname, '..', 'integration-legacy', 'data'),
+        options = {
+            'key': path.join(certDataPath, 'server-key.pem'),
+            'cert': path.join(certDataPath, 'server-crt.pem'),
+            'ca': path.join(certDataPath, 'ca-crt.pem')
+        };
+
+    if (opts) {
+        options = Object.assign(options, opts);
+    }
+
+    for (i in options) {
+        if (i !== 'requestCert' && i !== 'rejectUnauthorized' && i !== 'ciphers') {
+            options[i] = fs.readFileSync(options[i]);
+        }
+    }
+
+    server = https.createServer(options, function (req, resp) {
+        server.emit(req.url, req, resp);
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
 module.exports = {
-    createRawEchoServer
+    createRawEchoServer,
+    createSSLServer
 };
