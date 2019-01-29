@@ -139,8 +139,8 @@ function createRedirectServer () {
         // /<urlPath>/<numberOfRedirects>/<responseCode>
         if ((/\/\d+\/\d{3}$/).test(req.url)) {
             urlTokens = req.url.split('/');
-            numberOfRedirects = parseInt(urlTokens[1], 10);
-            responseCode = parseInt(urlTokens[2], 10);
+            numberOfRedirects = parseInt(urlTokens[urlTokens.length - 2], 10);
+            responseCode = parseInt(urlTokens[urlTokens.length - 1], 10);
 
             // redirect until all hops are covered
             if (numberOfRedirects > 1) {
