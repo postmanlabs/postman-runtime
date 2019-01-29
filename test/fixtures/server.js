@@ -1,8 +1,8 @@
-const net = require('net'),
-    fs = require('fs'),
+const fs = require('fs'),
+    net = require('net'),
     path = require('path'),
-    https = require('https'),
     http = require('http'),
+    https = require('https'),
     enableServerDestroy = require('server-destroy');
 
 /**
@@ -116,6 +116,7 @@ function createSSLServer (opts) {
 /**
  * Simple redirect server for tests that emit hit events on each request captured.
  * Use the URL format: /<urlPath>/<numberOfRedirects>/<responseCode>
+ * The final redirect in redirect chain will happen at /<urlPath>
  *
  * @example
  * var s = createRedirectServer();
@@ -144,7 +145,7 @@ function createRedirectServer () {
 
             // redirect until all hops are covered
             if (numberOfRedirects > 1) {
-                redirectURL = urlTokens.slice(0, -2).join('/') + '/' + (numberOfRedirects - 1) + '/' + responseCode;
+                redirectURL = urlTokens.slice(0, -2).join('/') + `/${(numberOfRedirects - 1)}/${responseCode}`;
             }
             else {
                 redirectURL = urlTokens.slice(0, -2).join('/') + '/';
@@ -165,7 +166,7 @@ function createRedirectServer () {
 }
 
 module.exports = {
-    createRawEchoServer,
     createSSLServer,
+    createRawEchoServer,
     createRedirectServer
 };

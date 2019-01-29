@@ -24,6 +24,7 @@ describe('protocolProfileBehavior', function () {
             });
         });
 
+        // This will be called on final redirect
         redirectServer.on('/', function (req, res) {
             res.writeHead(200, {'content-type': 'text/plain'});
             res.end('okay');

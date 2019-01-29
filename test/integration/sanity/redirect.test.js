@@ -12,6 +12,7 @@ describe('redirects', function() {
     before(function (done) {
         redirectServer = server.createRedirectServer();
 
+        // This will be called on final redirect
         redirectServer.on('/', function (req, res) {
             var data = '';
 
