@@ -1,11 +1,10 @@
 var fs = require('fs'),
-    http = require('http'),
     sinon = require('sinon'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+    server = require('../../fixtures/server');
 
 describe('content-type', function () {
-    var server,
+    var httpServer,
         testrun;
 
     /**
@@ -52,7 +51,9 @@ describe('content-type', function () {
     }
 
     before(function (done) {
-        server = http.createServer(function (req, res) {
+        httpServer = server.createHTTPServer();
+
+        httpServer.on('/', function (req, res) {
             var rawBody = '';
 
             req.on('data', function (chunk) {
@@ -64,12 +65,13 @@ describe('content-type', function () {
                 });
                 res.end(JSON.stringify(parseRaw(rawBody)));
             });
-        }).listen(5050, done);
-        enableServerDestroy(server);
+        });
+
+        httpServer.listen(5050, done);
     });
 
     after(function (done) {
-        server.destroy(done);
+        httpServer.destroy(done);
     });
 
     describe('default', function () {
