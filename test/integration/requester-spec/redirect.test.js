@@ -21,9 +21,9 @@ describe('Requester Spec: redirect', function () {
             });
         });
 
-        redirectServer.on('/', function (req, resp) {
-            resp.writeHead(200, {'content-type': 'text/plain'});
-            resp.end('okay');
+        redirectServer.on('/', function (req, res) {
+            res.writeHead(200, {'content-type': 'text/plain'});
+            res.end('okay');
         });
 
         redirectServer.listen(PORT, done);

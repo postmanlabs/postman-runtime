@@ -78,9 +78,9 @@ function createRawEchoServer () {
  *
  * @example
  * var s = createSSLServer();
- * s.on('/foo', function (req, resp) {
- *     resp.writeHead(200, {'Content-Type': 'text/plain'});
- *     resp.end('Hello World');
+ * s.on('/foo', function (req, res) {
+ *     res.writeHead(200, {'Content-Type': 'text/plain'});
+ *     res.end('Hello World');
  * });
  * s.listen(3000, 'localhost');
  */
@@ -104,8 +104,8 @@ function createSSLServer (opts) {
         }
     }
 
-    server = https.createServer(options, function (req, resp) {
-        server.emit(req.url, req, resp);
+    server = https.createServer(options, function (req, res) {
+        server.emit(req.url, req, res);
     });
 
     enableServerDestroy(server);
@@ -119,22 +119,22 @@ function createSSLServer (opts) {
  *
  * @example
  * var s = createRedirectServer();
- * s.on('hit', function (req, resp) {
+ * s.on('hit', function (req, res) {
  *     console.log(req.location);
  * });
- * s.on('/foo', function (req, resp)) {
+ * s.on('/foo', function (req, res)) {
  *     // this is called when there is no redirect.
  * }
  * s.listen(3000, callback);
  */
 function createRedirectServer () {
-    var server = http.createServer(function (req, resp) {
+    var server = http.createServer(function (req, res) {
         var urlTokens,
             numberOfRedirects,
             responseCode,
             redirectURL;
 
-        server.emit('hit', req, resp);
+        server.emit('hit', req, res);
 
         // /<urlPath>/<numberOfRedirects>/<responseCode>
         if ((/\/\d+\/\d{3}$/).test(req.url)) {
@@ -150,13 +150,13 @@ function createRedirectServer () {
                 redirectURL = urlTokens.slice(0, -2).join('/') + '/';
             }
 
-            resp.writeHead(responseCode, {location: redirectURL});
+            res.writeHead(responseCode, {location: redirectURL});
 
-            return resp.end();
+            return res.end();
         }
 
         // emit event if this is not a redirect request
-        server.emit(req.url, req, resp);
+        server.emit(req.url, req, res);
     });
 
     enableServerDestroy(server);

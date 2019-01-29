@@ -12,7 +12,7 @@ describe('redirects', function() {
     before(function (done) {
         redirectServer = server.createRedirectServer();
 
-        redirectServer.on('/', function (req, resp) {
+        redirectServer.on('/', function (req, res) {
             var data = '';
 
             req.on('data', function (d) {
@@ -20,8 +20,8 @@ describe('redirects', function() {
             });
 
             req.once('end', function () {
-                resp.writeHead(200, {connection: 'close'});
-                resp.end(data);
+                res.writeHead(200, {connection: 'close'});
+                res.end(data);
             });
         });
 

@@ -24,9 +24,9 @@ describe('protocolProfileBehavior', function () {
             });
         });
 
-        redirectServer.on('/', function (req, resp) {
-            resp.writeHead(200, {'content-type': 'text/plain'});
-            resp.end('okay');
+        redirectServer.on('/', function (req, res) {
+            res.writeHead(200, {'content-type': 'text/plain'});
+            res.end('okay');
         });
 
         redirectServer.listen(PORT, done);
@@ -427,14 +427,14 @@ describe('protocolProfileBehavior', function () {
             }),
             certificateId = 'test-certificate';
 
-        sslServer.on('/', function (req, resp) {
+        sslServer.on('/', function (req, res) {
             if (req.client.authorized) {
-                resp.writeHead(200, {'Content-Type': 'text/plain'});
-                resp.end('authorized\n');
+                res.writeHead(200, {'Content-Type': 'text/plain'});
+                res.end('authorized\n');
             }
             else {
-                resp.writeHead(401, {'Content-Type': 'text/plain'});
-                resp.end('unauthorized\n');
+                res.writeHead(401, {'Content-Type': 'text/plain'});
+                res.end('unauthorized\n');
             }
         });
 
