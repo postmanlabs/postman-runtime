@@ -165,8 +165,30 @@ function createRedirectServer () {
     return server;
 }
 
+/**
+ * Wrapper for HTTP server that emit events with the name of request url path.
+ *
+ * @example
+ * var s = createHTTPServer();
+ * s.on('/foo', function (req, res)) {
+ *     res.writeHead(200, {'content-type': 'text/plain'});
+ *     res.end('Hello world!');
+ * }
+ * s.listen(3000, callback);
+ */
+function createHTTPServer() {
+    var server = http.createServer(function (req, res) {
+        server.emit(req.url, req, res);
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
 module.exports = {
     createSSLServer,
+    createHTTPServer,
     createRawEchoServer,
     createRedirectServer
 };
