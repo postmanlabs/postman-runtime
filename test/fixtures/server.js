@@ -144,10 +144,10 @@ function createRedirectServer () {
 
             // redirect until all hops are covered
             if (numberOfRedirects > 1) {
-                redirectURL = urlTokens.slice(0, -2) + '/' + (numberOfRedirects - 1) + '/' + responseCode;
+                redirectURL = urlTokens.slice(0, -2).join('/') + '/' + (numberOfRedirects - 1) + '/' + responseCode;
             }
             else {
-                redirectURL = urlTokens.slice(0, -2) + '/';
+                redirectURL = urlTokens.slice(0, -2).join('/') + '/';
             }
 
             resp.writeHead(responseCode, {location: redirectURL});
