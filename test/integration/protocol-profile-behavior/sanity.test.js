@@ -1,21 +1,21 @@
 var fs = require('fs'),
     path = require('path'),
     http = require('http'),
-    https = require('https'),
     sinon = require('sinon'),
     expect = require('chai').expect,
     enableServerDestroy = require('server-destroy'),
+    server = require('../../fixtures/server'),
     CertificateList = require('postman-collection').CertificateList;
 
 describe('protocolProfileBehavior', function () {
-    var server,
+    var redirectServer,
         testrun,
         hits = [],
         PORT = 5050,
         HOST = 'http://localhost:' + PORT;
 
     before(function (done) {
-        server = http.createServer(function (req, res) {
+        redirectServer = http.createServer(function (req, res) {
             var hops;
 
             // keep track of all the requests made during redirects.
@@ -38,11 +38,11 @@ describe('protocolProfileBehavior', function () {
                 res.end('okay');
             }
         }).listen(PORT, done);
-        enableServerDestroy(server);
+        enableServerDestroy(redirectServer);
     });
 
     after(function (done) {
-        server.destroy(done);
+        redirectServer.destroy(done);
     });
 
     describe('with followRedirects: false', function () {
@@ -431,18 +431,27 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with strictSSL', function () {
-        var sslServer,
+        var sslServer = server.createSSLServer({
+                requestCert: true
+            }),
             certificateId = 'test-certificate';
+
+        sslServer.on('/', function (req, resp) {
+            if (req.client.authorized) {
+                resp.writeHead(200, {'Content-Type': 'text/plain'});
+                resp.end('authorized\n');
+            }
+            else {
+                resp.writeHead(401, {'Content-Type': 'text/plain'});
+                resp.end('unauthorized\n');
+            }
+        });
 
         before(function (done) {
             var port = 9090,
                 certDataPath = path.join(__dirname, '..', '..', 'integration-legacy', 'data'),
                 clientKeyPath = path.join(certDataPath, 'client1-key.pem'),
                 clientCertPath = path.join(certDataPath, 'client1-crt.pem'),
-
-                serverKeyPath = path.join(certDataPath, 'server-key.pem'),
-                serverCertPath = path.join(certDataPath, 'server-crt.pem'),
-                serverCaPath = path.join(certDataPath, 'ca-crt.pem'),
 
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
@@ -451,27 +460,7 @@ describe('protocolProfileBehavior', function () {
                     cert: {src: clientCertPath}
                 }]);
 
-            sslServer = https.createServer({
-                key: fs.readFileSync(serverKeyPath),
-                cert: fs.readFileSync(serverCertPath),
-                ca: fs.readFileSync(serverCaPath),
-                requestCert: true
-            });
-
-            sslServer.on('request', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized\n');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized\n');
-                }
-            });
-
             sslServer.listen(port, 'localhost');
-
-            enableServerDestroy(sslServer);
 
             this.run({
                 collection: {
