@@ -23,13 +23,13 @@ module.exports = function (exit) {
         istanbulReport = '';
 
     // for CI, we use simple xunit reporter
-    if (process.env.CI) {
+    if (process.env.CI) { // eslint-disable-line no-process-env
         mochaReporter = 'xunit';
         istanbulReport = '--report cobertura';
     }
 
     // banner line
-    console.log('Running unit tests using mocha...'.yellow.bold);
+    console.info('Running unit tests using mocha...'.yellow.bold);
 
     mkdir('-p', '.tmp');
     test('-d', COV_REPORT_PATH) && rm('-rf', COV_REPORT_PATH) && mkdir('-p', COV_REPORT_PATH);

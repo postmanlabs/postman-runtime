@@ -7,7 +7,6 @@ var _ = require('lodash'),
     fs = require('fs');
 
 describe('project repository', function () {
-
     describe('package.json', function () {
         var content,
             json;
@@ -57,6 +56,7 @@ describe('project repository', function () {
                 json.scripts && Object.keys(json.scripts).forEach(function (scriptName) {
                     if (scriptName === 'memory-check') { return; }
                     var fileContent = fs.readFileSync('npm/' + scriptName + '.js').toString();
+
                     expect(fileContent).to.match(/^#!\/(bin\/bash|usr\/bin\/env\snode)[\r\n][\W\w]*$/g);
                 });
             });
@@ -71,6 +71,7 @@ describe('project repository', function () {
                 var packages = _.without(Object.keys(json.dependencies),
                     // These are trusted packages
                     'postman-request', 'postman-collection', 'serialised-error');
+
                 packages.forEach(function (dependencyName) {
                     expect(json.dependencies[dependencyName]).to.match(new RegExp('^((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
                         '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));

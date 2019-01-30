@@ -215,6 +215,7 @@ describe('Option', function () {
                             });
 
                             var scriptResult = results[0];
+
                             expect(scriptResult).to.deep.nested.include({
                                 'result.target': 'test'
                             });

@@ -28,6 +28,7 @@ describe('form data', function () {
 
             var response = testrun.request.getCall(0).args[2],
                 body = response.json();
+
             expect(body).to.have.deep.nested.property('args.hi', ['hello', 'lolol']);
         });
 
@@ -71,6 +72,7 @@ describe('form data', function () {
             });
 
             var response = testrun.request.getCall(0).args[2];
+
             expect(response).to.have.property('code', 200);
         });
 
@@ -114,6 +116,7 @@ describe('form data', function () {
             });
 
             var response = testrun.request.getCall(0).args[2];
+
             expect(response).to.have.property('code', 200);
         });
 

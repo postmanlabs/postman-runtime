@@ -12,6 +12,7 @@ describe('runner', function () {
 
         it('should expose the run method', function () {
             var runner = new Runner();
+
             expect(runner.run).to.be.a('function');
         });
 

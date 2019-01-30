@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 describe('run', function () {
     var Run = require('../../lib/runner/run.js');
 
-    it('module should expose a constructor', function () {
+    it('should be exposed by the module as a constructor', function () {
         expect(Run).to.be.a('function');
         expect(Run).to.not.throw();
         expect(function () {

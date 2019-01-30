@@ -10,14 +10,14 @@ var fs = require('fs'),
 
 module.exports = function (exit) {
     // banner line
-    console.log('Running integration tests using mocha on node...'.yellow.bold);
+    console.info('Running integration tests using mocha on node...'.yellow.bold);
 
     var mocha = new Mocha({
         timeout: 10000
     });
 
     fs.readdir(SPEC_SOURCE_DIR, function (err, files) {
-        if (err) { return next(err); }
+        if (err) { return exit(err); }
 
         files.filter(function (file) {
             return (file.substr(-8) === '.test.js');

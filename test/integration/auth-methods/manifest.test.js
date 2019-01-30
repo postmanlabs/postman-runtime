@@ -7,6 +7,7 @@ var _ = require('lodash'),
 
 describe('manifest', function () {
     var authHandlers = AuthLoader.handlers;
+
     _.forEach(authHandlers, function (value, key) {
         it('should be valid for ' + key + ' auth', function () {
             ajv.validate(manifestSchema, value.manifest);
