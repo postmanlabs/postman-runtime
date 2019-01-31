@@ -1,28 +1,23 @@
 var _ = require('lodash'),
-    http = require('http'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+    server = require('../../fixtures/server');
 
 describe('multi valued headers', function () {
-    var server,
+    var httpServer,
         testrun;
 
     before(function (done) {
         var port;
 
-        server = http.createServer();
+        httpServer = server.createHTTPServer();
 
-        server.on('request', function (req, res) {
+        httpServer.on('/', function (req, res) {
             res.setHeader('x-pm-test', ['one', 'two']); // adds a duplicate header to the response
             res.end('worked');
         });
 
-        server.listen(0, 'localhost');
-
-        enableServerDestroy(server);
-
-        server.on('listening', function () {
-            port = server.address().port;
+        httpServer.listen(0, 'localhost', function () {
+            port = httpServer.address().port;
 
             this.run({
                 collection: {
@@ -57,6 +52,6 @@ describe('multi valued headers', function () {
     });
 
     after(function (done) {
-        server.destroy(done);
+        httpServer.destroy(done);
     });
 });
