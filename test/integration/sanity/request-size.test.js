@@ -33,9 +33,11 @@ describe('request size', function() {
             this.run({
                 collection: {
                     item: [{
+                        name: 'no user header',
                         request: URL
                     }, {
                         request: {
+                            name: 'duplicate header + raw body',
                             url: URL,
                             method: 'POST',
                             header: [{
@@ -52,6 +54,7 @@ describe('request size', function() {
                         }
                     }, {
                         request: {
+                            name: 'falsy header key + unicode char in body',
                             url: URL,
                             method: 'POST',
                             header: [{
@@ -72,6 +75,7 @@ describe('request size', function() {
                         }
                     }, {
                         request: {
+                            name: 'unicode char in body',
                             url: URL,
                             method: 'POST',
                             body: {
@@ -124,12 +128,21 @@ describe('request size', function() {
         expect(secondRequestSize.body).to.be.equal(POSTMAN.length);
         expect(secondRequestSize.header).to.be.greaterThan(0);
         expect(secondRequestSize.total).to.equal(secondRequestSize.body + secondRequestSize.header);
-        expect(Buffer.byteLength(secondRequestPayload)).to.equal(secondRequestSize.total);
+        // @todo Handle duplicates on upsert header
+        // Fixed in https://github.com/postmanlabs/postman-collection/pull/785
+        // @note "-7" because:
+        // actual header sent: duplicate: value0 + CRLF + duplicate: value1 + CRLF
+        // calculated header: duplicate: value0,value1 + CRLF + duplicate: value1 + CRLF
+        // @note this test will fail once its fixed in postman-collection.
+        expect(Buffer.byteLength(secondRequestPayload)).to.equal(secondRequestSize.total - 7);
 
         expect(thirdRequestSize.body).to.be.equal(POSTMAN.length + Buffer.byteLength(UNICODE));
         expect(thirdRequestSize.header).to.be.greaterThan(0);
         expect(thirdRequestSize.total).to.equal(thirdRequestSize.body + thirdRequestSize.header);
-        expect(Buffer.byteLength(thirdRequestPayload)).to.equal(thirdRequestSize.total);
+        // @note "-10" because falsy headers(key = '') is not supported by NodeJS
+        // but since its just a limitation of Node's HTTP parser, Collection SDK
+        // still consider ": value0" header during header size calculation.
+        expect(Buffer.byteLength(thirdRequestPayload)).to.equal(thirdRequestSize.total - 10);
 
         expect(fourthRequestSize.body).to.be.equal(Buffer.byteLength(UNICODE));
         expect(fourthRequestSize.header).to.be.greaterThan(0);
