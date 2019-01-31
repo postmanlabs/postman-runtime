@@ -1,48 +1,41 @@
-var http = require('http'),
-    sinon = require('sinon'),
+var sinon = require('sinon'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+    server = require('../../fixtures/server');
 
 describe('Requester Spec: redirect', function () {
-    var server,
+    var redirectServer,
         testrun,
         hits = [],
         PORT = 5050,
         HOST = 'http://localhost:' + PORT;
 
     before(function (done) {
-        server = http.createServer(function (req, res) {
-            var hops;
+        redirectServer = server.createRedirectServer();
 
+        redirectServer.on('hit', function (req) {
             // keep track of all the requests made during redirects.
             hits.push({
                 url: req.url,
                 method: req.method,
                 headers: req.headers
             });
+        });
 
-            // path: /{n}
-            if ((/^\/\d+$/).test(req.url)) {
-                hops = parseInt(req.url.substring(1), 10) - 1;
+        // This will be called on final redirect
+        redirectServer.on('/', function (req, res) {
+            res.writeHead(200, {'content-type': 'text/plain'});
+            res.end('okay');
+        });
 
-                // redirect until all hops are covered
-                res.writeHead(302, {location: hops > 0 ? `/${hops}` : '/'});
-                res.end();
-            }
-            else {
-                res.writeHead(200, {'content-type': 'text/plain'});
-                res.end('okay');
-            }
-        }).listen(PORT, done);
-        enableServerDestroy(server);
+        redirectServer.listen(PORT, done);
     });
 
     after(function (done) {
-        server.destroy(done);
+        redirectServer.destroy(done);
     });
 
     describe('with followOriginalHttpMethod: false', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -92,7 +85,7 @@ describe('Requester Spec: redirect', function () {
     });
 
     describe('with followOriginalHttpMethod: true', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -142,7 +135,7 @@ describe('Requester Spec: redirect', function () {
     });
 
     describe('with removeRefererHeaderOnRedirect: false', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -194,7 +187,7 @@ describe('Requester Spec: redirect', function () {
     });
 
     describe('with removeRefererHeaderOnRedirect: true', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         describe('should not have referer header', function () {
             before(function (done) {
@@ -301,7 +294,7 @@ describe('Requester Spec: redirect', function () {
     });
 
     describe('without maxRedirects', function () {
-        var URL = HOST + '/11';
+        var URL = HOST + '/11/302';
 
         before(function (done) {
             hits = [];
@@ -335,16 +328,16 @@ describe('Requester Spec: redirect', function () {
             var response = testrun.response.getCall(0);
 
             expect(response.args[0]).to.have.property('message',
-                `Exceeded maxRedirects. Probably stuck in a redirect loop ${HOST}/1`);
+                `Exceeded maxRedirects. Probably stuck in a redirect loop ${HOST}/1/302`);
 
             expect(hits).to.have.lengthOf(11);
-            expect(hits[10]).to.have.property('url', '/1');
+            expect(hits[10]).to.have.property('url', '/1/302');
             expect(hits[10]).to.have.property('method', 'GET');
         });
     });
 
     describe('with maxRedirects', function () {
-        var URL = HOST + '/11';
+        var URL = HOST + '/11/302';
 
         before(function (done) {
             hits = [];

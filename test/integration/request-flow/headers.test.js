@@ -1,11 +1,10 @@
 var _ = require('lodash'),
-    http = require('http'),
     sinon = require('sinon'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+    server = require('../../fixtures/server');
 
 describe('request headers', function () {
-    var server,
+    var httpServer,
         testrun,
         PORT = 5050,
         HOST = 'http://localhost:' + PORT;
@@ -25,10 +24,14 @@ describe('request headers', function () {
     }
 
     before(function (done) {
-        server = http.createServer(function (req, res) {
+        httpServer = server.createHTTPServer();
+
+        httpServer.on('/', function (req, res) {
             res.writeHead(200, {'content-type': 'application/json'});
             res.end(JSON.stringify(parseRawHeaders(req.rawHeaders)));
-        }).listen(PORT, function (err) {
+        });
+
+        httpServer.listen(PORT, function (err) {
             if (err) { return done(err); }
 
             this.run({
@@ -86,11 +89,10 @@ describe('request headers', function () {
                 done(err);
             });
         }.bind(this));
-        enableServerDestroy(server);
     });
 
     after(function (done) {
-        server.destroy(done);
+        httpServer.destroy(done);
     });
 
     it('should complete the run', function () {

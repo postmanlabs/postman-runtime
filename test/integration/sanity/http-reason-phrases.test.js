@@ -1,23 +1,22 @@
-var http = require('http'),
-    expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+var expect = require('chai').expect,
+    server = require('../../fixtures/server');
 
 describe('http reasons', function () {
-    var server,
+    var httpServer,
         testrun;
 
     before(function (done) {
         var port,
             self = this;
 
-        server = http.createServer();
+        httpServer = server.createHTTPServer();
 
-        server.on('request', function (req, res) {
+        httpServer.on('/', function (req, res) {
             res.end(res.writeHead(400, 'Some Custom Reason'));
         });
 
-        server.on('listening', function () {
-            port = server.address().port;
+        httpServer.listen(0, 'localhost', function () {
+            port = httpServer.address().port;
             self.run({
                 collection: {
                     item: {
@@ -29,10 +28,6 @@ describe('http reasons', function () {
                 done(err);
             });
         });
-
-        server.listen(0, 'localhost');
-
-        enableServerDestroy(server);
     });
 
     it('should have started and completed the test run', function () {
@@ -58,6 +53,6 @@ describe('http reasons', function () {
     });
 
     after(function (done) {
-        server.destroy(done);
+        httpServer.destroy(done);
     });
 });

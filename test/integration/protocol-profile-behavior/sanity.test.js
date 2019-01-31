@@ -1,9 +1,7 @@
 var fs = require('fs'),
     path = require('path'),
-    http = require('http'),
     sinon = require('sinon'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy'),
     server = require('../../fixtures/server'),
     CertificateList = require('postman-collection').CertificateList;
 
@@ -15,30 +13,24 @@ describe('protocolProfileBehavior', function () {
         HOST = 'http://localhost:' + PORT;
 
     before(function (done) {
-        redirectServer = http.createServer(function (req, res) {
-            var hops;
+        redirectServer = server.createRedirectServer();
 
+        redirectServer.on('hit', function (req) {
             // keep track of all the requests made during redirects.
             hits.push({
                 url: req.url,
                 method: req.method,
                 headers: req.headers
             });
+        });
 
-            // path: /{n}
-            if ((/^\/\d+$/).test(req.url)) {
-                hops = parseInt(req.url.substring(1), 10) - 1;
+        // This will be called on final redirect
+        redirectServer.on('/', function (req, res) {
+            res.writeHead(200, {'content-type': 'text/plain'});
+            res.end('okay');
+        });
 
-                // redirect until all hops are covered
-                res.writeHead(302, {location: hops > 0 ? `/${hops}` : '/'});
-                res.end();
-            }
-            else {
-                res.writeHead(200, {'content-type': 'text/plain'});
-                res.end('okay');
-            }
-        }).listen(PORT, done);
-        enableServerDestroy(redirectServer);
+        redirectServer.listen(PORT, done);
     });
 
     after(function (done) {
@@ -46,7 +38,7 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with followRedirects: false', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -101,7 +93,7 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with followRedirects: true', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -157,7 +149,7 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with followOriginalHttpMethod: false', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -211,7 +203,7 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with followOriginalHttpMethod: true', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -265,7 +257,7 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with removeRefererHeaderOnRedirect: false', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -321,7 +313,7 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with removeRefererHeaderOnRedirect: true', function () {
-        var URL = HOST + '/1';
+        var URL = HOST + '/1/302';
 
         before(function (done) {
             hits = [];
@@ -377,7 +369,7 @@ describe('protocolProfileBehavior', function () {
     });
 
     describe('with maxRedirects', function () {
-        var URL = HOST + '/11';
+        var URL = HOST + '/11/302';
 
         before(function (done) {
             hits = [];
@@ -436,14 +428,14 @@ describe('protocolProfileBehavior', function () {
             }),
             certificateId = 'test-certificate';
 
-        sslServer.on('/', function (req, resp) {
+        sslServer.on('/', function (req, res) {
             if (req.client.authorized) {
-                resp.writeHead(200, {'Content-Type': 'text/plain'});
-                resp.end('authorized\n');
+                res.writeHead(200, {'Content-Type': 'text/plain'});
+                res.end('authorized\n');
             }
             else {
-                resp.writeHead(401, {'Content-Type': 'text/plain'});
-                resp.end('unauthorized\n');
+                res.writeHead(401, {'Content-Type': 'text/plain'});
+                res.end('unauthorized\n');
             }
         });
 

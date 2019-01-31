@@ -1,11 +1,10 @@
 var fs = require('fs'),
-    http = require('http'),
     sinon = require('sinon'),
     expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy');
+    server = require('../../fixtures/server');
 
 describe('form-data with numeric keys', function () {
-    var server,
+    var httpServer,
         testrun;
 
     /**
@@ -54,7 +53,9 @@ describe('form-data with numeric keys', function () {
     }
 
     before(function (done) {
-        server = http.createServer(function (req, res) {
+        httpServer = server.createHTTPServer();
+
+        httpServer.on('/', function (req, res) {
             var rawBody = '';
 
             req.on('data', function (chunk) {
@@ -66,7 +67,9 @@ describe('form-data with numeric keys', function () {
                 });
                 res.end(JSON.stringify(parseRaw(rawBody)));
             });
-        }).listen(5050, function () {
+        });
+
+        httpServer.listen(5050, function () {
             this.run({
                 fileResolver: fs,
                 collection: {
@@ -103,11 +106,10 @@ describe('form-data with numeric keys', function () {
                 done(err);
             });
         }.bind(this));
-        enableServerDestroy(server);
     });
 
     after(function (done) {
-        server.destroy(done);
+        httpServer.destroy(done);
     });
 
     it('should complete the run', function () {

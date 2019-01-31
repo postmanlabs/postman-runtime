@@ -27,14 +27,14 @@ describe('certificates', function () {
                 requestCert: true
             });
 
-            sslServer.on('/', function (req, resp) {
+            sslServer.on('/', function (req, res) {
                 if (req.client.authorized) {
-                    resp.writeHead(200, {'Content-Type': 'text/plain'});
-                    resp.end('authorized\n');
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+                    res.end('authorized\n');
                 }
                 else {
-                    resp.writeHead(401, {'Content-Type': 'text/plain'});
-                    resp.end('unauthorized\n');
+                    res.writeHead(401, {'Content-Type': 'text/plain'});
+                    res.end('unauthorized\n');
                 }
             });
 
@@ -99,14 +99,14 @@ describe('certificates', function () {
 
             sslServer = server.createSSLServer();
 
-            sslServer.on('/', function (req, resp) {
+            sslServer.on('/', function (req, res) {
                 if (req.client.authorized) {
-                    resp.writeHead(200, {'Content-Type': 'text/plain'});
-                    resp.end('authorized\n');
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+                    res.end('authorized\n');
                 }
                 else {
-                    resp.writeHead(401, {'Content-Type': 'text/plain'});
-                    resp.end('unauthorized\n');
+                    res.writeHead(401, {'Content-Type': 'text/plain'});
+                    res.end('unauthorized\n');
                 }
             });
 
