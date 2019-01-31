@@ -39,7 +39,7 @@
     "inherits": "2.0.3",
     "lodash": "4.17.11",
     "node-oauth1": "1.2.2",
-    "postman-collection": "3.4.2-beta.2",
+    "postman-collection": "postmanlabs/postman-collection#develop",
     "postman-request": "2.88.1-postman.5",
     "postman-sandbox": "3.2.2",
     "resolve-from": "4.0.0",
