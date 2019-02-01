@@ -1,6 +1,6 @@
 # Postman Runtime Changelog
 
-#### v7.7.0 (unreleased)
+#### v7.7.0 (February 1, 2019)
 * #707 Avoid executing disabled `prerequest` and `test` scripts.
 * #707 Uses Collection SDK `Request~getHeaders` method to get request headers object.
 * Updated `postman-collection` to v3.4.2 which avoids substitution of disabled variables.
