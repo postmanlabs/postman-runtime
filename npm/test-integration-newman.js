@@ -8,47 +8,49 @@ var path = require('path'),
 
 module.exports = function (exit) {
     // banner line
-    console.log('Running newman integration tests...'.yellow.bold);
+    console.info('Running newman integration tests...'.yellow.bold);
 
     tmp.dir(function (err, dir, cleanup) {
         if (err || dir.length < 4) {
             console.error(err);
+
             return exit(1);
         }
 
         var installDir = path.join('node_modules', 'newman');
 
         pushd(dir);
-        async.waterfall([
+
+        return async.waterfall([
             function (next) {
-                console.log(('Setting up integration package at ' + dir).green);
+                console.info(('Setting up integration package at ' + dir).green);
                 exec('npm i newman --loglevel error', function (code, out, err) {
-                    next(code !== 0 ? err : null);
+                    next(code === 0 ? null : err);
                 });
             },
             function (next) {
-                console.log(('Installing dev dependencies of newman at ' + installDir).green);
+                console.info(('Installing dev dependencies of newman at ' + installDir).green);
                 pushd(installDir);
                 exec('npm i . --loglevel error', function (code, out, err) {
                     popd();
-                    next(code !== 0 ? err : null);
+                    next(code === 0 ? null : err);
                 });
             },
             function (next) {
-                console.log(('Migrating local runtime to ' + installDir).green);
+                console.info(('Migrating local runtime to ' + installDir).green);
                 pushd(installDir);
                 exec('npm i ' + path.join(__dirname, '..') + ' --loglevel error', function (code, out, err) {
                     popd();
-                    next(code !== 0 ? err : null);
+                    next(code === 0 ? null : err);
                 });
             },
             function (next) {
-                console.log('Running newman tests...'.green);
+                console.info('Running newman tests...'.green);
                 pushd(installDir);
                 // @todo figure out a way to bypass packity
                 exec('npm run test-unit && npm run test-integration && npm run test-cli', function (code, out, err) {
                     popd();
-                    next(code !== 0 ? err : null);
+                    next(code === 0 ? null : err);
                 });
             }
         ], function (err) {

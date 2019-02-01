@@ -10,6 +10,7 @@ describe('runner~timings', function () {
     it('should instantiate a new timings object', function () {
         expect(function () {
             var t = new Timings();
+
             expect(t).to.be.an.instanceOf(Timings);
         }).to.not.throw();
     });
@@ -26,7 +27,7 @@ describe('runner~timings', function () {
         });
     });
 
-    it('can use the create method to initialise a new instance', function () {
+    it('should use the create method to initialise a new instance', function () {
         var t = Timings.create({
             labelOne: 1468345625321,
             labelTwo: 1368345625321
@@ -39,7 +40,7 @@ describe('runner~timings', function () {
         });
     });
 
-    it('casts non numeric initial records to numbers', function () {
+    it('should cast non numeric initial records to numbers', function () {
         var t = new Timings({
             string: '1468345625321',
             float: 136834562532.29,
@@ -53,14 +54,15 @@ describe('runner~timings', function () {
         expect(t).to.have.property('date').that.is.NaN;
     });
 
-    it('records the current date time with a label', function () {
+    it('should record the current date time with a label', function () {
         var t = new Timings();
+
         t.record('capture');
         expect(t).to.have.property('capture').that.is.a('number');
         expect(t.capture <= Date.now()).to.be.ok;
     });
 
-    it('recording twice overrides old label', function (done) {
+    it('should override old labels on successive recording attempts', function (done) {
         var t = new Timings();
 
         t.record('capture');
@@ -68,12 +70,13 @@ describe('runner~timings', function () {
 
         setTimeout(function () {
             var old = t.capture;
+
             expect(t.record('capture') >= old).to.be.ok;
             done();
         }, 5);
     });
 
-    it('can be serialised to an object', function () {
+    it('should be serialised to an object', function () {
         var t = new Timings({
             labelOne: 1468345625321,
             labelTwo: 1368345625321

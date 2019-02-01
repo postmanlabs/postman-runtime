@@ -137,6 +137,7 @@ describe('asynchronous script timeouts', function () {
                 // so we wait for the sandbox to timeout, before testing the effects of timeout
                 setTimeout(function () {
                     var consoleCountsBefore = testrun.console.callCount;
+
                     setTimeout(function() {
                         expect(testrun).to.nested.include({
                             'console.callCount': consoleCountsBefore

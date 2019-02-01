@@ -41,6 +41,7 @@ describe('Control Flow', function () {
                 'start.calledOnce': true,
                 'abort.calledOnce': true
             });
+
             return done();
         });
         // eslint-disable-next-line handle-callback-err
@@ -60,6 +61,7 @@ describe('Control Flow', function () {
                 'pause.calledOnce': true,
                 'resume.calledOnce': true
             });
+
             return done();
         });
 
@@ -82,6 +84,7 @@ describe('Control Flow', function () {
                 'pause.calledOnce': true,
                 'abort.calledOnce': true
             });
+
             return done();
         });
 
@@ -91,6 +94,53 @@ describe('Control Flow', function () {
             run.pause(() => {
                 setTimeout(run.abort.bind(run), timeout);
             });
+        });
+    });
+
+    it('should allow a run to be aborted with interrupting the script execution', function (done) {
+        var collection = {
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: 'setTimeout(function () { throw "RUN ABORT FAILED" }, 10000);'
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        };
+
+        callbacks.script = function (err) {
+            expect(err).to.be.an('object');
+            expect(err).to.have.property('message', 'sandbox: execution interrupted, bridge disconnecting.');
+        };
+
+        callbacks.done = sinon.spy(function () {
+            expect(callbacks).to.be.ok;
+            expect(callbacks.done.getCall(0).args[0]).to.be.null;
+            expect(callbacks).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'abort.calledOnce': true
+            });
+
+            return done();
+        });
+
+        // eslint-disable-next-line handle-callback-err
+        runner.run(new Collection(collection), {}, function (err, run) {
+            callbacks.beforeScript = function () {
+                // wait until execution starts
+                setTimeout(function () {
+                    run.host.dispose(); // stop script execution
+                    run.abort(); // abort the run
+                }, 1000);
+            };
+
+            run.start(callbacks);
         });
     });
 });

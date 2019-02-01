@@ -213,6 +213,7 @@ describe('Option', function () {
                             });
 
                             var scriptResult = results[0];
+
                             expect(scriptResult).to.deep.nested.include({
                                 'result.target': 'test'
                             });
@@ -478,6 +479,7 @@ describe('Option', function () {
                                 expect(results[0]).to.deep.nested.include({
                                     'error.message': 'omg!'
                                 });
+
                                 return;
                             }
                             expect(err).to.be.null;
@@ -518,6 +520,7 @@ describe('Option', function () {
 
                             var result = results[0],
                                 scriptResult = results[0];
+
                             expect(result.error).to.be.undefined;
 
                             expect(scriptResult).to.deep.nested.include({
@@ -812,6 +815,7 @@ describe('Option', function () {
                                 expect(results).to.deep.nested.include({
                                     'error.message': 'omg!'
                                 });
+
                                 return;
                             }
                             expect(err).to.be.null;
@@ -852,6 +856,7 @@ describe('Option', function () {
 
                             var result = results[0],
                                 scriptResult = results[0];
+
                             expect(result.error).to.be.undefined;
 
                             expect(scriptResult).to.deep.nested.include({

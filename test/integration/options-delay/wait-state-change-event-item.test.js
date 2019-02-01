@@ -27,7 +27,7 @@ describe('waitStateChange event for item', function () {
         expect(testrun.waitStateChange.getCall(0).args[3]).to.equal(200);
     });
 
-    it('start delay source must be "item"', function () {
+    it('should have a start delay source as "item"', function () {
         expect(testrun.waitStateChange.getCall(0).args[4]).to.equal('item');
     });
 
@@ -39,7 +39,7 @@ describe('waitStateChange event for item', function () {
         expect(testrun.waitStateChange.getCall(1).args[3]).to.equal(200);
     });
 
-    it('end delay source must be "item"', function () {
+    it('should have end delay source as "item"', function () {
         expect(testrun.waitStateChange.getCall(1).args[4]).to.equal('item');
     });
 });

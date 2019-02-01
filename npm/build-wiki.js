@@ -18,7 +18,7 @@ var fs = require('fs'),
     SUCCESS_MESSAGE = colors.green.bold(`- wiki generated at "${OUT_PATH}"`);
 
 module.exports = function (exit) {
-    console.log(colors.yellow.bold('Generating wiki using jsdoc2md...'));
+    console.info(colors.yellow.bold('Generating wiki using jsdoc2md...'));
 
     // clean directory
     test('-d', OUT_DIR) && rm('-rf', OUT_DIR);
