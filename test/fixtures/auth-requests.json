@@ -168,7 +168,7 @@
                 "user": "asda",
                 "saveHelperData": true,
                 "extraData": "skjdfklsjhdflkjhsdf",
-                "appId": "",
+                "app": "someAppId",
                 "delegation": ""
             }
         },

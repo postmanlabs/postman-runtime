@@ -39,13 +39,13 @@ describe('hawk auth', function () {
         var request = testrun.request.getCall(0).args[3],
             header = request.headers.members[0];
 
-        expect(header).to.have.have.property('key').eq('Authorization');
-        expect(header).to.have.have.property('value').include('Hawk id="dh37fgj492je"');
-        expect(header).to.have.have.property('value').include('ts=');
-        expect(header).to.have.have.property('value').include('nonce="eFRP2o"');
-        expect(header).to.have.have.property('value').include('ext="skjdfklsjhdflkjhsdf"');
-        expect(header).to.have.have.property('value').include('mac=');
-        expect(header).to.have.have.property('value').include('app="someAppId"');
+        expect(header).to.have.have.property('key', 'Authorization');
+        expect(header).to.have.have.property('value').that.include('Hawk id="dh37fgj492je"');
+        expect(header).to.have.have.property('value').that.include('ts=');
+        expect(header).to.have.have.property('value').that.include('nonce="eFRP2o"');
+        expect(header).to.have.have.property('value').that.include('ext="skjdfklsjhdflkjhsdf"');
+        expect(header).to.have.have.property('value').that.include('mac=');
+        expect(header).to.have.have.property('value').that.include('app="someAppId"');
     });
 
     it('should have completed the run', function () {
