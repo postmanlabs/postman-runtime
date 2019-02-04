@@ -18,7 +18,7 @@ describe('Hawk authentication', function () {
                                 saveHelperData: true,
                                 nonce: 'eFRP2o',
                                 extraData: 'skjdfklsjhdflkjhsdf',
-                                appId: '',
+                                app: 'someAppId',
                                 delegation: '',
                                 timestamp: ''
                             }
@@ -32,6 +32,19 @@ describe('Hawk authentication', function () {
             testrun = results;
             done(err);
         });
+    });
+
+    it('should include hawk auth parameters in request header', function() {
+        var request = testrun.request.getCall(0).args[3],
+            header = request.headers.members[0];
+
+        expect(header).to.have.have.property('key').eq('Authorization');
+        expect(header).to.have.have.property('value').include('Hawk id="dh37fgj492je"');
+        expect(header).to.have.have.property('value').include('ts=');
+        expect(header).to.have.have.property('value').include('nonce="eFRP2o"');
+        expect(header).to.have.have.property('value').include('ext="skjdfklsjhdflkjhsdf"');
+        expect(header).to.have.have.property('value').include('mac=');
+        expect(header).to.have.have.property('value').include('app="someAppId"');
     });
 
     it('should have authorized successfully', function () {
