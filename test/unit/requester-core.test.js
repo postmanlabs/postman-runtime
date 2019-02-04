@@ -41,7 +41,8 @@ describe('requester util', function () {
                 maxRedirects: undefined,
                 removeRefererHeader: undefined,
                 encoding: null,
-                agentOptions: {keepAlive: undefined}
+                agentOptions: {keepAlive: undefined},
+                time: undefined
             });
         });
 
@@ -75,7 +76,8 @@ describe('requester util', function () {
                 maxRedirects: undefined,
                 removeRefererHeader: undefined,
                 encoding: null,
-                agentOptions: {keepAlive: undefined}
+                agentOptions: {keepAlive: undefined},
+                time: undefined
             });
         });
 
@@ -205,7 +207,8 @@ describe('requester util', function () {
                 maxRedirects: 15,
                 removeRefererHeader: true,
                 encoding: null,
-                agentOptions: {keepAlive: undefined}
+                agentOptions: {keepAlive: undefined},
+                time: undefined
             });
         });
     });
