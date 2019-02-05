@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('Requester Spec: timing', function () {
+describe('Requester Spec: responseTimings', function () {
     var testrun,
         URL = 'http://postman-echo.com/get',
         collection = {
@@ -12,7 +12,7 @@ describe('Requester Spec: timing', function () {
             }]
         };
 
-    describe('with time: undefined', function () {
+    describe('with responseTimings: undefined', function () {
         before(function (done) {
             this.run({
                 collection: collection
@@ -27,15 +27,19 @@ describe('Requester Spec: timing', function () {
 
             expect(response).to.have.property('timingStart');
             expect(response).to.have.property('timings');
-            expect(response).to.have.property('timingPhases');
+            expect(response.timings).to.have.property('socket');
+            expect(response.timings).to.have.property('lookup');
+            expect(response.timings).to.have.property('connect');
+            expect(response.timings).to.have.property('response');
+            expect(response.timings).to.have.property('end');
         });
     });
 
-    describe('with time: true', function () {
+    describe('with responseTimings: true', function () {
         before(function (done) {
             this.run({
                 requester: {
-                    time: true
+                    responseTimings: true
                 },
                 collection: collection
             }, function (err, results) {
@@ -49,15 +53,19 @@ describe('Requester Spec: timing', function () {
 
             expect(response).to.have.property('timingStart');
             expect(response).to.have.property('timings');
-            expect(response).to.have.property('timingPhases');
+            expect(response.timings).to.have.property('socket');
+            expect(response.timings).to.have.property('lookup');
+            expect(response.timings).to.have.property('connect');
+            expect(response.timings).to.have.property('response');
+            expect(response.timings).to.have.property('end');
         });
     });
 
-    describe('with time: false', function () {
+    describe('with responseTimings: false', function () {
         before(function (done) {
             this.run({
                 requester: {
-                    time: false
+                    responseTimings: false
                 },
                 collection: collection
             }, function (err, results) {
@@ -71,7 +79,6 @@ describe('Requester Spec: timing', function () {
 
             expect(response).to.not.have.property('timingStart');
             expect(response).to.not.have.property('timings');
-            expect(response).to.not.have.property('timingPhases');
         });
     });
 });
