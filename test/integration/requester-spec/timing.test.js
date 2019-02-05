@@ -25,13 +25,14 @@ describe('Requester Spec: responseTimings', function () {
         it('should include timing information by default', function () {
             var response = testrun.response.getCall(0).args[2];
 
-            expect(response).to.have.property('timingStart');
-            expect(response).to.have.property('timings');
-            expect(response.timings).to.have.property('socket');
-            expect(response.timings).to.have.property('lookup');
-            expect(response.timings).to.have.property('connect');
-            expect(response.timings).to.have.property('response');
-            expect(response.timings).to.have.property('end');
+            expect(response).to.include.all.keys('timingStart', 'timings');
+            expect(response.timings).to.be.an('object').that.have.all.keys([
+                'socket',
+                'lookup',
+                'connect',
+                'response',
+                'end'
+            ]);
         });
     });
 
@@ -51,13 +52,14 @@ describe('Requester Spec: responseTimings', function () {
         it('should include timing information', function () {
             var response = testrun.response.getCall(0).args[2];
 
-            expect(response).to.have.property('timingStart');
-            expect(response).to.have.property('timings');
-            expect(response.timings).to.have.property('socket');
-            expect(response.timings).to.have.property('lookup');
-            expect(response.timings).to.have.property('connect');
-            expect(response.timings).to.have.property('response');
-            expect(response.timings).to.have.property('end');
+            expect(response).to.include.all.keys('timingStart', 'timings');
+            expect(response.timings).to.be.an('object').that.have.all.keys([
+                'socket',
+                'lookup',
+                'connect',
+                'response',
+                'end'
+            ]);
         });
     });
 
@@ -77,8 +79,7 @@ describe('Requester Spec: responseTimings', function () {
         it('should not include timing information', function () {
             var response = testrun.response.getCall(0).args[2];
 
-            expect(response).to.not.have.property('timingStart');
-            expect(response).to.not.have.property('timings');
+            expect(response).to.not.include.all.keys('timingStart', 'timings');
         });
     });
 });
