@@ -1,9 +1,12 @@
 # Postman Runtime Changelog
 
-#### v7.7.0 (unreleased)
-* #707 Avoid executing disabled `prerequest` and `test` scripts.
-* #707 Uses Collection SDK `Request~getHeaders` method to get request headers object.
-* Updated `postman-collection` to v3.4.2 which avoids substitution of disabled variables.
+#### v7.7.0 (February 1, 2019)
+* #707 Avoid executing disabled `prerequest` and `test` scripts
+* #713 Expose Runtime and its dependencies package version via an API
+* #723 Fixed a bug where interrupting the script execution crashes the process
+* #707 Uses Collection SDK `Request~getHeaders` method to get request headers object
+* Updated `postman-collection` to v3.4.2 which avoids substitution of disabled variables
+* Updated dependencies
 
 #### v7.6.1 (January 3, 2019)
 * Updated `postman-collection` to v3.4.1 which fixes a bug where poly chained variables are not resolved correctly
