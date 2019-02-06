@@ -25,8 +25,9 @@ describe('Requester Spec: responseTimings', function () {
         it('should include timing information by default', function () {
             var response = testrun.response.getCall(0).args[2];
 
-            expect(response).to.include.all.keys('timingStart', 'timings');
+            expect(response).to.have.property('timings');
             expect(response.timings).to.be.an('object').that.have.all.keys([
+                'start',
                 'socket',
                 'lookup',
                 'connect',
@@ -52,8 +53,9 @@ describe('Requester Spec: responseTimings', function () {
         it('should include timing information', function () {
             var response = testrun.response.getCall(0).args[2];
 
-            expect(response).to.include.all.keys('timingStart', 'timings');
+            expect(response).to.have.property('timings');
             expect(response.timings).to.be.an('object').that.have.all.keys([
+                'start',
                 'socket',
                 'lookup',
                 'connect',
@@ -79,7 +81,7 @@ describe('Requester Spec: responseTimings', function () {
         it('should not include timing information', function () {
             var response = testrun.response.getCall(0).args[2];
 
-            expect(response).to.not.include.all.keys('timingStart', 'timings');
+            expect(response).to.not.have.property('timings');
         });
     });
 });
