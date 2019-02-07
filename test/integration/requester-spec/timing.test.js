@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('Requester Spec: responseTimings', function () {
+describe('Requester Spec: timings', function () {
     var testrun,
         URL = 'http://postman-echo.com/get',
         collection = {
@@ -12,7 +12,7 @@ describe('Requester Spec: responseTimings', function () {
             }]
         };
 
-    describe('with responseTimings: undefined', function () {
+    describe('with timings: undefined', function () {
         before(function (done) {
             this.run({
                 collection: collection
@@ -37,11 +37,11 @@ describe('Requester Spec: responseTimings', function () {
         });
     });
 
-    describe('with responseTimings: true', function () {
+    describe('with timings: true', function () {
         before(function (done) {
             this.run({
                 requester: {
-                    responseTimings: true
+                    timings: true
                 },
                 collection: collection
             }, function (err, results) {
@@ -65,11 +65,11 @@ describe('Requester Spec: responseTimings', function () {
         });
     });
 
-    describe('with responseTimings: false', function () {
+    describe('with timings: false', function () {
         before(function (done) {
             this.run({
                 requester: {
-                    responseTimings: false
+                    timings: false
                 },
                 collection: collection
             }, function (err, results) {
