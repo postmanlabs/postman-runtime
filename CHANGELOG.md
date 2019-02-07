@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### v7.7.1 (February 7, 2019)
+* #732 Fixed a bug where deep dependencies path was incorrect while fetching version
+
 #### v7.7.0 (February 1, 2019)
 * #707 Avoid executing disabled `prerequest` and `test` scripts
 * #713 Expose Runtime and its dependencies package version via an API
