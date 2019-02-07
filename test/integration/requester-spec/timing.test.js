@@ -26,7 +26,7 @@ describe('Requester Spec: timings', function () {
             var response = testrun.response.getCall(0).args[2];
 
             expect(response).to.have.property('timings');
-            expect(response.timings).to.be.an('object').that.have.all.keys([
+            expect(response.timings).to.be.an('object').that.has.all.keys([
                 'start',
                 'socket',
                 'lookup',
@@ -54,7 +54,7 @@ describe('Requester Spec: timings', function () {
             var response = testrun.response.getCall(0).args[2];
 
             expect(response).to.have.property('timings');
-            expect(response.timings).to.be.an('object').that.have.all.keys([
+            expect(response.timings).to.be.an('object').that.has.all.keys([
                 'start',
                 'socket',
                 'lookup',
