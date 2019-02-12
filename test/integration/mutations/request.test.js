@@ -8,9 +8,7 @@ describe('request mutations', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: {
-                            url: 'http://localhost'
-                        },
+                        request: 'http://localhost',
                         event: [{
                             listen: 'prerequest',
                             script: {
@@ -120,9 +118,9 @@ describe('request mutations', function () {
                             script: {
                                 exec: [
                                     'pm.request.headers.add({key: "h2", value: "v2"})',
-                                    'pm.request.addHeader({key: "h3", value: "v3"})',
-                                    'pm.request.upsertHeader({key: "h1", value: "v1"})',
-                                    'pm.request.removeHeader("h0")'
+                                    'pm.request.headers.add({key: "h3", value: "v3"})',
+                                    'pm.request.headers.upsert({key: "h1", value: "v1"})',
+                                    'pm.request.headers.remove("h0")'
                                 ],
                                 type: 'text/javascript'
                             }
@@ -167,7 +165,7 @@ describe('request mutations', function () {
         });
     });
 
-    describe('auth', function () {
+    describe('auth(immutable)', function () {
         before(function (done) {
             this.run({
                 collection: {
@@ -175,10 +173,10 @@ describe('request mutations', function () {
                         request: {
                             url: 'https://postman-echo.com/basic-auth',
                             auth: {
-                                type: 'digest',
-                                digest: {
-                                    username: 'foo',
-                                    password: 'bar'
+                                type: 'basic',
+                                basic: {
+                                    username: 'postman',
+                                    password: 'password'
                                 }
                             }
                         },
@@ -186,7 +184,7 @@ describe('request mutations', function () {
                             listen: 'prerequest',
                             script: {
                                 exec: [
-                                    'pm.request.authorizeUsing("basic", {username: "postman", password: "password"});'
+                                    'pm.request.authorizeUsing("digest", {username: "foo", password: "bar"});'
                                 ],
                                 type: 'text/javascript'
                             }
@@ -211,7 +209,7 @@ describe('request mutations', function () {
             });
         });
 
-        it('should update the request auth', function () {
+        it('should not update the request auth', function () {
             var request = testrun.response.getCall(0).args[3],
                 response = testrun.response.getCall(0).args[2],
                 responseBody = JSON.parse(response.stream.toString());
@@ -224,8 +222,7 @@ describe('request mutations', function () {
         });
     });
 
-    // @todo allow request body mutation
-    describe('body', function () {
+    describe('body(immutable)', function () {
         before(function (done) {
             this.run({
                 collection: {
