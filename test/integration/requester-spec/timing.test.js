@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 describe('Requester Spec: timings', function () {
     var testrun,
-        URL = 'http://postman-echo.com/get',
+        URL = 'https://postman-echo.com/get',
         collection = {
             item: [{
                 request: {
@@ -30,6 +30,14 @@ describe('Requester Spec: timings', function () {
                 'start',
                 'offset'
             ]);
+            expect(response.timings.offset).to.be.an('object').that.includes.all.keys([
+                'socket',
+                'lookup',
+                'connect',
+                'secureConnect',
+                'response',
+                'end'
+            ]);
         });
     });
 
@@ -53,6 +61,14 @@ describe('Requester Spec: timings', function () {
             expect(response.timings).to.be.an('object').that.has.all.keys([
                 'start',
                 'offset'
+            ]);
+            expect(response.timings.offset).to.be.an('object').that.includes.all.keys([
+                'socket',
+                'lookup',
+                'connect',
+                'secureConnect',
+                'response',
+                'end'
             ]);
         });
     });
