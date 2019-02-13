@@ -28,11 +28,7 @@ describe('Requester Spec: timings', function () {
             expect(response).to.have.property('timings');
             expect(response.timings).to.be.an('object').that.has.all.keys([
                 'start',
-                'socket',
-                'lookup',
-                'connect',
-                'response',
-                'end'
+                'offset'
             ]);
         });
     });
@@ -56,11 +52,7 @@ describe('Requester Spec: timings', function () {
             expect(response).to.have.property('timings');
             expect(response.timings).to.be.an('object').that.has.all.keys([
                 'start',
-                'socket',
-                'lookup',
-                'connect',
-                'response',
-                'end'
+                'offset'
             ]);
         });
     });
