@@ -39,12 +39,15 @@ describe('request mutations', function () {
         });
 
         it('should update the request URL', function () {
-            var request = testrun.response.getCall(0).args[3],
+            var initialRequest = testrun.beforeItem.getCall(0).args[2].request,
+                request = testrun.response.getCall(0).args[3],
                 response = testrun.response.getCall(0).args[2],
                 responseBody = JSON.parse(response.stream.toString());
 
+            expect(initialRequest).to.have.property('method', 'GET');
+            expect(initialRequest.url.toString()).to.equal('http://localhost');
+
             expect(request).to.have.property('method', 'GET');
-            expect(request).to.have.property('url').that.has.property('toString');
             expect(request.url.toString()).to.equal('https://postman-echo.com/get');
 
             expect(response).to.have.property('code', 200);
@@ -90,10 +93,12 @@ describe('request mutations', function () {
         });
 
         it('should update the request method', function () {
-            var request = testrun.response.getCall(0).args[3],
+            var initialRequest = testrun.beforeItem.getCall(0).args[2].request,
+                request = testrun.response.getCall(0).args[3],
                 response = testrun.response.getCall(0).args[2],
                 responseBody = JSON.parse(response.stream.toString());
 
+            expect(initialRequest).to.have.property('method', 'GET');
             expect(request).to.have.property('method', 'POST');
 
             expect(response).to.have.property('code', 200);
@@ -146,7 +151,9 @@ describe('request mutations', function () {
         });
 
         it('should update the request headers', function () {
-            var request = testrun.response.getCall(0).args[3],
+            var initialRequest = testrun.beforeItem.getCall(0).args[2].request,
+                initialHeaders = initialRequest.getHeaders(),
+                request = testrun.response.getCall(0).args[3],
                 requestHeaders = request.getHeaders(),
                 response = testrun.response.getCall(0).args[2],
                 responseBody = JSON.parse(response.stream.toString()),
@@ -156,6 +163,7 @@ describe('request mutations', function () {
                     h3: 'v3'
                 };
 
+            expect(initialHeaders).to.eql({h0: 'v0', h1: 'v0'});
             expect(requestHeaders).to.deep.include(headers);
             expect(requestHeaders).to.not.have.property('h0');
 
@@ -277,13 +285,12 @@ describe('request mutations', function () {
         });
     });
 
-    describe('multiple prerequest', function () {
+    describe('with multiple prerequest', function () {
         before(function (done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
-                            url: 'http://localhost',
                             body: {
                                 mode: 'raw',
                                 raw: 'postman'
@@ -337,12 +344,104 @@ describe('request mutations', function () {
         });
 
         it('should persist request mutations within multiple prerequest', function () {
-            var request = testrun.response.getCall(0).args[3],
+            var initialRequest = testrun.beforeItem.getCall(0).args[2].request,
+                request = testrun.response.getCall(0).args[3],
                 response = testrun.response.getCall(0).args[2],
                 responseBody = JSON.parse(response.stream.toString());
 
+            expect(initialRequest).to.have.property('method', 'GET');
+            expect(initialRequest.url.toString()).to.equal('');
+            expect(initialRequest.getHeaders()).to.eql({});
+
             expect(request).to.have.property('method', 'POST');
-            expect(request).to.have.property('url').that.has.property('toString');
+            expect(request.url.toString()).to.equal('https://postman-echo.com/post');
+            expect(request.getHeaders()).to.deep.include({h0: 'v0'});
+
+            expect(response).to.have.property('code', 200);
+            expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
+            expect(responseBody).to.have.property('data', 'postman');
+            expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
+        });
+    });
+
+    describe('with multiple iterations', function () {
+        before(function (done) {
+            this.run({
+                iterationCount: 2,
+                collection: {
+                    item: [{
+                        request: {
+                            url: '',
+                            body: {
+                                mode: 'raw',
+                                raw: 'postman'
+                            }
+                        },
+                        event: [{
+                            listen: 'prerequest',
+                            script: {
+                                exec: [
+                                    'pm.request.update({ url: "https://postman-echo.com/post" });',
+                                    'pm.request.update({ method: "POST" });',
+                                    'pm.request.headers.add({key: "h0", value: "v0"})',
+                                    'pm.request.body.mode = "file"',
+                                    'pm.request.body.raw = "new-postman"'
+                                ],
+                                type: 'text/javascript'
+                            }
+                        }]
+                    }]
+                }
+            },
+            function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'iteration.calledTwice': true,
+                'request.calledTwice': true,
+                'response.calledTwice': true
+            });
+        });
+
+        it('should mutate the request correctly', function () {
+            var initialRequest = testrun.beforeItem.getCall(0).args[2].request,
+                request = testrun.response.getCall(0).args[3],
+                response = testrun.response.getCall(0).args[2],
+                responseBody = JSON.parse(response.stream.toString());
+
+            expect(initialRequest).to.have.property('method', 'GET');
+            expect(initialRequest.url.toString()).to.equal('');
+            expect(initialRequest.getHeaders()).to.eql({});
+
+            expect(request).to.have.property('method', 'POST');
+            expect(request.url.toString()).to.equal('https://postman-echo.com/post');
+            expect(request.getHeaders()).to.deep.include({h0: 'v0'});
+
+            expect(response).to.have.property('code', 200);
+            expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
+            expect(responseBody).to.have.property('data', 'postman');
+            expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
+        });
+
+        it('should not persist request mutations across iterations', function () {
+            var request = testrun.response.getCall(1).args[3],
+                response = testrun.response.getCall(1).args[2],
+                responseBody = JSON.parse(response.stream.toString()),
+                initialRequest = testrun.beforeItem.getCall(1).args[2].request;
+
+            expect(initialRequest).to.have.property('method', 'GET');
+            expect(initialRequest.url.toString()).to.equal('');
+            expect(initialRequest.getHeaders()).to.eql({});
+
+            expect(request).to.have.property('method', 'POST');
             expect(request.url.toString()).to.equal('https://postman-echo.com/post');
             expect(request.getHeaders()).to.deep.include({h0: 'v0'});
 
