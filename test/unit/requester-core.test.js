@@ -19,17 +19,21 @@ describe('requester util', function () {
                 }
             });
 
-            expect(requesterCore.getRequestOptions(request, {})).to.eql({
-                headers: {
-                    alpha: 'foo',
-                    'User-Agent': 'PostmanRuntime/' + runtimeVersion,
-                    'Content-Type': 'text/plain',
-                    Accept: '*/*',
-                    Host: 'postman-echo.com'
-                },
+            expect(requesterCore.getRequestOptions(request, {}).headers).to.include({
+                alpha: 'foo',
+                'User-Agent': 'PostmanRuntime/' + runtimeVersion,
+                'Content-Type': 'text/plain',
+                Accept: '*/*',
+                'Cache-Control': 'no-cache',
+                Host: 'postman-echo.com'
+            });
+
+            expect(requesterCore.getRequestOptions(request, {})).to.deep.include({
                 body: '{"alpha": "foo"}',
                 url: 'http://postman-echo.com/post',
                 method: 'POST',
+                noCacheHeader: undefined,
+                postmanTokenHeader: undefined,
                 jar: true,
                 timeout: undefined,
                 gzip: true,
@@ -56,15 +60,19 @@ describe('requester util', function () {
                 }]
             });
 
-            expect(requesterCore.getRequestOptions(request, {})).to.eql({
-                headers: {
-                    alpha: 'foo',
-                    'User-Agent': 'PostmanRuntime/' + runtimeVersion,
-                    Accept: '*/*',
-                    Host: 'postman-echo.com'
-                },
+            expect(requesterCore.getRequestOptions(request, {}).headers).to.include({
+                alpha: 'foo',
+                'User-Agent': 'PostmanRuntime/' + runtimeVersion,
+                Accept: '*/*',
+                'Cache-Control': 'no-cache',
+                Host: 'postman-echo.com'
+            });
+
+            expect(requesterCore.getRequestOptions(request, {})).to.deep.include({
                 url: 'https://postman-echo.com',
                 method: 'GET',
+                noCacheHeader: undefined,
+                postmanTokenHeader: undefined,
                 jar: true,
                 timeout: undefined,
                 gzip: true,
@@ -185,17 +193,24 @@ describe('requester util', function () {
                     followRedirects: true,
                     followOriginalHttpMethod: true,
                     maxRedirects: 15,
-                    removeRefererHeaderOnRedirect: true
-                };
-
-            expect(requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior)).to.eql({
-                headers: {
-                    'User-Agent': 'PostmanRuntime/' + runtimeVersion,
-                    Accept: '*/*',
-                    Host: ''
+                    removeRefererHeaderOnRedirect: true,
+                    noCacheHeader: true,
+                    postmanTokenHeader: true
                 },
+                requestOptions = requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior);
+
+            expect(requestOptions.headers).to.include({
+                'User-Agent': 'PostmanRuntime/' + runtimeVersion,
+                Accept: '*/*',
+                'Cache-Control': 'no-cache',
+                Host: ''
+            });
+
+            expect(requestOptions).to.deep.include({
                 url: 'http://',
                 method: 'GET',
+                noCacheHeader: true,
+                postmanTokenHeader: true,
                 jar: true,
                 timeout: undefined,
                 gzip: true,
