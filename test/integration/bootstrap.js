@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    sinon = require('sinon'),
+    sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
     Collection = require('postman-collection').Collection,
     Runner = require('../../index.js').Runner,
@@ -7,6 +7,10 @@ var _ = require('lodash'),
     runtime;
 
 runtime = function (spec, done) {
+    // reset the internal state of all spies created in the previous run
+    // Refer: https://sinonjs.org/releases/latest/sandbox/
+    sinon.reset();
+
     _.isString(spec) && (spec = require('./' + spec));
 
     var runner = new Runner(_.merge({}, spec.options)),
@@ -29,12 +33,10 @@ runtime = function (spec, done) {
 };
 
 before(function () {
-    global.sinon = sinon; // expose global for ease of use
     global.expect = expect; // expose global
     this.run = runtime;
 });
 
 after(function () {
-    delete global.sinon;
     delete global.expect;
 });
