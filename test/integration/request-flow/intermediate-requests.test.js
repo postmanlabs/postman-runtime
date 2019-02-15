@@ -1,4 +1,4 @@
-var sinon = require('sinon'),
+var sinon = require('sinon').createSandbox(),
     AuthLoader = require('../../../lib/authorizer').AuthLoader,
     expect = require('chai').expect;
 
@@ -20,6 +20,10 @@ describe('intermediate requests from auth', function () {
             }
         }
     };
+
+    after(function () {
+        sinon.restore();
+    });
 
     describe('with intermediate request in pre', function () {
         var testrun,
