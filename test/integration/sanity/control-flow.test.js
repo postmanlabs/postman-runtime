@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    sinon = require('sinon'),
+    sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
     Collection = require('postman-collection').Collection,
     Runner = require('../../../index.js').Runner;
@@ -30,6 +30,10 @@ describe('Control Flow', function () {
         _.forEach(_.keys(Runner.Run.triggers), function (eventName) {
             callbacks[eventName] = sinon.spy();
         });
+    });
+
+    after(function () {
+        sinon.restore();
     });
 
     it('should allow a run to be aborted', function (done) {
