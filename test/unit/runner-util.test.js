@@ -1,8 +1,12 @@
-var sinon = require('sinon'),
+var sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
     runnerUtil = require('../../lib/runner/util');
 
 describe('runner util', function () {
+    after(function () {
+        sinon.restore();
+    });
+
     describe('.safeCall', function () {
         it('should not throw an error if a non function is passed', function () {
             var err = runnerUtil.safeCall('not a function');

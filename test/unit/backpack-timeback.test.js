@@ -1,8 +1,12 @@
 var expect = require('chai').expect,
-    sinon = require('sinon');
+    sinon = require('sinon').createSandbox();
 
 describe('backpack.timeback', function () {
     var timeback = require('../../lib/backpack').timeback;
+
+    after(function () {
+        sinon.restore();
+    });
 
     it('should exist as a function', function () {
         expect(timeback).to.be.ok;

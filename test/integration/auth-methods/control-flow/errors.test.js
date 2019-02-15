@@ -1,4 +1,4 @@
-var sinon = require('sinon'),
+var sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
     AuthLoader = require('../../../../lib/authorizer/index').AuthLoader;
 
@@ -20,6 +20,10 @@ describe('auth control flow', function () {
             }
         }
     };
+
+    after(function () {
+        sinon.restore();
+    });
 
     describe('with error in pre', function () {
         var testrun,
