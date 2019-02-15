@@ -1,5 +1,10 @@
 # Postman Runtime Changelog
 
+#### v7.8.0 (February 15, 2019)
+* #735 Added support for request mutation via prerequest scripts
+* #729 Added `timings` requester option to bubble up detailed request-response timings
+* Updated dependencies
+
 #### v7.7.1 (February 7, 2019)
 * #732 Fixed a bug where deep dependencies path was incorrect while fetching version
 
