@@ -24,12 +24,6 @@ Redirect with the original HTTP method, by default redirects with HTTP method GE
 - `removeRefererHeaderOnRedirect`<br/>
 Removes the `referer` header when a redirect happens.
 
-- `noCacheHeader`<br/>
-Controls whether or not request should be sent with cache-control header
-
-- ` postmanTokenHeader`<br/>
-Controls whether or not request should be sent with postman-token header
-
 **A collection with protocol profile behaviors:**
 ```javascript
 {
