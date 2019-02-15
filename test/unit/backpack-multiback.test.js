@@ -1,8 +1,12 @@
 var expect = require('chai').expect,
-    sinon = require('sinon');
+    sinon = require('sinon').createSandbox();
 
 describe('backpack.multiback', function () {
     var multiback = require('../../lib/backpack').multiback;
+
+    after(function () {
+        sinon.restore();
+    });
 
     it('should exist as a function', function () {
         expect(multiback).to.be.ok;

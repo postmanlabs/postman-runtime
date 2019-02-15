@@ -1,9 +1,13 @@
 var proxy = require('http-proxy'),
-    sinon = require('sinon'),
+    sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
     sdk = require('postman-collection');
 
 describe('systemProxy', function () {
+    after(function () {
+        sinon.restore();
+    });
+
     describe('valid output config', function () {
         var server,
             testrun,

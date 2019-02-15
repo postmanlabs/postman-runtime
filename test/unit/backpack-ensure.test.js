@@ -1,8 +1,12 @@
 var expect = require('chai').expect,
-    sinon = require('sinon');
+    sinon = require('sinon').createSandbox();
 
 describe('backpack.ensure', function () {
     var ensure = require('../../lib/backpack').ensure;
+
+    after(function () {
+        sinon.restore();
+    });
 
     it('should return a function if the original argument is a function and not otherwise', function () {
         var fn = function () { return 1; };
