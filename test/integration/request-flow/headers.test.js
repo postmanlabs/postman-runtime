@@ -82,25 +82,6 @@ describe('request headers', function () {
                                 value: 'value3'
                             }]
                         }
-                    },
-                    {
-                        name: 'Cache-Control and postman token headers',
-                        request: {
-                            url: HOST
-                        }
-                    },
-                    {
-                        name: 'Cache-Control and postman token headers 2',
-                        request: {
-                            url: HOST,
-                            header: [{
-                                key: 'Cache-Control',
-                                value: 'max-age=1200'
-                            }, {
-                                key: 'Postman-Token',
-                                value: 'someToken'
-                            }]
-                        }
                     }]
                 }
             }, function (err, results) {
@@ -120,8 +101,8 @@ describe('request headers', function () {
         sinon.assert.calledOnce(testrun.done);
         sinon.assert.calledWith(testrun.done.getCall(0), null);
 
-        sinon.assert.callCount(testrun.request, 5);
-        sinon.assert.callCount(testrun.response, 5);
+        sinon.assert.calledThrice(testrun.request);
+        sinon.assert.calledThrice(testrun.response);
     });
 
     it('should handle duplicate headers correctly', function () {
@@ -173,37 +154,5 @@ describe('request headers', function () {
             key: 'Header-Name-1',
             value: 'value1'
         });
-    });
-
-    it('should send cache-control and postman-token headers by default', function() {
-        var response = testrun.response.getCall(3).args[2],
-            requestHeaders = JSON.parse(response.stream),
-            regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-
-            tokenHeader = requestHeaders.filter(function(header) {
-                return (header.key === 'Postman-Token');
-            });
-
-        sinon.assert.calledWith(testrun.request.getCall(3), null);
-        sinon.assert.calledWith(testrun.response.getCall(3), null);
-
-        expect(requestHeaders).to.deep.include.members([
-            {key: 'Cache-Control', value: 'no-cache'}
-        ]);
-
-        expect(regex.test(tokenHeader[0].value)).to.be.true;
-    });
-
-    it('should override cache-control and postman-token headers when custom headers are provided', function() {
-        sinon.assert.calledWith(testrun.request.getCall(4), null);
-        sinon.assert.calledWith(testrun.response.getCall(4), null);
-
-        var response = testrun.response.getCall(4).args[2],
-            requestHeaders = JSON.parse(response.stream);
-
-        expect(requestHeaders).to.deep.include.members([
-            {key: 'Cache-Control', value: 'max-age=1200'},
-            {key: 'Postman-Token', value: 'someToken'}
-        ]);
     });
 });
