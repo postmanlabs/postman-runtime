@@ -26,10 +26,8 @@ describe('Requester Spec: timings', function () {
             var response = testrun.response.getCall(0).args[2];
 
             expect(response).to.have.property('timings');
-            expect(response.timings).to.be.an('object').that.has.all.keys([
-                'start',
-                'offset'
-            ]);
+            expect(response).to.have.property('responseTime');
+            expect(response.timings).to.be.an('object').that.has.all.keys(['start', 'overhead', 'offset']);
             expect(response.timings.offset).to.be.an('object').that.includes.all.keys([
                 'socket',
                 'lookup',
@@ -38,6 +36,7 @@ describe('Requester Spec: timings', function () {
                 'response',
                 'end'
             ]);
+            expect(response.timings.overhead).to.equal(response.responseTime - response.timings.offset.end);
         });
     });
 
@@ -58,10 +57,8 @@ describe('Requester Spec: timings', function () {
             var response = testrun.response.getCall(0).args[2];
 
             expect(response).to.have.property('timings');
-            expect(response.timings).to.be.an('object').that.has.all.keys([
-                'start',
-                'offset'
-            ]);
+            expect(response).to.have.property('responseTime');
+            expect(response.timings).to.be.an('object').that.has.all.keys(['start', 'overhead', 'offset']);
             expect(response.timings.offset).to.be.an('object').that.includes.all.keys([
                 'socket',
                 'lookup',
