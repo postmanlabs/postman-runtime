@@ -42,9 +42,7 @@ describe('requester util', function () {
                 removeRefererHeader: undefined,
                 encoding: null,
                 agentOptions: {keepAlive: undefined},
-                time: undefined,
-                noCacheHeader: undefined,
-                postmanTokenHeader: undefined
+                time: undefined
             });
         });
 
@@ -79,9 +77,7 @@ describe('requester util', function () {
                 removeRefererHeader: undefined,
                 encoding: null,
                 agentOptions: {keepAlive: undefined},
-                time: undefined,
-                noCacheHeader: undefined,
-                postmanTokenHeader: undefined
+                time: undefined
             });
         });
 
@@ -212,9 +208,7 @@ describe('requester util', function () {
                 removeRefererHeader: true,
                 encoding: null,
                 agentOptions: {keepAlive: undefined},
-                time: undefined,
-                noCacheHeader: undefined,
-                postmanTokenHeader: undefined
+                time: undefined
             });
         });
     });

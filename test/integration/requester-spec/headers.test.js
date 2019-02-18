@@ -6,7 +6,7 @@ describe('cache-control and postman-token headers', function () {
     var testrun,
         HOST = 'https://www.postman-echo.com/get';
 
-    describe('when `noCache` and `postmanToken` requester options are not provided', function() {
+    describe('are not provided', function() {
         before(function(done) {
             this.run({
                 collection: {
@@ -61,11 +61,11 @@ describe('cache-control and postman-token headers', function () {
         });
     });
 
-    describe('when `noCache` and `postmanToken` requester options are set to true', function() {
+    describe('are set to true', function() {
         before(function(done) {
             this.run({
                 requester: {
-                    noCacheHeader: true,
+                    cacheControlHeader: true,
                     postmanTokenHeader: true
                 },
                 collection: {
@@ -120,11 +120,11 @@ describe('cache-control and postman-token headers', function () {
         });
     });
 
-    describe('when `noCache` and `postmanToken` requester options are set to false', function() {
+    describe('are set to false', function() {
         before(function(done) {
             this.run({
                 requester: {
-                    noCacheHeader: false,
+                    cacheControlHeader: false,
                     postmanTokenHeader: false
                 },
                 collection: {
@@ -179,11 +179,11 @@ describe('cache-control and postman-token headers', function () {
         });
     });
 
-    describe('when custom headers are provided', function() {
+    describe('custom headers are provided', function() {
         before(function(done) {
             this.run({
                 requester: {
-                    noCacheHeader: false,
+                    cacheControlHeader: false,
                     postmanTokenHeader: false
                 },
                 collection: {
