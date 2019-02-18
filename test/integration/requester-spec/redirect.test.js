@@ -148,7 +148,10 @@ describe('Requester Spec: redirect', function () {
                         request: {
                             url: URL,
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [
+                                {key: 'Connection', value: 'close'},
+                                {key: 'referer', value: 'POSTMAN'}
+                            ]
                         }
                     }]
                 }
@@ -172,7 +175,8 @@ describe('Requester Spec: redirect', function () {
         });
 
         it('should have referer header on redirects', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var request = testrun.response.getCall(0).args[3],
+                response = testrun.response.getCall(0).args[2];
 
             expect(response).to.have.property('code', 200);
             expect(response).to.have.property('stream');
@@ -183,6 +187,10 @@ describe('Requester Spec: redirect', function () {
             expect(hits[1]).to.have.property('method', 'GET');
             expect(hits[1]).to.have.property('headers');
             expect(hits[1].headers).to.have.property('referer', URL);
+
+            // this also checks that referer header is updated in the request
+            expect(request.headers.reference).to.have.property('referer')
+                .that.has.property('value', URL);
         });
     });
 

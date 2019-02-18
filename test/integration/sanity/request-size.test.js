@@ -128,13 +128,7 @@ describe('request size', function() {
         expect(secondRequestSize.body).to.be.equal(POSTMAN.length);
         expect(secondRequestSize.header).to.be.greaterThan(0);
         expect(secondRequestSize.total).to.equal(secondRequestSize.body + secondRequestSize.header);
-        // @todo Handle duplicates on upsert header
-        // Fixed in https://github.com/postmanlabs/postman-collection/pull/785
-        // @note "-7" because:
-        // actual header sent: duplicate: value0 + CRLF + duplicate: value1 + CRLF
-        // calculated header: duplicate: value0,value1 + CRLF + duplicate: value1 + CRLF
-        // @note this test will fail once its fixed in postman-collection.
-        expect(Buffer.byteLength(secondRequestPayload)).to.equal(secondRequestSize.total - 7);
+        expect(Buffer.byteLength(secondRequestPayload)).to.equal(secondRequestSize.total);
 
         expect(thirdRequestSize.body).to.be.equal(POSTMAN.length + Buffer.byteLength(UNICODE));
         expect(thirdRequestSize.header).to.be.greaterThan(0);
