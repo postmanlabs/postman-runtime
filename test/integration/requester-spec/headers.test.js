@@ -2,7 +2,7 @@ var _ = require('lodash'),
     sinon = require('sinon'),
     expect = require('chai').expect;
 
-describe('Requester Spec: sendNoCacheHeader and sendPostmanTokenHeader', function () {
+describe('Requester Spec: implicitCacheControl and implicitTraceHeader', function () {
     var testrun,
         HOST = 'https://www.postman-echo.com/get';
 
@@ -59,8 +59,8 @@ describe('Requester Spec: sendNoCacheHeader and sendPostmanTokenHeader', functio
         before(function(done) {
             this.run({
                 requester: {
-                    sendNoCacheHeader: true,
-                    sendPostmanTokenHeader: true
+                    implicitCacheControl: true,
+                    implicitTraceHeader: true
                 },
                 collection: {
                     item: [{
@@ -112,8 +112,8 @@ describe('Requester Spec: sendNoCacheHeader and sendPostmanTokenHeader', functio
         before(function(done) {
             this.run({
                 requester: {
-                    sendNoCacheHeader: false,
-                    sendPostmanTokenHeader: false
+                    implicitCacheControl: false,
+                    implicitTraceHeader: false
                 },
                 collection: {
                     item: [{
@@ -165,8 +165,8 @@ describe('Requester Spec: sendNoCacheHeader and sendPostmanTokenHeader', functio
         before(function(done) {
             this.run({
                 requester: {
-                    sendNoCacheHeader: true,
-                    sendPostmanTokenHeader: true
+                    implicitCacheControl: true,
+                    implicitTraceHeader: true
                 },
                 collection: {
                     item: [{
