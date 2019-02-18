@@ -140,19 +140,21 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
         });
 
         it('should send request without `Cache-Control: no-cache` header', function () {
-            var request = testrun.request.getCall(0).args[3].toJSON(),
+            var request = testrun.request.getCall(0).args[3],
                 response = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
-            expect(request.header).to.deep.not.include('Cache-Control');
+            // .has function from sdk is being used here because we have a list of objects and this seems to be the
+            // neat way of doing it for now.
+            expect(request.headers.has('cache-control')).to.be.false;
             expect(response.headers).to.not.have.property('cache-control');
         });
 
         it('should send request without `Postman-Token` header', function () {
-            var request = testrun.request.getCall(0).args[3].toJSON(),
+            var request = testrun.request.getCall(0).args[3],
                 response = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
             expect(response.headers).to.not.have.property('postman-token');
-            expect(request.header).to.deep.not.include('Cache-Control');
+            expect(request.headers.has('postman-token')).to.be.false;
         });
     });
 
