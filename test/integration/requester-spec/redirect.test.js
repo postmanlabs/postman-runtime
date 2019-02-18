@@ -189,8 +189,9 @@ describe('Requester Spec: redirect', function () {
             expect(hits[1].headers).to.have.property('referer', URL);
 
             // this also checks that referer header is updated in the request
-            expect(request.headers.reference).to.have.property('referer')
-                .that.has.property('value', URL);
+            expect(request.headers.reference).to.have.property('referer');
+            expect(request.headers.reference.referer).to.have.property('value', URL);
+            expect(request.headers.reference.referer).to.have.property('system', true);
         });
     });
 
