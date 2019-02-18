@@ -27,16 +27,19 @@ describe('Requester Spec: timings', function () {
 
             expect(response).to.have.property('timings');
             expect(response).to.have.property('responseTime');
-            expect(response.timings).to.be.an('object').that.has.all.keys(['start', 'overhead', 'offset']);
+            expect(response.timings).to.be.an('object').that.has.all.keys(['start', 'offset']);
             expect(response.timings.offset).to.be.an('object').that.includes.all.keys([
+                'request',
                 'socket',
                 'lookup',
                 'connect',
                 'secureConnect',
                 'response',
-                'end'
+                'end',
+                'done'
             ]);
-            expect(response.timings.overhead).to.equal(response.responseTime - response.timings.offset.end);
+            expect(response.responseTime).to
+                .equal(Math.ceil(response.timings.offset.end - response.timings.offset.request));
         });
     });
 
@@ -58,14 +61,16 @@ describe('Requester Spec: timings', function () {
 
             expect(response).to.have.property('timings');
             expect(response).to.have.property('responseTime');
-            expect(response.timings).to.be.an('object').that.has.all.keys(['start', 'overhead', 'offset']);
+            expect(response.timings).to.be.an('object').that.has.all.keys(['start', 'offset']);
             expect(response.timings.offset).to.be.an('object').that.includes.all.keys([
+                'request',
                 'socket',
                 'lookup',
                 'connect',
                 'secureConnect',
                 'response',
-                'end'
+                'end',
+                'done'
             ]);
         });
     });
