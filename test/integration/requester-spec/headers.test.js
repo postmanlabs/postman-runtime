@@ -2,11 +2,11 @@ var _ = require('lodash'),
     sinon = require('sinon'),
     expect = require('chai').expect;
 
-describe('cache-control and postman-token headers', function () {
+describe('Requester Spec: sendNoCacheHeader and sendPostmanTokenHeader', function () {
     var testrun,
         HOST = 'https://www.postman-echo.com/get';
 
-    describe('are not provided', function() {
+    describe('with undefined', function() {
         before(function(done) {
             this.run({
                 collection: {
@@ -47,26 +47,20 @@ describe('cache-control and postman-token headers', function () {
         it('should send request with `Postman-Token` header', function () {
             var request = testrun.request.getCall(0).args[3].toJSON(),
                 response = testrun.response.getCall(0).args[2].stream.toString(),
-
-                regex = /^(Postman-Token: )?[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/mi,
-
                 responseHeader = _.get(JSON.parse(response).headers, 'postman-token'),
-
-                requestHeaders = request.header.filter(function(header) {
-                    return (header.key === 'Postman-Token');
-                });
+                regex = /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/mi;
 
             expect(regex.test(responseHeader)).to.be.true;
-            expect(regex.test(requestHeaders[0].value)).to.be.true;
+            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache'});
         });
     });
 
-    describe('are set to true', function() {
+    describe('with true', function() {
         before(function(done) {
             this.run({
                 requester: {
-                    cacheControlHeader: true,
-                    postmanTokenHeader: true
+                    sendNoCacheHeader: true,
+                    sendPostmanTokenHeader: true
                 },
                 collection: {
                     item: [{
@@ -106,26 +100,20 @@ describe('cache-control and postman-token headers', function () {
         it('should send request with `Postman-Token` header', function () {
             var request = testrun.request.getCall(0).args[3].toJSON(),
                 response = testrun.response.getCall(0).args[2].stream.toString(),
-
-                regex = /^(Postman-Token: )?[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/mi,
-
-                responseHeader = _.get(JSON.parse(response).headers, 'postman-token'),
-
-                requestHeaders = request.header.filter(function(header) {
-                    return (header.key === 'Postman-Token');
-                });
+                regex = /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/mi,
+                responseHeader = _.get(JSON.parse(response).headers, 'postman-token');
 
             expect(regex.test(responseHeader)).to.be.true;
-            expect(regex.test(requestHeaders[0].value)).to.be.true;
+            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache'});
         });
     });
 
-    describe('are set to false', function() {
+    describe('with false', function() {
         before(function(done) {
             this.run({
                 requester: {
-                    cacheControlHeader: false,
-                    postmanTokenHeader: false
+                    sendNoCacheHeader: false,
+                    sendPostmanTokenHeader: false
                 },
                 collection: {
                     item: [{
@@ -165,26 +153,20 @@ describe('cache-control and postman-token headers', function () {
         it('should send request without `Postman-Token` header', function () {
             var request = testrun.request.getCall(0).args[3].toJSON(),
                 response = testrun.response.getCall(0).args[2].stream.toString(),
-
-                regex = /^(Postman-Token: )?[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/mi,
-
-                responseHeader = _.get(JSON.parse(response).headers, 'postman-token'),
-
-                requestHeaders = request.header.filter(function(header) {
-                    return (header.key === 'Postman-Token');
-                });
+                regex = /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/mi,
+                responseHeader = _.get(JSON.parse(response).headers, 'postman-token');
 
             expect(regex.test(responseHeader)).to.be.false;
-            expect(requestHeaders).to.be.empty;
+            expect(request.header).to.deep.not.include({key: 'Cache-Control', value: 'no-cache'});
         });
     });
 
-    describe('custom headers are provided', function() {
+    describe('with custom headers', function() {
         before(function(done) {
             this.run({
                 requester: {
-                    cacheControlHeader: false,
-                    postmanTokenHeader: false
+                    sendNoCacheHeader: true,
+                    sendPostmanTokenHeader: true
                 },
                 collection: {
                     item: [{
