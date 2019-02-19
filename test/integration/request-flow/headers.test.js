@@ -1,6 +1,7 @@
 var _ = require('lodash'),
     sinon = require('sinon'),
     expect = require('chai').expect,
+    Header = require('postman-collection').Header,
     server = require('../../fixtures/server');
 
 describe('request headers', function () {
@@ -82,6 +83,21 @@ describe('request headers', function () {
                                 value: 'value3'
                             }]
                         }
+                    }, {
+                        name: 'System headers',
+                        request: {
+                            url: HOST,
+                            header: [{
+                                key: 'Header-Name-0',
+                                value: 'value0'
+                            }, {
+                                key: 'User-Agent',
+                                value: 'PostmanRuntime/test'
+                            }, {
+                                key: 'referer',
+                                value: HOST
+                            }]
+                        }
                     }]
                 }
             }, function (err, results) {
@@ -101,8 +117,8 @@ describe('request headers', function () {
         sinon.assert.calledOnce(testrun.done);
         sinon.assert.calledWith(testrun.done.getCall(0), null);
 
-        sinon.assert.calledThrice(testrun.request);
-        sinon.assert.calledThrice(testrun.response);
+        sinon.assert.callCount(testrun.request, 4);
+        sinon.assert.callCount(testrun.response, 4);
     });
 
     it('should handle duplicate headers correctly', function () {
@@ -154,5 +170,44 @@ describe('request headers', function () {
             key: 'Header-Name-1',
             value: 'value1'
         });
+    });
+
+    it('should handle system headers correctly', function () {
+        sinon.assert.calledWith(testrun.request.getCall(3), null);
+        sinon.assert.calledWith(testrun.response.getCall(3), null);
+
+        var request = testrun.response.getCall(3).args[3],
+            response = testrun.response.getCall(3).args[2],
+            requestHeaders = JSON.parse(response.stream);
+
+        // @note this will fail on updating system headers to track those changes
+        expect(requestHeaders).to.have.deep.members([
+            {key: 'Header-Name-0', value: 'value0'},
+            {key: 'User-Agent', value: 'PostmanRuntime/test'},
+            {key: 'referer', value: HOST},
+            {key: 'Accept', value: '*/*'},
+            {key: 'Host', value: 'localhost:5050'},
+            {key: 'accept-encoding', value: 'gzip, deflate'},
+            {key: 'Connection', value: 'keep-alive'}
+        ]);
+
+        // system headers should be added correctly
+        expect(request.headers.members).to.have.deep.members([
+            // user-defined headers
+            new Header({key: 'Header-Name-0', value: 'value0'}),
+            // user-defined, not overwritten by system
+            new Header({key: 'User-Agent', value: 'PostmanRuntime/test'}),
+            // requester header(overwritten) not added as system if value is unchanged
+            new Header({key: 'referer', value: HOST}),
+            // system headers
+            new Header({key: 'Accept', value: '*/*', system: true}),
+            new Header({key: 'Host', value: 'localhost:5050', system: true}),
+            new Header({key: 'accept-encoding', value: 'gzip, deflate', system: true})
+        ]);
+
+        // @todo handle headers added by Node's HTTP client
+        expect(request.headers.members).to.not.deep.include(new Header({
+            key: 'Connection', value: 'close', system: true
+        }));
     });
 });
