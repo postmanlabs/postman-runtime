@@ -39,17 +39,18 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
             var request = testrun.request.getCall(0).args[3].toJSON(),
                 response = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
-            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache'});
+            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache', system: true});
             expect(response.headers).to.have.property('cache-control', 'no-cache');
         });
 
         it('should send request with `Postman-Token` header', function () {
             var request = testrun.request.getCall(0).args[3].toJSON(),
                 response = JSON.parse(testrun.response.getCall(0).args[2].stream.toString()),
+                // checks for a valid uuid v4 string
                 regex = /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/mi;
 
+            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache', system: true});
             expect(response.headers).to.have.property('postman-token').that.match(regex);
-            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache'});
         });
     });
 
@@ -91,7 +92,7 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
             var request = testrun.request.getCall(0).args[3].toJSON(),
                 response = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
-            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache'});
+            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache', system: true});
             expect(response.headers).to.have.property('cache-control', 'no-cache');
         });
 
@@ -100,8 +101,8 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
                 response = JSON.parse(testrun.response.getCall(0).args[2].stream.toString()),
                 regex = /[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/mi;
 
+            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache', system: true});
             expect(response.headers).to.have.property('postman-token').that.match(regex);
-            expect(request.header).to.deep.include({key: 'Cache-Control', value: 'no-cache'});
         });
     });
 
@@ -143,8 +144,8 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
             var request = testrun.request.getCall(0).args[3],
                 response = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
-            // .has function from sdk is being used here because we have a list of objects and this seems to be the
-            // neat way of doing it for now.
+            // .has function from sdk is being used here so that we can check
+            // for headers irrespective of the case
             expect(request.headers.has('cache-control')).to.be.false;
             expect(response.headers).to.not.have.property('cache-control');
         });
@@ -153,8 +154,8 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
             var request = testrun.request.getCall(0).args[3],
                 response = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
-            expect(response.headers).to.not.have.property('postman-token');
             expect(request.headers.has('postman-token')).to.be.false;
+            expect(response.headers).to.not.have.property('postman-token');
         });
     });
 
