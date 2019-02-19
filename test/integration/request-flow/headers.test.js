@@ -94,6 +94,9 @@ describe('request headers', function () {
                                 key: 'User-Agent',
                                 value: 'PostmanRuntime/test'
                             }, {
+                                key: 'Postman-Token',
+                                value: 'someCustomToken'
+                            }, {
                                 key: 'referer',
                                 value: HOST
                             }]
@@ -184,8 +187,10 @@ describe('request headers', function () {
         expect(requestHeaders).to.have.deep.members([
             {key: 'Header-Name-0', value: 'value0'},
             {key: 'User-Agent', value: 'PostmanRuntime/test'},
+            {key: 'Postman-Token', value: 'someCustomToken'},
             {key: 'referer', value: HOST},
             {key: 'Accept', value: '*/*'},
+            {key: 'Cache-Control', value: 'no-cache'},
             {key: 'Host', value: 'localhost:5050'},
             {key: 'accept-encoding', value: 'gzip, deflate'},
             {key: 'Connection', value: 'keep-alive'}
@@ -197,10 +202,12 @@ describe('request headers', function () {
             new Header({key: 'Header-Name-0', value: 'value0'}),
             // user-defined, not overwritten by system
             new Header({key: 'User-Agent', value: 'PostmanRuntime/test'}),
+            new Header({key: 'Postman-Token', value: 'someCustomToken'}),
             // requester header(overwritten) not added as system if value is unchanged
             new Header({key: 'referer', value: HOST}),
             // system headers
             new Header({key: 'Accept', value: '*/*', system: true}),
+            new Header({key: 'Cache-Control', value: 'no-cache', system: true}),
             new Header({key: 'Host', value: 'localhost:5050', system: true}),
             new Header({key: 'accept-encoding', value: 'gzip, deflate', system: true})
         ]);
