@@ -190,8 +190,8 @@ describe('Requester Spec: redirect', function () {
 
             // this also checks that referer header is updated in the request
             expect(request.headers.reference).to.have.property('referer');
-            expect(request.headers.reference.referer).to.have.property('value', URL);
-            expect(request.headers.reference.referer).to.have.property('system', true);
+            expect(request.headers).to.have.nested.property('reference.referer.value', URL);
+            expect(request.headers).to.have.nested.property('reference.referer.system', true);
         });
     });
 
