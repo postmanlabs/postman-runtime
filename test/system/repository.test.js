@@ -3,6 +3,7 @@
  * content of the file as well. Any change to package.json must be accompanied by valid test case in this spec-sheet.
  */
 var _ = require('lodash'),
+    yml = require('js-yaml'),
     parseIgnore = require('parse-gitignore'),
     fs = require('fs');
 
@@ -168,6 +169,17 @@ describe('project repository', function () {
 
         it('should have .gitignore coverage must be a subset of .npmignore coverage', function () {
             expect(_.intersection(gitignore, npmignore)).to.eql(gitignore);
+        });
+    });
+
+    describe.only('CHANGELOG.yaml', function () {
+        console.log(JSON.stringify(yml.safeLoad(fs.readFileSync('./CHANGELOG.yaml')), null, 4));
+        it('should exist', function (done) {
+            fs.stat('./CHANGELOG.yaml', done);
+        });
+
+        it('should have readable content', function () {
+            expect(yml.safeLoad(fs.readFileSync('./CHANGELOG.yaml')), 'not a valid yaml').to.be.ok;
         });
     });
 });

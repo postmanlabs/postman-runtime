@@ -43,18 +43,12 @@
   new features:
     - 'Added requester options to configure redirects behavior [GitHub:#670]'
     - 'Inherit protocolProfileBehavior from parent ItemGroup(s) [GitHub:#675]'
-    - >
-      Added support for protocolProfileBehavior to override following [GitHub:#678]
-      requester options:
-
+    - |
+      Added support for protocolProfileBehavior to override following requester options- [GitHub:#678]
       - strictSSL
-
       - maxRedirects
-
       - followRedirects
-
       - followOriginalHttpMethod
-
       - removeRefererHeaderOnRedirect
     - Updated dependencies
 
@@ -175,19 +169,15 @@
     - |
       `restrictedAddresses` option is now moved to `network` option
         - In v7.0.0
-            ```js
             runner.run(collection, {
                 restrictedAddresses: {'x.x.x.x': true}
             }});
-            ```
         - In v7.1.0
-            ```js
             runner.run(collection, {
                 network: {
                     restrictedAddresses: {'x.x.x.x': true}
                 }
             }});
-            ```
 
 7.0.1:
   date: 2017-11-8
@@ -203,13 +193,11 @@
     - |
       #453 #447 Added default timeout value to 3 min. [GitHub:#453,#447]
         - Timeout options take a positive value in milliseconds. e.g.
-            ```javascript
             runner.run(collection, { timeout: {
                 global: 5 * 60 * 1000, // total timeout of 5 minutes
                 request: 500, // timeout for individual requests
                 script: 200 // timeout for individual scripts
             } });
-            ```
         - If you are increasing the default timeout for `script`/`request`, make sure `global` timeout is sufficiantly larger than that.
         - Use `0` for no timeout (infinite timeout).
     - >
@@ -222,20 +210,16 @@
       The `entrypoint` option now supports selecting requests as
       well as folders [GitHub:#427]
         - To execute a folder/request using id or name
-        ```javascript
         runner.run(collection, { entrypoint: {
             execute: `${desiredIdOrName}`,
             lookupStrategy: 'idOrName'
         }});
-        ```
         - To execute a folder/request using a path
-        ```javascript
         runner.run(collection, { entrypoint: {
             execute: `${desiredId}`,
             lookupStrategy: 'path',
             path: ['grand_parent_folder_id', 'parent_folder_id']
         }});
-        ```
     - >-
       Advanced auth flows are now enabled by
       default(`interactive` flag has been removed) [GitHub:#428]
