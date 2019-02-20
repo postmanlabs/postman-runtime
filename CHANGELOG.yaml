@@ -1,3 +1,27 @@
+7.9.1:
+  date: 2019-02-20
+  fixed bugs:
+    - Updated `postman-sandbox` to v3.2.4
+
+7.9.0:
+  date: 2019-02-19
+  new features:
+    - 'Added `system` property to all the headers added via requester [GitHub'
+    - >-
+      Added requester option to set `Cache-Control` and `Postman-Token` system
+      headers [GitHub
+    - 'Added additional timings properties to track client overhead [GitHub'
+    - Updated dependencies
+
+7.8.0:
+  date: 2019-02-15
+  new features:
+    - 'Added support for request mutation via prerequest scripts [GitHub'
+    - >-
+      Added `timings` requester option to bubble up detailed request-response
+      timings [GitHub
+    - Updated dependencies
+
 7.7.1:
   date: 2019-02-7
   fixed bugs:
