@@ -2,20 +2,20 @@
   date: 2019-02-7
   fixed bugs:
     - >-
-      #732 Fixed a bug where deep dependencies path was incorrect while
-      fetching version
+      Fixed a bug where deep dependencies path was incorrect while
+      fetching version [GitHub:#732]
 
 7.7.0:
   date: 2019-02-1
   new features:
-    - '#707 Avoid executing disabled `prerequest` and `test` scripts'
-    - '#713 Expose Runtime and its dependencies package version via an API'
+    - 'Avoid executing disabled `prerequest` and `test` scripts [GitHub:#707]'
+    - 'Expose Runtime and its dependencies package version via an API [GitHub:#713]'
     - >-
-      #723 Fixed a bug where interrupting the script execution crashes the
-      process
+      Fixed a bug where interrupting the script execution crashes the
+      process [GitHub:#723]
     - >-
-      #707 Uses Collection SDK `Request~getHeaders` method to get request
-      headers object
+      Uses Collection SDK `Request~getHeaders` method to get request
+      headers object [GitHub:#707]
     - >-
       Updated `postman-collection` to v3.4.2 which avoids substitution of
       disabled variables
@@ -32,19 +32,19 @@
 7.6.0:
   date: 2018-12-25
   new features:
-    - '#694 Respect form-data fields ordering'
+    - 'Respect form-data fields ordering [GitHub:#694]'
     - >-
-      #690 Fixed a bug that caused requests to fail when protocol of URL is not
-      in lowercase
+      Fixed a bug that caused requests to fail when protocol of URL is not
+      in lowercase [GitHub:#690]
     - Updated dependencies
 
 7.5.0:
   date: 2018-12-6
   new features:
-    - '#670 Added requester options to configure redirects behavior'
-    - '#675 Inherit protocolProfileBehavior from parent ItemGroup(s)'
+    - 'Added requester options to configure redirects behavior [GitHub:#670]'
+    - 'Inherit protocolProfileBehavior from parent ItemGroup(s) [GitHub:#675]'
     - >
-      \#678 Added support for protocolProfileBehavior to override following
+      Added support for protocolProfileBehavior to override following [GitHub:#678]
       requester options:
 
       - strictSSL
@@ -61,37 +61,37 @@
 7.4.2:
   date: 2018-11-7
   fixed bugs:
-    - '#667 Swapped dependency on hawk for request provided implementation'
+    - 'Swapped dependency on hawk for request provided implementation [GitHub:#667]'
     - Updated dependencies
     - Switched over to Travis for Windows builds
 
 7.4.1:
   date: 2018-11-4
   fixed bugs:
-    - '#665 Corrected `postman-collection` reference to a precise version: 3.3.0'
-    - '#664 Switched to Travis for Windows builds'
+    - 'Corrected `postman-collection` reference to a precise version: 3.3.0 [GitHub:#665]'
+    - 'Switched to Travis for Windows builds [GitHub:#664]'
     - Updated dependencies
     - >-
-      #662 Added `.gitattributes` to enforce consistent line endings for `.js`
-      files.
+      Added `.gitattributes` to enforce consistent line endings for `.js`
+      files. [GitHub:#662]
     - Migrated tests to use `chai.expect` assertions
 
 7.4.0:
   date: 2018-09-21
   new features:
-    - 'Updated dependencies :arrow_up:'
-    - '#636 Added support for `disabled` property in request body'
-    - '#640 Dropped support for `sendBodyWithGetRequests` requester option'
+    - 'Updated dependencies'
+    - 'Added support for `disabled` property in request body [GitHub:#636]'
+    - 'Dropped support for `sendBodyWithGetRequests` requester option [GitHub:#640]'
 
 7.3.0:
   date: 2018-08-21
   new features:
-    - 'Updated dependencies :arrow_up:'
-    - '#627 Removed NSP and associated apparatus :fire:'
-    - '#625 Improved file loading errors :bug:'
-    - '#624 Added support for `contentType` to form data request bodies :tada:'
-    - '#619 Added support for multi entrypoints by id or name :tada:'
-    - '#616 Improved certificate lookup error handling :bug:'
+    - 'Updated dependencies'
+    - 'Removed NSP and associated apparatus [GitHub:#627]'
+    - 'Improved file loading errors [GitHub:#625]'
+    - 'Added support for `contentType` to form data request bodies [GitHub:#624]'
+    - 'Added support for multi entrypoints by id or name [GitHub:#619]'
+    - 'Improved certificate lookup error handling [GitHub:#616]'
 
 7.2.0:
   date: 2018-06-30
@@ -114,48 +114,48 @@
 7.1.5:
   date: 2018-04-10
   fixed bugs:
-    - '#565 Updated `postman-sandbox` to `v3.0.6`.'
+    - 'Updated `postman-sandbox` to `v3.0.6`. [GitHub:#565]'
 
 7.1.4:
   date: 2018-04-9
   fixed bugs:
-    - 'Updated dependencies :arrow_up:'
+    - 'Updated dependencies'
     - >-
-      #563 Updated `postman-sandbox` to `v3.0.5`, which fixes assertion centric
-      bugs :bug:
+      Updated `postman-sandbox` to `v3.0.5`, which fixes assertion centric
+      bugs [GitHub:#563]
     - >-
-      #554 Updated `postman-request` to `v2.85.1-postman.1`, which fixes
-      https://nodesecurity.io/advisories/566 :lock:.
+      Updated `postman-request` to `v2.85.1-postman.1`, which fixes
+      https://nodesecurity.io/advisories/566. [GitHub:#554]
     - >-
-      #553 Fixed a bug that prevented JavaScript keywords from being used as
-      keys in request bodies. :bug:
+      Fixed a bug that prevented JavaScript keywords from being used as
+      keys in request bodies. [GitHub:#553]
 
 7.1.3:
   date: 2018-01-2
   fixed bugs:
     - >-
-      #510 Updated `postman-request` to `v2.81.1-postman.4`, which contains a
-      formdata `RangeError` bugfix.
+      Updated `postman-request` to `v2.81.1-postman.4`, which contains a
+      formdata `RangeError` bugfix. [GitHub:#510]
     - >-
-      #480 Removed blacklisting of headers for aws auth. All the headers are now
-      included in the signature calculation.
+      Removed blacklisting of headers for aws auth. All the headers are now
+      included in the signature calculation. [GitHub:#480]
 
 7.1.2:
   date: 2017-12-8
   fixed bugs:
-    - 'Updated dependencies :arrow_up:'
-    - '#500 Fixed entrypoint detection error :bug:'
-    - '#498 Cleared OAuth2 state conflicts for duplicate parameters :bug:'
-    - '#490 Switched to variable lists from POJOs :racehorse:'
-    - '#492 Removed redundant AWS auth region fallback :bug:'
-    - '#491 Updated entrypoint documentation :srcoll:'
-    - '#487 Accelerated memory leack checker script :racehorse:'
+    - 'Updated dependencies'
+    - 'Fixed entrypoint detection error [GitHub:#500]'
+    - 'Cleared OAuth2 state conflicts for duplicate parameters [GitHub:#498]'
+    - 'Switched to variable lists from POJOs [GitHub:#490]'
+    - 'Removed redundant AWS auth region fallback [GitHub:#492]'
+    - 'Updated entrypoint documentation [GitHub:#491]'
+    - 'Accelerated memory leack checker script [GitHub:#487]'
 
 7.1.1:
   date: 2017-11-30
   fixed bugs:
     - Dropped support for legacy `serviceName` property in `aws` auth.
-    - ':arrow_up: Updated dependencies.'
+    - 'Updated dependencies.'
 
 7.1.0:
   date: 2017-11-21
@@ -193,15 +193,15 @@
   date: 2017-11-8
   fixed bugs:
     - >-
-      :bug: Fixed a bug where the assertions for legacy `tests` failures did not
+      Fixed a bug where the assertions for legacy `tests` failures did not
       have an `error` object.
-    - ':arrow_up: Updated dependencies'
+    - 'Updated dependencies'
 
 7.0.0:
   date: 2017-11-7
   breaking changes:
     - |
-      #453 #447 Added default timeout value to 3 min.
+      #453 #447 Added default timeout value to 3 min. [GitHub:#453,#447]
         - Timeout options take a positive value in milliseconds. e.g.
             ```javascript
             runner.run(collection, { timeout: {
@@ -219,8 +219,8 @@
         - All assertions, both `pm.test` and legacy `tests` global are now available in the `assertion` callback.
         - The legacy `tests` are no longer available in results parameter in `test` callback.
     - >
-      #427 The `entrypoint` option now supports selecting requests as
-      well as folders
+      The `entrypoint` option now supports selecting requests as
+      well as folders [GitHub:#427]
         - To execute a folder/request using id or name
         ```javascript
         runner.run(collection, { entrypoint: {
@@ -237,80 +237,78 @@
         }});
         ```
     - >-
-      #428 Advanced auth flows are now enabled by
-      default(`interactive` flag has been removed)
+      Advanced auth flows are now enabled by
+      default(`interactive` flag has been removed) [GitHub:#428]
   new features:
     - >-
-      :tada: #424 Added support for collection level variables,
-      collection/folder level authentication and scripts
-    - ':arrow_up: Updated dependencies'
+      #424 Added support for collection level variables,
+      collection/folder level authentication and scripts [GitHub:#424]
+    - 'Updated dependencies'
     - >-
-      :bug: Invalid values in `entrypoint` now results in an error (when
+      Invalid values in `entrypoint` now results in an error (when
       `abortOnError` is set to `true`)
 
 6.4.2:
   date: 2017-11-2
   fixed bugs:
-    - ':arrow_up: Updated dependencies.'
-    - '#435 Added option to blacklist certain IP addresses from being hit :lock:'
-    - '#436 Improved HTTP request error handling :muscle:'
+    - 'Updated dependencies.'
+    - 'Added option to blacklist certain IP addresses from being hit [GitHub:#435]'
+    - 'Improved HTTP request error handling [GitHub:#436]'
 
 6.4.1:
   date: 2017-10-13
   fixed bugs:
-    - ':arrow_up: Updated dependencies.'
-    - ':bug: Made Bearer token case insensitive #417'
+    - 'Updated dependencies.'
+    - 'Made Bearer token case insensitive [GitHub:#417]'
 
 6.4.0:
   date: 2017-09-28
   new features:
-    - 'Improved flows for NTLM, Digest, and OAuth2 :tada:'
-    - '#382 Added script timeout option :tada:'
-    - '#408 Prevented max replay errors from bubling up :bug:'
-    - '#394 Refurbished interactive mode for auth :tada:'
-    - '#400 Fixed digest-md5-sess :bug:'
-    - '#402 Fix OAuth1 camelcased timestamp :bug:'
-    - '#350 Fixed abort-after-pause :bug:'
-    - '#386 Added support for bearer-token auth :tada:'
-    - '#373 Added response callback :tada:'
-    - '#360 Shifted the auth sign function from the Collection SDK.'
-    - '#368 All new auth-interface :tada:'
-    - '#367 Made basic-auth username optional :tada:'
-    - '#366 Documented exception callback :scroll:'
+    - 'Improved flows for NTLM, Digest, and OAuth2'
+    - 'Added script timeout option [GitHub:#382]'
+    - 'Prevented max replay errors from bubling up [GitHub:#408]'
+    - 'Refurbished interactive mode for auth [GitHub:#394]'
+    - 'Fixed digest-md5-sess [GitHub:#400]'
+    - 'Fix OAuth1 camelcased timestamp [GitHub:#402]'
+    - 'Fixed abort-after-pause [GitHub:#350]'
+    - 'Added support for bearer-token auth [GitHub:#386]'
+    - 'Added response callback [GitHub:#373]'
+    - 'Shifted the auth sign function from the Collection SDK. [GitHub:#360]'
+    - 'All new auth-interface [GitHub:#368]'
+    - 'Made basic-auth username optional [GitHub:#367]'
+    - 'Documented exception callback [GitHub:#366]'
 
 6.3.1-2:
   date: 2017-08-28
   fixed bugs:
-    - >-
-      :bug: Prevented empty/missing request urls from crashing `pm.sendRequest`
-      #361
+    - 'Prevented empty/missing request urls from crashing `pm.sendRequest` [GitHub:#361]'
 
 6.3.0:
   date: 2017-08-21
   new features:
     - >-
-      :arrow_up: Updated `postman-sandbox` to `v2.3.2`, which contains a header
-      assertion bugfix. #358
+      Updated `postman-sandbox` to `v2.3.2`, which contains a header
+      assertion bugfix. [GitHub:#358]
 
 6.2.6:
   date: 2017-08-18
   fixed bugs:
-    - 'Updated dependencies :arrow_up:'
-    - 'Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`. #353, #354'
-    - ':lock: Prevented files from being uploaded via `pm.sendRequest` #351'
+    - 'Updated dependencies'
+    - 'Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`. [GitHub:#353,#354]'
+    - 'Prevented files from being uploaded via `pm.sendRequest` [GitHub:#351]'
     - >-
       Queued `pm.sendRequest` through the request command, emitted the `request`
-      event. #345
-    - ':scroll: Expanded documentation for the `assertion` event. #342'
-    - 'Ensured that the `tunnel` value is set from the request protocol. #327'
-    - 'Prevented headers with falsy keys from being sent with requests. #337'
+      event. [GitHub:#345]
+    - 'Expanded documentation for the `assertion` event. [GitHub:#342]'
+    - 'Ensured that the `tunnel` value is set from the request protocol. [GitHub:#327]'
+    - 'Prevented headers with falsy keys from being sent with requests. [GitHub:#337]'
 
 6.2.5:
   date: 2017-07-19
   fixed bugs:
     - >-
-      :bug: Fixed a regression that prevented cookies from being passed across
-      requests. #323
+      Fixed a regression that prevented cookies from being passed across
+      requests. [GitHub:#323]
 
 6.2.4:
   date: 2017-07-11
@@ -330,8 +328,8 @@
   fixed bugs:
     - >-
       Bumped Postman Sandbox to v2.3.0, which includes support for synchronous
-      csv-parse #298
-    - 'Bumped Postman Collection SDK to v1.2.9, with critical bugfixes. #297'
+      csv-parse [GitHub:#298]
+    - 'Bumped Postman Collection SDK to v1.2.9, with critical bugfixes. [GitHub:#297]'
     - Updated other dependencies
 
 6.2.1:
@@ -345,13 +343,11 @@
   date: 2017-06-15
   new features:
     - 'Updated dependencies, pruned lodash3'
-    - 'Added support for authorization mechanisms #233'
-    - 'Added suport for NTLM auth #266'
+    - 'Added support for authorization mechanisms [GitHub:#233]'
+    - 'Added suport for NTLM auth [GitHub:#266]'
     - >
       Runtime now supports another event, `io`, which provides information about
-      intermediate requests that may be sent
-
-      as part of authentication or other flows.
+      intermediate requests that may be sent as part of authentication or other flows.
 
         ```javascript
         io: function inputOutput (err, cursor, trace, ...otherArgs) {
@@ -367,7 +363,7 @@
             // }
         }
         ```
-    - 'Used updated Sandbox with momentjs included #281'
+    - 'Used updated Sandbox with momentjs included [GitHub:#281]'
 
 6.1.6:
   date: 2017-05-16
