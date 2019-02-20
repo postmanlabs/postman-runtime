@@ -58,7 +58,7 @@
     "eslint-plugin-security": "1.4.0",
     "http-proxy": "1.17.0",
     "istanbul": "0.4.5",
-    "js-yaml": "^3.12.1",
+    "js-yaml": "3.12.1",
     "jsdoc": "3.5.5",
     "jsdoc-to-markdown": "4.0.1",
     "mocha": "6.0.0",
@@ -67,7 +67,7 @@
     "recursive-readdir": "2.2.2",
     "server-destroy": "1.0.1",
     "shelljs": "0.8.3",
-    "yankee": "^1.0.8",
+    "yankee": "1.0.8",
     "sinon": "7.2.4",
     "tmp": "0.0.33"
   },
