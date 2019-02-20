@@ -172,8 +172,7 @@ describe('project repository', function () {
         });
     });
 
-    describe.only('CHANGELOG.yaml', function () {
-        console.log(JSON.stringify(yml.safeLoad(fs.readFileSync('./CHANGELOG.yaml')), null, 4));
+    describe('CHANGELOG.yaml', function () {
         it('should exist', function (done) {
             fs.stat('./CHANGELOG.yaml', done);
         });
