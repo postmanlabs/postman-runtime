@@ -1,5 +1,8 @@
 # Postman Runtime Changelog
 
+#### v7.9.1 (February 20, 2019)
+* Updated `postman-sandbox` to v3.2.4
+
 #### v7.9.0 (February 19, 2019)
 * #744 Added `system` property to all the headers added via requester
 * #740 Added requester option to set `Cache-Control` and `Postman-Token` system headers
