@@ -7,9 +7,9 @@ var _ = require('lodash'),
     runtime;
 
 runtime = function (spec, done) {
-    // reset the internal state of all spies created in the previous run
-    // Refer: https://sinonjs.org/releases/latest/sandbox/
-    sinon.reset();
+    // restores all spies created through sandbox in the previous run
+    // @todo avoid restore on the first run
+    sinon.restore();
 
     _.isString(spec) && (spec = require('./' + spec));
 
@@ -39,4 +39,6 @@ before(function () {
 
 after(function () {
     delete global.expect;
+    // restores all spies created through sandbox in the previous run
+    sinon.restore();
 });

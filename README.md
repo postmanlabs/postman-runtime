@@ -101,6 +101,15 @@ runner.run(collection, {
         // Enable or disable certificate verification (only supported on Node, ignored in the browser)
         strictSSL: false,
 
+        // Enable or disable detailed request-response timings (only supported on Node, ignored in the browser)
+        timings: true,
+
+        // Implicitly add `Cache-Control` system header in request (only supported on Node, ignored in the browser)
+        implicitCacheControl: true,
+
+        // Implicitly add `Postman-Token` system header in request (only supported on Node, ignored in the browser)
+        implicitTraceHeader: true,
+
         // network related options
         network: {
             hostLookup: { // hosts file configuration for dns lookup
