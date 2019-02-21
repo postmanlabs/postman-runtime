@@ -170,4 +170,158 @@ describe('certificates', function () {
             sslServer.destroy(done);
         });
     });
+
+    describe('valid PFX', function () {
+        before(function (done) {
+            var port = 9090,
+                // @todo move certificate fixtures to test/fixtures
+                certDataPath = path.join(__dirname, '..', '..', 'integration-legacy', 'data'),
+                clientPfxPath = path.join(certDataPath, 'client1-pkcs12.pfx'),
+
+                certificateList = new CertificateList({}, [{
+                    id: certificateId,
+                    matches: ['https://localhost:' + port + '/*'],
+                    pfx: {src: clientPfxPath}
+                }]);
+
+            sslServer = server.createSSLServer({
+                requestCert: true
+            });
+
+            sslServer.on('/', function (req, res) {
+                if (req.client.authorized) {
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+                    res.end('authorized\n');
+                }
+                else {
+                    res.writeHead(401, {'Content-Type': 'text/plain'});
+                    res.end('unauthorized\n');
+                }
+            });
+
+            sslServer.listen(port, 'localhost');
+
+            this.run({
+                collection: {
+                    item: {
+                        request: 'https://localhost:' + port + '/'
+                    }
+                },
+                requester: {
+                    strictSSL: false
+                },
+                fileResolver: fs,
+                certificates: certificateList
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have started and completed the test run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+        });
+
+        it('should receive response from https server', function () {
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response.text()).to.eql('authorized\n');
+        });
+
+        it('should have certificate attached to request', function () {
+            var request = testrun.request.getCall(0).args[3].toJSON();
+
+            expect(request).to.nested.include({
+                'certificate.id': certificateId
+            });
+        });
+
+        after(function (done) {
+            sslServer.destroy(done);
+        });
+    });
+
+    describe('invalid PFX', function () {
+        before(function (done) {
+            var port = 9090,
+                clientPfxPath = path.join('/tmp/non-existent/', 'client1-pkcs12.pfx'),
+
+                certificateList = new CertificateList({}, [{
+                    id: certificateId,
+                    matches: ['https://localhost:' + port + '/*'],
+                    pfx: {src: clientPfxPath}
+                }]);
+
+            sslServer = server.createSSLServer();
+
+            sslServer.on('/', function (req, res) {
+                if (req.client.authorized) {
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+                    res.end('authorized\n');
+                }
+                else {
+                    res.writeHead(401, {'Content-Type': 'text/plain'});
+                    res.end('unauthorized\n');
+                }
+            });
+
+            sslServer.listen(port, 'localhost');
+
+            this.run({
+                collection: {
+                    item: {
+                        request: 'https://localhost:' + port + '/'
+                    }
+                },
+                requester: {
+                    strictSSL: false
+                },
+                fileResolver: fs,
+                certificates: certificateList
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have started and completed the test run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+        });
+
+        it('should not throw an error', function () {
+            expect(testrun).to.nested.include({
+                'request.calledOnce': true
+            });
+
+            var err = testrun.request.firstCall.args[0],
+                request = testrun.request.firstCall.args[3];
+
+            expect(err).to.not.be.ok;
+            expect(request).to.not.have.property('certificate');
+        });
+
+        it('should trigger a console warning', function () {
+            expect(testrun).to.nested.include({
+                'console.calledOnce': true
+            });
+
+            var log = testrun.console.firstCall.args;
+
+            expect(log[0]).to.have.property('ref');
+            expect(log[1]).to.equal('warn');
+            expect(log[2]).to.match(/^certificate "pfx" load error:/);
+        });
+
+        after(function (done) {
+            sslServer.destroy(done);
+        });
+    });
 });
