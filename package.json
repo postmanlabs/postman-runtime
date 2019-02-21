@@ -61,7 +61,7 @@
     "js-yaml": "3.12.1",
     "jsdoc": "3.5.5",
     "jsdoc-to-markdown": "4.0.1",
-    "mocha": "6.0.0",
+    "mocha": "6.0.1",
     "parse-gitignore": "0.5.1",
     "postman-jsdoc-theme": "0.0.3",
     "recursive-readdir": "2.2.2",
