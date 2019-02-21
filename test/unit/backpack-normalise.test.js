@@ -1,8 +1,12 @@
 var expect = require('chai').expect,
-    sinon = require('sinon');
+    sinon = require('sinon').createSandbox();
 
 describe('backpack.normalise', function () {
     var normalise = require('../../lib/backpack').normalise;
+
+    after(function () {
+        sinon.restore();
+    });
 
     it('should exist as a function', function () {
         expect(normalise).to.be.ok;
