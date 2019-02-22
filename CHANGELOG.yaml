@@ -71,19 +71,14 @@
   new features:
     - Added requester options to configure redirects behavior (GitHub 670)
     - Inherit protocolProfileBehavior from parent ItemGroup(s) (GitHub 675)
-    - >
+    - |
       Added support for protocolProfileBehavior to override following requester
       options- (GitHub 678)
-
-      - strictSSL
-
-      - maxRedirects
-
-      - followRedirects
-
-      - followOriginalHttpMethod
-
-      - removeRefererHeaderOnRedirect
+      -> strictSSL
+      -> maxRedirects
+      -> followRedirects
+      -> followOriginalHttpMethod
+      -> removeRefererHeaderOnRedirect
     - Updated dependencies
 
 7.4.2:
