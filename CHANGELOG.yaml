@@ -378,7 +378,6 @@
       intermediate requests that may be sent as part of authentication or other
       flows.
 
-        ```javascript
         io: function inputOutput (err, cursor, trace, ...otherArgs) {
             // err, cursor: Same as arguments for "start"
             // trace: An object which looks like this:
@@ -391,7 +390,6 @@
             //     source: 'collection
             // }
         }
-        ```
     - Used updated Sandbox with momentjs included (GitHub 281)
 
 6.1.6:
