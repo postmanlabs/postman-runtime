@@ -1,6 +1,6 @@
 7.9.1:
   date: 2019-02-20
-  fixed bugs:
+  chores:
     - Updated `postman-sandbox` to v3.2.4
 
 7.9.0:
@@ -13,6 +13,7 @@
       Added requester option to set `Cache-Control` and `Postman-Token` system
       headers (GitHub 740)
     - Added additional timings properties to track client overhead (GitHub 747)
+  chores:
     - Updated dependencies
 
 7.8.0:
@@ -22,6 +23,7 @@
     - >-
       Added `timings` requester option to bubble up detailed request-response
       timings (GitHub 729)
+  chores:
     - Updated dependencies
 
 7.7.1:
@@ -39,11 +41,13 @@
       Expose Runtime and its dependencies package version via an API (GitHub
       713)
     - >-
-      Fixed a bug where interrupting the script execution crashes the process
-      (GitHub 723)
-    - >-
       Uses Collection SDK `Request~getHeaders` method to get request headers
       object (GitHub 707)
+  fixed bugs:
+    - >-
+      Fixed a bug where interrupting the script execution crashes the process
+      (GitHub 723)
+  chores:
     - >-
       Updated `postman-collection` to v3.4.2 which avoids substitution of
       disabled variables
@@ -55,15 +59,18 @@
     - >-
       Updated `postman-collection` to v3.4.1 which fixes a bug where poly
       chained variables are not resolved correctly
+  chores:
     - Updated dependencies
 
 7.6.0:
   date: 2018-12-25
   new features:
     - Respect form-data fields ordering (GitHub 694)
+  bug fixex:
     - >-
       Fixed a bug that caused requests to fail when protocol of URL is not in
       lowercase (GitHub 690)
+  chores:
     - Updated dependencies
 
 7.5.0:
@@ -79,11 +86,12 @@
       -> followRedirects
       -> followOriginalHttpMethod
       -> removeRefererHeaderOnRedirect
+  chores:
     - Updated dependencies
 
 7.4.2:
   date: 2018-11-7
-  fixed bugs:
+  chores:
     - >-
       Swapped dependency on hawk for request provided implementation (GitHub
       667)
@@ -92,7 +100,7 @@
 
 7.4.1:
   date: 2018-11-4
-  fixed bugs:
+  chores:
     - >-
       Corrected `postman-collection` reference to a precise version: 3.3.0
       (GitHub 665)
@@ -106,21 +114,24 @@
 7.4.0:
   date: 2018-09-21
   new features:
-    - Updated dependencies
     - Added support for `disabled` property in request body (GitHub 636)
+  breaking changes:
     - >-
       Dropped support for `sendBodyWithGetRequests` requester option (GitHub
       640)
+  chores:
+    - Updated dependencies
 
 7.3.0:
   date: 2018-08-21
   new features:
-    - Updated dependencies
-    - Removed NSP and associated apparatus (GitHub 627)
-    - Improved file loading errors (GitHub 625)
     - Added support for `contentType` to form data request bodies (GitHub 624)
     - Added support for multi entrypoints by id or name (GitHub 619)
     - Improved certificate lookup error handling (GitHub 616)
+    - Improved file loading errors (GitHub 625)
+  chores:
+    - Removed NSP and associated apparatus (GitHub 627)
+    - Updated dependencies
 
 7.2.0:
   date: 2018-06-30
@@ -130,25 +141,26 @@
       `result` of script callbacks like `script`, `test` and `prerequest` will
       now have a `mutations` object. This contains only the mutations made
       within that script, if any.
+  chores:
     - Updated dependencies
 
 7.1.6:
   date: 2018-05-24
   fixed bugs:
-    - Updated dependencies
     - >-
       Updated `postman-request` to `v2.86.1-postman.1`, which fixes
       https://nodesecurity.io/advisories/664
+  chores:
+    - Updated dependencies
 
 7.1.5:
   date: 2018-04-10
-  fixed bugs:
+  chores:
     - Updated `postman-sandbox` to `v3.0.6`. (GitHub 565)
 
 7.1.4:
   date: 2018-04-9
   fixed bugs:
-    - Updated dependencies
     - >-
       Updated `postman-sandbox` to `v3.0.5`, which fixes assertion centric bugs
       (GitHub 563)
@@ -158,31 +170,35 @@
     - >-
       Fixed a bug that prevented JavaScript keywords from being used as keys in
       request bodies. (GitHub 553)
+  chores:
+    - Updated dependencies
 
 7.1.3:
   date: 2018-01-2
   fixed bugs:
     - >-
-      Updated `postman-request` to `v2.81.1-postman.4`, which contains a
-      formdata `RangeError` bugfix. (GitHub 510)
-    - >-
       Removed blacklisting of headers for aws auth. All the headers are now
       included in the signature calculation. (GitHub 480)
+    - >-
+      Updated `postman-request` to `v2.81.1-postman.4`, which contains a
+      formdata `RangeError` bugfix. (GitHub 510)
 
 7.1.2:
   date: 2017-12-8
   fixed bugs:
-    - Updated dependencies
     - Fixed entrypoint detection error (GitHub 500)
-    - Cleared OAuth2 state conflicts for duplicate parameters (GitHub 498)
-    - Switched to variable lists from POJOs (GitHub 490)
-    - Removed redundant AWS auth region fallback (GitHub 492)
+  docs:
     - Updated entrypoint documentation (GitHub 491)
+  chores:
+    - Cleared OAuth2 state conflicts for duplicate parameters (GitHub 498)
+    - Removed redundant AWS auth region fallback (GitHub 492)
     - Accelerated memory leack checker script (GitHub 487)
+    - Switched to variable lists from POJOs (GitHub 490)
+    - Updated dependencies
 
 7.1.1:
   date: 2017-11-30
-  fixed bugs:
+  chores:
     - Dropped support for legacy `serviceName` property in `aws` auth.
     - Updated dependencies.
 
@@ -220,6 +236,7 @@
     - >-
       Fixed a bug where the assertions for legacy `tests` failures did not have
       an `error` object.
+  chores:
     - Updated dependencies
 
 7.0.0:
@@ -261,23 +278,26 @@
     - >-
       Added support for collection level variables, collection/folder level
       authentication and scripts (GitHub 424)
-    - Updated dependencies
+  fixed bugs:
     - >-
       Invalid values in `entrypoint` now results in an error (when
       `abortOnError` is set to `true`)
+  chores:
+    - Updated dependencies
 
 6.4.2:
   date: 2017-11-2
-  fixed bugs:
-    - Updated dependencies.
+  new features:
     - Added option to blacklist certain IP addresses from being hit (GitHub 435)
     - Improved HTTP request error handling (GitHub 436)
+  chores:
+    - Updated dependencies.
 
 6.4.1:
   date: 2017-10-13
-  fixed bugs:
-    - Updated dependencies.
+  chores:
     - Made Bearer token case insensitive (GitHub 417)
+    - Updated dependencies.
 
 6.4.0:
   date: 2017-09-28
@@ -285,16 +305,19 @@
     - 'Improved flows for NTLM, Digest, and OAuth2'
     - Added script timeout option (GitHub 382)
     - Prevented max replay errors from bubling up (GitHub 408)
-    - Refurbished interactive mode for auth (GitHub 394)
+    - Added support for bearer-token auth (GitHub 386)
+    - Added response callback (GitHub 373)
+    - All new auth-interface (GitHub 368)
+  fixed bugs:
     - Fixed digest-md5-sess (GitHub 400)
     - Fix OAuth1 camelcased timestamp (GitHub 402)
     - Fixed abort-after-pause (GitHub 350)
-    - Added support for bearer-token auth (GitHub 386)
-    - Added response callback (GitHub 373)
-    - Shifted the auth sign function from the Collection SDK. (GitHub 360)
-    - All new auth-interface (GitHub 368)
-    - Made basic-auth username optional (GitHub 367)
+  docs:
     - Documented exception callback (GitHub 366)
+  chores:
+    - Shifted the auth sign function from the Collection SDK. (GitHub 360)
+    - Refurbished interactive mode for auth (GitHub 394)
+    - Made basic-auth username optional (GitHub 367)
 
 6.3.1-2:
   date: 2017-08-28
@@ -305,29 +328,30 @@
 
 6.3.0:
   date: 2017-08-21
-  new features:
+  fixed bugs:
     - >-
       Updated `postman-sandbox` to `v2.3.2`, which contains a header assertion
       bugfix. (GitHub 358)
 
 6.2.6:
   date: 2017-08-18
-  fixed bugs:
-    - Updated dependencies
-    - >-
-      Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`. (GitHub 353,
-      354)
+  new features:
     - Prevented files from being uploaded via `pm.sendRequest` (GitHub 351)
     - >-
       Queued `pm.sendRequest` through the request command, emitted the `request`
       event. (GitHub 345)
+    - >-
+      Prevented headers with falsy keys from being sent with requests. (GitHub
+      337)
+  chores:
+    - >-
+      Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`. (GitHub 353,
+      354)
     - Expanded documentation for the `assertion` event. (GitHub 342)
     - >-
       Ensured that the `tunnel` value is set from the request protocol. (GitHub
       327)
-    - >-
-      Prevented headers with falsy keys from being sent with requests. (GitHub
-      337)
+    - Updated dependencies
 
 6.2.5:
   date: 2017-07-19
@@ -345,13 +369,13 @@
 
 6.2.3:
   date: 2017-07-5
-  fixed bugs:
+  new features:
     - Support for updated `ProxyConfig` from Collection SDK v2.0.0
     - Custom proxies now have higher preference than system proxies
 
 6.2.2:
   date: 2017-06-28
-  fixed bugs:
+  chores:
     - >-
       Bumped Postman Sandbox to v2.3.0, which includes support for synchronous
       csv-parse (GitHub 298)
@@ -370,7 +394,6 @@
 6.2.0:
   date: 2017-06-15
   new features:
-    - 'Updated dependencies, pruned lodash3'
     - Added support for authorization mechanisms (GitHub 233)
     - Added suport for NTLM auth (GitHub 266)
     - >
@@ -390,30 +413,32 @@
             //     source: 'collection
             // }
         }
+  chores:
+    - 'Updated dependencies, pruned lodash3'
     - Used updated Sandbox with momentjs included (GitHub 281)
 
 6.1.6:
   date: 2017-05-16
-  fixed bugs:
+  chores:
     - Updated `postman-sandbox` to `v2.1.5`.
 
 6.1.5:
   date: 2017-05-15
-  fixed bugs:
+  chores:
     - >-
       Updated `postman-sandbox` to `v2.1.4`, which uses
       `postman-collection@1.2.5`
 
 6.1.4:
   date: 2017-05-12
-  fixed bugs:
+  chores:
     - >-
       Updated `postman-sandbox` to v2.1.3 and `postman-collection` to v1.2.5,
       which introduce `pm.variables` in the scripts
 
 6.1.3:
   date: 2017-05-09
-  fixed bugs:
+  chores:
     - >-
       Updated `postman-collection` to v1.2.4, which contains a bugfix for
       response size calculation
@@ -591,14 +616,16 @@
 4.1.0:
   date: 2017-03-07
   new features:
-    - Updated `lodash` to v4.x
-    - Updated `postman-collection` to v1.0
     - Use `CertificateList` to resolve certificates if provided
+  chores:
+    - Updated `postman-collection` to v1.0
+    - Updated `lodash` to v4.x
 
 4.0.4:
   date: 2017-02-20
-  fixed bugs:
+  new features:
     - Support for multilevel folders
+  chores:
     - Updated `postman-collection` to v0.5.12 which contains minor improvements
 
 4.0.3:
@@ -620,11 +647,12 @@
 
 4.0.1:
   date: 2017-01-02
-  fixed bugs:
+  new features:
     - >-
       Improved the proxy handling logic, it now relies on the SDK for correct
       resolution
-    - 'Runtime no longer accepts a `proxyManager`, which is a breaking change'
+  breaking changes:
+    - 'Runtime no longer accepts a `proxyManager`'
 
 4.0.0:
   date: 2016-12-29
@@ -676,13 +704,14 @@
       Updated `postman-collection` to v0.5.7 (contains a bugfix for handling
       disabled form parameters)
     - Ensure that the disabled parameters are not sent
+  chores:
     - >-
       Use [lodash3](https://www.npmjs.com/package/lodash3) instead of vanilla
       lodash
 
 3.0.4:
   date: 2016-11-17
-  fixed bugs:
+  chores:
     - >-
       Updated the version of `postman-request` which now conforms to
       specification of WHATWG URL, and correctly encodes URL parameters
@@ -771,7 +800,7 @@
 
 2.4.2:
   date: 2016-08-18
-  fixed bugs:
+  new features:
     - >-
       Runtime now uses the length of iteration data as the default iteration
       count (if data is provided)
@@ -806,12 +835,12 @@
 
 2.3.2:
   date: 2016-08-05
-  fixed bugs:
+  new features:
     - Added support for resolving binary files on the fly
 
 2.3.1:
   date: 2016-08-05
-  fixed bugs:
+  new features:
     - Added support for client side SSL authentication
 
 2.3.0:
@@ -852,7 +881,7 @@
 
 2.2.2:
   date: 2016-07-25
-  fixed bugs:
+  chores:
     - Updated the version of the request module
 
 2.2.1:
@@ -864,16 +893,18 @@
 2.2.0:
   date: 2016-07-19
   new features:
-    - Fixed a bug which caused `done` to be called twice if it threw an error
     - Added an option to abort a run on test failures (as well as errors)
+  fixed bugs:
+    - Fixed a bug which caused `done` to be called twice if it threw an error
 
 2.1.1:
   date: 2016-07-13
   fixed bugs:
-    - Updated to postman-collection@0.4.1
     - >-
       Fixed a bug that caused the Runtime to crash when used with stopOnError
       and with multiple iterations
+  chores:
+    - Updated to postman-collection@0.4.1
     - Added more test cases
 
 2.1.0:
