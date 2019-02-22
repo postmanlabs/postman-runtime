@@ -209,12 +209,13 @@ describe('request headers', function () {
             new Header({key: 'Accept', value: '*/*', system: true}),
             new Header({key: 'Cache-Control', value: 'no-cache', system: true}),
             new Header({key: 'Host', value: 'localhost:5050', system: true}),
-            new Header({key: 'accept-encoding', value: 'gzip, deflate', system: true})
+            new Header({key: 'accept-encoding', value: 'gzip, deflate', system: true}),
+            new Header({key: 'Connection', value: 'keep-alive', system: true})
         ]);
 
-        // @todo handle headers added by Node's HTTP client
-        expect(request.headers.members).to.not.deep.include(new Header({
-            key: 'Connection', value: 'close', system: true
-        }));
+        // @note currently, only `Connection` header is added by NodeJS which
+        // is handled by the requester. This test will fail if any other
+        // header will be added by NodeJS.
+        expect(request.headers.count()).to.equal(requestHeaders.length);
     });
 });
