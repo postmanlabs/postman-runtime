@@ -652,7 +652,7 @@
       Improved the proxy handling logic, it now relies on the SDK for correct
       resolution
   breaking changes:
-    - 'Runtime no longer accepts a `proxyManager`'
+    - Runtime no longer accepts a `proxyManager`
 
 4.0.0:
   date: 2016-12-29
