@@ -87,11 +87,11 @@ function createRawEchoServer () {
 function createSSLServer (opts) {
     var i,
         server,
-        certDataPath = path.join(__dirname, '..', 'integration-legacy', 'data'),
+        certDataPath = path.join(__dirname, 'certificates'),
         options = {
             'key': path.join(certDataPath, 'server-key.pem'),
             'cert': path.join(certDataPath, 'server-crt.pem'),
-            'ca': path.join(certDataPath, 'ca-crt.pem')
+            'ca': path.join(certDataPath, 'ca.pem')
         };
 
     if (opts) {
