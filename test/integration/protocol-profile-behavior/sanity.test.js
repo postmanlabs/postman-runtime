@@ -441,9 +441,9 @@ describe('protocolProfileBehavior', function () {
 
         before(function (done) {
             var port = 9090,
-                certDataPath = path.join(__dirname, '..', '..', 'integration-legacy', 'data'),
-                clientKeyPath = path.join(certDataPath, 'client1-key.pem'),
-                clientCertPath = path.join(certDataPath, 'client1-crt.pem'),
+                certDataPath = path.join(__dirname, '..', '..', 'fixtures', 'certificates'),
+                clientKeyPath = path.join(certDataPath, 'client-key.pem'),
+                clientCertPath = path.join(certDataPath, 'client-crt.pem'),
 
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
