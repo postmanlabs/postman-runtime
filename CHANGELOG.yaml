@@ -6,11 +6,10 @@
 7.9.0:
   date: 2019-02-19
   new features:
+    - GH-744 Added `system` property to all the headers added via requester
     - >-
-      GH-744 Added `system` property to all the headers added via requester
-    - >-
-      GH-740 Added requester option to set `Cache-Control` and `Postman-Token` system
-      headers
+      GH-740 Added requester option to set `Cache-Control` and `Postman-Token`
+      system headers
     - GH-747 Added additional timings properties to track client overhead
   chores:
     - Updated dependencies
@@ -20,8 +19,8 @@
   new features:
     - GH-735 Added support for request mutation via prerequest scripts
     - >-
-      GH-729 Added `timings` requester option to bubble up detailed request-response
-      timings
+      GH-729 Added `timings` requester option to bubble up detailed
+      request-response timings
   chores:
     - Updated dependencies
 
@@ -29,21 +28,21 @@
   date: 2019-02-7
   fixed bugs:
     - >-
-      GH-732 Fixed a bug where deep dependencies path was incorrect while fetching
-      version
+      GH-732 Fixed a bug where deep dependencies path was incorrect while
+      fetching version
 
 7.7.0:
   date: 2019-02-1
   new features:
     - GH-707 Avoid executing disabled `prerequest` and `test` scripts
+    - GH-713 Expose Runtime and its dependencies package version via an API
     - >-
-      GH-713 Expose Runtime and its dependencies package version via an API
-    - >-
-      GH-707 Uses Collection SDK `Request~getHeaders` method to get request headers
-      object
+      GH-707 Uses Collection SDK `Request~getHeaders` method to get request
+      headers object
   fixed bugs:
     - >-
-      GH-723 Fixed a bug where interrupting the script execution crashes the process
+      GH-723 Fixed a bug where interrupting the script execution crashes the
+      process
   chores:
     - >-
       Updated `postman-collection` to v3.4.2 which avoids substitution of
@@ -65,8 +64,8 @@
     - GH-694 Respect form-data fields ordering
   bug fixex:
     - >-
-      GH-690 Fixed a bug that caused requests to fail when protocol of URL is not in
-      lowercase
+      GH-690 Fixed a bug that caused requests to fail when protocol of URL is
+      not in lowercase
   chores:
     - Updated dependencies
 
@@ -76,8 +75,8 @@
     - GH-670 Added requester options to configure redirects behavior
     - GH-675 Inherit protocolProfileBehavior from parent ItemGroup(s)
     - |
-      GH-678 Added support for protocolProfileBehavior to override following requester
-      options-
+      GH-678 Added support for protocolProfileBehavior to override following
+      requester options:
       -> strictSSL
       -> maxRedirects
       -> followRedirects
@@ -89,8 +88,7 @@
 7.4.2:
   date: 2018-11-7
   chores:
-    - >-
-      GH-667 Swapped dependency on hawk for request provided implementation
+    - GH-667 Swapped dependency on hawk for request provided implementation
     - Updated dependencies
     - Switched over to Travis for Windows builds
 
@@ -98,11 +96,13 @@
   date: 2018-11-4
   chores:
     - >-
-      GH-665 Corrected `postman-collection` reference to a precise version: 3.3.0
+      GH-665 Corrected `postman-collection` reference to a precise version:
+      3.3.0
     - GH-664 Switched to Travis for Windows builds
     - Updated dependencies
     - >-
-      GH-662 Added `.gitattributes` to enforce consistent line endings for `.js` files.
+      GH-662 Added `.gitattributes` to enforce consistent line endings for `.js`
+      files.
     - Migrated tests to use `chai.expect` assertions
 
 7.4.0:
@@ -110,8 +110,7 @@
   new features:
     - GH-636 Added support for `disabled` property in request body
   breaking changes:
-    - >-
-      GH-640 Dropped support for `sendBodyWithGetRequests` requester option
+    - GH-640 Dropped support for `sendBodyWithGetRequests` requester option
   chores:
     - Updated dependencies
 
@@ -155,13 +154,14 @@
   date: 2018-04-9
   fixed bugs:
     - >-
-      GH-563 Updated `postman-sandbox` to `v3.0.5`, which fixes assertion centric bugs
+      GH-563 Updated `postman-sandbox` to `v3.0.5`, which fixes assertion
+      centric bugs
     - >-
       GH-554 Updated `postman-request` to `v2.85.1-postman.1`, which fixes
       https://nodesecurity.io/advisories/566
     - >-
-      GH-553 Fixed a bug that prevented JavaScript keywords from being used as keys in
-      request bodies
+      GH-553 Fixed a bug that prevented JavaScript keywords from being used as
+      keys in request bodies
   chores:
     - Updated dependencies
 
@@ -169,8 +169,8 @@
   date: 2018-01-2
   fixed bugs:
     - >-
-      GH-480 Removed blacklisting of headers for aws auth. All the headers are now
-      included in the signature calculation
+      GH-480 Removed blacklisting of headers for aws auth. All the headers are
+      now included in the signature calculation
     - >-
       GH-510 Updated `postman-request` to `v2.81.1-postman.4`, which contains a
       formdata `RangeError` bugfix
@@ -250,7 +250,8 @@
         - All assertions, both `pm.test` and legacy `tests` global are now available in the `assertion` callback.
         - The legacy `tests` are no longer available in results parameter in `test` callback.
     - >
-      GH-427 The `entrypoint` option now supports selecting requests as well as folders
+      GH-427 The `entrypoint` option now supports selecting requests as well as
+      folders
         - To execute a folder/request using id or name
         runner.run(collection, { entrypoint: {
             execute: `${desiredIdOrName}`,
@@ -263,12 +264,12 @@
             path: ['grand_parent_folder_id', 'parent_folder_id']
         }});
     - >-
-      GH-428 Advanced auth flows are now enabled by default(`interactive` flag has been
-      removed)
+      GH-428 Advanced auth flows are now enabled by default(`interactive` flag
+      has been removed)
   new features:
     - >-
-      GH-424 Added support for collection level variables, collection/folder level
-      authentication and scripts
+      GH-424 Added support for collection level variables, collection/folder
+      level authentication and scripts
   fixed bugs:
     - >-
       Invalid values in `entrypoint` now results in an error (when
@@ -313,31 +314,27 @@
 6.3.1-2:
   date: 2017-08-28
   fixed bugs:
-    - >-
-      GH-361 Prevented empty/missing request urls from crashing `pm.sendRequest`
+    - GH-361 Prevented empty/missing request urls from crashing `pm.sendRequest`
 
 6.3.0:
   date: 2017-08-21
   fixed bugs:
     - >-
-      GH-358 Updated `postman-sandbox` to `v2.3.2`, which contains a header assertion
-      bugfix.
+      GH-358 Updated `postman-sandbox` to `v2.3.2`, which contains a header
+      assertion bugfix.
 
 6.2.6:
   date: 2017-08-18
   new features:
     - GH-351 Prevented files from being uploaded via `pm.sendRequest`
     - >-
-      GH-345 Queued `pm.sendRequest` through the request command, emitted the `request`
-      event
-    - >-
-      GH-337 Prevented headers with falsy keys from being sent with requests
+      GH-345 Queued `pm.sendRequest` through the request command, emitted the
+      `request` event
+    - GH-337 Prevented headers with falsy keys from being sent with requests
   chores:
-    - >-
-      GH-353,354 Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`
+    - 'GH-353,354 Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`'
     - GH-342 Expanded documentation for the `assertion` event
-    - >-
-      GH-327 Ensured that the `tunnel` value is set from the request protocol
+    - GH-327 Ensured that the `tunnel` value is set from the request protocol
     - Updated dependencies
 
 6.2.5:
@@ -364,10 +361,9 @@
   date: 2017-06-28
   chores:
     - >-
-      GH-298 Bumped Postman Sandbox to v2.3.0, which includes support for synchronous
-      csv-parse
-    - >-
-      GH-297 Bumped Postman Collection SDK to v1.2.9, with critical bugfixes
+      GH-298 Bumped Postman Sandbox to v2.3.0, which includes support for
+      synchronous csv-parse
+    - 'GH-297 Bumped Postman Collection SDK to v1.2.9, with critical bugfixes'
     - Updated other dependencies
 
 6.2.1:
