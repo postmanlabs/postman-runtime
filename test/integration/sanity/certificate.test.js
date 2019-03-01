@@ -478,27 +478,13 @@ describe('certificates', function () {
     });
 
     describe('PFX: invalid passphrase', function () {
-        // @note this test fails if same `client-pkcs12-passphrase.pfx` cert
-        // used above is used here with the wrong passphrase.
-        //
-        // Reason: postman-request(Request~getNewAgent) caches Agent with the
-        // given setting i.e, indexed using `poolKey`. This means, the same
-        // agent will be used even if the passphrase is wrong because passphrase
-        // is not included in the poolKey generation. /)_-)
-        //
-        // Fix: Generate another pkcs12 certificate using the same cert and key
-        // but with a different passphrase to make sure different poolKey will
-        // be generated.
-        //
-        // @todo Update postman-request's poolKey generation logic to also
-        // consider passphrase for unique index.
         before(function (done) {
-            var clientPfxPath = path.join(certDataPath, 'client-pkcs12-passphrase2.pfx'),
+            var clientPfxPath = path.join(certDataPath, 'client-pkcs12-passphrase.pfx'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: ['https://localhost:' + port + '/*'],
                     pfx: {src: clientPfxPath},
-                    passphrase: 'random' // actually `postman`
+                    passphrase: 'random'
                 }]);
 
             sslServer = server.createSSLServer({
