@@ -69,7 +69,7 @@
     "server-destroy": "1.0.1",
     "shelljs": "0.8.3",
     "yankee": "1.0.8",
-    "sinon": "7.2.5",
+    "sinon": "7.2.6",
     "tmp": "0.0.33"
   },
   "browser": {
