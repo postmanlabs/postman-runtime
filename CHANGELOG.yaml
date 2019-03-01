@@ -1,10 +1,11 @@
 master:
   new features:
+    - GH-763 Added support for extending the root CA certificates
     - GH-753 Added support for PFX client certificates
     - GH-739 Added API Key type authentication helper
   chores:
-    - GH-745 Switched to a YAML changelog
     - GH-755 Added `connection` system header
+    - GH-745 Switched to a YAML changelog
     - Updated dependencies
 
 7.9.1:

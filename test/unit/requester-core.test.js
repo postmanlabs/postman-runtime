@@ -41,6 +41,7 @@ describe('requester util', function () {
                 maxRedirects: undefined,
                 removeRefererHeader: undefined,
                 encoding: null,
+                extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined
             });
@@ -76,6 +77,7 @@ describe('requester util', function () {
                 maxRedirects: undefined,
                 removeRefererHeader: undefined,
                 encoding: null,
+                extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined
             });
@@ -207,6 +209,7 @@ describe('requester util', function () {
                 maxRedirects: 15,
                 removeRefererHeader: true,
                 encoding: null,
+                extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined
             });
