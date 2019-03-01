@@ -1,10 +1,11 @@
-master:
+7.10.0:
+  date: 2019-03-01
   new features:
     - GH-763 Added support for extending the root CA certificates
     - GH-753 Added support for PFX client certificates
     - GH-739 Added API Key type authentication helper
   fixed bugs:
-    - GH-768 Used high-resolution time to calculate timings client overhead
+    - GH-768 Used high-resolution time to calculate client overhead timings
   chores:
     - GH-755 Added `connection` system header
     - GH-745 Switched to a YAML changelog
