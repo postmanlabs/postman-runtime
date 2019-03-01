@@ -39,6 +39,7 @@
     "inherits": "2.0.3",
     "lodash": "4.17.11",
     "node-oauth1": "1.2.2",
+    "performance-now": "2.1.0",
     "postman-collection": "3.4.5",
     "postman-request": "2.88.1-postman.7",
     "postman-sandbox": "3.2.5",
