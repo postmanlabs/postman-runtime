@@ -2,6 +2,8 @@ master:
   new features:
     - GH-753 Added support for PFX client certificates
     - GH-739 Added API Key type authentication helper
+  fixed bugs:
+    - GH-768 Used high-resolution time to calculate timings client overhead
   chores:
     - GH-745 Switched to a YAML changelog
     - GH-755 Added `connection` system header
