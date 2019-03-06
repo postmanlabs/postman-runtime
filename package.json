@@ -51,7 +51,7 @@
     "ajv": "6.10.0",
     "chai": "4.2.0",
     "colors": "1.3.3",
-    "editorconfig": "0.15.2",
+    "editorconfig": "0.15.3",
     "eslint": "5.15.1",
     "eslint-plugin-jsdoc": "4.1.1",
     "eslint-plugin-lodash": "4.0.0",
