@@ -24,6 +24,7 @@ describe('proxy', function () {
             // @todo replace all `http-proxy` servers with server.createProxyServer
             proxyServer = new proxy.createProxyServer({
                 target: 'http://postman-echo.com',
+                // extra headers to be added to target request
                 headers: {
                     'x-postman-proxy': 'true'
                 }
@@ -60,6 +61,8 @@ describe('proxy', function () {
             expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
             expect(request.proxy.getProxyUrl(sampleHttpUrl)).to.eql(proxyUrlForHttpRequest);
             expect(request.proxy.getProxyUrl(sampleHttpsUrl)).to.eql(proxyUrlForHttpRequest);
+            // make sure request went through proxy since this header will be added
+            // by the proxy before forwarding the request
             expect(response).to.have.nested.property('headers.x-postman-proxy', 'true');
         });
 
