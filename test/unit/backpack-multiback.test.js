@@ -14,7 +14,7 @@ describe('backpack.multiback', function () {
     });
 
     it('should accept empty flags and a callback', function () {
-        expect(function() {
+        expect(function () {
             multiback([], function () { return 1; });
         }).to.not.throw();
         expect(multiback([], function () { return 1; })).to.be.a('function');

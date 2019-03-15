@@ -5,8 +5,8 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
     var testrun,
         HOST = 'https://www.postman-echo.com/get';
 
-    describe('with undefined', function() {
-        before(function(done) {
+    describe('with undefined', function () {
+        before(function (done) {
             this.run({
                 collection: {
                     item: [{
@@ -54,8 +54,8 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
         });
     });
 
-    describe('with true', function() {
-        before(function(done) {
+    describe('with true', function () {
+        before(function (done) {
             this.run({
                 requester: {
                     implicitCacheControl: true,
@@ -106,8 +106,8 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
         });
     });
 
-    describe('with false', function() {
-        before(function(done) {
+    describe('with false', function () {
+        before(function (done) {
             this.run({
                 requester: {
                     implicitCacheControl: false,
@@ -159,8 +159,8 @@ describe('Requester Spec: implicitCacheControl and implicitTraceHeader', functio
         });
     });
 
-    describe('with custom headers', function() {
-        before(function(done) {
+    describe('with custom headers', function () {
+        before(function (done) {
             this.run({
                 requester: {
                     implicitCacheControl: true,

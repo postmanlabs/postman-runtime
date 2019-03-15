@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 
-describe('Slashed variables', function() {
+describe('Slashed variables', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             environment: {
                 values: [{key: 'fo/o', type: 'text', value: 'alpha', enabled: true},
@@ -14,13 +14,13 @@ describe('Slashed variables', function() {
                     request: 'https://postman-echo.com/get?foo={{fo/o}}&bar={{b\\ar}}'
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have sent the request successfully', function() {
+    it('should have sent the request successfully', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'request.calledOnce': true
@@ -29,7 +29,7 @@ describe('Slashed variables', function() {
         expect(testrun.request.getCall(0).args[0]).to.be.null;
     });
 
-    it('should have resolved the variables', function() {
+    it('should have resolved the variables', function () {
         var response = testrun.request.getCall(0).args[2],
             query;
 
@@ -43,7 +43,7 @@ describe('Slashed variables', function() {
         });
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({

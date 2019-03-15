@@ -2,7 +2,7 @@ var net = require('net'),
     expect = require('chai').expect,
     enableServerDestroy = require('server-destroy');
 
-describe('request size', function() {
+describe('request size', function () {
     var server,
         testrun,
         POSTMAN = 'postman',
@@ -97,7 +97,7 @@ describe('request size', function() {
         server.destroy(done);
     });
 
-    it('should have extracted request size correctly', function() {
+    it('should have extracted request size correctly', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'request.callCount': 4
@@ -144,7 +144,7 @@ describe('request size', function() {
         expect(Buffer.byteLength(fourthRequestPayload)).to.equal(fourthRequestSize.total);
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({

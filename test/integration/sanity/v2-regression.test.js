@@ -1,10 +1,10 @@
 var request = require('postman-request'),
     expect = require('chai').expect;
 
-describe('V2 regressions', function() {
+describe('V2 regressions', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             requester: {strictSSL: false, cookieJar: request.jar()},
             environment: {
@@ -50,13 +50,13 @@ describe('V2 regressions', function() {
                     }
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have run the test script successfully', function() {
+    it('should have run the test script successfully', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'test.calledThrice': true
@@ -80,7 +80,7 @@ describe('V2 regressions', function() {
         ]);
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({

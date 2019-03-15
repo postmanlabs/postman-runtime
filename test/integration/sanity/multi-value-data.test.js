@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 
-describe('Multi value data', function() {
+describe('Multi value data', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             collection: {
                 item: [{
@@ -24,13 +24,13 @@ describe('Multi value data', function() {
                     }
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have run the test script successfully', function() {
+    it('should have run the test script successfully', function () {
         var assertions = testrun.assertion.getCall(0).args[1];
 
         expect(testrun).to.be.ok;
@@ -45,7 +45,7 @@ describe('Multi value data', function() {
         });
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({
