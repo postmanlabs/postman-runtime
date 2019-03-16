@@ -1,10 +1,10 @@
 var AuthLoader = require('../../../lib/authorizer').AuthLoader,
     expect = require('chai').expect;
 
-describe('unhandled errors in request send', function() {
+describe('unhandled errors in request send', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             collection: {
                 item: [{
@@ -24,7 +24,7 @@ describe('unhandled errors in request send', function() {
             authorizer: {
                 interactive: true
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
@@ -50,7 +50,7 @@ describe('unhandled errors in request send', function() {
         }, 'fake');
     });
 
-    it('should not call request or response callback for unhandled errors', function() {
+    it('should not call request or response callback for unhandled errors', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'request.callCount': 0,
@@ -58,11 +58,11 @@ describe('unhandled errors in request send', function() {
         });
     });
 
-    it('should have bubbled to done and error callback when abortOnError is set', function() {
+    it('should have bubbled to done and error callback when abortOnError is set', function () {
         expect(testrun.done.getCall(0)).to.have.nested.property('args[0].message', 'deal with it');
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'done.calledOnce': true,

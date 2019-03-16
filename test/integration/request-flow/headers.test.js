@@ -18,7 +18,7 @@ describe('request headers', function () {
      * @param {String[]} rawHeaders - raw request headers
      * @returns {Object[]}
      */
-    function parseRawHeaders(rawHeaders) {
+    function parseRawHeaders (rawHeaders) {
         return _(rawHeaders).chunk(2).map(([key, value]) => {
             return {key, value};
         }).value();

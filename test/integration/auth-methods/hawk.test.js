@@ -35,7 +35,7 @@ describe('hawk auth', function () {
         });
     });
 
-    it('should include hawk auth parameters in request header', function() {
+    it('should include hawk auth parameters in request header', function () {
         var request = testrun.request.getCall(0).args[3],
             header = request.headers.members[0];
 

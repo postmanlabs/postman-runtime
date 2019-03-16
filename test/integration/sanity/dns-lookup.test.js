@@ -1,10 +1,10 @@
 var dns = require('dns'),
     expect = require('chai').expect;
 
-describe('DNS lookup', function() {
+describe('DNS lookup', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         var self = this;
 
         // Not hard-coding since this can change
@@ -27,14 +27,14 @@ describe('DNS lookup', function() {
                         }
                     }
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
         });
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({
@@ -43,7 +43,7 @@ describe('DNS lookup', function() {
         });
     });
 
-    it('should have used the provided hostIpMap for resolving hostname', function() {
+    it('should have used the provided hostIpMap for resolving hostname', function () {
         expect(testrun.response.getCall(0).args[0]).to.be.null;
 
         var response = testrun.response.firstCall.args[2];

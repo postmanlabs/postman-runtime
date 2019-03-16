@@ -25,7 +25,7 @@ describe('form-data with numeric keys', function () {
      *
      * returns -> [{name: 'foo', contentType: 'text/plain'}]
      */
-    function parseRaw(raw) {
+    function parseRaw (raw) {
         raw = raw.split('\r\n');
         var boundary = raw[0],
             result = [],

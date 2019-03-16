@@ -9,7 +9,7 @@ describe('cookie sandbox request interaction', function () {
             describe('clear', function () {
                 var testrun;
 
-                before(function(done) {
+                before(function (done) {
                     this.run({
                         collection: {
                             item: {
@@ -36,7 +36,7 @@ describe('cookie sandbox request interaction', function () {
                                 }
                             }
                         }
-                    }, function(err, results) {
+                    }, function (err, results) {
                         testrun = results;
                         done(err);
                     });
@@ -68,7 +68,7 @@ describe('cookie sandbox request interaction', function () {
             describe('set', function () {
                 var testrun;
 
-                before(function(done) {
+                before(function (done) {
                     this.run({
                         collection: {
                             item: {
@@ -98,7 +98,7 @@ describe('cookie sandbox request interaction', function () {
                                 request: cookieUrl
                             }
                         }
-                    }, function(err, results) {
+                    }, function (err, results) {
                         testrun = results;
                         done(err);
                     });
@@ -132,7 +132,7 @@ describe('cookie sandbox request interaction', function () {
             describe('clear', function () {
                 var testrun;
 
-                before(function(done) {
+                before(function (done) {
                     this.run({
                         collection: {
                             item: {
@@ -171,7 +171,7 @@ describe('cookie sandbox request interaction', function () {
                                 }
                             }
                         }
-                    }, function(err, results) {
+                    }, function (err, results) {
                         testrun = results;
                         done(err);
                     });
@@ -210,7 +210,7 @@ describe('cookie sandbox request interaction', function () {
             describe('set', function () {
                 var testrun;
 
-                before(function(done) {
+                before(function (done) {
                     this.run({
                         collection: {
                             item: {
@@ -246,7 +246,7 @@ describe('cookie sandbox request interaction', function () {
                                 request: cookieUrl
                             }
                         }
-                    }, function(err, results) {
+                    }, function (err, results) {
                         testrun = results;
                         done(err);
                     });
@@ -286,7 +286,7 @@ describe('cookie sandbox request interaction', function () {
             describe('clear', function () {
                 var testrun;
 
-                before(function(done) {
+                before(function (done) {
                     this.run({
                         collection: {
                             item: {
@@ -322,7 +322,7 @@ describe('cookie sandbox request interaction', function () {
                                 }
                             }
                         }
-                    }, function(err, results) {
+                    }, function (err, results) {
                         testrun = results;
                         done(err);
                     });
@@ -365,7 +365,7 @@ describe('cookie sandbox request interaction', function () {
             describe('clear', function () {
                 var testrun;
 
-                before(function(done) {
+                before(function (done) {
                     this.run({
                         collection: {
                             item: {
@@ -399,7 +399,7 @@ describe('cookie sandbox request interaction', function () {
                                 }
                             }
                         }
-                    }, function(err, results) {
+                    }, function (err, results) {
                         testrun = results;
                         done(err);
                     });
@@ -439,7 +439,7 @@ describe('cookie sandbox request interaction', function () {
             describe('set', function () {
                 var testrun;
 
-                before(function(done) {
+                before(function (done) {
                     this.run({
                         collection: {
                             item: {
@@ -470,7 +470,7 @@ describe('cookie sandbox request interaction', function () {
                                 request: cookieUrl + '/set?foo=bar'
                             }
                         }
-                    }, function(err, results) {
+                    }, function (err, results) {
                         testrun = results;
                         done(err);
                     });

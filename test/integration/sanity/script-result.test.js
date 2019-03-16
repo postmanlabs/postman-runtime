@@ -1,11 +1,11 @@
 var sdk = require('postman-collection'),
     expect = require('chai').expect;
 
-describe('script result format', function() {
+describe('script result format', function () {
     describe('sanity checks', function () {
         var testrun;
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 requester: {followRedirects: false},
                 collection: {
@@ -21,13 +21,13 @@ describe('script result format', function() {
                         request: 'https://postman-echo.com/get'
                     }
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
         });
 
-        it('should have sent the request successfully', function() {
+        it('should have sent the request successfully', function () {
             expect(testrun).to.be.ok;
             expect(testrun).to.nested.include({
                 'request.calledOnce': true
@@ -117,7 +117,7 @@ describe('script result format', function() {
             expect(sdk.Response.isResponse(test.response)).to.be.true;
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({
@@ -130,7 +130,7 @@ describe('script result format', function() {
     describe('next request in pre-request script', function () {
         var testrun;
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 requester: {followRedirects: false},
                 collection: {
@@ -143,13 +143,13 @@ describe('script result format', function() {
                         request: 'https://postman-echo.com/get'
                     }
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
         });
 
-        it('should have sent the request successfully', function() {
+        it('should have sent the request successfully', function () {
             expect(testrun).to.be.ok;
             expect(testrun).to.nested.include({
                 'request.calledOnce': true
@@ -171,7 +171,7 @@ describe('script result format', function() {
             expect(prerequest).to.have.nested.property('return.nextRequest', 'some-req-name');
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({
