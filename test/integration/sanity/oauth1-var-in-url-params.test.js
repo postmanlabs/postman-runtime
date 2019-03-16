@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 
-describe('OAuth1 var in url params', function() {
+describe('OAuth1 var in url params', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             collection: {
                 item: [{
@@ -35,13 +35,13 @@ describe('OAuth1 var in url params', function() {
                     }
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have signed the oauth1 request successfully', function() {
+    it('should have signed the oauth1 request successfully', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'request.calledOnce': true
@@ -55,7 +55,7 @@ describe('OAuth1 var in url params', function() {
         expect(response.json()).to.have.property('status', 'pass');
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({

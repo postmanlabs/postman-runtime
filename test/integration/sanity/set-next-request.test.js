@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 
-describe('Set next request', function() {
+describe('Set next request', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             collection: {
                 item: [{
@@ -32,13 +32,13 @@ describe('Set next request', function() {
                     }
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have run the test script successfully', function() {
+    it('should have run the test script successfully', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'request.calledTwice': true
@@ -48,7 +48,7 @@ describe('Set next request', function() {
         expect(testrun.request.getCall(1)).to.have.nested.property('args[4].name', 'three');
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({

@@ -4,7 +4,7 @@ describe('form data', function () {
     describe('multiple values for query parameters', function () {
         var testrun;
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: [{
@@ -14,13 +14,13 @@ describe('form data', function () {
                         }
                     }]
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
         });
 
-        it('should have sent the request successfully', function() {
+        it('should have sent the request successfully', function () {
             expect(testrun).to.be.ok;
             expect(testrun).to.nested.include({
                 'request.calledOnce': true
@@ -32,7 +32,7 @@ describe('form data', function () {
             expect(body).to.have.deep.nested.property('args.hi', ['hello', 'lolol']);
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({
@@ -45,7 +45,7 @@ describe('form data', function () {
     describe('empty urlencoded body', function () {
         var testrun;
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: [{
@@ -59,13 +59,13 @@ describe('form data', function () {
                         }
                     }]
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
         });
 
-        it('should have sent the request successfully', function() {
+        it('should have sent the request successfully', function () {
             expect(testrun).to.be.ok;
             expect(testrun).to.nested.include({
                 'request.calledOnce': true
@@ -76,7 +76,7 @@ describe('form data', function () {
             expect(response).to.have.property('code', 200);
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({
@@ -89,7 +89,7 @@ describe('form data', function () {
     describe('empty formdata body', function () {
         var testrun;
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: [{
@@ -103,13 +103,13 @@ describe('form data', function () {
                         }
                     }]
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
         });
 
-        it('should have sent the request successfully', function() {
+        it('should have sent the request successfully', function () {
             expect(testrun).to.be.ok;
             expect(testrun).to.nested.include({
                 'request.calledOnce': true
@@ -120,7 +120,7 @@ describe('form data', function () {
             expect(response).to.have.property('code', 200);
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({

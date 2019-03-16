@@ -68,7 +68,7 @@ describe('Auth Loader', function () {
         it('should return undefined if no Handler is found for a type', function () {
             var handler;
 
-            expect(function() {
+            expect(function () {
                 AuthLoader.getHandler('fake');
             }).to.not.throw();
             expect(handler).to.be.undefined;
