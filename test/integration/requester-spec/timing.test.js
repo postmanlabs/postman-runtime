@@ -23,12 +23,16 @@ describe('Requester Spec: timings', function () {
         });
 
         it('should include timing information by default', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var response = testrun.response.getCall(0).args[2],
+                history = testrun.request.getCall(0).args[6],
+                timings;
 
-            expect(response).to.have.property('timings');
+            expect(history).to.have.property('execution').that.include.property('data');
+            timings = history.execution.data[0].timings;
+
             expect(response).to.have.property('responseTime');
-            expect(response.timings).to.be.an('object').that.has.all.keys(['start', 'offset']);
-            expect(response.timings.offset).to.be.an('object').that.includes.all.keys([
+            expect(timings).to.be.an('object').that.has.all.keys(['start', 'requestStart', 'offset']);
+            expect(timings.offset).to.be.an('object').that.includes.all.keys([
                 'request',
                 'socket',
                 'lookup',
@@ -39,7 +43,7 @@ describe('Requester Spec: timings', function () {
                 'done'
             ]);
             expect(response.responseTime).to
-                .equal(Math.ceil(response.timings.offset.end - response.timings.offset.request));
+                .equal(Math.ceil(timings.offset.end - timings.offset.request));
         });
     });
 
@@ -57,12 +61,16 @@ describe('Requester Spec: timings', function () {
         });
 
         it('should include timing information', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var response = testrun.response.getCall(0).args[2],
+                history = testrun.response.getCall(0).args[6],
+                timings;
 
-            expect(response).to.have.property('timings');
+            expect(history).to.have.property('execution').that.include.property('data');
+            timings = history.execution.data[0].timings;
+
             expect(response).to.have.property('responseTime');
-            expect(response.timings).to.be.an('object').that.has.all.keys(['start', 'offset']);
-            expect(response.timings.offset).to.be.an('object').that.includes.all.keys([
+            expect(timings).to.be.an('object').that.has.all.keys(['start', 'requestStart', 'offset']);
+            expect(timings.offset).to.be.an('object').that.includes.all.keys([
                 'request',
                 'socket',
                 'lookup',

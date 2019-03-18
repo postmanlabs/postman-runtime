@@ -1,3 +1,13 @@
+master:
+  new features:
+    - GH-786 Added history in request and response callback
+    - GH-787 Added TLS protocol profile behavior
+  breaking changes:
+    - GH-786 Moved timings out of response instance
+  chores:
+    - GH-775 Added tests for proxy authentication
+    - Updated dependencies
+
 7.10.0:
   date: 2019-03-01
   new features:

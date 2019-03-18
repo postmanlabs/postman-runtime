@@ -43,7 +43,8 @@ describe('requester util', function () {
                 encoding: null,
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
-                time: undefined
+                time: undefined,
+                verbose: undefined
             });
         });
 
@@ -79,7 +80,8 @@ describe('requester util', function () {
                 encoding: null,
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
-                time: undefined
+                time: undefined,
+                verbose: undefined
             });
         });
 
@@ -211,7 +213,8 @@ describe('requester util', function () {
                 encoding: null,
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
-                time: undefined
+                time: undefined,
+                verbose: undefined
             });
         });
     });
