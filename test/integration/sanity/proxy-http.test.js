@@ -80,13 +80,9 @@ describe('proxy', function () {
                 match: '*://postman-echo.com/*',
                 host: proxyHost,
                 port: port,
-                auth: {
-                    type: 'basic',
-                    basic: {
-                        username: auth.username,
-                        password: auth.password
-                    }
-                }
+                authenticate: true,
+                username: auth.username,
+                password: auth.password
             }]);
 
         before(function (done) {
@@ -138,13 +134,9 @@ describe('proxy', function () {
                 match: '*://postman-echo.com/*',
                 host: proxyHost,
                 port: port,
-                auth: {
-                    type: 'basic',
-                    basic: {
-                        username: auth.username,
-                        password: auth.password
-                    }
-                }
+                authenticate: true,
+                username: auth.username,
+                password: auth.password
             }]);
 
         before(function (done) {
