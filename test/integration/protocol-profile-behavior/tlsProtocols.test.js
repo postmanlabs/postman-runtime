@@ -56,7 +56,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
         }, done);
     });
 
-    describe('mode: disabledProtocols', function () {
+    describe('disabled protocols', function () {
         describe('TLSv1 server', function () {
             describe('default', function () {
                 before(function (done) {
@@ -128,10 +128,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['TLSv1_1', 'TLSv1_2']
-                                    }
+                                    tlsDisabledProtocols: ['TLSv1_1', 'TLSv1_2']
                                 }
                             }]
                         }
@@ -186,10 +183,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['TLSv1']
-                                    }
+                                    tlsDisabledProtocols: ['TLSv1']
                                 }
                             }]
                         }
@@ -286,10 +280,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['TLSv1', 'TLSv1_2']
-                                    }
+                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_2']
                                 }
                             }]
                         }
@@ -342,10 +333,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['TLSv1_1']
-                                    }
+                                    tlsDisabledProtocols: ['TLSv1_1']
                                 }
                             }]
                         }
@@ -442,10 +430,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['TLSv1', 'TLSv1_1']
-                                    }
+                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_1']
                                 }
                             }]
                         }
@@ -500,10 +485,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['TLSv1_2']
-                                    }
+                                    tlsDisabledProtocols: ['TLSv1_2']
                                 }
                             }]
                         }
@@ -610,10 +592,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1_1', 'TLSv1_2']
-                                    }
+                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1_1', 'TLSv1_2']
                                 }
                             }]
                         }
@@ -668,10 +647,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_2']
-                                    }
+                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_2']
                                 }
                             }]
                         }
@@ -726,10 +702,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_1']
-                                    }
+                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_1']
                                 }
                             }]
                         }
@@ -782,7 +755,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {}
+                                    tlsCipherSelection: []
                                 }
                             }]
                         }
@@ -839,10 +812,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsCipherSelection: {
-                                        mode: 'disabledProtocols',
-                                        disabledProtocols: ['SSLv2', 'TLSv1', 'TLSv1_1', 'TLSv1_2']
-                                    }
+                                    tlsDisabledProtocols: ['SSLv2', 'TLSv1', 'TLSv1_1', 'TLSv1_2']
                                 }
                             }]
                         }
@@ -956,10 +926,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                             }
                         }],
                         protocolProfileBehavior: {
-                            tlsCipherSelection: {
-                                mode: 'customCiphers',
-                                customCiphers: ['AES128-SHA']
-                            }
+                            tlsCipherSelection: ['AES128-SHA']
                         }
                     }
                 }, function (err, results) {
@@ -1018,10 +985,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
                             }
                         }],
                         protocolProfileBehavior: {
-                            tlsCipherSelection: {
-                                mode: 'customCiphers',
-                                customCiphers: ['RANDOM']
-                            }
+                            tlsCipherSelection: ['RANDOM']
                         }
                     }
                 }, function (err, results) {
