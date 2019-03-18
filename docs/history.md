@@ -1,6 +1,6 @@
 # History
 
-As the name suggests, the history object holds the entire life-cycle of the request sent and the response received as well as with the low-level execution information which helps to debug the request execution.
+As the name suggests, the history object holds the entire life-cycle of the request sent and the response received as well as the low-level execution information which helps to debug the request execution.
 
 ### Structure
 
@@ -35,7 +35,7 @@ execution: Object - The execution history of a request
         end: Number - Timestamp when the last bytes of the response is received
         done: Number - Timestamp when the response is received at the client (Runtime)
   - request: Object - The final request sent (redirect request)
-      // Same as above
+      // similar to the first request
   sessions: Object - Different socket connections made during the request
     <UNIQUE-SESSION-ID>: Object - Connection session data
       addresses: Object - Local and remote address data

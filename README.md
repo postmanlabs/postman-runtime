@@ -104,6 +104,9 @@ runner.run(collection, {
         // Enable or disable detailed request-response timings (only supported on Node, ignored in the browser)
         timings: true,
 
+        // Enable or disable verbose level history (only supported on Node, ignored in the browser)
+        verbose: false,
+
         // Implicitly add `Cache-Control` system header in request (only supported on Node, ignored in the browser)
         implicitCacheControl: true,
 
