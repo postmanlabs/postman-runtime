@@ -182,7 +182,7 @@ function createRedirectServer () {
  * }
  * s.listen(3000, callback);
  */
-function createHTTPServer() {
+function createHTTPServer () {
     var server = http.createServer(function (req, res) {
         server.emit(req.url, req, res);
     });
@@ -197,9 +197,69 @@ function createHTTPServer() {
     return server;
 }
 
+/**
+ * Simple HTTP proxy server
+ *
+ * @param {Object} [options] - Additional options to configure proxy server
+ * @param {Object} [options.auth] - Proxy authentication, Basic auth
+ * @param {String} [options.agent] - Agent used for http(s).request
+ *
+ * @example
+ * var s = createProxyServer({
+ *      headers: { proxy: 'true' },
+ *      auth: { username: 'user', password: 'pass' }
+ * });
+ * s.listen(3000, callback);
+ */
+function createProxyServer (options) {
+    !options && (options = {});
+
+    var agent = options.agent === 'https' ? https : http,
+        server = createHTTPServer(),
+        proxyAuthHeader;
+
+    // pre calculate proxy-authorization header value
+    if (options.auth) {
+        proxyAuthHeader = 'Basic ' + Buffer.from(
+            `${options.auth.username}:${options.auth.password}`
+        ).toString('base64');
+    }
+
+    // listen on every incoming request
+    server.on('request', function (req, res) {
+        // verify proxy authentication if auth is set
+        if (options.auth && req.headers['proxy-authorization'] !== proxyAuthHeader) {
+            res.writeHead(407);
+
+            return res.end('Proxy Authentication Required');
+        }
+
+        // avoid compressed response, ease to respond
+        delete req.headers['accept-encoding'];
+
+        // merge headers set in options
+        req.headers = Object.assign(req.headers, options.headers || {});
+
+        // forward request to the origin and pipe the response
+        var fwd = agent.request({
+            host: req.headers.host,
+            path: req.url,
+            method: req.method.toLowerCase(),
+            headers: req.headers
+        }, function (resp) {
+            resp.pipe(res);
+        });
+
+        req.pipe(fwd);
+    });
+
+    return server;
+}
+
 module.exports = {
     createSSLServer,
     createHTTPServer,
+    createProxyServer,
     createRawEchoServer,
     createRedirectServer
 };
