@@ -138,7 +138,7 @@ describe('asynchronous script timeouts', function () {
                 setTimeout(function () {
                     var consoleCountsBefore = testrun.console.callCount;
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         expect(testrun).to.nested.include({
                             'console.callCount': consoleCountsBefore
                         });

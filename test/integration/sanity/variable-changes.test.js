@@ -1,10 +1,10 @@
 var sdk = require('postman-collection'),
     expect = require('chai').expect;
 
-describe('variable changes', function() {
+describe('variable changes', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             requester: {followRedirects: false},
             collection: {
@@ -28,13 +28,13 @@ describe('variable changes', function() {
                     request: 'https://postman-echo.com/get'
                 }
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have sent the request successfully', function() {
+    it('should have sent the request successfully', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'request.calledOnce': true
@@ -76,7 +76,7 @@ describe('variable changes', function() {
         expect(test._variables.mutations.count()).to.equal(0);
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({

@@ -3,7 +3,7 @@ var fs = require('fs'),
     expect = require('chai').expect,
     server = require('../../fixtures/server');
 
-describe('redirects', function() {
+describe('redirects', function () {
     var testrun,
         redirectServer,
         PORT = 5050,
@@ -34,7 +34,7 @@ describe('redirects', function() {
     });
 
     describe('sanity', function () {
-        before(function(done) {
+        before(function (done) {
             this.run({
                 requester: {followRedirects: false},
                 collection: {
@@ -42,7 +42,7 @@ describe('redirects', function() {
                         request: 'https://postman-echo.com/redirect-to?url=https://postman-echo.com/get'
                     }]
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -61,7 +61,7 @@ describe('redirects', function() {
             sinon.assert.calledWith(testrun.response.getCall(0), null);
         });
 
-        it('should not have followed the redirect', function() {
+        it('should not have followed the redirect', function () {
             var response = testrun.request.getCall(0).args[2];
 
             expect(response).to.have.property('code', 302);

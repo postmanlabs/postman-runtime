@@ -83,7 +83,7 @@ describe('requester util', function () {
             });
         });
 
-        describe('Should accept URL irrespective of the case', function() {
+        describe('Should accept URL irrespective of the case', function () {
             it('should accept URL in uppercase', function () {
                 var request = new sdk.Request({
                     url: 'HTTP://POSTMAN-ECHO.COM/POST',

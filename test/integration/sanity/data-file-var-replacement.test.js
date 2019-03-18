@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 
-describe('data variable replacement', function() {
+describe('data variable replacement', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             data: [{dataVar: 'value1'}, {dataVar: 'value2'}],
             collection: {
@@ -38,13 +38,13 @@ describe('data variable replacement', function() {
                     }
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have run two iterations', function() {
+    it('should have run two iterations', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'iteration.calledTwice': true,
@@ -55,7 +55,7 @@ describe('data variable replacement', function() {
         expect(testrun.request.getCall(1).args[0]).to.be.null;
     });
 
-    it('should use a consistent format for request.data', function() {
+    it('should use a consistent format for request.data', function () {
         expect(testrun).to.be.ok;
 
         // prerequest script checks
@@ -85,7 +85,7 @@ describe('data variable replacement', function() {
         });
     });
 
-    it('should have substituted the data variables', function() {
+    it('should have substituted the data variables', function () {
         expect(testrun).to.be.ok;
 
         var firstResponse = testrun.request.getCall(0).args[2],
@@ -103,7 +103,7 @@ describe('data variable replacement', function() {
         });
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({
