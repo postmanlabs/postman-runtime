@@ -1,14 +1,15 @@
 # History
 
-As the name suggests, the history object in `request` and `response` [callbacks](https://github.com/postmanlabs/postman-runtime/#callbacks) holds the entire life-cycle of a request sent and the response received as well as low-level execution information which helps to debug the request execution.
+As the name suggests, the history object holds the entire life-cycle of the request sent and the response received as well as the low-level execution information which helps to debug the request execution.
 
 ### Structure
 
 The structure of the history object in its full shape looks like this:
 
-**execution**: `Object` - The execution history of a request
-  **verbose**: `Boolean` - Is verbose level information available or not
-  **data**: `Array` - The execution data/logs of every request sent (including redirects)
+```yaml
+execution: `Object` - The execution history of a request
+  verbose: `Boolean` - Is verbose level information available or not
+  data: `Array` - The execution data/logs of every request sent (including redirects)
   - request: `Object` - The first request sent in a redirect chain (initial request)
       method: `String` - Request method
       href: `String` - Request URL
@@ -34,8 +35,8 @@ The structure of the history object in its full shape looks like this:
         end: `Number` - Timestamp when the last bytes of the response is received
         done: `Number` - Timestamp when the response is received at the client (Runtime)
   - request: `Object` - The final request sent (redirect request)
-      > // Same as above
-  **sessions**: `Object` - Different socket connections made during the request
+      // Same as above
+  sessions: `Object` - Different socket connections made during the request
     <UNIQUE-SESSION-ID>: `Object` - Connection session data
       addresses: `Object` - Local and remote address data
         local: `Object` - Local address data
@@ -78,6 +79,7 @@ The structure of the history object in its full shape looks like this:
           validTo: `String` - The date-time the certificate is valid to
           fingerprint:  `String` - The SHA-1 digest of the DER encoded certificate
           serialNumber: `String` - The certificate serial number, as a hex string
+```
 
 ### Usage and Verbose Mode
 
@@ -85,7 +87,7 @@ Getting this level of debug data for every request sent in runtime might be expe
 
 #### Usage
 
-The history object is accessible in both `request` and `response` callbacks.
+The history object is accessible in both `request` and `response` [callbacks](https://github.com/postmanlabs/postman-runtime/#callbacks).
 
 ```javascript
 runner.run(collection, { requester: { verbose: true } }, function(err, run) {
@@ -103,9 +105,10 @@ runner.run(collection, { requester: { verbose: true } }, function(err, run) {
 });
 ```
 
-#### Example with `verbose: false` (default)
-
+<details><summary>Example with `verbose: false` (default)</summary>
+<p>
 > History for a request made at https://getpostman.com
+
 ```javascript
 {
   "execution": {
@@ -165,10 +168,13 @@ runner.run(collection, { requester: { verbose: true } }, function(err, run) {
   }
 }
 ```
+</p>
+</details>
 
-#### Example with `verbose: true`
-
+<details><summary>Example with `verbose: true`</summary>
+<p>
 > History for an request made at https://www.getpostman.com
+
 ```javascript
 {
   "execution": {
@@ -254,3 +260,5 @@ runner.run(collection, { requester: { verbose: true } }, function(err, run) {
   }
 }
 ```
+</p>
+</details>
