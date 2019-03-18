@@ -26,7 +26,7 @@ var fs = require('fs'),
     };
 
 
-describe('protocolProfileBehavior: tlsCipherSelection', function () {
+describe('protocolProfileBehavior: tls options', function () {
     var testrun,
         servers = {
             // SSLv2 and SSLv3 methods are disabled in Node
@@ -56,7 +56,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
         }, done);
     });
 
-    describe('disabled protocols', function () {
+    describe('tlsDisabledProtocols', function () {
         describe('TLSv1 server', function () {
             describe('default', function () {
                 before(function (done) {
@@ -839,7 +839,7 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
         });
     });
 
-    describe('mode: customCiphers', function () {
+    describe('tlsCipherSelection', function () {
         var sslServer;
 
         before(function (done) {
@@ -1006,6 +1006,198 @@ describe('protocolProfileBehavior: tlsCipherSelection', function () {
             it('should throw error for unsupported protocol', function () {
                 expect(testrun.response.getCall(0).calledWith(null)).to.be.false;
                 expect(testrun.response.getCall(0).args[0]).to.be.ok;
+            });
+        });
+    });
+
+    describe('tlsPreferServerCiphers', function () {
+        var sslServer;
+
+        before(function (done) {
+            sslServer = server.createSSLServer({
+                ciphers: 'ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256'
+            });
+            sslServer.on('/', requestHandler);
+            sslServer.listen(0, done);
+        });
+
+        after(function (done) {
+            sslServer.destroy(done);
+        });
+
+        describe('default', function () {
+            before(function (done) {
+                this.run({
+                    fileResolver: fs,
+                    requester: {
+                        extendedRootCA: CACertPath,
+                        verbose: true
+                    },
+                    collection: {
+                        item: [{
+                            request: {
+                                url: sslServer.url,
+                                header: [{
+                                    key: 'Connection',
+                                    value: 'close'
+                                }]
+                            }
+                        }],
+                        protocolProfileBehavior: {}
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should choose the server specified cipher', function () {
+                expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
+
+                var response = testrun.response.getCall(0).args[2],
+                    history = testrun.response.getCall(0).args[6],
+                    executionData,
+                    sessionData,
+                    sessions;
+
+                expect(history).to.have.property('execution').that.include.property('sessions');
+                sessions = history.execution.sessions;
+                executionData = history.execution.data[0];
+                sessionData = sessions[executionData.session.id];
+
+                expect(response.reason()).to.eql('OK');
+                expect(response.text()).to.eql('okay');
+
+                expect(sessionData.tls).to.have.property('cipher');
+                expect(sessionData.tls.cipher).to.have.property('name', 'ECDHE-RSA-AES256-GCM-SHA384');
+            });
+        });
+
+        describe('with tlsPreferServerCiphers: true', function () {
+            before(function (done) {
+                this.run({
+                    fileResolver: fs,
+                    requester: {
+                        extendedRootCA: CACertPath,
+                        verbose: true
+                    },
+                    collection: {
+                        item: [{
+                            request: {
+                                url: sslServer.url,
+                                header: [{
+                                    key: 'Connection',
+                                    value: 'close'
+                                }]
+                            }
+                        }],
+                        protocolProfileBehavior: {
+                            tlsPreferServerCiphers: true
+                        }
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should choose the server specified cipher', function () {
+                expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
+
+                var response = testrun.response.getCall(0).args[2],
+                    history = testrun.response.getCall(0).args[6],
+                    executionData,
+                    sessionData,
+                    sessions;
+
+                expect(history).to.have.property('execution').that.include.property('sessions');
+                sessions = history.execution.sessions;
+                executionData = history.execution.data[0];
+                sessionData = sessions[executionData.session.id];
+
+                expect(response.reason()).to.eql('OK');
+                expect(response.text()).to.eql('okay');
+
+                expect(sessionData.tls).to.have.property('cipher');
+                expect(sessionData.tls.cipher).to.have.property('name', 'ECDHE-RSA-AES256-GCM-SHA384');
+            });
+        });
+
+        describe('with tlsPreferServerCiphers: false', function () {
+            before(function (done) {
+                this.run({
+                    fileResolver: fs,
+                    requester: {
+                        extendedRootCA: CACertPath,
+                        verbose: true
+                    },
+                    collection: {
+                        item: [{
+                            request: {
+                                url: sslServer.url,
+                                header: [{
+                                    key: 'Connection',
+                                    value: 'close'
+                                }]
+                            }
+                        }],
+                        protocolProfileBehavior: {
+                            tlsPreferServerCiphers: false,
+                            tlsCipherSelection: ['ECDHE-RSA-AES128-GCM-SHA256']
+                        }
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should choose the client specified cipher', function () {
+                expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
+
+                var response = testrun.response.getCall(0).args[2],
+                    history = testrun.response.getCall(0).args[6],
+                    executionData,
+                    sessionData,
+                    sessions;
+
+                expect(history).to.have.property('execution').that.include.property('sessions');
+                sessions = history.execution.sessions;
+                executionData = history.execution.data[0];
+                sessionData = sessions[executionData.session.id];
+
+                expect(response.reason()).to.eql('OK');
+                expect(response.text()).to.eql('okay');
+
+                expect(sessionData.tls).to.have.property('cipher');
+                expect(sessionData.tls.cipher).to.have.property('name', 'ECDHE-RSA-AES128-GCM-SHA256');
             });
         });
     });
