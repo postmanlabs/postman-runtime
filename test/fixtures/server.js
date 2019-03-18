@@ -64,6 +64,7 @@ function createRawEchoServer () {
 
     server.on('listening', function () {
         server.port = this.address().port;
+        server.url = 'http://localhost:' + server.port;
     });
 
     enableServerDestroy(server);
@@ -85,27 +86,32 @@ function createRawEchoServer () {
  * s.listen(3000, 'localhost');
  */
 function createSSLServer (opts) {
-    var i,
-        server,
+    var server,
         certDataPath = path.join(__dirname, 'certificates'),
         options = {
             'key': path.join(certDataPath, 'server-key.pem'),
             'cert': path.join(certDataPath, 'server-crt.pem'),
             'ca': path.join(certDataPath, 'ca.pem')
-        };
+        },
+        optionsWithFilePath = ['key', 'cert', 'ca', 'pfx'];
 
     if (opts) {
         options = Object.assign(options, opts);
     }
 
-    for (i in options) {
-        if (i !== 'requestCert' && i !== 'rejectUnauthorized' && i !== 'ciphers') {
-            options[i] = fs.readFileSync(options[i]);
-        }
-    }
+    optionsWithFilePath.forEach(function (option) {
+        if (!options[option]) { return; }
+
+        options[option] = fs.readFileSync(options[option]);
+    });
 
     server = https.createServer(options, function (req, res) {
         server.emit(req.url, req, res);
+    });
+
+    server.on('listening', function () {
+        server.port = this.address().port;
+        server.url = 'https://localhost:' + server.port;
     });
 
     enableServerDestroy(server);
@@ -179,6 +185,11 @@ function createRedirectServer () {
 function createHTTPServer() {
     var server = http.createServer(function (req, res) {
         server.emit(req.url, req, res);
+    });
+
+    server.on('listening', function () {
+        server.port = this.address().port;
+        server.url = 'http://localhost:' + server.port;
     });
 
     enableServerDestroy(server);
