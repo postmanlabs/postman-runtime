@@ -1,10 +1,17 @@
+1. [Introduction](#history)
+2. [Structure](#structure)
+    1. [Structure of the properties](#structure-of-the-properties)
+        1. [sessions and its use cases](#sessions)
+        2. [data and its use cases](#data)
+3. [Usage](#usage-and-verbose-mode)
+
 # History
 
 As the name suggests, the history object holds the entire life-cycle of the request sent and the response received as well as the low-level execution information which helps to debug the request execution.
 
 ## Structure
 
-The history object have the following top level properties:
+The history object has the following top-level properties:
 
 ```javascript
 {
@@ -37,7 +44,7 @@ The history object have the following top level properties:
     - **sessions** `<Object>` Holds low-level information of every socket connections made during the request.
     - **data** `<Array>` Request execution information for every request sent (including redirects).
 
-> Each request sent by runtime have its own unique history. In the above documentation every socket and every request sent means the redirection the initial request went through.
+> Each request sent by runtime have its own unique history. In the above documentation, every socket and every request sent means the redirection the initial request went through.
 
 ### Structure of the properties
 
@@ -46,7 +53,7 @@ The history object have the following top level properties:
 > These details are not enabled by default. Enable `verbose` requester option to get this information.
 
 - **sessions** `<Object>`
-    - *<UNIQUE-SESSION-ID>* `<String>` Every socket have a unique session ID which will be referred in the request `data`. Same socket can be reused for a [persistent connection](https://en.wikipedia.org/wiki/HTTP_persistent_connection).
+    - *<UNIQUE-SESSION-ID>* `<String>` Every socket have a unique session ID which will be referred in the request `data`. The same socket can be reused for a [persistent connection](https://en.wikipedia.org/wiki/HTTP_persistent_connection).
         - **addresses** `<Object>` Local and remote address information like IP, Port.
             - **local** `<Object>` Local address data.
                 - *address* `<String>` Local IP address. For example, `192.168.1.1`.
@@ -64,7 +71,7 @@ The history object have the following top level properties:
                 - *name* `<String>` Cipher name. For example `AES256-SHA`.
                 - *version* `<String>` Cipher version.
             - **protocol** `<String>` The negotiated SSL/TLS protocol version of the current connection.
-            - **ephemeralKeyInfo** `<Object>` Represents the type, name, and size of parameter of an ephemeral key exchange in [Perfect Forward Secrecy](https://en.wikipedia.org/wiki/Forward_secrecy) on a client connection.  It returns an empty object when the key exchange is not ephemeral.
+            - **ephemeralKeyInfo** `<Object>` Represents the type, name, and size of the parameter of an ephemeral key exchange in [Perfect Forward Secrecy](https://en.wikipedia.org/wiki/Forward_secrecy) on a client connection.  It returns an empty object when the key exchange is not ephemeral.
                 - *type*: `<String>` The type of ephemeral key exchange.
                 - *name*: `<String>` The ephemeral key name.
                 - *size*: `<Number>` The size of ephemeral key.
@@ -98,6 +105,8 @@ The history object have the following top level properties:
 - The peer's certificate validity. Using `peerCertificate.validFrom` and `peerCertificate.validTo`.
 
 #### data
+
+> This is an array because it holds information of every request sent in a redirect chain.
 
 - **data** `<Array>` The execution data/logs of every request sent (including redirects).
     - **request** `<Object>` The information of the request sent.
