@@ -63,14 +63,14 @@ describe('url', function () {
     describe('empty', function () {
         var testrun;
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: {
                         request: {}
                     }
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -85,7 +85,7 @@ describe('url', function () {
             expect(testrun.request.getCall(0)).to.have.deep.nested.property('args[0].message', emptyUrlErrorMessage);
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({

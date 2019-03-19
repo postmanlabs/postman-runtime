@@ -1550,7 +1550,7 @@ describe('Requester', function () {
                 runner = new runtime.Runner(),
                 fakeFileResolver = {
                     stat: function (src, cb) {
-                        cb(null, {isFile: function() { return true; }, mode: 33188});
+                        cb(null, {isFile: function () { return true; }, mode: 33188});
                     },
                     createReadStream: function () {
                         return 'fake-file-content';

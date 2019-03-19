@@ -43,7 +43,8 @@ describe('requester util', function () {
                 encoding: null,
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
-                time: undefined
+                time: undefined,
+                verbose: undefined
             });
         });
 
@@ -79,11 +80,12 @@ describe('requester util', function () {
                 encoding: null,
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
-                time: undefined
+                time: undefined,
+                verbose: undefined
             });
         });
 
-        describe('Should accept URL irrespective of the case', function() {
+        describe('Should accept URL irrespective of the case', function () {
             it('should accept URL in uppercase', function () {
                 var request = new sdk.Request({
                     url: 'HTTP://POSTMAN-ECHO.COM/POST',
@@ -211,7 +213,8 @@ describe('requester util', function () {
                 encoding: null,
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
-                time: undefined
+                time: undefined,
+                verbose: undefined
             });
         });
     });

@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 
-describe('Collection Variables', function() {
+describe('Collection Variables', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             globals: {
                 values: [
@@ -49,13 +49,13 @@ describe('Collection Variables', function() {
                     }
                 }
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have run the test script successfully', function() {
+    it('should have run the test script successfully', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'test.calledOnce': true
@@ -63,7 +63,7 @@ describe('Collection Variables', function() {
         expect(testrun.test.getCall(0).args[0]).to.be.null;
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({
@@ -72,13 +72,13 @@ describe('Collection Variables', function() {
         });
     });
 
-    it('should be resolved in request URL', function() {
+    it('should be resolved in request URL', function () {
         var url = testrun.request.getCall(0).args[3].url.toString();
 
         expect(url).to.equal('https://postman-echo.com/basic-auth');
     });
 
-    it('should be resolved in request auth', function() {
+    it('should be resolved in request auth', function () {
         var request = testrun.response.getCall(0).args[3],
             response = testrun.response.getCall(0).args[2],
             auth = request.auth.parameters().toObject();
@@ -90,7 +90,7 @@ describe('Collection Variables', function() {
         expect(response).to.have.property('code', 200);
     });
 
-    it('should be resolved in test and prerequest scripts', function() {
+    it('should be resolved in test and prerequest scripts', function () {
         var testConsoleArgs = testrun.console.getCall(1).args.slice(2),
             prConsoleArgs = testrun.console.getCall(0).args.slice(2),
             variables = {

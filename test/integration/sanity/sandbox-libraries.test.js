@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 
-describe('Sandbox libraries', function() {
+describe('Sandbox libraries', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             collection: {
                 item: [{
@@ -196,13 +196,13 @@ describe('Sandbox libraries', function() {
                     request: {url: 'https://postman-echo.com/get?a={{name{{i}}}}', method: 'GET'}
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have run the test script successfully', function() {
+    it('should have run the test script successfully', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'test.callCount': 11,
@@ -234,7 +234,7 @@ describe('Sandbox libraries', function() {
             {error: null, index: 7, passed: true, skipped: false, name: 'Correct envVar2'}
         ]);
 
-        [2, 3, 4].forEach(function(index) { // generates a range [2, 4], and checks the tests on those indices
+        [2, 3, 4].forEach(function (index) { // generates a range [2, 4], and checks the tests on those indices
             expect(testrun.test.getCall(index).args[0]).to.be.null;
             expect(testrun.assertion.getCall(index).args[1]).to.eql([
                 {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
@@ -269,7 +269,7 @@ describe('Sandbox libraries', function() {
         ]);
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({

@@ -1,11 +1,11 @@
 var expect = require('chai').expect;
 
-describe('requests from sandbox', function() {
+describe('requests from sandbox', function () {
     describe('single .sendRequest', function () {
         var testrun,
             sandboxRequestUrl = 'postman-echo.com/get?sandbox=true';
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: {
@@ -29,7 +29,7 @@ describe('requests from sandbox', function() {
                         request: 'https://postman-echo.com/get'
                     }
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -102,7 +102,7 @@ describe('requests from sandbox', function() {
             });
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({
@@ -119,7 +119,7 @@ describe('requests from sandbox', function() {
             testname1 = 'sending-1',
             testname2 = 'sending-2';
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: {
@@ -155,7 +155,7 @@ describe('requests from sandbox', function() {
                         request: 'https://postman-echo.com/get'
                     }
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -264,7 +264,7 @@ describe('requests from sandbox', function() {
             });
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({
@@ -277,7 +277,7 @@ describe('requests from sandbox', function() {
     describe('with invalid urls', function () {
         var testrun;
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: {
@@ -298,7 +298,7 @@ describe('requests from sandbox', function() {
                         request: 'https://postman-echo.com/get'
                     }
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -345,7 +345,7 @@ describe('requests from sandbox', function() {
             });
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({
@@ -359,7 +359,7 @@ describe('requests from sandbox', function() {
         var testrun,
             sandboxRequestUrl = 'somenonexistentweirddomain.com/get?sandbox=true';
 
-        before(function(done) {
+        before(function (done) {
             this.run({
                 collection: {
                     item: {
@@ -383,7 +383,7 @@ describe('requests from sandbox', function() {
                         request: 'https://postman-echo.com/get'
                     }
                 }
-            }, function(err, results) {
+            }, function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -457,7 +457,7 @@ describe('requests from sandbox', function() {
             });
         });
 
-        it('should have completed the run', function() {
+        it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
             expect(testrun).to.nested.include({
@@ -503,7 +503,7 @@ describe('requests from sandbox', function() {
                             }
                         }
                     }
-                }, function(err, results) {
+                }, function (err, results) {
                     testrun = results;
                     done(err);
                 });
@@ -565,7 +565,7 @@ describe('requests from sandbox', function() {
                             }
                         }
                     }
-                }, function(err, results) {
+                }, function (err, results) {
                     testrun = results;
                     done(err);
                 });
