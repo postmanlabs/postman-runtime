@@ -2,84 +2,151 @@
 
 As the name suggests, the history object holds the entire life-cycle of the request sent and the response received as well as the low-level execution information which helps to debug the request execution.
 
-### Structure
+## Structure
 
-The structure of the history object in its full shape looks like this:
+The history object have the following top level properties:
 
-```yaml
-execution: Object - The execution history of a request
-  verbose: Boolean - Is verbose level information available or not
-  data: Array - The execution data/logs of every request sent (including redirects)
-  - request: Object - The first request sent in a redirect chain (initial request)
-      method: String - Request method
-      href: String - Request URL
-      proxy: Object - Request Proxy details
-        href: String - Proxy URL
-      httpVersion: String - Request HTTP Version
-    response: Object - The response of the first request
-      statusCode: Number - Response status code
-      httpVersion: String - Response HTTP Version
-    session: Object - Session used in request (referred in `sessions`)
-      id: String - Unique session ID
-      reused: Boolean - Is session reused (Keep-Alive connection)
-    timings: Object - Request-Response events timeline
-      start: Number - Timestamp of the start of the request (in Runtime)
-      requestStart: Number - Timestamp of the start of the request (in Postman Request)
-      offset: Object - Events offsets in millisecond resolution relative to `start`
-        request: Number - Timestamp of the start of the request
-        socket: Number - Timestamp when the socket is assigned to the request
-        lookup: Number - Timestamp when the DNS has been resolved
-        connect: Number - Timestamp when the server acknowledges the TCP connection
-        secureConnect: Number - Timestamp when secure handshaking process is completed
-        response: Number - Timestamp when the first bytes are received from the server
-        end: Number - Timestamp when the last bytes of the response is received
-        done: Number - Timestamp when the response is received at the client (Runtime)
-  - request: Object - The final request sent (redirect request)
-      // similar to the first request
-  sessions: Object - Different socket connections made during the request
-    <UNIQUE-SESSION-ID>: Object - Connection session data
-      addresses: Object - Local and remote address data
-        local: Object - Local address data
-          address: String - Local IP address
-          family: String - Local IP family, `IPv4/IPv6`
-          port: Number - Local port
-        remote: Object - Remote address data
-          address: String - Remote IP address
-          family: String - Remote IP family, `IPv4/IPv6`
-          port: Number - Remote port
-      tls: Object - TLS related information
-        reused: Boolean - Is this TLS session reused
-        authorized: Boolean - Is `peerCertificate` was signed by one of the trusted CAs
-        authorizationError: String - Reason why the `peerCertificate` was not been verified
-        cipher: Object - TLS cipher information
-          name: String - Cipher name
-          version: String - Cipher version
-        protocol: String - The negotiated SSL/TLS protocol version
-        ephemeralKeyInfo: Object - Ephemeral key exchange data
-          type: String - The type of ephemeral key exchange
-          name: String - The ephemeral key name
-          size: Number - The size of ephemeral key
-        peerCertificate: Object - The peer's certificate data
-          subject: Object - The certificate subject
-            country: String
-            stateOrProvince: String
-            locality: String
-            organization: String
-            organizationalUnit: String
-            commonName: String
-            alternativeNames: String
-          issuer: Object - The certificate issuer
-            country: String
-            stateOrProvince: String
-            locality: String
-            organization: String
-            organizationalUnit: String
-            commonName: String
-          validFrom: String - The date-time the certificate is valid from
-          validTo: String - The date-time the certificate is valid to
-          fingerprint: String - The SHA-1 digest of the DER encoded certificate
-          serialNumber: String - The certificate serial number, as a hex string
+```javascript
+{
+  "execution": {
+    "verbose": true
+    "sessions": { .. }
+    "data": [ .. ]
+  }
+}
 ```
+
+<details><summary>Changelog</summary>
+| Version | Changes           |
+|---------|-------------------|
+| v7.11.0 | Added in: v7.11.0 |
+</details>
+
+- **execution** `<Object>`
+    - **verbose** `<Boolean>` Flag indicating whether the low-level information is available or not.
+    - **sessions** `<Object>` Holds low-level information of every socket connections made during the request.
+    - **data** `<Array>` Request execution information for every request sent (including redirects).
+
+> Each request sent by runtime have its own unique history. In the above documentation every socket and every request sent means the redirection the initial request went through.
+
+### Structure of the properties
+
+#### sessions
+
+> These details are not enabled by default. Enable `verbose` requester option to get this information.
+
+- **sessions** `<Object>`
+    - *<UNIQUE-SESSION-ID>* `<String>` Every socket have a unique session ID which will be referred in the request `data`. Same socket can be reused for a [persistent connection](https://en.wikipedia.org/wiki/HTTP_persistent_connection).
+        - **addresses** `<Object>` Local and remote address information like IP, Port.
+            - **local** `<Object>` Local address data.
+                - *address* `<String>` Local IP address. For example, `192.168.1.1`.
+                - *family* `<String>` Local IP family, `IPv4` or `IPv6`.
+                - *port* `<Number>` Local port. For example, `8080`.
+            - **remote** `<Object>` Remote address data
+                - *address* `<String>` Remote IP address.
+                - *family* `<String>` Remote IP family.
+                - *port* `<Number>` Remote port.
+        - **tls** `<Object>` SSL/TLS related information.
+            - **reused** `<Boolean>` Flag indicating whether the TLS session reused.
+            - **authorized** `<Boolean>` Flag indicating whether the `peerCertificate` was signed by one of the trusted CAs.
+            - **authorizationError** `<String>` Reason why the `peerCertificate` was not been verified.
+            - **cipher** `<Object>` TLS cipher information.
+                - *name* `<String>` Cipher name. For example `AES256-SHA`.
+                - *version* `<String>` Cipher version.
+            - **protocol** `<String>` The negotiated SSL/TLS protocol version of the current connection.
+            - **ephemeralKeyInfo** `<Object>` Represents the type, name, and size of parameter of an ephemeral key exchange in [Perfect Forward Secrecy](https://en.wikipedia.org/wiki/Forward_secrecy) on a client connection.  It returns an empty object when the key exchange is not ephemeral.
+                - *type*: `<String>` The type of ephemeral key exchange.
+                - *name*: `<String>` The ephemeral key name.
+                - *size*: `<Number>` The size of ephemeral key.
+            - **peerCertificate** `<Object>` The peer's certificate information.
+                - **subject**: `<Object>` The certificate subject data.
+                    - *country* `<String>`
+                    - *stateOrProvince* `<String>`
+                    - *locality* `<String>`
+                    - *organization* `<String>`
+                    - *organizationalUnit* `<String>`
+                    - *commonName* `<String>`
+                    - *alternativeNames* `<String>`
+                - **issuer**: `<Object>` The certificate issuer data.
+                    - *country* `<String>`
+                    - *stateOrProvince* `<String>`
+                    - *locality* `<String>`
+                    - *organization* `<String>`
+                    - *organizationalUnit* `<String>`
+                    - *commonName* `<String>`
+                - **validFrom** `<String>` The date-time the certificate is valid from.
+                - **validTo** `<String>` The date-time the certificate is valid to.
+                - **fingerprint** `<String>` The SHA-1 digest of the DER encoded certificate. It is returned as a : separated hexadecimal string.
+                - **serialNumber** `<String>` The certificate serial number, as a hex string. For example, `B9B0D332A1AA5635`.
+
+**Use cases**:
+- The remote IP address of the request. Using `addresses.remote`.
+- The reason why the peer's certificate was not been verified. Using `tls.authorizationError`.
+- The negotiated TLS cipher of the connection. Using `tls.cipher.name`.
+- The negotiated TLS protocol version of the connection. Using `tls.protocol`.
+- The peer's certificate information. Using `peerCertificate`.
+- The peer's certificate validity. Using `peerCertificate.validFrom` and `peerCertificate.validTo`.
+
+#### data
+
+- **data** `<Array>` The execution data/logs of every request sent (including redirects).
+    - **request** `<Object>` The information of the request sent.
+        - *method* `<String>` Request method. For example, `GET`, `POST`.
+        - *href* `<String>` Request URL.
+        - *proxy* `<Object>` Request Proxy details if enabled.
+            - *href* `<String>` Proxy URL.
+        - *httpVersion* `<String>` Request HTTP Version. For example, `1.1`
+    - **response** `<Object>` The response of the request.
+      - *statusCode* `<Number>` Response status code.
+      - *httpVersion* `<String>` Response HTTP Version.
+    - **session** `<Object>` Session used by this request connection (referred in `sessions`).
+      - *id* `<String>` Unique session ID (UUID).
+      - *reused* `<Boolean>` Is session reused (persistent connection connection).
+    - **timings** `<Object>` Request-Response events timeline.
+      - *start* `<Number>` Timestamp of the start of the request (in Runtime).
+      - *requestStart* `<Number>` Timestamp of the start of the request (in Postman Request).
+      - *offset* `<Object>` Events offsets in millisecond resolution relative to `start`.
+        - *request* `<Number>` Timestamp of the start of the request.
+        - *socket* `<Number>` Timestamp when the socket is assigned to the request.
+        - *lookup* `<Number>` Timestamp when the DNS has been resolved.
+        - *connect* `<Number>` Timestamp when the server acknowledges the TCP connection.
+        - *secureConnect* `<Number>` Timestamp when secure handshaking process is completed.
+        - *response* `<Number>` Timestamp when the first bytes are received from the server.
+        - *end* `<Number>` Timestamp when the last bytes of the response is received.
+        - *done* `<Number>` Timestamp when the response is received at the client (Runtime).
+
+**Use cases**:
+- The total number of redirects a request went through and detailed information about every request. Using `data[..]`.
+- The connection session information. Using `session`.
+- The total response time. Using `timings.offset.end`.
+- Calculating the request timing phases.
+<details><summary>Example of timing phases</summary>
+<p>
+
+**Usage**:
+```javascript
+var Response = require('postman-collection').Response,
+    executionData = history.execution.data[0];
+
+Response.timingPhases(executionData.timings);
+```
+
+**Timing Phases**:
+```javascript
+{
+    prepare: Number,         // duration of request preparation
+    wait: Number,            // duration of socket initialization
+    dns: Number,             // duration of DNS lookup
+    tcp: Number,             // duration of TCP connection
+    secureHandshake: Number, // duration of secure handshake
+    firstByte: Number,       // duration of HTTP server response
+    download: Number,        // duration of HTTP download
+    process: Number,         // duration of response processing
+    total: Number            // duration entire HTTP round-trip
+}
+```
+</p>
+</details>
 
 ### Usage and Verbose Mode
 
