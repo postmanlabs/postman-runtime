@@ -1,3 +1,5 @@
+## Table of contents
+
 1. [Introduction](#history)
 2. [Structure](#structure)
     1. [Structure of the properties](#structure-of-the-properties)
