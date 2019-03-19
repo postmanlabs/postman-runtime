@@ -9,6 +9,15 @@ The history object have the following top level properties:
 ```javascript
 {
   "execution": {
+    /*
+    * Following properties are not available since they are passed via arguments
+    * in request and response callback but eventually the history object will
+    * include these as well:
+    *
+    * "request": <PostmanRequest>,
+    * "response": <PostmanResponse>,
+    * "cookies": <Object>
+    */
     "verbose": true
     "sessions": { .. }
     "data": [ .. ]
@@ -17,6 +26,7 @@ The history object have the following top level properties:
 ```
 
 <details><summary>Changelog</summary>
+
 | Version | Changes           |
 |---------|-------------------|
 | v7.11.0 | Added in: v7.11.0 |
