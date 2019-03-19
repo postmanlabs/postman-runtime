@@ -912,7 +912,8 @@ describe('Auth Handler:', function () {
             var headers,
                 rawReq = _.defaults(rawRequests.awsv4, {
                     body: {
-                        foo: 'bar'
+                        mode: 'raw',
+                        raw: '\'foo\': \'bar\''
                     }
                 }),
                 request = new Request(_.omit(rawReq, ['header.0', 'auth.awsv4.sessionToken', 'region'])),
@@ -931,9 +932,6 @@ describe('Auth Handler:', function () {
             });
 
             expect(headers).to.include.keys(['authorization', 'x-amz-date']);
-            expect(headers).to.have.property('content-type', request.getHeaders({
-                ignoreCase: true
-            })['content-type']);
             expect(request.auth.parameters().toObject()).to.eql({
                 auto: true,
                 id: 'awsSigV4',
@@ -966,9 +964,6 @@ describe('Auth Handler:', function () {
             });
 
             expect(headers).to.include.keys(['authorization', 'x-amz-date']);
-            expect(headers).to.have.property('content-type', request.getHeaders({
-                ignoreCase: true
-            })['content-type']);
             expect(request.auth.parameters().toObject()).to.eql({
                 auto: true,
                 id: 'awsSigV4',

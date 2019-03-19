@@ -1,9 +1,9 @@
 var expect = require('chai').expect;
 
-describe('response size', function() {
+describe('response size', function () {
     var testrun;
 
-    before(function(done) {
+    before(function (done) {
         this.run({
             collection: {
                 item: [{
@@ -12,13 +12,13 @@ describe('response size', function() {
                     request: 'https://google.com/'
                 }]
             }
-        }, function(err, results) {
+        }, function (err, results) {
             testrun = results;
             done(err);
         });
     });
 
-    it('should have extracted response size correctly', function() {
+    it('should have extracted response size correctly', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
             'request.calledTwice': true
@@ -45,7 +45,7 @@ describe('response size', function() {
         });
     });
 
-    it('should have completed the run', function() {
+    it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
         expect(testrun).to.nested.include({

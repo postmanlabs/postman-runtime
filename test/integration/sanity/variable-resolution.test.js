@@ -14,7 +14,7 @@ describe('variable resolution', function () {
      * @param {Number} n
      * @returns {String}
      */
-    function getPolyChainedVariable(n) {
+    function getPolyChainedVariable (n) {
         var i,
             str = '';
 
@@ -38,7 +38,7 @@ describe('variable resolution', function () {
      * @param {Number} e - Variables ending number (inclusive)
      * @returns {Object[]}
      */
-    function getVariables(s, e) {
+    function getVariables (s, e) {
         var i,
             variables = [];
 

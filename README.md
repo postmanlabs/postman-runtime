@@ -104,6 +104,9 @@ runner.run(collection, {
         // Enable or disable detailed request-response timings (only supported on Node, ignored in the browser)
         timings: true,
 
+        // Enable or disable verbose level history (only supported on Node, ignored in the browser)
+        verbose: false,
+
         // Implicitly add `Cache-Control` system header in request (only supported on Node, ignored in the browser)
         implicitCacheControl: true,
 
@@ -290,7 +293,7 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called just after sending a request, may include request replays
-        request: function (err, cursor, response, request, item, cookies) {
+        request: function (err, cursor, response, request, item, cookies, history) {
             // err, cursor: Same as arguments for "start"
             // item: sdk.Item
 
@@ -299,7 +302,7 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called once with response for each request in a collection
-        response: function (err, cursor, response, request, item, cookies) {
+        response: function (err, cursor, response, request, item, cookies, history) {
             // err, cursor: Same as arguments for "start"
             // item: sdk.Item
 

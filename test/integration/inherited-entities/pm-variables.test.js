@@ -280,7 +280,7 @@ describe('pm.variables', function () {
             var events = testRun.test.getCall(0).args[2].concat(testRun.prerequest.getCall(0).args[2]);
 
             expect(events).to.have.lengthOf(4);
-            events.forEach(function(event) {
+            events.forEach(function (event) {
                 expect(event).to.deep.nested.include({
                     'result.data': {
                         'key-4': 'data-value-4'
@@ -301,7 +301,7 @@ describe('pm.variables', function () {
             });
         });
 
-        it('should be resolved in request URL', function() {
+        it('should be resolved in request URL', function () {
             var url1 = testRun.request.getCall(0).args[3].url.toString(),
                 url2 = testRun.request.getCall(1).args[3].url.toString(),
                 expectedToken1 = 'modified-1:modified-2:modified-2:data-value-4',
@@ -311,7 +311,7 @@ describe('pm.variables', function () {
             expect(url2).to.equal('https://postman-echo.com/get?param=' + expectedToken2);
         });
 
-        it('should be resolved in request auth', function() {
+        it('should be resolved in request auth', function () {
             var response1 = testRun.response.getCall(0).args[2],
                 response2 = testRun.response.getCall(1).args[2],
                 expectedToken1 = 'modified-1:modified-2:modified-2:data-value-4',
