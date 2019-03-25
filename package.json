@@ -70,7 +70,7 @@
     "shelljs": "0.8.3",
     "yankee": "1.0.8",
     "sinon": "7.3.0",
-    "tmp": "0.0.33"
+    "tmp": "0.1.0"
   },
   "browser": {
     "./lib/requester/request-wrapper.js": "./lib/requester/browser/request.js",
