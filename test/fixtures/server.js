@@ -3,6 +3,7 @@ const fs = require('fs'),
     path = require('path'),
     http = require('http'),
     https = require('https'),
+    GraphQL = require('graphql'),
     enableServerDestroy = require('server-destroy');
 
 /**
@@ -256,10 +257,85 @@ function createProxyServer (options) {
     return server;
 }
 
+function createGraphQLServer (options) {
+    !options && (options = {});
+
+    if (options.schema) {
+        options.schema = GraphQL.buildSchema(options.schema);
+    }
+
+    var server = createHTTPServer();
+
+    function badRequest (res, request, error) {
+        res.writeHead(400, {
+            'content-type': 'application/json'
+        });
+        res.end(JSON.stringify({
+            request: request,
+            error: error
+        }));
+    }
+
+    function responseHandler (req, res, body) {
+        var stringBody = body && body.toString && body.toString(),
+            request = {
+                headers: req.headers,
+                body: stringBody
+            },
+            jsonBody;
+
+        try {
+            jsonBody = JSON.parse(body.toString());
+        }
+        catch (e) {
+            return badRequest(res, request, new Error('Invalid JSON body'));
+        }
+
+        GraphQL.graphql(
+            options.schema,
+            jsonBody.query,
+            options.root,
+            options.context,
+            jsonBody.variables,
+            jsonBody.operationName)
+            .then(function (data) {
+                if (data.errors) {
+                    return badRequest(res, request, data.errors);
+                }
+
+                res.writeHead(200, {
+                    'content-type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    request: request,
+                    result: data
+                }));
+            })
+            .catch(function (err) {
+                badRequest(res, request, err);
+            });
+    }
+
+    server.on('request', function (req, res) {
+        req.on('data', function (chunk) {
+            !this.chunks && (this.chunks = []);
+
+            this.chunks.push(chunk);
+        });
+
+        req.on('end', function () {
+            responseHandler(req, res, this.chunks && Buffer.concat(this.chunks));
+        });
+    });
+
+    return server;
+}
+
 module.exports = {
     createSSLServer,
     createHTTPServer,
     createProxyServer,
     createRawEchoServer,
+    createGraphQLServer,
     createRedirectServer
 };
