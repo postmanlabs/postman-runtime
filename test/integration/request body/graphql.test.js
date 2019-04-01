@@ -1,7 +1,6 @@
 var expect = require('chai').expect,
     server = require('../../fixtures/server');
 
-// @todo test with GraphQL server and add more tests
 describe('Request Body Mode: graphql', function () {
     var testrun,
         graphqlServer = server.createGraphQLServer({
