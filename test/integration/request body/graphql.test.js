@@ -241,9 +241,11 @@ describe('Request Body Mode: graphql', function () {
                             body: {
                                 mode: 'graphql',
                                 graphql: {
-                                    query: 'query Square($ten: Int!) { square(n: $ten) }' +
-                                        '\\n query Test { hello }',
-                                    variables: JSON.stringify({ten: 2})
+                                    query: `
+                                        query Square($ten: Int!) { square(n: $ten) }
+                                        query Test { hello }
+                                    `,
+                                    variables: JSON.stringify({ten: 2}) // stringified JSON
                                 }
                             }
                         }
@@ -276,6 +278,8 @@ describe('Request Body Mode: graphql', function () {
             expect(responseBody.request.headers).to.have.property('content-type', 'application/json');
 
             expect(responseBody.error).to.be.an('array').that.is.not.empty;
+            expect(responseBody.error[0]).to.have.property('message',
+                'Must provide operation name if query contains multiple operations.');
         });
     });
 });

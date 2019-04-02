@@ -288,7 +288,7 @@ function createGraphQLServer (options) {
             jsonBody = JSON.parse(body.toString());
         }
         catch (e) {
-            return badRequest(res, request, new Error('Invalid JSON body'));
+            return badRequest(res, request, 'Invalid JSON body');
         }
 
         GraphQL.graphql(
