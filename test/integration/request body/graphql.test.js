@@ -171,7 +171,7 @@ describe('Request Body Mode: graphql', function () {
             expect(responseBody.request).to.have.property('headers');
             expect(responseBody.request.headers).to.have.property('content-type', 'application/json');
 
-            expect(responseBody.request).to.have.property('body', '{"query":""}');
+            expect(responseBody.request).to.have.property('body', '{}');
             expect(responseBody.error).to.be.an('array').that.is.not.empty;
         });
     });
