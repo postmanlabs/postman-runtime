@@ -45,7 +45,8 @@ describe('requester util', function () {
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined,
-                verbose: undefined
+                verbose: undefined,
+                disablePostmanUrlEncoder: true
             });
         });
 
@@ -82,7 +83,8 @@ describe('requester util', function () {
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined,
-                verbose: undefined
+                verbose: undefined,
+                disablePostmanUrlEncoder: true
             });
         });
 
@@ -216,7 +218,8 @@ describe('requester util', function () {
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined,
-                verbose: undefined
+                verbose: undefined,
+                disablePostmanUrlEncoder: true
             });
         });
     });
