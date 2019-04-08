@@ -34,6 +34,12 @@ describe('UTF-8 hostname', function () {
         });
     });
 
+    it('should have the Host header with correct value in sent request', function () {
+        var request = testrun.request.getCall(0).args[3];
+
+        expect(request.headers.get('Host')).to.equal('xn--nstq34i.com');
+    });
+
     it('should have completed the run', function () {
         expect(testrun).to.be.ok;
         expect(testrun.done.getCall(0).args[0]).to.be.null;
