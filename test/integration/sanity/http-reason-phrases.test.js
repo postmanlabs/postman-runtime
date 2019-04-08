@@ -12,7 +12,8 @@ describe('http reasons', function () {
         httpServer = server.createHTTPServer();
 
         httpServer.on('/', function (req, res) {
-            res.end(res.writeHead(400, 'Some Custom Reason'));
+            res.writeHead(400, 'Some Custom Reason');
+            res.end();
         });
 
         httpServer.listen(0, 'localhost', function () {
