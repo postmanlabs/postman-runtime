@@ -1,3 +1,14 @@
+master:
+  new features:
+    - GH-800 Added support for GraphQL request body
+    - GH-799 Added support for payload hash in Hawk authentication
+  chores:
+    - GH-804 Take control of URL encoding from `postman-request`
+    - >-
+      Fixed URL encoding issues while calculating payload hash in multiple
+      authorizer modules
+    - Updated dependencies
+
 7.11.0:
   date: 2019-03-19
   new features:
