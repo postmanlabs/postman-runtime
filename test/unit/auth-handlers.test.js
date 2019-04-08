@@ -1022,6 +1022,25 @@ describe('Auth Handler:', function () {
             expect(_.parseInt(_.get(tsMatch, 1))).to.be.a('number');
         });
 
+        it('should add the hash to the Authorized request if request contains body', function () {
+            var request = new Request(rawRequests.hawkWithBody),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.getHeaders({
+                ignoreCase: true
+            });
+
+            // Ensure that the required headers have been added.
+            expect(headers).to.have.property('authorization');
+
+            // Ensure that the body hash is included in Authorization header
+            expect(headers.authorization).to.include('hash');
+        });
+
         it('should bail out the original request if auth key is missing', function () {
             var request = new Request(_.omit(rawRequests.hawk, 'auth.hawk.authKey')),
                 auth = request.auth,
