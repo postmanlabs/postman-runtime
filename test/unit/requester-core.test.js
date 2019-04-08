@@ -7,19 +7,20 @@ describe('requester util', function () {
     describe('.getRequestOptions', function () {
         it('should use http as the default protocol', function () {
             var request = new sdk.Request({
-                url: 'postman-echo.com/post',
-                method: 'POST',
-                header: [{
-                    key: 'alpha',
-                    value: 'foo'
-                }],
-                body: {
-                    mode: 'raw',
-                    raw: '{"alpha": "foo"}'
-                }
-            });
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    body: {
+                        mode: 'raw',
+                        raw: '{"alpha": "foo"}'
+                    }
+                }),
+                requestOptions = requesterCore.getRequestOptions(request, {});
 
-            expect(requesterCore.getRequestOptions(request, {})).to.eql({
+            expect(requestOptions).to.deep.include({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
@@ -28,7 +29,6 @@ describe('requester util', function () {
                     Host: 'postman-echo.com'
                 },
                 body: '{"alpha": "foo"}',
-                url: 'http://postman-echo.com/post',
                 method: 'POST',
                 jar: true,
                 timeout: undefined,
@@ -44,28 +44,45 @@ describe('requester util', function () {
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined,
-                verbose: undefined
+                verbose: undefined,
+                disableUrlEncoding: true
+            });
+
+            expect(requestOptions).to.have.ownProperty('url');
+            expect(requestOptions.url).to.nested.include({
+                protocol: 'http:',
+                slashes: true,
+                auth: null,
+                host: 'postman-echo.com',
+                port: null,
+                hostname: 'postman-echo.com',
+                hash: null,
+                search: null,
+                query: null,
+                pathname: '/post',
+                path: '/post',
+                href: 'http://postman-echo.com/post'
             });
         });
 
         it('should use https where applicable', function () {
             var request = new sdk.Request({
-                url: 'https://postman-echo.com',
-                method: 'GET',
-                header: [{
-                    key: 'alpha',
-                    value: 'foo'
-                }]
-            });
+                    url: 'https://postman-echo.com',
+                    method: 'GET',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }]
+                }),
+                requestOptions = requesterCore.getRequestOptions(request, {});
 
-            expect(requesterCore.getRequestOptions(request, {})).to.eql({
+            expect(requestOptions).to.deep.include({
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     Accept: '*/*',
                     Host: 'postman-echo.com'
                 },
-                url: 'https://postman-echo.com',
                 method: 'GET',
                 jar: true,
                 timeout: undefined,
@@ -81,7 +98,24 @@ describe('requester util', function () {
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined,
-                verbose: undefined
+                verbose: undefined,
+                disableUrlEncoding: true
+            });
+
+            expect(requestOptions).to.have.ownProperty('url');
+            expect(requestOptions.url).to.nested.include({
+                protocol: 'https:',
+                slashes: true,
+                auth: null,
+                host: 'postman-echo.com',
+                port: null,
+                hostname: 'postman-echo.com',
+                hash: null,
+                search: null,
+                query: null,
+                pathname: '/',
+                path: '/',
+                href: 'https://postman-echo.com/'
             });
         });
 
@@ -92,8 +126,8 @@ describe('requester util', function () {
                     method: 'POST'
                 });
 
-                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
-                    'HTTP://POSTMAN-ECHO.COM/POST');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.nested.property('url.href',
+                    'http://postman-echo.com/POST');
             });
 
             it('should accept URL in lowercase', function () {
@@ -102,7 +136,7 @@ describe('requester util', function () {
                     method: 'POST'
                 });
 
-                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
+                expect(requesterCore.getRequestOptions(request, {})).to.have.nested.property('url.href',
                     'http://postman-echo.com/post');
             });
 
@@ -112,8 +146,8 @@ describe('requester util', function () {
                     method: 'POST'
                 });
 
-                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
-                    'Http://postman-echo.com/post');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.nested.property('url.href',
+                    'http://postman-echo.com/post');
             });
 
             it('should accept URL in mixed case : HtTp:// ..', function () {
@@ -122,8 +156,8 @@ describe('requester util', function () {
                     method: 'POST'
                 });
 
-                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
-                    'HtTp://postman-echo.com/post');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.nested.property('url.href',
+                    'http://postman-echo.com/post');
             });
 
             it('should accept secure http url in mixed case : HttPs:// ..', function () {
@@ -132,8 +166,8 @@ describe('requester util', function () {
                     method: 'GET'
                 });
 
-                expect(requesterCore.getRequestOptions(request, {})).to.have.property('url',
-                    'HttPs://postman-echo.com');
+                expect(requesterCore.getRequestOptions(request, {})).to.have.nested.property('url.href',
+                    'https://postman-echo.com/');
             });
         });
 
@@ -190,15 +224,15 @@ describe('requester util', function () {
                     followOriginalHttpMethod: true,
                     maxRedirects: 15,
                     removeRefererHeaderOnRedirect: true
-                };
+                },
+                requestOptions = requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior);
 
-            expect(requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior)).to.eql({
+            expect(requestOptions).to.deep.include({
                 headers: {
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     Accept: '*/*',
                     Host: ''
                 },
-                url: 'http://',
                 method: 'GET',
                 jar: true,
                 timeout: undefined,
@@ -214,7 +248,24 @@ describe('requester util', function () {
                 extraCA: undefined,
                 agentOptions: {keepAlive: undefined},
                 time: undefined,
-                verbose: undefined
+                verbose: undefined,
+                disableUrlEncoding: true
+            });
+
+            expect(requestOptions).to.have.ownProperty('url');
+            expect(requestOptions.url).to.nested.include({
+                protocol: 'http:',
+                slashes: true,
+                auth: null,
+                host: '',
+                port: null,
+                hostname: '',
+                hash: null,
+                search: null,
+                query: null,
+                pathname: null,
+                path: null,
+                href: 'http://'
             });
         });
     });
