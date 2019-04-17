@@ -70,7 +70,7 @@
     "recursive-readdir": "2.2.2",
     "server-destroy": "1.0.1",
     "shelljs": "0.8.3",
-    "sinon": "7.3.1",
+    "sinon": "7.3.2",
     "tmp": "0.1.0",
     "yankee": "1.0.8"
   },
