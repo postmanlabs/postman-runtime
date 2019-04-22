@@ -28,6 +28,19 @@ describe('file upload in request body', function () {
                             url: 'https://postman-echo.com/post',
                             method: 'POST',
                             body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'file',
+                                    src: ['test/fixtures/upload-file.json', 'test/fixtures/upload-second-file.json'],
+                                    type: 'file'
+                                }]
+                            }
+                        }
+                    }, {
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
                                 mode: 'file',
                                 file: {src: 'test/fixtures/upload-file.json'}
                             }
@@ -45,10 +58,10 @@ describe('file upload in request body', function () {
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledThrice(testrun.request);
         });
 
-        it('should upload the files in formdata mode correctly', function () {
-            sinon.assert.calledTwice(testrun.request);
+        it('should upload the single file in formdata mode correctly', function () {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             var resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
@@ -60,10 +73,24 @@ describe('file upload in request body', function () {
             expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
         });
 
-        it('should upload the files in binary mode correctly', function () {
+        it('should upload the multiple files in formdata mode correctly', function () {
             sinon.assert.calledWith(testrun.request.getCall(1), null);
 
             var resp = JSON.parse(testrun.response.getCall(1).args[2].stream.toString());
+
+            expect(resp.files).to.have.property('upload-file.json');
+            expect(resp.files).to.have.property('upload-second-file.json');
+
+            expect(resp).to.nested.include({
+                'headers.content-length': '457'
+            });
+            expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
+        });
+
+        it('should upload the files in binary mode correctly', function () {
+            sinon.assert.calledWith(testrun.request.getCall(2), null);
+
+            var resp = JSON.parse(testrun.response.getCall(2).args[2].stream.toString());
 
             expect(resp).to.have.property('data', '{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
             expect(resp).to.nested.include({
