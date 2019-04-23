@@ -83,4 +83,69 @@ describe('sandbox library - pm api', function () {
             }]);
         });
     });
+
+    describe('sendRequest', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: 'https://postman-echo.com/get',
+                        event: [{
+                            listen: 'test',
+                            script: {
+                                type: 'text/javascript',
+                                exec: `
+                                pm.sendRequest('https://postman-echo.com/cookies/set?foo=bar', (err, res, history) => {
+                                    var CookieList = require('postman-collection').CookieList;
+                                    pm.test("History object in pm.sendRequest", function () {
+                                        pm.expect(history).to.be.ok;
+                                        pm.expect(history).to.be.an('object');
+                                        pm.expect(history).to.have.all.keys(['cookies']);
+                                        pm.expect(CookieList.isCookieList(history.cookies)).to.be.true;
+                                        pm.expect(history.cookies.count()).to.equal(2);
+                                        pm.expect(history.cookies.get('foo')).to.equal('bar');
+                                    });
+                                });
+                                `
+                            }
+                        }]
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledTwice(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should run the test script successfully', function () {
+            sinon.assert.calledOnce(testrun.script);
+            sinon.assert.calledWith(testrun.script.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.test);
+            sinon.assert.calledWith(testrun.script.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.assertion);
+
+            expect(testrun.assertion.getCall(0).args[1]).to.eql([{
+                error: null,
+                index: 0,
+                passed: true,
+                skipped: false,
+                name: 'History object test'
+            }]);
+        });
+    });
 });
