@@ -102,7 +102,7 @@ describe('sandbox library - pm api', function () {
                                         pm.expect(history).to.be.an('object');
                                         pm.expect(history).to.have.all.keys(['cookies']);
                                         pm.expect(CookieList.isCookieList(history.cookies)).to.be.true;
-                                        pm.expect(history.cookies.count()).to.equal(2);
+                                        pm.expect(history.cookies.count()).to.be.at.least(1);;
                                         pm.expect(history.cookies.get('foo')).to.equal('bar');
                                     });
                                 });
@@ -144,7 +144,7 @@ describe('sandbox library - pm api', function () {
                 index: 0,
                 passed: true,
                 skipped: false,
-                name: 'History object test'
+                name: 'History object in pm.sendRequest'
             }]);
         });
     });
