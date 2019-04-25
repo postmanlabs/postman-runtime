@@ -66,21 +66,21 @@ describe('sandbox library - pm api', function () {
 
             sinon.assert.calledTwice(testrun.assertion);
 
-            expect(testrun.assertion.getCall(0).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(0).args[1][0]).to.include({
                 error: null,
                 index: 0,
                 passed: true,
                 skipped: false,
                 name: 'pre-assert request'
-            }]);
+            });
 
-            expect(testrun.assertion.getCall(1).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(1).args[1][0]).to.include({
                 error: null,
                 index: 1,
                 passed: true,
                 skipped: false,
                 name: 'pre-assert response'
-            }]);
+            });
         });
     });
 
@@ -139,13 +139,13 @@ describe('sandbox library - pm api', function () {
 
             sinon.assert.calledOnce(testrun.assertion);
 
-            expect(testrun.assertion.getCall(0).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(0).args[1][0]).to.include({
                 error: null,
                 index: 0,
                 passed: true,
                 skipped: false,
                 name: 'History object in pm.sendRequest'
-            }]);
+            });
         });
     });
 
