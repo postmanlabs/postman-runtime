@@ -1,3 +1,7 @@
+master:
+  new features:
+    - Added support for multiple files in form-data body
+
 7.12.0:
   date: 2019-04-08
   new features:
