@@ -278,7 +278,7 @@ describe('content-type', function () {
                                 mode: 'formdata',
                                 formdata: [{
                                     key: 'fileName',
-                                    src: ['test/fixtures/upload-file.json', 'test/fixtures/upload-csv'],
+                                    src: ['test/fixtures/upload-file.json', 'test/fixtures/upload-csv.json'],
                                     contentType: 'text/csv',
                                     type: 'file'
                                 }]

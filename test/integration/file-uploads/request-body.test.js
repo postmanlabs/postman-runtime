@@ -31,7 +31,7 @@ describe('file upload in request body', function () {
                                 mode: 'formdata',
                                 formdata: [{
                                     key: 'file',
-                                    src: ['test/fixtures/upload-file.json', 'test/fixtures/upload-csv'],
+                                    src: ['test/fixtures/upload-file.json', 'test/fixtures/upload-csv.json'],
                                     type: 'file'
                                 }]
                             }
@@ -92,7 +92,7 @@ describe('file upload in request body', function () {
             var resp = JSON.parse(testrun.response.getCall(1).args[2].stream.toString());
 
             expect(resp.files).to.have.property('upload-file.json');
-            expect(resp.files).to.have.property('upload-csv');
+            expect(resp.files).to.have.property('upload-csv.json');
 
             expect(resp).to.nested.include({
                 'headers.content-length': '437'
@@ -374,7 +374,7 @@ describe('file upload in request body', function () {
                                 mode: 'formdata',
                                 formdata: [{
                                     key: 'userData',
-                                    src: ['randomFile', 'test/fixtures/upload-csv'],
+                                    src: ['randomFile', 'test/fixtures/upload-csv.json'],
                                     type: 'file'
                                 }]
                             }
@@ -413,13 +413,13 @@ describe('file upload in request body', function () {
         it('should warn for one of missing file in multi src param with formdata mode', function () {
             expect(testrun.console.getCall(1).args[1]).to.equal('warn');
             expect(testrun.console.getCall(1).args[2])
-                .to.equal('Form param `userData`, file (randomFile) load error: "randomFile", no such file');
+                .to.equal('Form param `userData`, file load error: "randomFile", no such file');
         });
 
         it('should upload the other file in multi src param with formdata mode correctly', function () {
             var resp = JSON.parse(testrun.response.getCall(1).args[2].stream.toString());
 
-            expect(resp.files).to.have.property('upload-csv');
+            expect(resp.files).to.have.property('upload-csv.json');
             expect(resp).to.nested.include({
                 'headers.content-length': '244'
             });
