@@ -359,7 +359,7 @@ describe('sandbox library - pm api', function () {
                 sinon.assert.calledOnce(testrun.script);
                 sinon.assert.calledWith(testrun.script.getCall(0), null);
 
-                sinon.assert.calledTwice(testrun.assertion);
+                sinon.assert.calledOnce(testrun.assertion);
                 expect(testrun.assertion.getCall(0).args[1][0]).to.include({
                     error: null,
                     index: 0,

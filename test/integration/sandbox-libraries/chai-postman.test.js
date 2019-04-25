@@ -149,13 +149,13 @@ describe('sandbox library - chai-postman', function () {
                 name: '4: pm.response.to'
             });
 
-            expect(testrun.assertion.getCall(5).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(5).args[1][0]).to.include({
                 error: null,
                 index: 5,
                 passed: true,
                 skipped: false,
                 name: '5: pm.response.to.not'
-            }]);
+            });
         });
     });
 });
