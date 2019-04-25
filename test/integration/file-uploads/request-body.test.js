@@ -28,6 +28,32 @@ describe('file upload in request body', function () {
                             url: 'https://postman-echo.com/post',
                             method: 'POST',
                             body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'file',
+                                    src: ['test/fixtures/upload-file.json', 'test/fixtures/upload-csv.json'],
+                                    type: 'file'
+                                }]
+                            }
+                        }
+                    }, {
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'file',
+                                    src: ['test/fixtures/upload-file.json'],
+                                    type: 'file'
+                                }]
+                            }
+                        }
+                    }, {
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
                                 mode: 'file',
                                 file: {src: 'test/fixtures/upload-file.json'}
                             }
@@ -45,10 +71,10 @@ describe('file upload in request body', function () {
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.callCount(testrun.request, 4);
         });
 
-        it('should upload the files in formdata mode correctly', function () {
-            sinon.assert.calledTwice(testrun.request);
+        it('should upload the single file in formdata mode correctly', function () {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             var resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
@@ -60,10 +86,36 @@ describe('file upload in request body', function () {
             expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
         });
 
-        it('should upload the files in binary mode correctly', function () {
+        it('should upload the multiple files in formdata mode correctly', function () {
             sinon.assert.calledWith(testrun.request.getCall(1), null);
 
             var resp = JSON.parse(testrun.response.getCall(1).args[2].stream.toString());
+
+            expect(resp.files).to.have.property('upload-file.json');
+            expect(resp.files).to.have.property('upload-csv.json');
+
+            expect(resp).to.nested.include({
+                'headers.content-length': '437'
+            });
+            expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
+        });
+
+        it('should upload the single file in multi src param with formdata mode correctly', function () {
+            sinon.assert.calledWith(testrun.request.getCall(2), null);
+
+            var resp = JSON.parse(testrun.response.getCall(2).args[2].stream.toString());
+
+            expect(resp.files).to.have.property('upload-file.json');
+            expect(resp).to.nested.include({
+                'headers.content-length': '253'
+            });
+            expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
+        });
+
+        it('should upload the files in binary mode correctly', function () {
+            sinon.assert.calledWith(testrun.request.getCall(3), null);
+
+            var resp = JSON.parse(testrun.response.getCall(3).args[2].stream.toString());
 
             expect(resp).to.have.property('data', '{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
             expect(resp).to.nested.include({
@@ -91,6 +143,15 @@ describe('file upload in request body', function () {
                         request: {
                             url: 'https://postman-echo.com/post',
                             method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{key: 'userData', type: 'file', src: []}]
+                            }
+                        }
+                    }, {
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
                             body: {mode: 'file', file: {}}
                         }
                     }]
@@ -106,22 +167,30 @@ describe('file upload in request body', function () {
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledThrice(testrun.request);
         });
 
         it('should warn for missing src in formdata mode', function () {
-            sinon.assert.calledTwice(testrun.request);
             sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             expect(testrun.console.getCall(0).args[1]).to.equal('warn');
             expect(testrun.console.getCall(0).args[2])
-                .to.equal('Form param `userData`, file load error: invalid or missing file source');
+                .to.equal('Form param `userData`, file load error: missing file source');
         });
 
-        it('should warn for missing src in binary mode', function () {
-            sinon.assert.calledWith(testrun.request.getCall(1), null);
+        it('should warn for missing src in multi src param with formdata mode', function () {
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             expect(testrun.console.getCall(1).args[1]).to.equal('warn');
             expect(testrun.console.getCall(1).args[2])
+                .to.equal('Form param `userData`, file load error: missing file source');
+        });
+
+        it('should warn for missing src in binary mode', function () {
+            sinon.assert.calledWith(testrun.request.getCall(2), null);
+
+            expect(testrun.console.getCall(2).args[1]).to.equal('warn');
+            expect(testrun.console.getCall(2).args[2])
                 .to.equal('Binary file load error: invalid or missing file source');
         });
     });
@@ -302,6 +371,19 @@ describe('file upload in request body', function () {
                             url: 'https://postman-echo.com/post',
                             method: 'POST',
                             body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'userData',
+                                    src: ['randomFile', 'test/fixtures/upload-csv.json'],
+                                    type: 'file'
+                                }]
+                            }
+                        }
+                    }, {
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
                                 mode: 'file',
                                 file: {src: 'randomFile'}
                             }
@@ -319,19 +401,34 @@ describe('file upload in request body', function () {
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.calledThrice(testrun.request);
         });
 
         it('should warn for missing file in formdata mode', function () {
-            sinon.assert.calledTwice(testrun.request);
-
             expect(testrun.console.getCall(0).args[1]).to.equal('warn');
             expect(testrun.console.getCall(0).args[2])
                 .to.equal('Form param `userData`, file load error: "randomFile", no such file');
         });
 
-        it('should warn for missing file in binary mode', function () {
+        it('should warn for one of missing file in multi src param with formdata mode', function () {
             expect(testrun.console.getCall(1).args[1]).to.equal('warn');
             expect(testrun.console.getCall(1).args[2])
+                .to.equal('Form param `userData`, file load error: "randomFile", no such file');
+        });
+
+        it('should upload the other file in multi src param with formdata mode correctly', function () {
+            var resp = JSON.parse(testrun.response.getCall(1).args[2].stream.toString());
+
+            expect(resp.files).to.have.property('upload-csv.json');
+            expect(resp).to.nested.include({
+                'headers.content-length': '244'
+            });
+            expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
+        });
+
+        it('should warn for missing file in binary mode', function () {
+            expect(testrun.console.getCall(2).args[1]).to.equal('warn');
+            expect(testrun.console.getCall(2).args[2])
                 .to.equal('Binary file load error: "randomFile", no such file');
         });
     });
