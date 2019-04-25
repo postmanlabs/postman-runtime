@@ -154,28 +154,28 @@ describe('sandbox library - AJV', function () {
 
         sinon.assert.calledThrice(testrun.assertion);
 
-        expect(testrun.assertion.getCall(0).args[1]).to.eql([{
+        expect(testrun.assertion.getCall(0).args[1][0]).to.include({
             error: null,
             index: 0,
             passed: true,
             skipped: false,
             name: 'ajv.validate'
-        }]);
+        });
 
-        expect(testrun.assertion.getCall(1).args[1]).to.eql([{
+        expect(testrun.assertion.getCall(1).args[1][0]).to.include({
             error: null,
             index: 1,
             passed: true,
             skipped: false,
             name: 'ajv.compile'
-        }]);
+        });
 
-        expect(testrun.assertion.getCall(2).args[1]).to.eql([{
+        expect(testrun.assertion.getCall(2).args[1][0]).to.include({
             error: null,
             index: 0,
             passed: true,
             skipped: false,
             name: 'ajv.compileAsync'
-        }]);
+        });
     });
 });
