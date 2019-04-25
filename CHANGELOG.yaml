@@ -1,6 +1,10 @@
 master:
   new features:
-    - Added support for multiple files in form-data body
+    - GH-818 Added support for multiple files in form-data body
+    - GH-819 Handle CookieStore events on `execution.cookies.${id}`
+  chores:
+    - GH-815 Allow empty string as variables in GraphQL body
+    - Updated dependencies
 
 7.12.0:
   date: 2019-04-08
