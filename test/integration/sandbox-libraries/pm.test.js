@@ -66,21 +66,21 @@ describe('sandbox library - pm api', function () {
 
             sinon.assert.calledTwice(testrun.assertion);
 
-            expect(testrun.assertion.getCall(0).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(0).args[1][0]).to.include({
                 error: null,
                 index: 0,
                 passed: true,
                 skipped: false,
                 name: 'pre-assert request'
-            }]);
+            });
 
-            expect(testrun.assertion.getCall(1).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(1).args[1][0]).to.include({
                 error: null,
                 index: 1,
                 passed: true,
                 skipped: false,
                 name: 'pre-assert response'
-            }]);
+            });
         });
     });
 
@@ -139,13 +139,238 @@ describe('sandbox library - pm api', function () {
 
             sinon.assert.calledOnce(testrun.assertion);
 
-            expect(testrun.assertion.getCall(0).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(0).args[1][0]).to.include({
                 error: null,
                 index: 0,
                 passed: true,
                 skipped: false,
                 name: 'History object in pm.sendRequest'
-            }]);
+            });
+        });
+    });
+
+
+    describe('cookies.jar', function () {
+        describe('getCookies', function () {
+            before(function (done) {
+                this.run({
+                    collection: {
+                        item: [{
+                            request: 'http://postman-echo.com/cookies/set?foo=bar',
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    type: 'text/javascript',
+                                    exec: `
+                                    var jar = pm.cookies.jar();
+
+                                    pm.test('getCookies in pre-request', function (done) {
+                                        jar.getCookies("http://postman-echo.com/", function (err, cookies) {
+                                            pm.expect(err).to.be.null;
+                                            pm.expect(cookies).to.be.an('array').that.is.empty;
+                                            done();
+                                        });
+                                    });
+                                    `
+                                }
+                            }, {
+                                listen: 'test',
+                                script: {
+                                    type: 'text/javascript',
+                                    exec: `
+                                    var jar = pm.cookies.jar();
+
+                                    pm.test('getCookies in test', function (done) {
+                                        jar.getCookies("http://postman-echo.com/", function (err, cookies) {
+                                            pm.expect(err).to.be.null;
+                                            pm.expect(cookies).to.be.an('array').that.have.a.lengthOf.at.least(1);
+                                            done();
+                                        });
+                                    });
+                                    `
+                                }
+                            }]
+                        }]
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                sinon.assert.calledOnce(testrun.start);
+                sinon.assert.calledOnce(testrun.done);
+                sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+                sinon.assert.calledOnce(testrun.request);
+                sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+                sinon.assert.calledOnce(testrun.response);
+                sinon.assert.calledWith(testrun.response.getCall(0), null);
+            });
+
+            it('should run the test script successfully', function () {
+                sinon.assert.calledTwice(testrun.script);
+                sinon.assert.calledWith(testrun.script.getCall(0), null);
+                sinon.assert.calledWith(testrun.script.getCall(1), null);
+
+                sinon.assert.calledTwice(testrun.assertion);
+
+                expect(testrun.assertion.getCall(0).args[1][0]).to.include({
+                    error: null,
+                    index: 0,
+                    passed: true,
+                    skipped: false,
+                    name: 'getCookies in pre-request'
+                });
+
+                expect(testrun.assertion.getCall(1).args[1][0]).to.include({
+                    error: null,
+                    index: 0,
+                    passed: true,
+                    skipped: false,
+                    name: 'getCookies in test'
+                });
+            });
+        });
+
+        describe('setCookie', function () {
+            before(function (done) {
+                this.run({
+                    collection: {
+                        item: [{
+                            request: 'http://postman-echo.com/cookies',
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    type: 'text/javascript',
+                                    exec: `
+                                    var jar = pm.cookies.jar();
+
+                                    pm.test('setCookie in pre-request', function (done) {
+                                        jar.setCookie("hello=world; Path=/", "http://postman-echo.com/",
+                                            function (err) {
+                                            pm.expect(err).to.be.null;
+                                            done();
+                                        });
+                                    });
+                                    `
+                                }
+                            }]
+                        }]
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                sinon.assert.calledOnce(testrun.start);
+                sinon.assert.calledOnce(testrun.done);
+                sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+                sinon.assert.calledOnce(testrun.request);
+                sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+                sinon.assert.calledOnce(testrun.response);
+                sinon.assert.calledWith(testrun.response.getCall(0), null);
+            });
+
+            it('should run the test script successfully', function () {
+                var response = testrun.response.getCall(0).args[2].stream.toString();
+
+                sinon.assert.calledOnce(testrun.script);
+                sinon.assert.calledWith(testrun.script.getCall(0), null);
+
+                sinon.assert.calledOnce(testrun.assertion);
+                expect(testrun.assertion.getCall(0).args[1][0]).to.include({
+                    error: null,
+                    index: 0,
+                    passed: true,
+                    skipped: false,
+                    name: 'setCookie in pre-request'
+                });
+
+                expect(JSON.parse(response)).to.eql({cookies: {hello: 'world'}});
+            });
+        });
+
+        describe('removeAllCookies', function () {
+            before(function (done) {
+                this.run({
+                    collection: {
+                        item: [{
+                            request: 'http://postman-echo.com/cookies/set?foo=bar'
+                        }, {
+                            request: 'http://postman-echo.com/cookies',
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    type: 'text/javascript',
+                                    exec: `
+                                    var jar = pm.cookies.jar();
+
+                                    pm.test('setCookie in pre-request', function (done) {
+                                        jar.setCookie("hello=world; Path=/", "http://postman-echo.com/",
+                                            function (err) {
+                                            pm.expect(err).to.be.null;
+                                            done();
+                                        });
+                                    });
+
+                                    pm.test('removeAllCookies in pre-request', function (done) {
+                                        jar.removeAllCookies(function (err) {
+                                            pm.expect(err).to.be.null;
+                                            done();
+                                        });
+                                    });
+                                    `
+                                }
+                            }]
+                        }]
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                sinon.assert.calledOnce(testrun.start);
+                sinon.assert.calledOnce(testrun.done);
+                sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+                sinon.assert.calledTwice(testrun.request);
+                sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+                sinon.assert.calledTwice(testrun.response);
+                sinon.assert.calledWith(testrun.response.getCall(0), null);
+            });
+
+            it('should run the test script successfully', function () {
+                var firstResponse = testrun.response.getCall(0).args[2].stream.toString(),
+                    secondResponse = testrun.response.getCall(1).args[2].stream.toString();
+
+                sinon.assert.calledOnce(testrun.script);
+                sinon.assert.calledWith(testrun.script.getCall(0), null);
+
+                sinon.assert.calledOnce(testrun.assertion);
+                expect(testrun.assertion.getCall(0).args[1][0]).to.include({
+                    error: null,
+                    index: 0,
+                    passed: true,
+                    skipped: false,
+                    name: 'setCookie in pre-request'
+                });
+
+                expect(JSON.parse(firstResponse)).to.eql({cookies: {foo: 'bar'}});
+                expect(JSON.parse(secondResponse)).to.eql({cookies: {}});
+            });
         });
     });
 });

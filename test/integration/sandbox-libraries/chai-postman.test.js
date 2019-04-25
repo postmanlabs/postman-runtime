@@ -95,21 +95,21 @@ describe('sandbox library - chai-postman', function () {
 
             sinon.assert.callCount(testrun.assertion, 6);
 
-            expect(testrun.assertion.getCall(0).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(0).args[1][0]).to.include({
                 error: null,
                 index: 0,
                 passed: true,
                 skipped: false,
                 name: '0: valid schema'
-            }]);
+            });
 
-            expect(testrun.assertion.getCall(1).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(1).args[1][0]).to.include({
                 error: null,
                 index: 1,
                 passed: true,
                 skipped: false,
                 name: '1: negated assertions'
-            }]);
+            });
 
             expect(testrun.assertion.getCall(2).args[1]).to.have.lengthOf(1);
             expect(testrun.assertion.getCall(2).args[1][0]).to.include({
@@ -141,21 +141,21 @@ describe('sandbox library - chai-postman', function () {
                 expected: true
             });
 
-            expect(testrun.assertion.getCall(4).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(4).args[1][0]).to.include({
                 error: null,
                 index: 4,
                 passed: true,
                 skipped: false,
                 name: '4: pm.response.to'
-            }]);
+            });
 
-            expect(testrun.assertion.getCall(5).args[1]).to.eql([{
+            expect(testrun.assertion.getCall(5).args[1][0]).to.include({
                 error: null,
                 index: 5,
                 passed: true,
                 skipped: false,
                 name: '5: pm.response.to.not'
-            }]);
+            });
         });
     });
 });
