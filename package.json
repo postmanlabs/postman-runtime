@@ -33,7 +33,7 @@
     "aws4": "1.8.0",
     "btoa": "1.2.1",
     "crypto-js": "3.1.9-1",
-    "eventemitter3": "3.1.0",
+    "eventemitter3": "3.1.1",
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.6",
     "inherits": "2.0.3",
