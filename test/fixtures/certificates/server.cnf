@@ -11,7 +11,7 @@ ST                     = CA
 L                      = SF
 O                      = Postman
 OU                     = test
-CN                     = test.localhost.com
+CN                     = localhost
 emailAddress           = do.not@email.me
 
 [ req_attributes ]
