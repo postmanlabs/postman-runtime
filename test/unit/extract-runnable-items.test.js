@@ -18,6 +18,7 @@ describe('extractRunnableItems', function () {
                     id: 'ID4',
                     name: 'F1.F1',
                     item: [{
+                        id: 'IDx',
                         name: 'F1.F1.R1',
                         request: 'https://postman-echo.com/cookies'
                     }]
@@ -482,6 +483,221 @@ describe('extractRunnableItems', function () {
                     expect(runnableItems).to.have.lengthOf(1);
                     expect(_.map(runnableItems, 'id')).to.eql(['ID1']);
                     expect(entrypoint).to.have.property('name', 'Collection C2');
+                    done();
+                }
+            );
+        });
+    });
+
+    describe('lookupStrategy: followOrder', function () {
+        it('should handle invalid entry points', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: 'random',
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(runnableItems).to.eql([]);
+                    expect(entrypoint).to.be.undefined;
+                    done();
+                }
+            );
+        });
+
+        it('should bail out if any of the given entrypoint is not found. ', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['ID3', 'RANDOM'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(runnableItems).to.eql([]);
+                    expect(entrypoint).to.be.undefined;
+                    done();
+                }
+            );
+        });
+
+        it('should filter single item group by id', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['ID2'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F2.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should filter multiple item groups by id and follow the order', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['ID2', 'ID1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F2.R1', 'F1.R1', 'F1.F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should filter single item by id', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['ID3'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should filter multiple items by id and follow the order', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['ID3', 'ID6', 'ID4'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'R1', 'F1.F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should filter single item group by name', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['F1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should filter multiple item groups by name and follow the order', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['F2', 'F1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F2.R1', 'F1.R1', 'F1.F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should filter single item by name', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['F1.R1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(runnableItems).to.have.lengthOf(1);
+                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should filter multiple items by name and follow the order', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['F2.R1', 'F1.R1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F2.R1', 'F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should filter by combination of id and name and follow the order', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['F2', 'ID1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F2.R1', 'F1.R1', 'F1.F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should avoid nested entrypoints', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['F1', 'F1.F1', 'F1.F1.R1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(_.map(runnableItems, 'name')).to.eql(['F1.R1', 'F1.F1.R1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
+                    done();
+                }
+            );
+        });
+
+        it('should choose the first match in collection order', function (done) {
+            extractRunnableItems(
+                collectionWithDuplicates, {
+                    execute: ['R1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(runnableItems).to.have.lengthOf(1);
+                    expect(_.map(runnableItems, 'id')).to.eql(['ID1']);
+                    expect(entrypoint).to.have.property('name', 'Collection C2');
+                    done();
+                }
+            );
+        });
+
+        it('should follow the order for duplicates', function (done) {
+            extractRunnableItems(
+                collection, {
+                    execute: ['R1', 'ID4', 'R1'],
+                    lookupStrategy: 'followOrder'
+                },
+                function (err, runnableItems, entrypoint) {
+                    expect(err).to.be.null;
+                    expect(runnableItems).to.have.lengthOf(3);
+                    expect(_.map(runnableItems, 'id')).to.eql(['ID6', 'IDx', 'ID6']);
+                    expect(entrypoint).to.have.property('name', 'Collection C1');
                     done();
                 }
             );

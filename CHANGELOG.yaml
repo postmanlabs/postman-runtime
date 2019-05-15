@@ -1,3 +1,9 @@
+master:
+  new features:
+    - GH-832 Added support for multi entrypoints by id or name which follows the given order
+  chores:
+    - Updated dependencies
+
 7.13.0:
   date: 2019-04-26
   new features:
