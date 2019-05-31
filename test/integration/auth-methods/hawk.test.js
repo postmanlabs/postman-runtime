@@ -121,7 +121,8 @@ describe('hawk auth', function () {
                                     extraData: 'skjdfklsjhdflkjhsdf',
                                     app: 'someAppId',
                                     delegation: '',
-                                    timestamp: ''
+                                    timestamp: '',
+                                    includePayloadHash: true
                                 }
                             },
                             url: 'https://postman-echo.com/auth/hawk',
