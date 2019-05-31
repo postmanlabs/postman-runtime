@@ -29,7 +29,7 @@
   "author": "Postman Labs <help@getpostman.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "async": "3.0.1",
+    "async": "2.6.2",
     "aws4": "1.8.0",
     "btoa": "1.2.1",
     "crypto-js": "3.1.9-1",
