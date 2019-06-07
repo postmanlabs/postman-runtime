@@ -301,6 +301,17 @@ runner.run(collection, { /* options */ }, function(err, run) {
             // request: sdk.request
         },
 
+        // Called just after receiving the request-response without waiting for
+        // the response body or, request to end.
+        // Called once with response for each request in a collection
+        responseStart: function (err, cursor, response, request, item, cookies, history) {
+            // err, cursor: Same as arguments for "start"
+            // item: sdk.Item
+
+            // response: sdk.Response
+            // request: sdk.request
+        },
+
         // Called once with response for each request in a collection
         response: function (err, cursor, response, request, item, cookies, history) {
             // err, cursor: Same as arguments for "start"

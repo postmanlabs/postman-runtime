@@ -1,3 +1,12 @@
+7.15.0:
+  date: 2019-06-07
+  new features:
+    - GH-840 Added responseStart callback
+  fixed bugs:
+    - GH-837 Fixed a bug where invalid url crashes the process
+  chores:
+    - Updated dependencies
+
 7.14.0:
   date: 2019-05-16
   new features:
