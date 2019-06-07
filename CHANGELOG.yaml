@@ -1,4 +1,6 @@
 master:
+  new features:
+    - GH-840 Added responseStart callback
   fixed bugs:
     - Fixed a bug where invalid url crashes the process
 
