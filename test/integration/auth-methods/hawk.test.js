@@ -18,7 +18,7 @@ describe('hawk auth', function () {
 
     before(function (done) {
         httpServer = server.createHTTPServer();
-        
+
         httpServer.on('/', function (req, res) {
             var data = [];
 
