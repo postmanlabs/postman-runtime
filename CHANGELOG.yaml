@@ -3,7 +3,7 @@
   new features:
     - GH-840 Added responseStart callback
     - >-
-      GH-844 Added `maxResponseSize` requester option which aborts the request
+      GH-845 Added `maxResponseSize` requester option which aborts the request
       if the response size exceeds the threshold
   fixed bugs:
     - GH-837 Fixed a bug where invalid url crashes the process
