@@ -4,7 +4,7 @@ var expect = require('chai').expect,
 
 describe('hawk auth', function () {
     // create local server with hawk auth because postman-echo does not support payload varification.
-    var httpServer = server.createHTTPServer(),
+    var httpServer,
 
         credentialsFunc = function (id) {
             if (id === 'dh37fgj492je') {
@@ -17,8 +17,10 @@ describe('hawk auth', function () {
         };
 
     before(function (done) {
+        httpServer = server.createHTTPServer();
+        
         httpServer.on('/', function (req, res) {
-            let data = [];
+            var data = [];
 
             req.on('data', function (chunk) {
                 data.push(chunk);
