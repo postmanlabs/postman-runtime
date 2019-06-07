@@ -38,7 +38,7 @@ describe('Runner Spec: responseStart', function () {
             var responseStart = testrun.responseStart.getCall(0),
                 response = responseStart.args[2];
 
-            expect(responseStart.args).to.have.lengthOf(6);
+            expect(responseStart.args).to.have.lengthOf(7);
             expect(response).to.have.property('code', 200);
             expect(response).to.have.property('headers');
             expect(response).to.not.have.property('stream');
@@ -97,7 +97,7 @@ describe('Runner Spec: responseStart', function () {
                 response = responseStart.args[2],
                 request = responseStart.args[3];
 
-            expect(responseStart.args).to.have.lengthOf(6);
+            expect(responseStart.args).to.have.lengthOf(7);
             expect(response).to.have.property('code', 200);
             expect(response).to.have.property('headers');
             expect(response).to.not.have.property('stream');
@@ -185,7 +185,7 @@ describe('Runner Spec: responseStart', function () {
                 response = responseStart.args[2],
                 request = responseStart.args[3];
 
-            expect(responseStart.args).to.have.lengthOf(6);
+            expect(responseStart.args).to.have.lengthOf(7);
             expect(response).to.have.property('code', 200);
             expect(response).to.have.property('headers');
             expect(response).to.not.have.property('stream');
