@@ -95,6 +95,9 @@ runner.run(collection, {
         // Maximum number of redirects to follow (only supported on Node, ignored in the browser)
         maxRedirects: 10,
 
+        // Maximum allowed response size in bytes (only supported on Node, ignored in the browser)
+        maxResponseSize: 1000000,
+
         // Removes the `referer` header when a redirect happens (only supported on Node, ignored in the browser)
         removeRefererHeaderOnRedirect: false,
 
