@@ -31,14 +31,13 @@ describe('Runner Spec: responseStart', function () {
             sinon.assert.calledWith(testrun.response.getCall(0), null);
         });
 
-        it('should trigger responseStart callback correctly', function () {
+        it('should trigger responseStart callback for collection request', function () {
             sinon.assert.calledOnce(testrun.responseStart);
             sinon.assert.calledWith(testrun.responseStart.getCall(0), null);
 
             var responseStart = testrun.responseStart.getCall(0),
                 response = responseStart.args[2];
 
-            expect(responseStart.args).to.have.lengthOf(6);
             expect(response).to.have.property('code', 200);
             expect(response).to.have.property('headers');
             expect(response).to.not.have.property('stream');
@@ -97,7 +96,6 @@ describe('Runner Spec: responseStart', function () {
                 response = responseStart.args[2],
                 request = responseStart.args[3];
 
-            expect(responseStart.args).to.have.lengthOf(6);
             expect(response).to.have.property('code', 200);
             expect(response).to.have.property('headers');
             expect(response).to.not.have.property('stream');
@@ -185,7 +183,6 @@ describe('Runner Spec: responseStart', function () {
                 response = responseStart.args[2],
                 request = responseStart.args[3];
 
-            expect(responseStart.args).to.have.lengthOf(6);
             expect(response).to.have.property('code', 200);
             expect(response).to.have.property('headers');
             expect(response).to.not.have.property('stream');
