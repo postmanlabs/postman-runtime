@@ -1,55 +1,6 @@
-var expect = require('chai').expect,
-    server = require('../../fixtures/server'),
-    hawk = require('@hapi/hawk').server;
+var expect = require('chai').expect;
 
 describe('hawk auth', function () {
-    // create local server with hawk auth because postman-echo does not support payload varification.
-    var httpServer,
-
-        credentialsFunc = function (id) {
-            if (id === 'dh37fgj492je') {
-                return {
-                    key: 'werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn',
-                    algorithm: 'sha256',
-                    user: 'Postman'
-                };
-            }
-        };
-
-    before(function (done) {
-        httpServer = server.createHTTPServer();
-
-        httpServer.on('/', function (req, res) {
-            var data = [];
-
-            req.on('data', function (chunk) {
-                data.push(chunk);
-            });
-
-            req.on('end', function () {
-                data = Buffer.concat(data);
-
-                let auth = hawk.authenticate(req, credentialsFunc, {
-                    payload: data.length && data
-                });
-
-                auth.then(function (loginDetails) {
-                    res.writeHead(200);
-                    res.end(`Hello ${loginDetails.credentials.user}`);
-                }).catch(function () {
-                    res.writeHead(401);
-                    res.end('unauthorized');
-                });
-            });
-        });
-
-        httpServer.listen(0, done);
-    });
-
-    after(function (done) {
-        httpServer.destroy(done);
-    });
-
     describe('without body', function () {
         var testrun;
 
@@ -74,7 +25,7 @@ describe('hawk auth', function () {
                                     timestamp: ''
                                 }
                             },
-                            url: httpServer.url,
+                            url: 'https://postman-echo.com/auth/hawk',
                             method: 'GET'
                         }
                     }
@@ -118,7 +69,7 @@ describe('hawk auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(httpServer.url);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
             expect(response).to.have.property('code', 200);
         });
 
@@ -132,7 +83,7 @@ describe('hawk auth', function () {
                 firstResponse = testrun.io.firstCall.args[3];
 
             expect(firstError).to.be.null;
-            expect(firstRequest.url.toString()).to.eql(httpServer.url);
+            expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
             expect(firstResponse).to.have.property('code', 200);
         });
 
@@ -144,7 +95,7 @@ describe('hawk auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(httpServer.url);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
             expect(response).to.have.property('code', 200);
         });
     });
@@ -174,15 +125,19 @@ describe('hawk auth', function () {
                                     includePayloadHash: true
                                 }
                             },
-                            url: httpServer.url,
-                            method: 'POST',
+                            url: 'https://postman-echo.com/auth/hawk',
+                            method: 'GET',
                             body: {
-                                'mode': 'raw',
-                                'raw': 'Hello World!!'
+                                mode: 'raw',
+                                raw: 'Hello World!!'
                             },
                             header: {
                                 'Content-Type': 'text/plain'
                             }
+                        },
+                        protocolProfileBehavior: {
+                            // this is required to send body with GET request
+                            disableBodyPruning: true
                         }
                     }
                 }
@@ -228,7 +183,7 @@ describe('hawk auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(httpServer.url);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
             expect(response).to.have.property('code', 200);
         });
 
@@ -242,7 +197,7 @@ describe('hawk auth', function () {
                 firstResponse = testrun.io.firstCall.args[3];
 
             expect(firstError).to.be.null;
-            expect(firstRequest.url.toString()).to.eql(httpServer.url);
+            expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
             expect(firstResponse).to.have.property('code', 200);
         });
 
@@ -254,7 +209,7 @@ describe('hawk auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(httpServer.url);
+            expect(request.url.toString()).to.eql('https://postman-echo.com/auth/hawk');
             expect(response).to.have.property('code', 200);
         });
     });
