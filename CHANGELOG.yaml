@@ -1,6 +1,8 @@
 master:
   fixed bugs:
     - Fixed a bug where invalid url crashes the process
+  new features:
+    - Added `includePayloadHash` option in hawk auth to make payload hash optional
 
 7.14.0:
   date: 2019-05-16
