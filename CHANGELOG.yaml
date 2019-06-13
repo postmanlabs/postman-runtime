@@ -1,3 +1,7 @@
+master:
+  new features:
+    - GH-839 Added `includePayloadHash` option in Hawk auth to make payload hash optional
+
 7.15.0:
   date: 2019-06-07
   new features:

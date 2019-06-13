@@ -169,7 +169,8 @@
                 "saveHelperData": true,
                 "extraData": "skjdfklsjhdflkjhsdf",
                 "app": "someAppId",
-                "delegation": ""
+                "delegation": "",
+                "includePayloadHash": false
             }
         },
         "url": "https://postman-echo.com/auth/hawk",
@@ -188,32 +189,63 @@
         "description": ""
     },
     "hawkWithBody": {
-      "auth": {
-          "type": "hawk",
-          "hawk": {
-              "authId": "dh37fgj492je",
-              "authKey": "werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn",
-              "algorithm": "sha256",
-              "user": "asda",
-              "saveHelperData": true,
-              "extraData": "skjdfklsjhdflkjhsdf",
-              "app": "someAppId",
-              "delegation": ""
-          }
-      },
-      "url": "https://postman-echo.com/auth/hawk",
-      "method": "GET",
-      "header": [
-          {
-              "key": "Authorization",
-              "value": "",
-              "description": ""
-          }
-      ],
-      "body": {
-          "mode": "raw",
-          "raw": "Hello World!!"
-      },
-      "description": ""
-  }
+        "auth": {
+            "type": "hawk",
+            "hawk": {
+                "authId": "dh37fgj492je",
+                "authKey": "werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn",
+                "algorithm": "sha256",
+                "user": "asda",
+                "saveHelperData": true,
+                "extraData": "skjdfklsjhdflkjhsdf",
+                "app": "someAppId",
+                "delegation": "",
+                "includePayloadHash": true
+            }
+        },
+        "url": "https://postman-echo.com/auth/hawk",
+        "method": "GET",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "",
+                "description": ""
+            }
+        ],
+        "body": {
+            "mode": "raw",
+            "raw": "Hello World!!"
+        },
+        "description": ""
+    },
+    "hawkWithBodyWithoutHash": {
+        "auth": {
+            "type": "hawk",
+            "hawk": {
+                "authId": "dh37fgj492je",
+                "authKey": "werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn",
+                "algorithm": "sha256",
+                "user": "asda",
+                "saveHelperData": true,
+                "extraData": "skjdfklsjhdflkjhsdf",
+                "app": "someAppId",
+                "delegation": "",
+                "includePayloadHash": false
+            }
+        },
+        "url": "https://postman-echo.com/auth/hawk",
+        "method": "GET",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "",
+                "description": ""
+            }
+        ],
+        "body": {
+            "mode": "raw",
+            "raw": "Hello World!!"
+        },
+        "description": ""
+    }
 }

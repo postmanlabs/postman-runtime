@@ -1022,24 +1022,45 @@ describe('Auth Handler:', function () {
             expect(_.parseInt(_.get(tsMatch, 1))).to.be.a('number');
         });
 
-        it('should add the hash to the Authorized request if request contains body', function () {
-            var request = new Request(rawRequests.hawkWithBody),
-                auth = request.auth,
-                authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type),
-                headers;
+        it('should add the hash to the Authorized request if request contains body and includePayloadHash=true',
+            function () {
+                var request = new Request(rawRequests.hawkWithBody),
+                    auth = request.auth,
+                    authInterface = createAuthInterface(auth),
+                    handler = AuthLoader.getHandler(auth.type),
+                    headers;
 
-            handler.sign(authInterface, request, _.noop);
-            headers = request.getHeaders({
-                ignoreCase: true
+                handler.sign(authInterface, request, _.noop);
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+
+                // Ensure that the required headers have been added.
+                expect(headers).to.have.property('authorization');
+
+                // Ensure that the body hash is included in Authorization header
+                expect(headers.authorization).to.include('hash');
             });
 
-            // Ensure that the required headers have been added.
-            expect(headers).to.have.property('authorization');
+        it('should not add the hash to the Authorized request if request contains body but includePayloadHash=false',
+            function () {
+                var request = new Request(rawRequests.hawkWithBodyWithoutHash),
+                    auth = request.auth,
+                    authInterface = createAuthInterface(auth),
+                    handler = AuthLoader.getHandler(auth.type),
+                    headers;
 
-            // Ensure that the body hash is included in Authorization header
-            expect(headers.authorization).to.include('hash');
-        });
+                handler.sign(authInterface, request, _.noop);
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+
+                // Ensure that the required headers have been added.
+                expect(headers).to.have.property('authorization');
+
+                // Ensure that the body hash is included in Authorization header
+                expect(headers.authorization).to.not.include('hash');
+            });
 
         it('should bail out the original request if auth key is missing', function () {
             var request = new Request(_.omit(rawRequests.hawk, 'auth.hawk.authKey')),
