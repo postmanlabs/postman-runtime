@@ -1,8 +1,18 @@
 master:
-  fixed bugs:
-    - Fixed a bug where invalid url crashes the process
   new features:
-    - Added `includePayloadHash` option in hawk auth to make payload hash optional
+    - GH-839 Added `includePayloadHash` option in Hawk auth to make payload hash optional
+
+7.15.0:
+  date: 2019-06-07
+  new features:
+    - GH-840 Added responseStart callback
+    - >-
+      GH-845 Added `maxResponseSize` requester option which aborts the request
+      if the response size exceeds the threshold
+  fixed bugs:
+    - GH-837 Fixed a bug where invalid url crashes the process
+  chores:
+    - Updated dependencies
 
 7.14.0:
   date: 2019-05-16
