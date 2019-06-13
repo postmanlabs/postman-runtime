@@ -95,6 +95,9 @@ runner.run(collection, {
         // Maximum number of redirects to follow (only supported on Node, ignored in the browser)
         maxRedirects: 10,
 
+        // Maximum allowed response size in bytes (only supported on Node, ignored in the browser)
+        maxResponseSize: 1000000,
+
         // Removes the `referer` header when a redirect happens (only supported on Node, ignored in the browser)
         removeRefererHeaderOnRedirect: false,
 
@@ -294,6 +297,17 @@ runner.run(collection, { /* options */ }, function(err, run) {
 
         // Called just after sending a request, may include request replays
         request: function (err, cursor, response, request, item, cookies, history) {
+            // err, cursor: Same as arguments for "start"
+            // item: sdk.Item
+
+            // response: sdk.Response
+            // request: sdk.request
+        },
+
+        // Called just after receiving the request-response without waiting for
+        // the response body or, request to end.
+        // Called once with response for each request in a collection
+        responseStart: function (err, cursor, response, request, item, cookies, history) {
             // err, cursor: Same as arguments for "start"
             // item: sdk.Item
 
