@@ -1,13 +1,17 @@
-master:
-  new features:
-    - GH-839 Added `includePayloadHash` option in Hawk auth to make payload hash optional
+7.15.1:
+  date: 2019-06-18
   fixed bugs:
     - Fixed a bug where non-string raw bodies crash the process
     - >-
       Fixed a bug where disabled headers with the same name as of system headers
       don't get overwritten in the original request
   chores:
-    - Refactored requester to avoid duplicate computation for response object
+    - >-
+      GH-839 Added `includePayloadHash` option in Hawk auth to make payload hash
+      optional
+    - >-
+      GH-848 Refactored requester to avoid duplicate computation for response
+      object
     - Updated dependencies
 
 7.15.0:
