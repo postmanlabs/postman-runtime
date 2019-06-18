@@ -91,6 +91,10 @@ describe('request headers', function () {
                                 key: 'Header-Name-0',
                                 value: 'value0'
                             }, {
+                                key: 'accept-encoding',
+                                value: 'disabled-system-header',
+                                disabled: true
+                            }, {
                                 key: 'User-Agent',
                                 value: 'PostmanRuntime/test'
                             }, {
@@ -197,6 +201,9 @@ describe('request headers', function () {
         ]);
 
         // system headers should be added correctly
+        // @note currently, only `Connection` header is added by NodeJS which
+        // is handled by the requester. This test will fail if any other
+        // header will be added by NodeJS.
         expect(request.headers.members).to.have.deep.members([
             // user-defined headers
             new Header({key: 'Header-Name-0', value: 'value0'}),
@@ -205,6 +212,8 @@ describe('request headers', function () {
             new Header({key: 'Postman-Token', value: 'someCustomToken'}),
             // requester header(overwritten) not added as system if value is unchanged
             new Header({key: 'referer', value: HOST}),
+            // user-defined, disabled header same as one-of system header
+            new Header({key: 'accept-encoding', value: 'disabled-system-header', disabled: true}),
             // system headers
             new Header({key: 'Accept', value: '*/*', system: true}),
             new Header({key: 'Cache-Control', value: 'no-cache', system: true}),
@@ -212,10 +221,5 @@ describe('request headers', function () {
             new Header({key: 'accept-encoding', value: 'gzip, deflate', system: true}),
             new Header({key: 'Connection', value: 'keep-alive', system: true})
         ]);
-
-        // @note currently, only `Connection` header is added by NodeJS which
-        // is handled by the requester. This test will fail if any other
-        // header will be added by NodeJS.
-        expect(request.headers.count()).to.equal(requestHeaders.length);
     });
 });
