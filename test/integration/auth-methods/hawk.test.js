@@ -121,15 +121,23 @@ describe('hawk auth', function () {
                                     extraData: 'skjdfklsjhdflkjhsdf',
                                     app: 'someAppId',
                                     delegation: '',
-                                    timestamp: ''
+                                    timestamp: '',
+                                    includePayloadHash: true
                                 }
                             },
                             url: 'https://postman-echo.com/auth/hawk',
                             method: 'GET',
                             body: {
-                                'mode': 'raw',
-                                'raw': 'Hello World!!'
+                                mode: 'raw',
+                                raw: 'Hello World!!'
+                            },
+                            header: {
+                                'Content-Type': 'text/plain'
                             }
+                        },
+                        protocolProfileBehavior: {
+                            // this is required to send body with GET request
+                            disableBodyPruning: true
                         }
                     }
                 }
@@ -141,7 +149,9 @@ describe('hawk auth', function () {
 
         it('should include hawk auth parameters in request header', function () {
             var request = testrun.request.getCall(0).args[3],
-                header = request.headers.members[0];
+
+                // check for second header because first header will be 'Content-Type'
+                header = request.headers.members[1];
 
             expect(header).to.have.have.property('key', 'Authorization');
             expect(header).to.have.have.property('value').that.include('Hawk id="dh37fgj492je"');
