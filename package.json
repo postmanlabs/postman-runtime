@@ -36,7 +36,7 @@
     "eventemitter3": "3.1.2",
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.6",
-    "inherits": "2.0.3",
+    "inherits": "2.0.4",
     "lodash": "4.17.11",
     "node-oauth1": "1.2.2",
     "performance-now": "2.1.0",
