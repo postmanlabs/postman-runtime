@@ -60,7 +60,7 @@ describe('protocolProfileBehavior', function () {
 
                 expect(response).to.include('GET / HTTP/1.1')
                     .and.include('Content-Type: text/plain')
-                    .and.include('content-length: 7')
+                    .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
         });
@@ -109,7 +109,7 @@ describe('protocolProfileBehavior', function () {
 
                 expect(rawResponse).to.include('HEAD / HTTP/1.1')
                     .and.include('Content-Type: text/plain')
-                    .and.include('content-length: 7')
+                    .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
         });
@@ -156,7 +156,7 @@ describe('protocolProfileBehavior', function () {
 
                 expect(response).to.include('POSTMAN / HTTP/1.1')
                     .and.include('Content-Type: text/plain')
-                    .and.include('content-length: 7')
+                    .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
         });
@@ -208,7 +208,7 @@ describe('protocolProfileBehavior', function () {
 
                 expect(response).to.include('GET / HTTP/1.1')
                     .and.include('Content-Type: text/plain')
-                    .and.include('content-length: 7')
+                    .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
         });
@@ -351,7 +351,7 @@ describe('protocolProfileBehavior', function () {
 
                 expect(response).to.include('POSTMAN / HTTP/1.1')
                     .and.include('Content-Type: text/plain')
-                    .and.include('content-length: 7')
+                    .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
         });
@@ -485,7 +485,7 @@ describe('protocolProfileBehavior', function () {
 
                 expect(response).to.include('POSTMAN / HTTP/1.1')
                     .and.include('Content-Type: text/plain')
-                    .and.include('content-length: 7')
+                    .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
         });

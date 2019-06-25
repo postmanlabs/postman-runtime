@@ -195,7 +195,7 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.include('content-type: application/x-www-form-urlencoded');
+                    expect(response).to.include('Content-Type: application/x-www-form-urlencoded');
                     expect(response).to.include('foo=bar');
                 });
             });
@@ -245,7 +245,7 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.include('content-type: multipart/form-data');
+                    expect(response).to.include('Content-Type: multipart/form-data');
                     expect(response).to.include('name="foo"\r\n\r\nbar');
                 });
             });
