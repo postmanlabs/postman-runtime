@@ -74,11 +74,11 @@ describe('File uploads', function () {
         sinon.assert.calledTwice(testrun.request);
 
         sinon.assert.calledWith(testrun.request.getCall(0), null);
-        expect(_.find(testrun.request.getCall(0).args[3].headers.members, {key: 'content-length'}))
+        expect(_.find(testrun.request.getCall(0).args[3].headers.members, {key: 'Content-Length'}))
             .to.have.property('value', 253);
 
         sinon.assert.calledWith(testrun.request.getCall(1), null);
-        expect(_.find(testrun.request.getCall(1).args[3].headers.members, {key: 'content-length'}))
+        expect(_.find(testrun.request.getCall(1).args[3].headers.members, {key: 'Content-Length'}))
             .to.have.property('value', 33);
     });
 });
