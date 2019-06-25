@@ -3855,11 +3855,11 @@ describe('Requester', function () {
                                 value: 'postman-echo.com'
                             });
                             expect(request.headers.one('Cookie')).to.deep.include({
-                                key: 'cookie',
+                                key: 'Cookie',
                                 value: 'yo=hello'
                             });
                             expect(request.headers.one('Accept-Encoding')).to.deep.include({
-                                key: 'accept-encoding',
+                                key: 'Accept-Encoding',
                                 value: 'gzip, deflate'
                             });
                         });
