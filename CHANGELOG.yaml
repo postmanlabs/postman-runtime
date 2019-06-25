@@ -1,3 +1,8 @@
+7.15.2:
+  date: 2019-06-25
+  chores:
+    - Updated dependencies
+
 7.15.1:
   date: 2019-06-18
   fixed bugs:
