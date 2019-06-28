@@ -187,6 +187,14 @@ describe('requester util', function () {
             expect(requesterCore.getRequestOptions(request, {}).lookup).to.be.a('function');
         });
 
+        it('should not override lookup function for *.localhost.com', function () {
+            var request = new sdk.Request({
+                url: 'http://subdomain.localhost.com:8080/random/path'
+            });
+
+            expect(requesterCore.getRequestOptions(request, {}).lookup).to.not.be.a('function');
+        });
+
         it('should override lookup function for restricted addresses', function () {
             var request = new sdk.Request({
                     url: 'https://postman-echo.com/get'
