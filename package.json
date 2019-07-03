@@ -59,7 +59,7 @@
     "eslint-plugin-lodash": "5.1.0",
     "eslint-plugin-mocha": "5.3.0",
     "eslint-plugin-security": "1.4.0",
-    "graphql": "14.4.1",
+    "graphql": "14.4.2",
     "http-proxy": "1.17.0",
     "istanbul": "0.4.5",
     "js-yaml": "3.13.1",
