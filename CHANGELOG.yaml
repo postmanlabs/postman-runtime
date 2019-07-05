@@ -3,6 +3,8 @@ master:
     - >-
       GH-855 Fixed resolution of all `*.localhost` names to the loopback address
       (127.0.0.1)
+  chores:
+    - Updated dependencies
 
 7.15.2:
   date: 2019-06-25
