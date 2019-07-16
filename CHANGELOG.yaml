@@ -1,6 +1,6 @@
 master:
   new features:
-    - GH-861 Added support to process `Visualiser` templates provided as a result of script execution
+    - GH-861 Added support to process `Visualizer` templates provided as a result of script execution
   fixed bugs:
     - >-
       GH-855 Fixed resolution of all `*.localhost` names to the loopback address
