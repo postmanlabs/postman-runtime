@@ -3,6 +3,9 @@ master:
     - >-
       GH-855 Fixed resolution of all `*.localhost` names to the loopback address
       (127.0.0.1)
+    - >-
+      GH-869 Fixed a bug where GraphQL requests with AWS or Hawk authentication caused
+      the collection run to hang
   chores:
     - Updated dependencies
 
