@@ -221,7 +221,7 @@ runner.run(collection, { /* options */ }, function(err, run) {
         item: function (err, cursor, item, visualizer) {
             // err, cursor, item: Same as arguments for "beforeItem"
 
-            // visualizer: undefined or object containing visualizer result that looks like this:
+            // visualizer: null or object containing visualizer result that looks like this:
             //  {
             //      -- Tmeplate processing error
             //      error: <Error>
