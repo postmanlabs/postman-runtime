@@ -218,8 +218,26 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called after completion of an Item
-        item: function (err, cursor, item) {
-            /* Same as arguments for "beforeItem" */
+        item: function (err, cursor, item, visualizerData) {
+            // err, cursor, item: Same as arguments for "beforeItem"
+
+            // visualizerData: undefined or object containing visualizer data that looks like this:
+            //  {
+            //      -- tmeplate processing error
+            //      error: Error,
+            //
+            //      -- template provided by user
+            //      template: String,
+            //
+            //      -- data provided by user
+            //      data: Object,
+            //
+            //      -- options used for processing the template
+            //      options: Object,
+            //
+            //      -- generated template after processing
+            //      processedTemplate: String
+            //  }
         },
 
         // Called before running pre-request script(s) (Yes, Runtime supports multiple pre-request scripts!)
