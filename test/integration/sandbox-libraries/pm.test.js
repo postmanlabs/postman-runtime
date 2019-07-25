@@ -425,7 +425,6 @@ describe('sandbox library - pm api', function () {
             var visualizerResults = testrun.item.getCall(0).args[3];
 
             expect(visualizerResults).to.deep.include({
-                template: '<h1>{{name}}</h1>',
                 data: {name: 'Postman'},
                 processedTemplate: '<h1>Postman</h1>'
             });

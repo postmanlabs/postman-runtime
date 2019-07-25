@@ -218,25 +218,19 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called after completion of an Item
-        item: function (err, cursor, item, visualizerData) {
+        item: function (err, cursor, item, visualizer) {
             // err, cursor, item: Same as arguments for "beforeItem"
 
-            // visualizerData: undefined or object containing visualizer data that looks like this:
+            // visualizer: undefined or object containing visualizer result that looks like this:
             //  {
-            //      -- tmeplate processing error
-            //      error: Error,
+            //      -- Tmeplate processing error
+            //      error: <Error>
             //
-            //      -- template provided by user
-            //      template: String,
+            //      -- Data used for template processing
+            //      data: <Object>
             //
-            //      -- data provided by user
-            //      data: Object,
-            //
-            //      -- options used for processing the template
-            //      options: Object,
-            //
-            //      -- generated template after processing
-            //      processedTemplate: String
+            //      -- Processed template
+            //      processedTemplate: <String>
             //  }
         },
 
