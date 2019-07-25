@@ -374,4 +374,61 @@ describe('sandbox library - pm api', function () {
             });
         });
     });
+
+    describe('Visualizer', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: 'https://postman-echo.com/get',
+                        event: [{
+                            listen: 'test',
+                            script: {
+                                type: 'text/javascript',
+                                exec: `
+                                var template = '<h1>{{name}}</h1>',
+                                    data = {name: 'Postman'};
+
+                                pm.visualizer.set(template, data);
+                                `
+                            }
+                        }]
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should run the test script successfully', function () {
+            sinon.assert.calledOnce(testrun.script);
+            sinon.assert.calledWith(testrun.script.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.test);
+            sinon.assert.calledWith(testrun.test.getCall(0), null);
+        });
+
+        it('should return visualizer data in item callback', function () {
+            var visualizerResults = testrun.item.getCall(0).args[3];
+
+            expect(visualizerResults).to.deep.include({
+                data: {name: 'Postman'},
+                processedTemplate: '<h1>Postman</h1>'
+            });
+        });
+    });
 });
