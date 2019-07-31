@@ -1118,6 +1118,36 @@ describe('Auth Handler:', function () {
             expect(_.get(request, 'auth.hawk.timestamp')).to.not.be.ok;
         });
 
+        it('should handle formdata bodies correctly when includePayloadHash=true',
+            function (done) {
+                var rawReq = _.merge({}, rawRequests.hawkWithBody, {
+                        body: {
+                            mode: 'formdata',
+                            formdata: []
+                        }
+                    }),
+                    request = new Request(rawReq),
+                    auth = request.auth,
+                    authInterface = createAuthInterface(auth),
+                    handler = AuthLoader.getHandler(auth.type),
+                    headers;
+
+                handler.sign(authInterface, request, function () {
+                    headers = request.getHeaders({
+                        ignoreCase: true
+                    });
+
+                    // Ensure that the required headers have been added.
+                    expect(headers).to.have.property('authorization');
+
+                    // Ensure that the body hash is not included in Authorization header.
+                    // Update this once we figure out a way to calculate hash for formdata body type.
+                    expect(headers.authorization).to.not.include('hash');
+
+                    done();
+                });
+            });
+
         it('should handle graphql bodies correctly when includePayloadHash=true',
             function (done) {
                 var rawReq = _.merge({}, rawRequests.hawkWithBody, {
