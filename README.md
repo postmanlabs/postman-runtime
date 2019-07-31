@@ -218,8 +218,20 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called after completion of an Item
-        item: function (err, cursor, item) {
-            /* Same as arguments for "beforeItem" */
+        item: function (err, cursor, item, visualizer) {
+            // err, cursor, item: Same as arguments for "beforeItem"
+
+            // visualizer: null or object containing visualizer result that looks like this:
+            //  {
+            //      -- Tmeplate processing error
+            //      error: <Error>
+            //
+            //      -- Data used for template processing
+            //      data: <Object>
+            //
+            //      -- Processed template
+            //      processedTemplate: <String>
+            //  }
         },
 
         // Called before running pre-request script(s) (Yes, Runtime supports multiple pre-request scripts!)
