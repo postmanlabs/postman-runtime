@@ -83,7 +83,10 @@ runner.run(collection, {
     // Options specific to the requester
     requester: {
 
-        // An object compatible with the cookieJar provided by the 'postman-request' module
+        // An object compatible with the cookieJar provided by the 'postman-request' module.
+        // To limit programmatic cookie access to only whitelisted domains, add `allowProgrammaticAccess`
+        // method to the jar. Example:
+        // jar.allowProgrammaticAccess = function (domain) { return domain === 'postman-echo.com'; };
         cookieJar: jar,
 
         // Controls redirect behavior (only supported on Node, ignored in the browser)
