@@ -458,7 +458,7 @@ describe('requester util', function () {
                         mode: 'raw',
                         options: {
                             raw: {
-                                contentType: 'application-json'
+                                language: 'application-json'
                             }
                         }
                     }
@@ -480,7 +480,7 @@ describe('requester util', function () {
                         raw: '{"beta":"bar"}',
                         options: {
                             raw: {
-                                contentType: 'application-json'
+                                language: 'application-json'
                             }
                         }
                     }
@@ -506,7 +506,7 @@ describe('requester util', function () {
                         raw: '{"beta":"bar"}',
                         options: {
                             raw: {
-                                contentType: 'application-json'
+                                language: 'application-json'
                             }
                         }
                     }
