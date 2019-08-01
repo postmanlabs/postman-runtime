@@ -1,3 +1,7 @@
+master:
+  chores:
+    - Updated dependencies
+
 7.16.0:
   date: 2019-08-01
   new features:
