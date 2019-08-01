@@ -1,7 +1,9 @@
 master:
   new features:
+    - GH-865 Added support for asynchronous CookieJar
+    - GH-865 Added support for programmatic cookie access via scripts
     - GH-861 Added support to process `Visualizer` templates provided as a result of script execution
-    - Added visualizer data in `item` callback
+    - GH-861 Added visualizer data in `item` callback
   fixed bugs:
     - >-
       GH-855 Fixed resolution of all `*.localhost` names to the loopback address
