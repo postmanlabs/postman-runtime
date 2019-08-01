@@ -977,6 +977,45 @@ describe('Auth Handler:', function () {
                 time: 1452673288848
             });
         });
+
+        it('should handle graphql bodies correctly', function (done) {
+            var rawReq = _.merge({}, rawRequests.awsv4, {
+                    body: {
+                        mode: 'graphql',
+                        graphql: {
+                            query: 'query Test { hello }',
+                            operationName: 'Test',
+                            variables: '{"foo":"bar"}'
+                        }
+                    }
+                }),
+                request = new Request(_.omit(rawReq, 'header')),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+
+                expect(headers).to.include.keys(['authorization', 'x-amz-date']);
+                expect(request.auth.parameters().toObject()).to.eql({
+                    auto: true,
+                    id: 'awsSigV4',
+                    region: 'eu-west-1',
+                    saveHelper: true,
+                    service: '',
+                    serviceName: 'execute-api',
+                    accessKey: 'AKIAI53QRL',
+                    sessionToken: '33Dhtnwf0RVHCFttmMPYt3dxx9zi8I07CBwTXaqupHQ=',
+                    secretKey: 'cr2RAfsY4IIVweutTBoBzR',
+                    time: 1452673288848
+                });
+                done();
+            });
+        });
     });
 
     describe('hawk', function () {
@@ -1078,6 +1117,69 @@ describe('Auth Handler:', function () {
             expect(_.get(request, 'auth.hawk.nonce')).to.not.be.ok;
             expect(_.get(request, 'auth.hawk.timestamp')).to.not.be.ok;
         });
+
+        it('should handle formdata bodies correctly when includePayloadHash=true',
+            function (done) {
+                var rawReq = _.merge({}, rawRequests.hawkWithBody, {
+                        body: {
+                            mode: 'formdata',
+                            formdata: []
+                        }
+                    }),
+                    request = new Request(rawReq),
+                    auth = request.auth,
+                    authInterface = createAuthInterface(auth),
+                    handler = AuthLoader.getHandler(auth.type),
+                    headers;
+
+                handler.sign(authInterface, request, function () {
+                    headers = request.getHeaders({
+                        ignoreCase: true
+                    });
+
+                    // Ensure that the required headers have been added.
+                    expect(headers).to.have.property('authorization');
+
+                    // Ensure that the body hash is not included in Authorization header.
+                    // Update this once we figure out a way to calculate hash for formdata body type.
+                    expect(headers.authorization).to.not.include('hash');
+
+                    done();
+                });
+            });
+
+        it('should handle graphql bodies correctly when includePayloadHash=true',
+            function (done) {
+                var rawReq = _.merge({}, rawRequests.hawkWithBody, {
+                        body: {
+                            mode: 'graphql',
+                            graphql: {
+                                query: 'query Test { hello }',
+                                operationName: 'Test',
+                                variables: '{"foo":"bar"}'
+                            }
+                        }
+                    }),
+                    request = new Request(rawReq),
+                    auth = request.auth,
+                    authInterface = createAuthInterface(auth),
+                    handler = AuthLoader.getHandler(auth.type),
+                    headers;
+
+                handler.sign(authInterface, request, function () {
+                    headers = request.getHeaders({
+                        ignoreCase: true
+                    });
+
+                    // Ensure that the required headers have been added.
+                    expect(headers).to.have.property('authorization');
+
+                    // Ensure that the body hash is included in Authorization header
+                    expect(headers.authorization).to.include('hash');
+
+                    done();
+                });
+            });
     });
 
     describe('ntlm', function () {
