@@ -24,7 +24,6 @@ describe('requester util', function () {
                 headers: {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
-                    'Content-Type': 'text/plain',
                     Accept: '*/*',
                     Host: 'postman-echo.com'
                 },
@@ -444,6 +443,81 @@ describe('requester util', function () {
             });
 
             expect(requesterCore.getRequestBody(request)).to.be.undefined;
+        });
+
+        describe('with body options', function () {
+            it('should not set {Content-Type} for raw if body data is not provided', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        options: {
+                            raw: {
+                                contentType: 'application-json'
+                            }
+                        }
+                    }
+                });
+
+                expect(request.headers.has('Content-Type')).to.be.false;
+            });
+
+            it('should set {Content-Type} for raw from body options if not provided', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    header: [{
+                        key: 'alpha',
+                        value: 'foo'
+                    }],
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: '{"beta":"bar"}',
+                        options: {
+                            raw: {
+                                contentType: 'application-json'
+                            }
+                        }
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request)).to.eql({
+                    body: '{"beta":"bar"}'
+                });
+                expect(request.headers.has('Content-Type')).to.be.true;
+                expect(request.headers.get('Content-Type')).to.eql('application/json');
+            });
+
+            it('should ignore {Content-Type} for raw from body options if already provided', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    header: [{
+                        key: 'Content-Type',
+                        value: 'application/xml'
+                    }],
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: '{"beta":"bar"}',
+                        options: {
+                            raw: {
+                                contentType: 'application-json'
+                            }
+                        }
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request)).to.eql({
+                    body: '{"beta":"bar"}'
+                });
+                expect(request.headers.has('Content-Type')).to.be.true;
+                expect(request.headers.get('Content-Type')).to.eql('application/xml');
+            });
         });
 
         describe('with protocolProfileBehavior', function () {
