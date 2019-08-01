@@ -1,5 +1,6 @@
 var expect = require('chai').expect,
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    postmanRequest = require('postman-request');
 
 describe('sandbox library - pm api', function () {
     var testrun;
@@ -151,7 +152,7 @@ describe('sandbox library - pm api', function () {
 
 
     describe('cookies.jar', function () {
-        describe('getCookies', function () {
+        describe('get', function () {
             before(function (done) {
                 this.run({
                     collection: {
@@ -164,10 +165,10 @@ describe('sandbox library - pm api', function () {
                                     exec: `
                                     var jar = pm.cookies.jar();
 
-                                    pm.test('getCookies in pre-request', function (done) {
-                                        jar.getCookies("http://postman-echo.com/", function (err, cookies) {
+                                    pm.test('jar.get in pre-request', function (done) {
+                                        jar.get("http://postman-echo.com/", "foo", function (err, value) {
                                             pm.expect(err).to.be.null;
-                                            pm.expect(cookies).to.be.an('array').that.is.empty;
+                                            pm.expect(value).to.be.null;
                                             done();
                                         });
                                     });
@@ -180,10 +181,10 @@ describe('sandbox library - pm api', function () {
                                     exec: `
                                     var jar = pm.cookies.jar();
 
-                                    pm.test('getCookies in test', function (done) {
-                                        jar.getCookies("http://postman-echo.com/", function (err, cookies) {
+                                    pm.test('jar.get in test', function (done) {
+                                        jar.get(pm.request.url, "foo", function (err, value) {
                                             pm.expect(err).to.be.null;
-                                            pm.expect(cookies).to.be.an('array').that.have.a.lengthOf.at.least(1);
+                                            pm.expect(value).to.equal("bar");
                                             done();
                                         });
                                     });
@@ -223,7 +224,7 @@ describe('sandbox library - pm api', function () {
                     index: 0,
                     passed: true,
                     skipped: false,
-                    name: 'getCookies in pre-request'
+                    name: 'jar.get in pre-request'
                 });
 
                 expect(testrun.assertion.getCall(1).args[1][0]).to.include({
@@ -231,12 +232,12 @@ describe('sandbox library - pm api', function () {
                     index: 0,
                     passed: true,
                     skipped: false,
-                    name: 'getCookies in test'
+                    name: 'jar.get in test'
                 });
             });
         });
 
-        describe('setCookie', function () {
+        describe('set', function () {
             before(function (done) {
                 this.run({
                     collection: {
@@ -249,9 +250,8 @@ describe('sandbox library - pm api', function () {
                                     exec: `
                                     var jar = pm.cookies.jar();
 
-                                    pm.test('setCookie in pre-request', function (done) {
-                                        jar.setCookie("hello=world; Path=/", "http://postman-echo.com/",
-                                            function (err) {
+                                    pm.test('jar.set in pre-request', function (done) {
+                                        jar.set('postman-echo.com', "hello=world; Path=/", function (err) {
                                             pm.expect(err).to.be.null;
                                             done();
                                         });
@@ -292,14 +292,14 @@ describe('sandbox library - pm api', function () {
                     index: 0,
                     passed: true,
                     skipped: false,
-                    name: 'setCookie in pre-request'
+                    name: 'jar.set in pre-request'
                 });
 
                 expect(JSON.parse(response)).to.eql({cookies: {hello: 'world'}});
             });
         });
 
-        describe('removeAllCookies', function () {
+        describe('clear', function () {
             before(function (done) {
                 this.run({
                     collection: {
@@ -314,16 +314,8 @@ describe('sandbox library - pm api', function () {
                                     exec: `
                                     var jar = pm.cookies.jar();
 
-                                    pm.test('setCookie in pre-request', function (done) {
-                                        jar.setCookie("hello=world; Path=/", "http://postman-echo.com/",
-                                            function (err) {
-                                            pm.expect(err).to.be.null;
-                                            done();
-                                        });
-                                    });
-
-                                    pm.test('removeAllCookies in pre-request', function (done) {
-                                        jar.removeAllCookies(function (err) {
+                                    pm.test('jar.clear in pre-request', function (done) {
+                                        jar.clear(pm.request.url, function (err) {
                                             pm.expect(err).to.be.null;
                                             done();
                                         });
@@ -365,11 +357,165 @@ describe('sandbox library - pm api', function () {
                     index: 0,
                     passed: true,
                     skipped: false,
-                    name: 'setCookie in pre-request'
+                    name: 'jar.clear in pre-request'
                 });
 
                 expect(JSON.parse(firstResponse)).to.eql({cookies: {foo: 'bar'}});
                 expect(JSON.parse(secondResponse)).to.eql({cookies: {}});
+            });
+        });
+
+        describe('allowProgrammaticAccess', function () {
+            before(function (done) {
+                var cookieJar = postmanRequest.jar();
+
+                cookieJar.allowProgrammaticAccess = function (domain) {
+                    return domain === 'postman-echo.com';
+                };
+
+                this.run({
+                    requester: {
+                        cookieJar: cookieJar
+                    },
+                    collection: {
+                        item: [{
+                            request: 'http://postman-echo.com/cookies',
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    type: 'text/javascript',
+                                    exec: `
+                                    var jar = pm.cookies.jar();
+
+                                    pm.test('jar.set in pre-request', function (done) {
+                                        jar.set('www.postman-echo.com', "hello=world; Path=/", done);
+                                    });
+                                    `
+                                }
+                            }]
+                        }, {
+                            request: 'http://postman-echo.com/cookies',
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    type: 'text/javascript',
+                                    exec: `
+                                    var jar = pm.cookies.jar();
+
+                                    pm.test('jar.set in pre-request', function (done) {
+                                        jar.set('postman-echo.com', "hello=world; Path=/", done);
+                                    });
+                                    `
+                                }
+                            }]
+                        }]
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                sinon.assert.calledOnce(testrun.start);
+                sinon.assert.calledOnce(testrun.done);
+                sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+                sinon.assert.calledTwice(testrun.request);
+                sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+                sinon.assert.calledTwice(testrun.response);
+                sinon.assert.calledWith(testrun.response.getCall(0), null);
+            });
+
+            it('should run the test script successfully', function () {
+                var firstResponse = testrun.response.getCall(0).args[2].stream.toString(),
+                    secondResponse = testrun.response.getCall(1).args[2].stream.toString();
+
+                expect(JSON.parse(firstResponse)).to.eql({cookies: {}});
+                expect(JSON.parse(secondResponse)).to.eql({cookies: {hello: 'world'}});
+
+                sinon.assert.calledTwice(testrun.script);
+                sinon.assert.calledWith(testrun.script.getCall(0), null);
+                sinon.assert.calledWith(testrun.script.getCall(1), null);
+
+                sinon.assert.calledTwice(testrun.assertion);
+                expect(testrun.assertion.getCall(0).args[1][0]).to.deep.include({
+                    error: {
+                        type: 'Error',
+                        name: 'Error',
+                        message: 'CookieStore: programmatic access to "www.postman-echo.com" is denied'
+                    },
+                    index: 0,
+                    passed: false,
+                    skipped: false,
+                    name: 'jar.set in pre-request'
+                });
+                expect(testrun.assertion.getCall(1).args[1][0]).to.deep.include({
+                    error: null,
+                    index: 0,
+                    passed: true,
+                    skipped: false,
+                    name: 'jar.set in pre-request'
+                });
+            });
+        });
+    });
+
+    describe('Visualizer', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: 'https://postman-echo.com/get',
+                        event: [{
+                            listen: 'test',
+                            script: {
+                                type: 'text/javascript',
+                                exec: `
+                                var template = '<h1>{{name}}</h1>',
+                                    data = {name: 'Postman'};
+
+                                pm.visualizer.set(template, data);
+                                `
+                            }
+                        }]
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should run the test script successfully', function () {
+            sinon.assert.calledOnce(testrun.script);
+            sinon.assert.calledWith(testrun.script.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.test);
+            sinon.assert.calledWith(testrun.test.getCall(0), null);
+        });
+
+        it('should return visualizer data in item callback', function () {
+            var visualizerResults = testrun.item.getCall(0).args[3];
+
+            expect(visualizerResults).to.deep.include({
+                data: {name: 'Postman'},
+                processedTemplate: '<h1>Postman</h1>'
             });
         });
     });

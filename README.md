@@ -83,7 +83,10 @@ runner.run(collection, {
     // Options specific to the requester
     requester: {
 
-        // An object compatible with the cookieJar provided by the 'postman-request' module
+        // An object compatible with the cookieJar provided by the 'postman-request' module.
+        // To limit programmatic cookie access to only whitelisted domains, add `allowProgrammaticAccess`
+        // method to the jar. Example:
+        // jar.allowProgrammaticAccess = function (domain) { return domain === 'postman-echo.com'; };
         cookieJar: jar,
 
         // Controls redirect behavior (only supported on Node, ignored in the browser)
@@ -218,8 +221,20 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called after completion of an Item
-        item: function (err, cursor, item) {
-            /* Same as arguments for "beforeItem" */
+        item: function (err, cursor, item, visualizer) {
+            // err, cursor, item: Same as arguments for "beforeItem"
+
+            // visualizer: null or object containing visualizer result that looks like this:
+            //  {
+            //      -- Tmeplate processing error
+            //      error: <Error>
+            //
+            //      -- Data used for template processing
+            //      data: <Object>
+            //
+            //      -- Processed template
+            //      processedTemplate: <String>
+            //  }
         },
 
         // Called before running pre-request script(s) (Yes, Runtime supports multiple pre-request scripts!)

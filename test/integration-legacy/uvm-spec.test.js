@@ -449,7 +449,7 @@ describe('UVM', function () {
                 cookieJar = request.jar();
 
             // Add a cookie to the Jar
-            cookieJar.setCookie(request.cookie('hi=hello'), 'https://postman-echo.com/type/xml');
+            cookieJar.setCookieSync(request.cookie('hi=hello'), 'https://postman-echo.com/type/xml');
             runner.run(collection, {
                 iterationCount: 1,
                 abortOnFailure: true,
