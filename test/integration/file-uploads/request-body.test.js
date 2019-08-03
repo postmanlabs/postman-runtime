@@ -117,7 +117,7 @@ describe('file upload in request body', function () {
 
             var resp = JSON.parse(testrun.response.getCall(3).args[2].stream.toString());
 
-            expect(resp.data).to.be.eql({ key1: 'value1', key2: 2 });
+            expect(resp.data).to.be.eql({key1: 'value1', key2: 2});
             expect(resp).to.nested.include({
                 'headers.content-length': '33'
             });
@@ -293,7 +293,7 @@ describe('file upload in request body', function () {
                 expect(req.body.file).to.have.property('content');
 
                 expect(resp.data).to.be.eql(
-                    { key1: 'value1', key2: 2 }
+                    {key1: 'value1', key2: 2}
                 );
             });
         });

@@ -83,7 +83,7 @@ describe('Request Body Mode: raw', function () {
             var response = testrun.response.getCall(0).args[2],
                 responseBody = JSON.parse(response.stream.toString());
 
-            expect(response).to.have.property('code', 200);          
+            expect(response).to.have.property('code', 200);
             expect(responseBody.data).to.be.eql({});
         });
     });
