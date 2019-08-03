@@ -281,7 +281,7 @@ describe('request mutations', function () {
             expect(request.body).to.deep.include({mode: 'raw', raw: 'postman'});
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.property('data', 'postman');
+            expect(responseBody.data).to.be.eql({});
         });
     });
 
@@ -359,7 +359,7 @@ describe('request mutations', function () {
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
-            expect(responseBody).to.have.property('data', 'postman');
+            expect(responseBody.data).to.be.eql({});
             expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
         });
     });
@@ -427,7 +427,7 @@ describe('request mutations', function () {
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
-            expect(responseBody).to.have.property('data', 'postman');
+            expect(responseBody.data).to.be.eql({});
             expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
         });
 
@@ -447,7 +447,7 @@ describe('request mutations', function () {
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
-            expect(responseBody).to.have.property('data', 'postman');
+            expect(responseBody.data).to.be.eql({});
             expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
         });
     });

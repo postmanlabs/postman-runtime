@@ -59,7 +59,6 @@ describe('protocolProfileBehavior', function () {
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
                 expect(response).to.include('GET / HTTP/1.1')
-                    .and.include('Content-Type: text/plain')
                     .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
@@ -108,7 +107,6 @@ describe('protocolProfileBehavior', function () {
                     rawResponse = response.headers.get('raw-request');
 
                 expect(rawResponse).to.include('HEAD / HTTP/1.1')
-                    .and.include('Content-Type: text/plain')
                     .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
@@ -155,7 +153,6 @@ describe('protocolProfileBehavior', function () {
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
                 expect(response).to.include('POSTMAN / HTTP/1.1')
-                    .and.include('Content-Type: text/plain')
                     .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
@@ -207,7 +204,6 @@ describe('protocolProfileBehavior', function () {
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
                 expect(response).to.include('GET / HTTP/1.1')
-                    .and.include('Content-Type: text/plain')
                     .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
@@ -350,7 +346,6 @@ describe('protocolProfileBehavior', function () {
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
                 expect(response).to.include('POSTMAN / HTTP/1.1')
-                    .and.include('Content-Type: text/plain')
                     .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });
@@ -484,7 +479,6 @@ describe('protocolProfileBehavior', function () {
                 var response = testrun.request.getCall(0).args[2].stream.toString();
 
                 expect(response).to.include('POSTMAN / HTTP/1.1')
-                    .and.include('Content-Type: text/plain')
                     .and.include('Content-Length: 7')
                     .and.include('foo=bar');
             });

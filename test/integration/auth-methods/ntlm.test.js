@@ -114,7 +114,7 @@ describe('NTLM', function () {
             });
         });
 
-        it('should have completed the run', function () {
+        it.only('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun).to.nested.include({
                 'done.callCount': 1
