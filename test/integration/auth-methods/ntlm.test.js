@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     _ = require('lodash');
 
-describe('NTLM', function () {
+describe.skip('NTLM', function () {
     // @todo Add '/ntlm' endpoint in echo server
     var ntlmServerIP = '34.214.154.175',
         USERNAME = 'postman',
@@ -35,7 +35,10 @@ describe('NTLM', function () {
                 collection: {
                     item: {
                         request: {
-                            url: 'https://postman-echo.com/digest'
+                            url: 'https://postman-echo.com/digest',
+                            headers: {
+                                'Content-Type': 'text/plain'
+                            }
                         }
                     }
                 }

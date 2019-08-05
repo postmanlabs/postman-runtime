@@ -464,6 +464,11 @@ describe('requester util', function () {
                     }
                 });
 
+                expect(request.body.options).to.be.eql({
+                    raw: {
+                        language: 'application-json'
+                    }
+                });
                 expect(request.headers.has('Content-Type')).to.be.false;
             });
 
@@ -486,6 +491,7 @@ describe('requester util', function () {
                     }
                 });
 
+                expect(request.headers.has('Content-Type')).to.be.false;
                 expect(requesterCore.getRequestBody(request)).to.eql({
                     body: '{"beta":"bar"}'
                 });
