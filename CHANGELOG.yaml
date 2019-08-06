@@ -1,16 +1,25 @@
-master:
+7.16.1:
+  date: 2019-08-02
+  chores:
+    - Updated dependencies
+
+7.16.0:
+  date: 2019-08-01
   new features:
-    - GH-861 Added support to process `Visualizer` templates provided as a result of script execution
-    - Added visualizer data in `item` callback
+    - GH-870 Added support for body options
+    - GH-865 Added support for asynchronous CookieJar
+    - GH-865 Added support for programmatic cookie access via scripts
     - >-
-      GH-870 Added support for body options
+      GH-861 Added support to process `Visualizer` templates provided as a
+      result of script execution
+    - GH-861 Added visualizer data in `item` callback
   fixed bugs:
     - >-
       GH-855 Fixed resolution of all `*.localhost` names to the loopback address
       (127.0.0.1)
     - >-
-      GH-869 Fixed a bug where GraphQL requests with AWS or Hawk authentication caused
-      the collection run to hang
+      GH-869 Fixed a bug where GraphQL requests with AWS or Hawk authentication
+      caused the collection run to hang
   chores:
     - Updated dependencies
 

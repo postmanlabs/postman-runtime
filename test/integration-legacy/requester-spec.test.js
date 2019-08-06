@@ -3682,7 +3682,7 @@ describe('Requester', function () {
 
                 cookieJar = request.jar();
 
-            cookieJar.setCookie('yo=hello', 'https://postman-echo.com/cookies');
+            cookieJar.setCookieSync('yo=hello', 'https://postman-echo.com/cookies');
 
             runner.run(collection, {
                 iterationCount: 1,
