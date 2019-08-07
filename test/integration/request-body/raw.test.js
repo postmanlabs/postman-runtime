@@ -12,6 +12,10 @@ describe('Request Body Mode: raw', function () {
                         request: {
                             url: HOST,
                             method: 'POST',
+                            header: [{
+                                key: 'Content-Type',
+                                value: 'text/plain'
+                            }],
                             body: {
                                 mode: 'raw',
                                 raw: 'POSTMAN'
@@ -41,7 +45,7 @@ describe('Request Body Mode: raw', function () {
                 responseBody = JSON.parse(response.stream.toString());
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody.data).to.be.eql({});
+            expect(responseBody).to.have.property('data', 'POSTMAN');
         });
     });
 
@@ -53,6 +57,10 @@ describe('Request Body Mode: raw', function () {
                         request: {
                             url: HOST,
                             method: 'POST',
+                            header: [{
+                                key: 'Content-Type',
+                                value: 'text/plain'
+                            }],
                             body: {
                                 mode: 'raw',
                                 raw: {
@@ -84,7 +92,7 @@ describe('Request Body Mode: raw', function () {
                 responseBody = JSON.parse(response.stream.toString());
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody.data).to.be.eql({});
+            expect(responseBody).to.have.property('data', '{"name":"POSTMAN"}');
         });
     });
 

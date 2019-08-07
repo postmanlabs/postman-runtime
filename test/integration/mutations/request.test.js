@@ -238,6 +238,10 @@ describe('request mutations', function () {
                         request: {
                             url: 'https://postman-echo.com/post',
                             method: 'POST',
+                            header: [{
+                                key: 'Content-Type',
+                                value: 'text/plain'
+                            }],
                             body: {
                                 mode: 'raw',
                                 raw: 'postman'
@@ -281,7 +285,7 @@ describe('request mutations', function () {
             expect(request.body).to.deep.include({mode: 'raw', raw: 'postman'});
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody.data).to.be.eql({});
+            expect(responseBody).to.have.property('data', 'postman');
         });
     });
 
@@ -291,6 +295,10 @@ describe('request mutations', function () {
                 collection: {
                     item: [{
                         request: {
+                            header: [{
+                                key: 'Content-Type',
+                                value: 'text/plain'
+                            }],
                             body: {
                                 mode: 'raw',
                                 raw: 'postman'
@@ -351,7 +359,7 @@ describe('request mutations', function () {
 
             expect(initialRequest).to.have.property('method', 'GET');
             expect(initialRequest.url.toString()).to.equal('');
-            expect(initialRequest.getHeaders()).to.eql({});
+            expect(initialRequest.getHeaders()).to.eql({'Content-Type': 'text/plain'});
 
             expect(request).to.have.property('method', 'POST');
             expect(request.url.toString()).to.equal('https://postman-echo.com/post');
@@ -359,7 +367,7 @@ describe('request mutations', function () {
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
-            expect(responseBody.data).to.be.eql({});
+            expect(responseBody).to.have.property('data', 'postman');
             expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
         });
     });
@@ -372,6 +380,10 @@ describe('request mutations', function () {
                     item: [{
                         request: {
                             url: '',
+                            header: [{
+                                key: 'Content-Type',
+                                value: 'text/plain'
+                            }],
                             body: {
                                 mode: 'raw',
                                 raw: 'postman'
@@ -419,7 +431,7 @@ describe('request mutations', function () {
 
             expect(initialRequest).to.have.property('method', 'GET');
             expect(initialRequest.url.toString()).to.equal('');
-            expect(initialRequest.getHeaders()).to.eql({});
+            expect(initialRequest.getHeaders()).to.eql({'Content-Type': 'text/plain'});
 
             expect(request).to.have.property('method', 'POST');
             expect(request.url.toString()).to.equal('https://postman-echo.com/post');
@@ -427,7 +439,7 @@ describe('request mutations', function () {
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
-            expect(responseBody.data).to.be.eql({});
+            expect(responseBody).to.have.property('data', 'postman');
             expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
         });
 
@@ -439,7 +451,7 @@ describe('request mutations', function () {
 
             expect(initialRequest).to.have.property('method', 'GET');
             expect(initialRequest.url.toString()).to.equal('');
-            expect(initialRequest.getHeaders()).to.eql({});
+            expect(initialRequest.getHeaders()).to.eql({'Content-Type': 'text/plain'});
 
             expect(request).to.have.property('method', 'POST');
             expect(request.url.toString()).to.equal('https://postman-echo.com/post');
@@ -447,7 +459,7 @@ describe('request mutations', function () {
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
-            expect(responseBody.data).to.be.eql({});
+            expect(responseBody).to.have.property('data', 'postman');
             expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
         });
     });

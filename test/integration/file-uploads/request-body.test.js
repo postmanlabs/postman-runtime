@@ -137,7 +137,11 @@ describe('file upload in request body', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [{key: 'userData', type: 'file'}]
-                            }
+                            },
+                            header: [{
+                                key: 'Content-Type',
+                                value: 'plain/text'
+                            }]
                         }
                     }, {
                         request: {
