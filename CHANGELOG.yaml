@@ -1,3 +1,7 @@
+master:
+  new features:
+    - GH-870 Added support for body options
+
 7.16.1:
   date: 2019-08-02
   chores:
@@ -6,7 +10,6 @@
 7.16.0:
   date: 2019-08-01
   new features:
-    - GH-870 Added support for body options
     - GH-865 Added support for asynchronous CookieJar
     - GH-865 Added support for programmatic cookie access via scripts
     - >-
