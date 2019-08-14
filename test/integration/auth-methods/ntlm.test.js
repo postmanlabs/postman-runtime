@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     _ = require('lodash');
 
-describe('NTLM', function () {
+describe.skip('NTLM', function () {
     // @todo Add '/ntlm' endpoint in echo server
     var ntlmServerIP = '34.214.154.175',
         USERNAME = 'postman',
