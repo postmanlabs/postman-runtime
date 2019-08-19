@@ -256,6 +256,102 @@ describe('protocolProfileBehavior', function () {
         });
     });
 
+    describe('with followAuthorizationHeader: false', function () {
+        var URL = 'https://httpbin.org/redirect-to?url=https://postman-echo.com/get';
+
+        before(function (done) {
+            hits = [];
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: URL,
+                            method: 'POST',
+                            header: [{key: 'authorization', value: 'supersecret'}]
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        followAuthorizationHeader: false
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should not retain `authorization` header when redirects to a different hostname', function () {
+            var response = testrun.response.getCall(0).args[2],
+                request = testrun.response.getCall(0).args[3];
+
+            expect(request.headers.toJSON()).to.deep.include({key: 'authorization', value: 'supersecret'});
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json().headers).to.not.have.property('authorization');
+        });
+    });
+
+    describe('with followAuthorizationHeader: true', function () {
+        var URL = 'https://httpbin.org/redirect-to?url=https://postman-echo.com/get';
+
+        before(function (done) {
+            hits = [];
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: URL,
+                            method: 'POST',
+                            header: [{key: 'authorization', value: 'supersecret'}]
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        followAuthorizationHeader: true
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should retain `authorization` header when redirects to a different hostname', function () {
+            var response = testrun.response.getCall(0).args[2],
+                request = testrun.response.getCall(0).args[3];
+
+            expect(request.headers.toJSON()).to.deep.include({key: 'authorization', value: 'supersecret'});
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json().headers).to.have.property('authorization');
+        });
+    });
+
     describe('with removeRefererHeaderOnRedirect: false', function () {
         var URL = HOST + '/1/302';
 

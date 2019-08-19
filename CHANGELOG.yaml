@@ -1,3 +1,8 @@
+master:
+  chores:
+    - GH-879 Added `followAuthorizationHeader` protocol profile behavior
+    - Updated dependencies
+
 7.16.2:
   date: 2019-08-14
   chores:
