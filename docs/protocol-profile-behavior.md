@@ -21,6 +21,9 @@ Control request body pruning for following methods: ```GET, COPY, HEAD, PURGE, U
 - `followOriginalHttpMethod`<br/>
 Redirect with the original HTTP method, by default redirects with HTTP method GET.
 
+- `followAuthorizationHeader`<br/>
+Retain `authorization` header when a redirect happens to a different hostname.
+
 - `removeRefererHeaderOnRedirect`<br/>
 Removes the `referer` header when a redirect happens.
 
