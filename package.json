@@ -58,7 +58,7 @@
     "eslint": "5.16.0",
     "eslint-plugin-jsdoc": "8.7.0",
     "eslint-plugin-lodash": "5.1.0",
-    "eslint-plugin-mocha": "6.0.0",
+    "eslint-plugin-mocha": "6.1.0",
     "eslint-plugin-security": "1.4.0",
     "graphql": "14.4.2",
     "http-proxy": "1.17.0",
