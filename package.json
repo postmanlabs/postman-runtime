@@ -65,7 +65,7 @@
     "istanbul": "0.4.5",
     "js-yaml": "3.13.1",
     "jsdoc": "3.6.3",
-    "jsdoc-to-markdown": "5.0.0",
+    "jsdoc-to-markdown": "5.0.1",
     "mocha": "6.2.0",
     "parse-gitignore": "0.5.1",
     "postman-jsdoc-theme": "0.0.3",
