@@ -1,6 +1,8 @@
 master:
   new features:
-    - GH-870 Added support for body options
+    - GH-870 Added support for request body options
+  chores:
+    - Updated dependencies
 
 7.16.3:
   date: 2019-08-19
