@@ -446,6 +446,140 @@ describe('requester util', function () {
             expect(requesterCore.getRequestBody(request)).to.be.undefined;
         });
 
+        describe('with raw mode body options', function () {
+            it('should not set Content-Type if data is not present', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        options: {
+                            raw: {
+                                language: 'text'
+                            }
+                        }
+                    }
+                });
+
+                // calling `getRequestBody` will set headers if needed.
+                expect(requesterCore.getRequestBody(request)).to.be.undefined;
+                expect(request.headers.has('Content-Type')).to.be.false;
+            });
+
+            it('should set Content-Type if data is present', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: '{"beta":"bar"}',
+                        options: {
+                            raw: {
+                                language: 'json'
+                            }
+                        }
+                    }
+                });
+
+                expect(request.headers.has('Content-Type')).to.be.false;
+                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"bar"}'});
+                expect(request.headers.has('Content-Type')).to.be.true;
+                expect(request.headers.toJSON()).to.deep.include({
+                    key: 'Content-Type',
+                    value: 'application/json',
+                    system: true
+                });
+            });
+
+            it('should set `text/plain` by default', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: '{"beta":"bar"}'
+                    }
+                });
+
+                expect(request.headers.has('Content-Type')).to.be.false;
+                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"bar"}'});
+                expect(request.headers.toJSON()).to.deep.include({
+                    key: 'Content-Type',
+                    value: 'text/plain',
+                    system: true
+                });
+            });
+
+            it('should handle invalid `language` type', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: '{"beta":"bar"}',
+                        options: {
+                            raw: {
+                                language: 'something'
+                            }
+                        }
+                    }
+                });
+
+                expect(request.headers.has('Content-Type')).to.be.false;
+                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"bar"}'});
+                expect(request.headers.toJSON()).to.deep.include({
+                    key: 'Content-Type',
+                    value: 'text/plain',
+                    system: true
+                });
+
+                request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: '{"beta":"foo"}',
+                        options: {
+                            raw: {
+                                language: undefined
+                            }
+                        }
+                    }
+                });
+
+                expect(request.headers.has('Content-Type')).to.be.false;
+                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"foo"}'});
+                expect(request.headers.toJSON()).to.deep.include({
+                    key: 'Content-Type',
+                    value: 'text/plain',
+                    system: true
+                });
+            });
+
+            it('should not override Content-Type if present already', function () {
+                var request = new sdk.Request({
+                    url: 'postman-echo.com/post',
+                    header: [{
+                        key: 'Content-Type',
+                        value: 'application/xml'
+                    }],
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: '{"beta":"bar"}',
+                        options: {
+                            raw: {
+                                language: 'json'
+                            }
+                        }
+                    }
+                });
+
+                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"bar"}'});
+                expect(request.headers.toJSON()).to.deep.include({key: 'Content-Type', value: 'application/xml'});
+            });
+        });
+
         describe('with protocolProfileBehavior', function () {
             it('should bail out on GET requests with disableBodyPruning: false', function () {
                 var request = new sdk.Request({
