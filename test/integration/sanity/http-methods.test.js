@@ -295,7 +295,7 @@ describe('http methods', function () {
                     expect(request).to.have.property('method', 'POSTMAN');
 
                     // response received at server
-                    expect(response).to.include('Content-Type: text/plain');
+                    expect(response).to.include('Content-Type: application/json');
                     expect(response).to.include('{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
                 });
             });
