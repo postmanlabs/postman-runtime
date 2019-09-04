@@ -117,11 +117,11 @@ describe('file upload in request body', function () {
 
             var resp = JSON.parse(testrun.response.getCall(3).args[2].stream.toString());
 
-            expect(resp).to.have.property('data', '{\n\t"key1":"value1",\n\t"key2": 2\n}\n');
+            expect(resp.data).to.be.eql({key1: 'value1', key2: 2});
             expect(resp).to.nested.include({
                 'headers.content-length': '33'
             });
-            expect(resp.headers['content-type']).to.equal('text/plain');
+            expect(resp.headers['content-type']).to.equal('application/json');
         });
     });
 
@@ -292,12 +292,8 @@ describe('file upload in request body', function () {
                     'body.disabled': false
                 });
                 expect(req.body.file).to.have.property('content');
-
-                expect(resp).to.deep.nested.include({
-                    'headers.content-length': '33',
-                    data: '{\n\t"key1":"value1",\n\t"key2": 2\n}\n'
-                });
-                expect(resp.headers['content-type']).to.equal('text/plain');
+                expect(resp.headers['content-type']).to.equal('application/json');
+                expect(resp.data).to.be.eql({key1: 'value1', key2: 2});
             });
         });
     });

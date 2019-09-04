@@ -1,3 +1,14 @@
+7.17.0:
+  date: 2019-09-04
+  new features:
+    - GH-870 Added support for request body options
+  fixed bugs:
+    - >-
+      GH-885 Fixed a bug where collection execution won't stop or abort on async
+      script errors
+  chores:
+    - Updated dependencies
+
 7.16.3:
   date: 2019-08-19
   chores:
