@@ -1,3 +1,12 @@
+7.17.1:
+  date: 2019-09-06
+  fixed bugs:
+    - >-
+      GH-889 Fixed a bug where system header was not updated correctly in case
+      of multiple `cookie` headers
+  chores:
+    - Updated dependencies
+
 7.17.0:
   date: 2019-09-04
   new features:

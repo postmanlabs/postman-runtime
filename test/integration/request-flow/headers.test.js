@@ -2,13 +2,19 @@ var _ = require('lodash'),
     sinon = require('sinon'),
     expect = require('chai').expect,
     Header = require('postman-collection').Header,
+    cookieJar = require('postman-request').jar(),
     server = require('../../fixtures/server');
 
 describe('request headers', function () {
     var httpServer,
         testrun,
         PORT = 5050,
-        HOST = 'http://localhost:' + PORT;
+        HOST = 'http://localhost:' + PORT,
+        COOKIE_HOST = HOST + '/cookie';
+
+    // add 🍪s in the jar
+    cookieJar.setCookieSync('c3=v3; path=/cookie', COOKIE_HOST);
+    cookieJar.setCookieSync('c4=v4; path=/cookie', COOKIE_HOST);
 
     /**
      * Converts raw request headers to array of key-value object.
@@ -32,10 +38,18 @@ describe('request headers', function () {
             res.end(JSON.stringify(parseRawHeaders(req.rawHeaders)));
         });
 
+        httpServer.on('/cookie', function (req, res) {
+            res.writeHead(200, {'content-type': 'application/json'});
+            res.end(JSON.stringify(parseRawHeaders(req.rawHeaders)));
+        });
+
         httpServer.listen(PORT, function (err) {
             if (err) { return done(err); }
 
             this.run({
+                requester: {
+                    cookieJar: cookieJar
+                },
                 collection: {
                     item: [{
                         name: 'Duplicate headers',
@@ -105,6 +119,18 @@ describe('request headers', function () {
                                 value: HOST
                             }]
                         }
+                    }, {
+                        name: 'Cookie headers',
+                        request: {
+                            url: COOKIE_HOST,
+                            header: [{
+                                key: 'Cookie',
+                                value: 'c1=v1'
+                            }, {
+                                key: 'Cookie',
+                                value: 'c2=v2'
+                            }]
+                        }
                     }]
                 }
             }, function (err, results) {
@@ -124,8 +150,8 @@ describe('request headers', function () {
         sinon.assert.calledOnce(testrun.done);
         sinon.assert.calledWith(testrun.done.getCall(0), null);
 
-        sinon.assert.callCount(testrun.request, 4);
-        sinon.assert.callCount(testrun.response, 4);
+        sinon.assert.callCount(testrun.request, 5);
+        sinon.assert.callCount(testrun.response, 5);
     });
 
     it('should handle duplicate headers correctly', function () {
@@ -221,5 +247,27 @@ describe('request headers', function () {
             new Header({key: 'Accept-Encoding', value: 'gzip, deflate', system: true}),
             new Header({key: 'Connection', value: 'keep-alive', system: true})
         ]);
+    });
+
+    it('should handle multiple cookie headers correctly', function () {
+        sinon.assert.calledWith(testrun.request.getCall(4), null);
+        sinon.assert.calledWith(testrun.response.getCall(4), null);
+
+        var request = testrun.response.getCall(4).args[3],
+            response = testrun.response.getCall(4).args[2],
+            requestHeaders = JSON.parse(response.stream);
+
+
+        // make sure there's only 1 cookie header
+        expect(requestHeaders.filter(function (h) { return h.key.toLowerCase() === 'cookie'; }))
+            .to.have.lengthOf(1);
+        expect(requestHeaders).to.deep.include.members([
+            {key: 'Cookie', value: 'c1=v1; c2=v2; c3=v3; c4=v4'}
+        ]);
+
+        // make sure duplicates (multiple cookie headers) are removed
+        expect(request.headers.reference.cookie).to.deep.eql(
+            new Header({key: 'Cookie', value: 'c1=v1; c2=v2; c3=v3; c4=v4', system: true})
+        );
     });
 });
