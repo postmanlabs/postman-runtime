@@ -41,7 +41,7 @@
     "lodash": "4.17.15",
     "node-oauth1": "1.2.2",
     "performance-now": "2.1.0",
-    "postman-collection": "3.5.2",
+    "postman-collection": "3.5.3",
     "postman-request": "2.88.1-postman.15",
     "postman-sandbox": "3.3.2",
     "postman-url-encoder": "1.0.2",
