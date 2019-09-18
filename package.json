@@ -61,7 +61,7 @@
     "eslint-plugin-mocha": "6.1.0",
     "eslint-plugin-security": "1.4.0",
     "graphql": "14.5.4",
-    "http-proxy": "1.17.0",
+    "http-proxy": "1.18.0",
     "istanbul": "0.4.5",
     "js-yaml": "3.13.1",
     "jsdoc": "3.6.3",
