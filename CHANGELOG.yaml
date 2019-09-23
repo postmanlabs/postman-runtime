@@ -1,3 +1,7 @@
+master:
+  chores:
+    - Updated dependencies
+
 7.17.1:
   date: 2019-09-06
   fixed bugs:
