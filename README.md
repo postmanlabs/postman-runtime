@@ -122,6 +122,9 @@ runner.run(collection, {
         // Extend well known "root" CAs with the extra certificates in file. The file should consist of one or more trusted certificates in PEM format. (only supported on Node, ignored in the browser)
         extendedRootCA: 'path/to/extra/CA/certs.pem',
 
+        // Opt-out of [proxy configured using environment variables]((https://github.com/postmanlabs/postman-request#controlling-proxy-behaviour-using-environment-variables) ) (only supported on Node, ignored in the browser)
+        ignoreProxySystemVariables: false,
+
         // network related options
         network: {
             hostLookup: { // hosts file configuration for dns lookup

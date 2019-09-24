@@ -1,4 +1,7 @@
 master:
+  new features:
+    - GH-898 Added `ignoreProxySystemVariables` requester option to opt-out of
+      implicit proxy configured using environment variables
   chores:
     - Updated dependencies
 
