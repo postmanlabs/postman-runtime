@@ -2,7 +2,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
     expect = require('chai').expect,
     server = require('../../fixtures/server');
 
-describe('Requester Spec: ignoreProxySystemVariables', function () {
+describe('Runner Spec: ignoreProxyEnvironmentVariables', function () {
     var proxyServer,
         testrun,
         PROXY_HOST = 'localhost',
@@ -53,12 +53,10 @@ describe('Requester Spec: ignoreProxySystemVariables', function () {
         });
     });
 
-    describe('with ignoreProxySystemVariables: true', function () {
+    describe('with ignoreProxyEnvironmentVariables: true', function () {
         before(function (done) {
             this.run({
-                requester: {
-                    ignoreProxySystemVariables: true
-                },
+                ignoreProxyEnvironmentVariables: true,
                 collection: {
                     item: {
                         request: 'http://postman-echo.com/get'
@@ -87,12 +85,10 @@ describe('Requester Spec: ignoreProxySystemVariables', function () {
         });
     });
 
-    describe('with ignoreProxySystemVariables: false', function () {
+    describe('with ignoreProxyEnvironmentVariables: false', function () {
         before(function (done) {
             this.run({
-                requester: {
-                    ignoreProxySystemVariables: false
-                },
+                ignoreProxyEnvironmentVariables: false,
                 collection: {
                     item: {
                         request: 'http://postman-echo.com/get'
@@ -121,12 +117,10 @@ describe('Requester Spec: ignoreProxySystemVariables', function () {
         });
     });
 
-    describe('with ignoreProxySystemVariables and global proxy', function () {
+    describe('with ignoreProxyEnvironmentVariables and global proxy', function () {
         before(function (done) {
             this.run({
-                requester: {
-                    ignoreProxySystemVariables: true
-                },
+                ignoreProxyEnvironmentVariables: true,
                 proxies: new ProxyConfigList({}, [{
                     match: '*://postman-echo.com/*',
                     host: PROXY_HOST,
