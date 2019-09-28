@@ -141,6 +141,9 @@ runner.run(collection, {
     // A function that fetches the system proxy for a given URL.
     systemProxy: function (url, callback) { return callback(null, {/* ProxyConfig object */}) },
 
+    // Opt-out of [proxy configured using environment variables]((https://github.com/postmanlabs/postman-request#controlling-proxy-behaviour-using-environment-variables) ) (only supported on Node, ignored in the browser)
+    ignoreProxyEnvironmentVariables: false,
+
     // A CertificateList from the SDK
     certificates: new sdk.CertificateList(),
 
