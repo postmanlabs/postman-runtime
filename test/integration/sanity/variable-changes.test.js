@@ -17,12 +17,16 @@ describe('variable changes', function () {
                                 pm.variables.set('_variable', '_variable value');
                                 pm.environment.set('environment', 'environment value');
                                 pm.globals.set('globals', 'globals value');
+                                pm.collectionVariables.set('collection', 'collection value');
                             `
                         }
                     }, {
                         listen: 'test',
                         script: {
-                            exec: 'pm.environment.set("environment", "environment updated value");'
+                            exec: `
+                                pm.environment.set("environment", "environment updated value");
+                                pm.collectionVariables.set("collection", "collection updated value");
+                            `
                         }
                     }],
                     request: 'https://postman-echo.com/get'
@@ -55,9 +59,11 @@ describe('variable changes', function () {
 
         expect(sdk.VariableScope.isVariableScope(prerequest.environment)).to.be.true;
         expect(sdk.VariableScope.isVariableScope(prerequest.globals)).to.be.true;
+        expect(sdk.VariableScope.isVariableScope(prerequest.collectionVariables)).to.be.true;
 
         expect(sdk.VariableScope.isVariableScope(test.environment)).to.be.true;
         expect(sdk.VariableScope.isVariableScope(test.globals)).to.be.true;
+        expect(sdk.VariableScope.isVariableScope(test.collectionVariables)).to.be.true;
     });
 
     it('should have provided variable changes in the scripts', function () {
@@ -65,6 +71,7 @@ describe('variable changes', function () {
 
         expect(prerequest.environment.mutations.count()).to.equal(1);
         expect(prerequest.globals.mutations.count()).to.equal(1);
+        expect(prerequest.collectionVariables.mutations.count()).to.equal(1);
         expect(prerequest._variables.mutations.count()).to.equal(1);
     });
 
@@ -72,6 +79,7 @@ describe('variable changes', function () {
         var test = testrun.script.secondCall.args[2];
 
         expect(test.environment.mutations.count()).to.equal(1);
+        expect(test.collectionVariables.mutations.count()).to.equal(1);
         expect(test.globals.mutations.count()).to.equal(0);
         expect(test._variables.mutations.count()).to.equal(0);
     });
