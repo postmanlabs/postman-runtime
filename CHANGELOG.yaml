@@ -1,6 +1,8 @@
-master:
+7.18.0:
+  date: 2019-10-01
   new features:
-    - GH-898 Added `ignoreProxyEnvironmentVariables` runner option to opt-out of
+    - >-
+      GH-898 Added `ignoreProxyEnvironmentVariables` runner option to opt-out of
       implicit proxy configured using environment variables
   chores:
     - Updated dependencies
