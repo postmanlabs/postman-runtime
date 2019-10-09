@@ -39,7 +39,6 @@
     "httpntlm": "1.7.6",
     "inherits": "2.0.4",
     "lodash": "4.17.15",
-    "moment": "2.24.0",
     "node-oauth1": "1.2.2",
     "performance-now": "2.1.0",
     "postman-collection": "3.5.4",
