@@ -1,3 +1,7 @@
+master:
+  new features:
+    - GH-908 Added helper for Akamai EdgeGrid authorization method
+
 7.18.0:
   date: 2019-10-01
   new features:
