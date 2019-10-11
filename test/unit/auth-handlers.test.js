@@ -1213,8 +1213,58 @@ describe('Auth Handler:', function () {
     });
 
     describe('EdgeGrid', function () {
+        var requestWithAllParams = {
+                auth: {
+                    type: 'edgegrid',
+                    edgegrid: {
+                        accessToken: 'postman_access_token',
+                        clientToken: 'postman_client_token',
+                        clientSecret: 'postman_client_secret',
+                        baseURL: 'https://postman-echo.com',
+                        nonce: 'foo',
+                        timestamp: '20191009T06:38:34+0000',
+                        headersToSign: ''
+                    }
+                },
+                url: 'https://postman-echo.com/get',
+                method: 'GET',
+                header: [
+                    {
+                        key: 'Authorization',
+                        value: '',
+                        description: ''
+                    }
+                ]
+            },
+
+            requestWithoutOptionalParams = {
+                auth: {
+                    type: 'edgegrid',
+                    edgegrid: {
+                        accessToken: 'postman_access_token',
+                        clientToken: 'postman_client_token',
+                        clientSecret: 'postman_client_secret'
+                    }
+                },
+                url: 'https://postman-echo.com/get',
+                method: 'GET',
+                header: [
+                    {
+                        key: 'Authorization',
+                        value: '',
+                        description: ''
+                    }
+                ]
+            };
+
         it('should be able to load all parameters from a request', function (done) {
-            var rawReq = rawRequests.edgegridWithBody,
+            var rawReq = _.merge({}, requestWithAllParams, {
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
                 request = new Request(rawReq),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -1235,7 +1285,13 @@ describe('Auth Handler:', function () {
         });
 
         it('should add Authorization header with required values', function (done) {
-            var rawReq = rawRequests.edgegridWithBody,
+            var rawReq = _.merge({}, requestWithAllParams, {
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
                 request = new Request(rawReq),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -1251,17 +1307,19 @@ describe('Auth Handler:', function () {
                 authHeader = headers[0];
 
                 expect(authHeader.system).to.be.true;
-                expect(authHeader.toString()).to.include('client_token=');
-                expect(authHeader.toString()).to.include('access_token=');
-                expect(authHeader.toString()).to.include('timestamp=');
-                expect(authHeader.toString()).to.include('nonce=');
-                expect(authHeader.toString()).to.include('signature=');
+
+                authHeader = authHeader.toString();
+                expect(authHeader).to.include('client_token=');
+                expect(authHeader).to.include('access_token=');
+                expect(authHeader).to.include('timestamp=');
+                expect(authHeader).to.include('nonce=');
+                expect(authHeader).to.include('signature=');
                 done();
             });
         });
 
         it('should add auto-generated nonce to Authorization header when not provided', function (done) {
-            var rawReq = rawRequests.edgegridWithoutOptionalParameters,
+            var rawReq = requestWithoutOptionalParams,
                 request = new Request(rawReq),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -1282,7 +1340,7 @@ describe('Auth Handler:', function () {
         });
 
         it('should add auto-generated timestamp to Authorization header when not provided', function (done) {
-            var rawReq = rawRequests.edgegridWithoutOptionalParameters,
+            var rawReq = requestWithoutOptionalParams,
                 request = new Request(rawReq),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -1303,7 +1361,7 @@ describe('Auth Handler:', function () {
         });
 
         it('should calculate correct signature for request without body', function (done) {
-            var rawReq = rawRequests.edgegridWithoutBody,
+            var rawReq = requestWithAllParams,
                 request = new Request(rawReq),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
@@ -1325,7 +1383,7 @@ describe('Auth Handler:', function () {
         });
 
         it('should calculate correct signature for non-POST request with body', function (done) {
-            var rawReq = _.merge({}, rawRequests.edgegridWithoutBody, {
+            var rawReq = _.merge({}, requestWithAllParams, {
                     method: 'PUT',
                     body: {
                         mode: 'raw',
@@ -1353,7 +1411,7 @@ describe('Auth Handler:', function () {
         });
 
         it('should calculate correct signature for POST request with raw body', function (done) {
-            var rawReq = _.merge({}, rawRequests.edgegridWithoutBody, {
+            var rawReq = _.merge({}, requestWithAllParams, {
                     method: 'POST',
                     body: {
                         mode: 'raw',
@@ -1381,7 +1439,7 @@ describe('Auth Handler:', function () {
         });
 
         it('should calculate correct signature for POST request with urlencoded body', function (done) {
-            var rawReq = _.merge({}, rawRequests.edgegridWithoutBody, {
+            var rawReq = _.merge({}, requestWithAllParams, {
                     method: 'POST',
                     body: {
                         mode: 'urlencoded',
@@ -1412,7 +1470,7 @@ describe('Auth Handler:', function () {
         });
 
         it('should calculate correct signature for POST request with GraphQL body', function (done) {
-            var rawReq = _.merge({}, rawRequests.edgegridWithoutBody, {
+            var rawReq = _.merge({}, requestWithAllParams, {
                     method: 'POST',
                     body: {
                         mode: 'graphql',
