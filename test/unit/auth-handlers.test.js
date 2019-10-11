@@ -1295,12 +1295,11 @@ describe('Auth Handler:', function () {
                 request = new Request(rawReq),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type),
-                headers,
-                authHeader;
+                handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, function () {
-                headers = request.headers.all();
+                var headers = request.headers.all(),
+                    authHeader;
 
                 expect(headers).to.have.lengthOf(1);
 
@@ -1309,10 +1308,10 @@ describe('Auth Handler:', function () {
                 expect(authHeader.system).to.be.true;
 
                 authHeader = authHeader.toString();
-                expect(authHeader).to.include('client_token=');
-                expect(authHeader).to.include('access_token=');
-                expect(authHeader).to.include('timestamp=');
-                expect(authHeader).to.include('nonce=');
+                expect(authHeader).to.include('client_token=postman_client_token');
+                expect(authHeader).to.include('access_token=postman_access_token');
+                expect(authHeader).to.include('timestamp=20191009T06:38:34+0000');
+                expect(authHeader).to.include('nonce=foo');
                 expect(authHeader).to.include('signature=');
                 done();
             });
@@ -1323,12 +1322,11 @@ describe('Auth Handler:', function () {
                 request = new Request(rawReq),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type),
-                headers,
-                authHeader;
+                handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, function () {
-                headers = request.headers.all();
+                var headers = request.headers.all(),
+                    authHeader;
 
                 expect(headers).to.have.lengthOf(1);
 
@@ -1344,12 +1342,11 @@ describe('Auth Handler:', function () {
                 request = new Request(rawReq),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
-                handler = AuthLoader.getHandler(auth.type),
-                headers,
-                authHeader;
+                handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, function () {
-                headers = request.headers.all();
+                var headers = request.headers.all(),
+                    authHeader;
 
                 expect(headers).to.have.lengthOf(1);
 
@@ -1366,12 +1363,11 @@ describe('Auth Handler:', function () {
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
-                expectedSignature = 'UAU6Kp19TTPX+U0iwL02ILJgwHNN4Uo1vyYYKWileLM=',
-                headers,
-                authHeader;
+                expectedSignature = 'UAU6Kp19TTPX+U0iwL02ILJgwHNN4Uo1vyYYKWileLM=';
 
             handler.sign(authInterface, request, function () {
-                headers = request.headers.all();
+                var headers = request.headers.all(),
+                    authHeader;
 
                 expect(headers).to.have.lengthOf(1);
 
@@ -1394,12 +1390,11 @@ describe('Auth Handler:', function () {
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
-                expectedSignature = 'qtdfIJzsauPvytI9WdIQoPKH15jGjIgWZyJ37yuzrbM=',
-                headers,
-                authHeader;
+                expectedSignature = 'qtdfIJzsauPvytI9WdIQoPKH15jGjIgWZyJ37yuzrbM=';
 
             handler.sign(authInterface, request, function () {
-                headers = request.headers.all();
+                var headers = request.headers.all(),
+                    authHeader;
 
                 expect(headers).to.have.lengthOf(1);
 
@@ -1422,12 +1417,11 @@ describe('Auth Handler:', function () {
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
-                expectedSignature = '/206+PqfPKDQ4ljGCU3Jq9kj1D+XrycugYy8GmyVKzg=',
-                headers,
-                authHeader;
+                expectedSignature = '/206+PqfPKDQ4ljGCU3Jq9kj1D+XrycugYy8GmyVKzg=';
 
             handler.sign(authInterface, request, function () {
-                headers = request.headers.all();
+                var headers = request.headers.all(),
+                    authHeader;
 
                 expect(headers).to.have.lengthOf(1);
 
@@ -1453,12 +1447,11 @@ describe('Auth Handler:', function () {
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
-                expectedSignature = 'CX6gvvw5aaNv0qa9M6Kn2e/+swM914PxBv6wU6jHa84=',
-                headers,
-                authHeader;
+                expectedSignature = 'CX6gvvw5aaNv0qa9M6Kn2e/+swM914PxBv6wU6jHa84=';
 
             handler.sign(authInterface, request, function () {
-                headers = request.headers.all();
+                var headers = request.headers.all(),
+                    authHeader;
 
                 expect(headers).to.have.lengthOf(1);
 
@@ -1485,12 +1478,11 @@ describe('Auth Handler:', function () {
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
-                expectedSignature = 'gyJTYlDGTNOGYsOyTvPIWKsEtWBfuILnmMhIIYMcSoU=',
-                headers,
-                authHeader;
+                expectedSignature = 'gyJTYlDGTNOGYsOyTvPIWKsEtWBfuILnmMhIIYMcSoU=';
 
             handler.sign(authInterface, request, function () {
-                headers = request.headers.all();
+                var headers = request.headers.all(),
+                    authHeader;
 
                 expect(headers).to.have.lengthOf(1);
 
