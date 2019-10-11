@@ -111,7 +111,7 @@ describe('EdgeGrid auth', function () {
         it('should include correct Authorization header', function () {
             var request = testrun.request.getCall(0).args[3],
                 header = request.headers.members[0],
-                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]){6};/,
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
                 timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
 
             expect(header).to.have.have.property('key', 'Authorization');
@@ -191,7 +191,7 @@ describe('EdgeGrid auth', function () {
         it('should include correct Authorization header', function () {
             var request = testrun.request.getCall(0).args[3],
                 header = request.headers.members[0],
-                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]){6};/,
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
                 timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
 
             expect(header).to.have.have.property('key', 'Authorization');
@@ -270,7 +270,7 @@ describe('EdgeGrid auth', function () {
         it('should include correct Authorization header', function () {
             var request = testrun.request.getCall(0).args[3],
                 header = request.headers.members[0],
-                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]){6};/,
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
                 timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
 
             expect(header).to.have.have.property('key', 'Authorization');
@@ -349,7 +349,7 @@ describe('EdgeGrid auth', function () {
         it('should include correct Authorization header', function () {
             var request = testrun.request.getCall(0).args[3],
                 header = request.headers.members[0],
-                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]){6};/,
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
                 timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
 
             expect(header).to.have.have.property('key', 'Authorization');

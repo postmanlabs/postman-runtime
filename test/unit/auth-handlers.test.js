@@ -1334,7 +1334,7 @@ describe('Auth Handler:', function () {
 
                 authHeader = headers[0].toString();
 
-                expect(authHeader).to.match(/nonce=([A-Z]|[a-z]|[0-9]){6};/);
+                expect(authHeader).to.match(/nonce=([A-Z]|[a-z]|[0-9]|-){36};/);
                 done();
             });
         });
