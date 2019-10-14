@@ -1,6 +1,8 @@
 master:
   new features:
-    - GH-908 Added support for Akamai EdgeGrid Authentication
+    - GH-908 Added support for Akamai EdgeGrid authentication
+  chores:
+    - GH-911 Added reused session data to history object
 
 7.18.0:
   date: 2019-10-01
