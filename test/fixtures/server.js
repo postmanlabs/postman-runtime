@@ -1,8 +1,10 @@
 const fs = require('fs'),
     net = require('net'),
+    _ = require('lodash'),
     path = require('path'),
     http = require('http'),
     https = require('https'),
+    crypto = require('crypto'),
     GraphQL = require('graphql'),
     enableServerDestroy = require('server-destroy');
 
@@ -331,11 +333,176 @@ function createGraphQLServer (options) {
     return server;
 }
 
+/**
+ * Server with EdgeGrid authentication.
+ *
+ * @param {Object} [options]
+ * @param {String} [options.accessToken] Access token to use for authentication
+ * @param {String} [options.clientToken] Client token to use for authentication
+ * @param {String} [options.clientSecret] Client secret to use for authentication
+ * @param {String[]} [options.headersToSign] Ordered list of headers to include in signature
+ */
+function createEdgeGridAuthServer (options) {
+    !options && (options = {});
+
+    _.defaults(options, {
+        accessToken: 'postman_access_token',
+        clientToken: 'postman_client_token',
+        clientSecret: 'postman_client_secret',
+        headersToSign: []
+    });
+
+    var server = createHTTPServer();
+
+    function authSuccess (res) {
+        res.writeHead(200, {
+            'content-type': 'text/plain'
+        });
+        res.end('authorized');
+    }
+
+    function authFail (res) {
+        res.writeHead(401, {
+            'content-type': 'text/plain'
+        });
+        res.end('unauthorized');
+    }
+
+    // if this function throws error, it means that the authorization header is malformed
+    function parseAuthHeader (authHeader) {
+        var params = {};
+
+        authHeader = authHeader.split(' ')[1].split(';');
+
+        params.clientToken = authHeader[0].replace('client_token=', '');
+        params.accessToken = authHeader[1].replace('access_token=', '');
+        params.timestamp = authHeader[2].replace('timestamp=', '');
+        params.nonce = authHeader[3].replace('nonce=', '');
+        params.signature = authHeader[4].replace('signature=', '');
+
+        return params;
+    }
+
+    function base64HmacSha256 (data, key) {
+        var encrypt = crypto.createHmac('sha256', key);
+
+        encrypt.update(data);
+
+        return encrypt.digest('base64');
+    }
+
+    function base64Sha256 (data) {
+        var shasum = crypto.createHash('sha256').update(data);
+
+        return shasum.digest('base64');
+    }
+
+    function canonicalizeHeaders (headers) {
+        var formattedHeaders = [],
+            headerValue;
+
+        if (!_.isArray(options.headersToSign)) {
+            return '';
+        }
+
+        options.headersToSign.forEach(function (headerName) {
+            if (typeof headerName !== 'string') { return; }
+
+            // trim the header name to remove extra spaces
+            headerName = headerName.trim().toLowerCase();
+            headerValue = headers[headerName];
+
+            // should not include empty headers as per the specification
+            if (typeof headerValue !== 'string' || headerValue === '') { return; }
+
+            formattedHeaders.push(`${headerName}:${headerValue.trim().replace(/\s+/g, ' ')}`);
+        });
+
+        return formattedHeaders.join('\t');
+    }
+
+    function calculateSignature (params) {
+        var authHeader = 'EG1-HMAC-SHA256 ',
+            signingKey = base64HmacSha256(params.timestamp, options.clientSecret),
+            dataToSign;
+
+        authHeader += `client_token=${params.clientToken};`;
+        authHeader += `access_token=${params.accessToken};`;
+        authHeader += `timestamp=${params.timestamp};`;
+        authHeader += `nonce=${params.nonce};`;
+
+        dataToSign = [
+            params.method,
+            'http',
+            `localhost:${server.port}`,
+            params.path,
+            canonicalizeHeaders(params.headers),
+            params.body && params.method === 'POST' ? base64Sha256(params.body) : '',
+            authHeader
+        ].join('\t');
+
+        return base64HmacSha256(dataToSign, signingKey);
+    }
+
+    function authHandler (req, res, body) {
+        var authHeader = req.headers.authorization,
+            authParams,
+            requestSignature;
+
+        if (!authHeader) { return authFail(res); }
+
+        try {
+            authParams = parseAuthHeader(authHeader);
+        }
+        catch (err) {
+            // auth is failed if the authHeader is malformed
+            return authFail(res);
+        }
+
+        // validate the params from authHeader
+        if (!(
+            authParams.clientToken === options.clientToken &&
+            authParams.accessToken === options.accessToken &&
+            (/[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000/).test(authParams.timestamp)
+        )) {
+            return authFail(res);
+        }
+
+        authParams.method = req.method;
+        authParams.path = req.url;
+        authParams.headers = req.headers;
+        authParams.body = body && body.toString && body.toString();
+
+        requestSignature = calculateSignature(authParams);
+
+        if (requestSignature !== authParams.signature) {
+            return authFail(res);
+        }
+
+        return authSuccess(res);
+    }
+
+    server.on('request', function (req, res) {
+        req.on('data', function (chunk) {
+            !this.chunks && (this.chunks = []);
+
+            this.chunks.push(chunk);
+        });
+
+        req.on('end', function () {
+            authHandler(req, res, this.chunks && Buffer.concat(this.chunks));
+        });
+    });
+
+    return server;
+}
+
 module.exports = {
     createSSLServer,
     createHTTPServer,
     createProxyServer,
     createRawEchoServer,
     createGraphQLServer,
-    createRedirectServer
+    createRedirectServer,
+    createEdgeGridAuthServer
 };

@@ -1211,4 +1211,286 @@ describe('Auth Handler:', function () {
             });
         });
     });
+
+    describe('EdgeGrid', function () {
+        var requestWithAllParams = {
+                auth: {
+                    type: 'edgegrid',
+                    edgegrid: {
+                        accessToken: 'postman_access_token',
+                        clientToken: 'postman_client_token',
+                        clientSecret: 'postman_client_secret',
+                        baseURL: 'https://postman-echo.com',
+                        nonce: 'foo',
+                        timestamp: '20191009T06:38:34+0000',
+                        headersToSign: ''
+                    }
+                },
+                url: 'https://postman-echo.com/get',
+                method: 'GET',
+                header: [
+                    {
+                        key: 'Authorization',
+                        value: '',
+                        description: ''
+                    }
+                ]
+            },
+
+            requestWithoutOptionalParams = {
+                auth: {
+                    type: 'edgegrid',
+                    edgegrid: {
+                        accessToken: 'postman_access_token',
+                        clientToken: 'postman_client_token',
+                        clientSecret: 'postman_client_secret'
+                    }
+                },
+                url: 'https://postman-echo.com/get',
+                method: 'GET',
+                header: [
+                    {
+                        key: 'Authorization',
+                        value: '',
+                        description: ''
+                    }
+                ]
+            };
+
+        it('should be able to load all parameters from a request', function (done) {
+            var rawReq = _.merge({}, requestWithAllParams, {
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                expect(request.auth.edgegrid.toObject()).to.include({
+                    accessToken: 'postman_access_token',
+                    clientToken: 'postman_client_token',
+                    clientSecret: 'postman_client_secret',
+                    baseURL: 'https://postman-echo.com',
+                    nonce: 'foo',
+                    timestamp: '20191009T06:38:34+0000',
+                    headersToSign: ''
+                });
+                done();
+            });
+        });
+
+        it('should add Authorization header with required values', function (done) {
+            var rawReq = _.merge({}, requestWithAllParams, {
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                var headers = request.headers.all(),
+                    authHeader;
+
+                expect(headers).to.have.lengthOf(1);
+
+                authHeader = headers[0];
+
+                expect(authHeader.system).to.be.true;
+
+                authHeader = authHeader.toString();
+                expect(authHeader).to.include('client_token=postman_client_token');
+                expect(authHeader).to.include('access_token=postman_access_token');
+                expect(authHeader).to.include('timestamp=20191009T06:38:34+0000');
+                expect(authHeader).to.include('nonce=foo');
+                expect(authHeader).to.include('signature=');
+                done();
+            });
+        });
+
+        it('should add auto-generated nonce to Authorization header when not provided', function (done) {
+            var rawReq = requestWithoutOptionalParams,
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                var headers = request.headers.all(),
+                    authHeader;
+
+                expect(headers).to.have.lengthOf(1);
+
+                authHeader = headers[0].toString();
+
+                expect(authHeader).to.match(/nonce=([A-Z]|[a-z]|[0-9]|-){36};/);
+                done();
+            });
+        });
+
+        it('should add auto-generated timestamp to Authorization header when not provided', function (done) {
+            var rawReq = requestWithoutOptionalParams,
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                var headers = request.headers.all(),
+                    authHeader;
+
+                expect(headers).to.have.lengthOf(1);
+
+                authHeader = headers[0].toString();
+
+                expect(authHeader).to.match(/timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/);
+                done();
+            });
+        });
+
+        it('should calculate correct signature for request without body', function (done) {
+            var rawReq = requestWithAllParams,
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                expectedSignature = 'UAU6Kp19TTPX+U0iwL02ILJgwHNN4Uo1vyYYKWileLM=';
+
+            handler.sign(authInterface, request, function () {
+                var headers = request.headers.all(),
+                    authHeader;
+
+                expect(headers).to.have.lengthOf(1);
+
+                authHeader = headers[0].toString();
+
+                expect(authHeader).to.include(`signature=${expectedSignature}`);
+                done();
+            });
+        });
+
+        it('should calculate correct signature for non-POST request with body', function (done) {
+            var rawReq = _.merge({}, requestWithAllParams, {
+                    method: 'PUT',
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                expectedSignature = 'qtdfIJzsauPvytI9WdIQoPKH15jGjIgWZyJ37yuzrbM=';
+
+            handler.sign(authInterface, request, function () {
+                var headers = request.headers.all(),
+                    authHeader;
+
+                expect(headers).to.have.lengthOf(1);
+
+                authHeader = headers[0].toString();
+
+                expect(authHeader).to.include(`signature=${expectedSignature}`);
+                done();
+            });
+        });
+
+        it('should calculate correct signature for POST request with raw body', function (done) {
+            var rawReq = _.merge({}, requestWithAllParams, {
+                    method: 'POST',
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                expectedSignature = '/206+PqfPKDQ4ljGCU3Jq9kj1D+XrycugYy8GmyVKzg=';
+
+            handler.sign(authInterface, request, function () {
+                var headers = request.headers.all(),
+                    authHeader;
+
+                expect(headers).to.have.lengthOf(1);
+
+                authHeader = headers[0].toString();
+
+                expect(authHeader).to.include(`signature=${expectedSignature}`);
+                done();
+            });
+        });
+
+        it('should calculate correct signature for POST request with urlencoded body', function (done) {
+            var rawReq = _.merge({}, requestWithAllParams, {
+                    method: 'POST',
+                    body: {
+                        mode: 'urlencoded',
+                        urlencoded: [{
+                            key: 'foo',
+                            value: 'bar'
+                        }]
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                expectedSignature = 'CX6gvvw5aaNv0qa9M6Kn2e/+swM914PxBv6wU6jHa84=';
+
+            handler.sign(authInterface, request, function () {
+                var headers = request.headers.all(),
+                    authHeader;
+
+                expect(headers).to.have.lengthOf(1);
+
+                authHeader = headers[0].toString();
+
+                expect(authHeader).to.include(`signature=${expectedSignature}`);
+                done();
+            });
+        });
+
+        it('should calculate correct signature for POST request with GraphQL body', function (done) {
+            var rawReq = _.merge({}, requestWithAllParams, {
+                    method: 'POST',
+                    body: {
+                        mode: 'graphql',
+                        graphql: {
+                            query: 'query Test { hello }',
+                            operationName: 'Test',
+                            variables: '{"foo":"bar"}'
+                        }
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                expectedSignature = 'gyJTYlDGTNOGYsOyTvPIWKsEtWBfuILnmMhIIYMcSoU=';
+
+            handler.sign(authInterface, request, function () {
+                var headers = request.headers.all(),
+                    authHeader;
+
+                expect(headers).to.have.lengthOf(1);
+
+                authHeader = headers[0].toString();
+
+                expect(authHeader).to.include(`signature=${expectedSignature}`);
+                done();
+            });
+        });
+    });
 });
