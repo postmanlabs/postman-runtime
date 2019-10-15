@@ -81,12 +81,12 @@ describe('Request Body Mode: formdata', function () {
             });
         });
 
-        it('should post toString method\'s output as form-data value', function () {
+        it('should post stringified object as form-data value', function () {
             var response = testrun.response.getCall(0).args[2],
                 responseBody = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.deep.property('form', {foo: '[object Object]'});
+            expect(responseBody).to.have.deep.property('form', {foo: '{"bar":"baz"}'});
         });
     });
 
