@@ -1,3 +1,12 @@
+7.19.0:
+  date: 2019-10-16
+  new features:
+    - GH-908 Added support for Akamai EdgeGrid authentication
+  fixed bugs:
+    - GH-914 Fixed a bug where form-data with object value crashes the process
+  chores:
+    - GH-911 Added reused session data to history object
+
 7.18.0:
   date: 2019-10-01
   new features:
