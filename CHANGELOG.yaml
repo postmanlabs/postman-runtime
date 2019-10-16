@@ -1,4 +1,5 @@
-master:
+7.19.0:
+  date: 2019-10-16
   new features:
     - GH-908 Added support for Akamai EdgeGrid authentication
   fixed bugs:
