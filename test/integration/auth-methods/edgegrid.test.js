@@ -1,4 +1,6 @@
-var expect = require('chai').expect,
+var fs = require('fs'),
+    path = require('path'),
+    expect = require('chai').expect,
     server = require('../../fixtures/server');
 
 describe('EdgeGrid auth', function () {
@@ -203,7 +205,7 @@ describe('EdgeGrid auth', function () {
         });
     });
 
-    describe('POST request with body and correct credentials', function () {
+    describe('POST request with raw body and correct credentials', function () {
         var testrun;
 
         before(function (done) {
@@ -225,6 +227,78 @@ describe('EdgeGrid auth', function () {
                         }
                     }
                 }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+        });
+
+        it('should pass the EdgeGrid authentication', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
+
+            var request = testrun.request.getCall(0).args[3],
+                response = testrun.request.getCall(0).args[2],
+                header = request.headers.members[0],
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
+                timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
+
+            expect(header).to.have.have.property('key', 'Authorization');
+            expect(header).to.have.have.property('value')
+                .that.include(`client_token=${credentials.clientToken}`);
+            expect(header).to.have.have.property('value')
+                .that.include(`access_token=${credentials.accessToken}`);
+            expect(header).to.have.have.property('value')
+                .that.include('signature=');
+            expect(header).to.have.have.property('value')
+                .that.match(nonceRegex);
+            expect(header).to.have.have.property('value')
+                .that.match(timestampRegex);
+
+            expect(request.url.toString()).to.eql(edgeGridAuthServer.url);
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('POST request with binary body and correct credentials', function () {
+        var testrun;
+
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'edgegrid',
+                                edgegrid: credentials
+                            },
+                            url: edgeGridAuthServer.url,
+                            method: 'POST',
+                            body: {
+                                mode: 'file',
+                                file: {
+                                    src: path.resolve(__dirname, '../../fixtures/upload-csv')
+                                }
+                            }
+                        }
+                    }
+                },
+                fileResolver: fs
             }, function (err, results) {
                 testrun = results;
                 done(err);
