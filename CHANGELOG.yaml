@@ -1,3 +1,9 @@
+master:
+  fixed bugs:
+    - >-
+      GH-918 Fixed a bug where requests having binary body with AWS, Hawk or 
+      EdgeGrid authentication caused the Runtime to crash
+
 7.19.0:
   date: 2019-10-16
   new features:
