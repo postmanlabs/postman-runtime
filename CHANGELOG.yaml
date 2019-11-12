@@ -1,3 +1,17 @@
+7.20.0:
+  date: 2019-11-12
+  new features:
+    - GH-921 Added ability to preserve non-JSON data types in console logs
+    - >-
+      GH-921 Added an option `script.serializeLogs` to allow sending logs as a
+      serialized string which can be parsed using `teleport-javascript`
+  fixed bugs:
+    - >-
+      GH-918 Fixed a bug where requests having binary body with AWS, Hawk or
+      EdgeGrid authentication caused the Runtime to crash
+  chores:
+    - Updated dependencies
+
 7.19.0:
   date: 2019-10-16
   new features:

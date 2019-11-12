@@ -135,6 +135,14 @@ runner.run(collection, {
         }
     },
 
+    // Options specific to the script execution
+    script: {
+
+        // Option to set whether to send console logs in serialized format which can be parsed
+        // using the `teleport-javascript` serialization library.
+        serializeLogs: false
+    },
+
     // A ProxyConfigList, from the SDK
     proxies: new sdk.ProxyConfigList(),
 
