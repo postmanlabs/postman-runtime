@@ -1,4 +1,5 @@
-master:
+7.20.0:
+  date: 2019-11-12
   new features:
     - GH-921 Added ability to preserve non-JSON data types in console logs
     - >-
