@@ -1,3 +1,7 @@
+master:
+  chores:
+    - Updated dependencies
+
 7.20.0:
   date: 2019-11-12
   new features:
