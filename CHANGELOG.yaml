@@ -1,3 +1,9 @@
+master:
+  fixed bugs:
+    - >-
+      GH-928 Fixed a bug where Basic Auth was failing if credentials had
+      non-ASCII characters
+
 7.20.1:
   date: 2019-11-13
   chores:
