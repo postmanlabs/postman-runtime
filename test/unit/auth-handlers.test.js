@@ -1,6 +1,5 @@
 var _ = require('lodash'),
     expect = require('chai').expect,
-    btoa = require('btoa'),
     aws4 = require('aws4'),
     sdk = require('postman-collection'),
     AuthLoader = require('../../lib/authorizer').AuthLoader,
@@ -91,7 +90,8 @@ describe('Auth Handler:', function () {
                 authInterface = createAuthInterface(auth),
                 username = rawRequests.basic.auth.basic.username,
                 password = rawRequests.basic.auth.basic.password,
-                expectedAuthHeader = 'Authorization: Basic ' + btoa(username + ':' + password),
+                expectedAuthHeader = 'Authorization: Basic ' +
+                                     Buffer.from(`${username}:${password}`, 'utf8').toString('base64'),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 authHeader;
@@ -119,7 +119,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa('foo:'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from('foo:', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
 
             rawBasicReq.auth.basic = {password: 'foo'}; // no username present
@@ -129,7 +133,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa(':foo'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from(':foo', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
 
             rawBasicReq.auth.basic = {}; // no username and no password present
@@ -139,7 +147,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa(':'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from(':', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
         });
     });
