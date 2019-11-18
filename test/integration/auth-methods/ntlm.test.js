@@ -87,6 +87,58 @@ describe.skip('NTLM', function () {
         });
     });
 
+    describe('with empty details', function () {
+        before(function (done) {
+            // creating local copy of collection because we don't want to send
+            // any parameters for NTLM auth
+            var localRunOptions = {
+                collection: {
+                    item: {
+                        name: 'NTLM Sample Request',
+                        request: {
+                            url: ntlmServerIP,
+                            auth: {
+                                type: 'ntlm'
+                            }
+                        }
+                    }
+                }
+            };
+
+            // perform the collection run
+            this.run(localRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+
+            var err = testrun.request.firstCall.args[0];
+
+            err && console.error(err.stack);
+            expect(err).to.be.null;
+
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request thrice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
+
+            var response = testrun.request.firstCall.args[2];
+
+            expect(response).to.have.property('code', 401);
+        });
+    });
+
     describe('with in-correct details', function () {
         before(function (done) {
             var clonedRunOptions = _.merge({}, runOptions, {
