@@ -106,6 +106,27 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
+        it('should generate correct header for parameters with unicode characters', function () {
+            var rawBasicReq = _.cloneDeep(rawRequests.basic),
+                request,
+                authInterface,
+                handler;
+
+            rawBasicReq.auth.basic = {username: '中文', password: '文中'};
+            request = new Request(rawBasicReq);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.toJSON()).to.eql([
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from('中文:文中', 'utf8').toString('base64'),
+                    system: true
+                }
+            ]);
+        });
+
         it('should use default values for the missing parameters', function () {
             var rawBasicReq = _.cloneDeep(rawRequests.basic),
                 request,
