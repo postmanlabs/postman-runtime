@@ -1,4 +1,6 @@
 master:
+  new  features:
+    - GH-931 Added support for redirects in NTLM auth requests
   fixed bugs:
     - >-
       GH-929 Fixed a bug where error was thrown when `username` or `password`
