@@ -1,5 +1,7 @@
 var expect = require('chai').expect,
-    _ = require('lodash');
+    _ = require('lodash'),
+
+    server = require('../../fixtures/server');
 
 describe.skip('NTLM', function () {
     // @todo Add '/ntlm' endpoint in echo server
@@ -251,6 +253,88 @@ describe.skip('NTLM', function () {
 
             expect(err).to.be.null;
             expect(response).to.have.property('code', 401);
+        });
+    });
+
+    describe('with redirects', function () {
+        var redirectServer,
+            PORT = 5050,
+            URL = 'http://localhost:' + PORT;
+
+        before(function (done) {
+            redirectServer = server.createExternalRedirectServer();
+
+            var customRunOptions = {
+                collection: {
+                    item: [{
+                        name: 'NTLM Sample Request',
+                        request: {
+                            // send request to ntlm server after redirect
+                            url: URL + '/http://' + ntlmServerIP,
+                            auth: {
+                                type: 'ntlm',
+                                ntlm: {
+                                    username: USERNAME,
+                                    password: PASSWORD,
+                                    domain: DOMAIN,
+                                    workstation: WORKSTATION
+                                }
+                            }
+                        }
+                    }, {
+                        name: 'Close connection',
+                        request: {
+                            header: [{
+                                key: 'Connection',
+                                value: 'close'
+                            }],
+                            url: ntlmServerIP
+                        }
+                    }]
+                }
+            };
+
+            redirectServer.listen(PORT, function () {
+                // perform the collection run
+                this.run(customRunOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            }.bind(this));
+        });
+
+        after(function (done) {
+            redirectServer.destroy(done);
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+
+            var err = testrun.request.firstCall.args[0];
+
+            err && console.error(err.stack);
+            expect(err).to.be.null;
+
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request thrice for NTLM', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 4 // fourth call is for "Close connection" request
+            });
+
+            var response1 = testrun.request.firstCall.args[2],
+                response2 = testrun.request.secondCall.args[2],
+                response3 = testrun.request.thirdCall.args[2];
+
+            expect(response1).to.have.property('code', 401);
+            expect(response2).to.have.property('code', 401);
+            expect(response3).to.have.property('code', 200);
         });
     });
 

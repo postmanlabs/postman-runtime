@@ -175,6 +175,32 @@ function createRedirectServer () {
 }
 
 /**
+ * Simple redirect server for tests that redirects to external url
+ * Use the URL format: /url
+ *
+ * @example
+ * var s = createRedirectServer();
+ * s.on('/hit', function (req, res) {
+ *     console.log(req.location);
+ * });
+ * s.listen(3000, callback);
+ */
+function createExternalRedirectServer () {
+    var server = http.createServer(function (req, res) {
+        var redirectUrl = req.url.slice(1);
+
+        server.emit('hit', req, res);
+        res.writeHead(302, {location: redirectUrl});
+
+        return res.end();
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
+/**
  * Wrapper for HTTP server that emit events with the name of request url path.
  *
  * @example
@@ -504,5 +530,6 @@ module.exports = {
     createRawEchoServer,
     createGraphQLServer,
     createRedirectServer,
+    createExternalRedirectServer,
     createEdgeGridAuthServer
 };
