@@ -6,6 +6,9 @@ master:
     - >-
       GH-928 Fixed a bug where Basic Auth was failing if credentials had
       non-ASCII characters
+    - >-
+      GH-932 Fixed a bug where special characters in proxy auth credentials
+      caused connection failure to the proxy server
 
 7.20.1:
   date: 2019-11-13
