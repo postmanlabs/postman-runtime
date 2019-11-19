@@ -184,4 +184,56 @@ describe('proxy', function () {
             proxyServer.destroy();
         });
     });
+
+    describe('auth: credentials contain special characters', function () {
+        var auth = {
+                username: 'user#1@Postman',
+                password: 'password#1@Postman'
+            },
+            proxyList = new ProxyConfigList({}, [{
+                match: '*://postman-echo.com/*',
+                host: proxyHost,
+                port: port,
+                authenticate: true,
+                username: auth.username,
+                password: auth.password
+            }]);
+
+        before(function (done) {
+            proxyServer = server.createProxyServer({headers: {'x-postman-proxy': 'true'}, auth: auth});
+            proxyServer.listen(port);
+
+            this.run({
+                collection: {
+                    item: {
+                        request: 'http://postman-echo.com/get'
+                    }
+                },
+                proxies: proxyList
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have started and completed the test run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+        });
+
+        it('should receive response from the proxy', function () {
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(testrun.request.calledOnce).to.be.ok;
+            expect(response.reason()).to.eql('OK');
+            expect(response.json()).to.have.nested.property('headers.x-postman-proxy', 'true');
+        });
+
+        after(function () {
+            proxyServer.destroy();
+        });
+    });
 });
