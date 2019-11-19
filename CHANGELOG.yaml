@@ -1,6 +1,9 @@
 master:
   fixed bugs:
     - >-
+      GH-929 Fixed a bug where error was thrown when `username` or `password`
+      fields were empty for NTLM auth
+    - >-
       GH-928 Fixed a bug where Basic Auth was failing if credentials had
       non-ASCII characters
 
