@@ -1,6 +1,5 @@
 var _ = require('lodash'),
     expect = require('chai').expect,
-    btoa = require('btoa'),
     aws4 = require('aws4'),
     sdk = require('postman-collection'),
     AuthLoader = require('../../lib/authorizer').AuthLoader,
@@ -91,7 +90,8 @@ describe('Auth Handler:', function () {
                 authInterface = createAuthInterface(auth),
                 username = rawRequests.basic.auth.basic.username,
                 password = rawRequests.basic.auth.basic.password,
-                expectedAuthHeader = 'Authorization: Basic ' + btoa(username + ':' + password),
+                expectedAuthHeader = 'Authorization: Basic ' +
+                                     Buffer.from(`${username}:${password}`, 'utf8').toString('base64'),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 authHeader;
@@ -104,6 +104,27 @@ describe('Auth Handler:', function () {
             authHeader = headers[0];
             expect(authHeader.toString()).to.eql(expectedAuthHeader);
             expect(authHeader.system).to.be.true;
+        });
+
+        it('should generate correct header for parameters with unicode characters', function () {
+            var rawBasicReq = _.cloneDeep(rawRequests.basic),
+                request,
+                authInterface,
+                handler;
+
+            rawBasicReq.auth.basic = {username: '中文', password: '文中'};
+            request = new Request(rawBasicReq);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.toJSON()).to.eql([
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from('中文:文中', 'utf8').toString('base64'),
+                    system: true
+                }
+            ]);
         });
 
         it('should use default values for the missing parameters', function () {
@@ -119,7 +140,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa('foo:'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from('foo:', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
 
             rawBasicReq.auth.basic = {password: 'foo'}; // no username present
@@ -129,7 +154,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa(':foo'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from(':foo', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
 
             rawBasicReq.auth.basic = {}; // no username and no password present
@@ -139,7 +168,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa(':'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from(':', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
         });
     });
