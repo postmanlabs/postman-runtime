@@ -323,4 +323,108 @@ describe('NTLM', function () {
             expect(response).to.have.property('code', 200);
         });
     });
+
+    describe('with username in down-level logon format', function () {
+        before(function (done) {
+            var clonedRunOptions = _.merge({}, runOptions, {
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: DOMAIN + '\\' + USERNAME
+                    }, {
+                        key: 'pass',
+                        value: PASSWORD
+                    }, {
+                        key: 'domain',
+                        value: ''
+                    }, {
+                        key: 'workstation',
+                        value: WORKSTATION
+                    }]
+                }
+            }, runOptions);
+
+            // perform the collection run
+            this.run(clonedRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run successfully', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request thrice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
+
+            var err = testrun.request.thirdCall.args[0],
+                response = testrun.request.thirdCall.args[2];
+
+            expect(err).to.be.null;
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('with username in user principal name format', function () {
+        before(function (done) {
+            var clonedRunOptions = _.merge({}, runOptions, {
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: USERNAME + '@' + DOMAIN
+                    }, {
+                        key: 'pass',
+                        value: PASSWORD
+                    }, {
+                        key: 'domain',
+                        value: ''
+                    }, {
+                        key: 'workstation',
+                        value: WORKSTATION
+                    }]
+                }
+            }, runOptions);
+
+            // perform the collection run
+            this.run(clonedRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run successfully', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request thrice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
+
+            var err = testrun.request.thirdCall.args[0],
+                response = testrun.request.thirdCall.args[2];
+
+            expect(err).to.be.null;
+            expect(response).to.have.property('code', 200);
+        });
+    });
 });
