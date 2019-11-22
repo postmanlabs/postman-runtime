@@ -1,4 +1,6 @@
 master:
+  new features:
+    - GH-934 Added ability to pull domain name from username for NTLM auth
   fixed bugs:
     - >-
       GH-929 Fixed a bug where error was thrown when `username` or `password`
