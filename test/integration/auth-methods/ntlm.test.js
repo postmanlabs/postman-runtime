@@ -1,20 +1,24 @@
 var expect = require('chai').expect,
-    _ = require('lodash');
+    _ = require('lodash'),
 
-describe.skip('NTLM', function () {
+    server = require('../../fixtures/server');
+
+describe('NTLM', function () {
     // @todo Add '/ntlm' endpoint in echo server
-    var ntlmServerIP = '34.214.154.175',
+    var PORT = 2000,
         USERNAME = 'postman',
         PASSWORD = 'NTLM@123',
-        DOMAIN = '',
-        WORKSTATION = '',
+        DOMAIN = 'domain',
+        WORKSTATION = 'workstation',
+        ntlmServerURL = 'http://localhost:' + PORT,
+        ntlmServer,
         testrun,
         runOptions = {
             collection: {
                 item: {
                     name: 'NTLM Sample Request',
                     request: {
-                        url: ntlmServerIP,
+                        url: ntlmServerURL,
                         auth: {
                             type: 'ntlm',
                             ntlm: {
@@ -28,6 +32,20 @@ describe.skip('NTLM', function () {
                 }
             }
         };
+
+    before(function (done) {
+        ntlmServer = server.createNTLMServer({
+            // debug: true,
+            username: USERNAME,
+            password: PASSWORD,
+            domain: DOMAIN,
+            workstation: WORKSTATION
+        }).listen(PORT, done);
+    });
+
+    after(function (done) {
+        ntlmServer.destroy(done);
+    });
 
     describe('with request server not supporting NTLM', function () {
         before(function (done) {
@@ -96,7 +114,7 @@ describe.skip('NTLM', function () {
                     item: {
                         name: 'NTLM Sample Request',
                         request: {
-                            url: ntlmServerIP,
+                            url: ntlmServerURL,
                             auth: {
                                 type: 'ntlm'
                             }
