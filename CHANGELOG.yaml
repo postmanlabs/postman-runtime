@@ -1,4 +1,8 @@
 master:
+  new features:
+    - >-
+      GH-937 Added ability to use OAuth2 tokens with unknown types as Bearer
+      token in OAuth2 authentication
   fixed bugs:
     - >-
       GH-929 Fixed a bug where error was thrown when `username` or `password`
