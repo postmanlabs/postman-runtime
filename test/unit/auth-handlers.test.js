@@ -731,7 +731,7 @@ describe('Auth Handler:', function () {
             });
         });
 
-        it('should return when token type is not known', function () {
+        it('should treat unknown token type as "Bearer"', function () {
             var clonedRequestObj,
                 request,
                 auth,
@@ -740,6 +740,31 @@ describe('Auth Handler:', function () {
 
             clonedRequestObj = _.cloneDeep(requestObj);
             clonedRequestObj.auth.oauth2.tokenType = 'unknown type';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
+        it('should return when token type is MAC', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.tokenType = 'mac';
 
             request = new Request(clonedRequestObj);
             auth = request.auth;
@@ -838,37 +863,6 @@ describe('Auth Handler:', function () {
                     oauth2: {
                         addTokenTo: 'queryParams',
                         tokenType: 'bearer'
-                    }
-                },
-                header: [{key: 'Authorization', value: 'Old-Header'}],
-                url: 'https://postman-echo.com/get?access_token=old-token'
-            }, requestObj);
-
-            request = new Request(requestWithAuthHeader);
-            auth = request.auth;
-            authInterface = createAuthInterface(auth);
-            handler = AuthLoader.getHandler(auth.type);
-
-            handler.sign(authInterface, request, _.noop);
-
-            expect(request.headers.toJSON()).to.eql([{key: 'Authorization', value: 'Old-Header'}]);
-
-            expect(request.url.toJSON()).to.eql({
-                protocol: 'https',
-                path: ['get'],
-                host: ['postman-echo', 'com'],
-                query: [{key: 'access_token', value: 'old-token'}],
-                variable: []
-            });
-
-            // invalid token type
-            requestWithAuthHeader = _.defaults({
-                auth: {
-                    type: 'oauth2',
-                    oauth2: {
-                        accessToken: '123456789abcdefghi',
-                        addTokenTo: 'queryParams',
-                        tokenType: 'micdrop'
                     }
                 },
                 header: [{key: 'Authorization', value: 'Old-Header'}],
