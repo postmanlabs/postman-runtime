@@ -33,6 +33,9 @@ runner.run(collection, {
         script: 5000
     },
 
+    // Number of concurrent users
+    concurrency: 1,
+
     // Number of iterations
     iterationCount: 1,
 
