@@ -208,7 +208,7 @@ function createHTTPServer () {
  * @param {Object} [options] - Additional options to configure proxy server
  * @param {Object} [options.auth] - Proxy authentication, Basic auth
  * @param {String} [options.agent] - Agent used for http(s).request
- * @param {Boolean} [options.useIPv6] - If true, force using IPv6 address while forwarfing request.
+ * @param {Boolean} [options.useIPv6] - If true, force using IPv6 address while forwarding request.
  *
  * @example
  * var s = createProxyServer({
