@@ -1,5 +1,6 @@
 const fs = require('fs'),
     net = require('net'),
+    url = require('url'),
     dns = require('dns'),
     _ = require('lodash'),
     path = require('path'),
@@ -247,18 +248,22 @@ function createProxyServer (options) {
         req.headers = Object.assign(req.headers, options.headers || {});
 
         // forward request to the origin and pipe the response
-        var fwd = agent.request(req.url, {
-            method: req.method.toLowerCase(),
-            headers: req.headers,
-            lookup: options.useIPv6 && function (hostname, options, callback) {
-                !options && (options = {});
-                options.family = 6;
+        var requestUrl = url.parse(req.url),
+            fwd = agent.request({
+                host: requestUrl.hostname,
+                path: requestUrl.path,
+                port: requestUrl.port,
+                method: req.method.toLowerCase(),
+                headers: req.headers,
+                lookup: options.useIPv6 && function (hostname, options, callback) {
+                    !options && (options = {});
+                    options.family = 6;
 
-                return dns.lookup(hostname, options, callback);
-            }
-        }, function (resp) {
-            resp.pipe(res);
-        });
+                    return dns.lookup(hostname, options, callback);
+                }
+            }, function (resp) {
+                resp.pipe(res);
+            });
 
         req.pipe(fwd);
     });
