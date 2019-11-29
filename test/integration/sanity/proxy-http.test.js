@@ -186,7 +186,9 @@ describe('proxy', function () {
     });
 
     // issue: https://github.com/postmanlabs/postman-app-support/issues/5626
-    describe('IPv6 request through IPv4 proxy', function () {
+    // Skip in TRAVIS because IPv6 is disabled there
+    // eslint-disable-next-line no-process-env
+    (process.env.TRAVIS ? describe.skip : describe)('IPv6 request through IPv4 proxy', function () {
         var proxyList = new ProxyConfigList({}, [{
                 host: proxyHost,
                 port: port
