@@ -205,8 +205,10 @@ describe('proxy', function () {
 
             requestServer = server.createHTTPServer();
             requestServer.on('/foo', function (req, res) {
+                var proxyHeader = Boolean(req.headers['x-postman-proxy']);
+
                 res.writeHead(200, {'content-type': 'text/plain'});
-                res.end('Hello Postman!!');
+                res.end(`Hello Postman!!\nproxy-header:${proxyHeader}`);
             });
 
             // listening on IPv6
@@ -240,7 +242,8 @@ describe('proxy', function () {
             expect(testrun.request.calledOnce).to.be.ok;
             expect(request.proxy.getProxyUrl()).to.eql(proxyUrlForHttpRequest);
             expect(response.reason()).to.eql('OK');
-            expect(response.text()).to.equal('Hello Postman!!');
+            expect(response.text()).to.include('Hello Postman!!');
+            expect(response.text()).to.include('proxy-header:true');
         });
 
         after(function () {
