@@ -1,3 +1,29 @@
+7.21.0:
+  date: 2019-12-02
+  new features:
+    - >-
+      GH-937 Added ability to use OAuth2 tokens with unknown types as Bearer
+      token in OAuth2 authentication
+    - GH-934 Added ability to pull domain name from username for NTLM auth
+  fixed bugs:
+    - >-
+      GH-939 Fixed a bug where IPv6 localhost request through IPv4 localhost
+      proxy was failing.
+    - >-
+      GH-928 Fixed a bug where Basic Auth was failing if credentials had
+      non-ASCII characters
+    - >-
+      GH-929 Fixed a bug where error was thrown when `username` or `password`
+      fields were empty for NTLM auth
+    - >-
+      GH-933 Fixed a bug where NTLM could not complete authentication if
+      multiple `www-authenticate` headers were sent
+  chores:
+    - >-
+      GH-942 Convert response into a JSON serializable object before executing
+      the script
+    - Updated dependencies
+
 7.20.1:
   date: 2019-11-13
   chores:

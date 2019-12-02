@@ -1,6 +1,5 @@
 var _ = require('lodash'),
     expect = require('chai').expect,
-    btoa = require('btoa'),
     aws4 = require('aws4'),
     sdk = require('postman-collection'),
     AuthLoader = require('../../lib/authorizer').AuthLoader,
@@ -91,7 +90,8 @@ describe('Auth Handler:', function () {
                 authInterface = createAuthInterface(auth),
                 username = rawRequests.basic.auth.basic.username,
                 password = rawRequests.basic.auth.basic.password,
-                expectedAuthHeader = 'Authorization: Basic ' + btoa(username + ':' + password),
+                expectedAuthHeader = 'Authorization: Basic ' +
+                                     Buffer.from(`${username}:${password}`, 'utf8').toString('base64'),
                 handler = AuthLoader.getHandler(auth.type),
                 headers,
                 authHeader;
@@ -104,6 +104,27 @@ describe('Auth Handler:', function () {
             authHeader = headers[0];
             expect(authHeader.toString()).to.eql(expectedAuthHeader);
             expect(authHeader.system).to.be.true;
+        });
+
+        it('should generate correct header for parameters with unicode characters', function () {
+            var rawBasicReq = _.cloneDeep(rawRequests.basic),
+                request,
+                authInterface,
+                handler;
+
+            rawBasicReq.auth.basic = {username: '中文', password: '文中'};
+            request = new Request(rawBasicReq);
+            authInterface = createAuthInterface(request.auth);
+            handler = AuthLoader.getHandler(request.auth.type);
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.toJSON()).to.eql([
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from('中文:文中', 'utf8').toString('base64'),
+                    system: true
+                }
+            ]);
         });
 
         it('should use default values for the missing parameters', function () {
@@ -119,7 +140,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa('foo:'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from('foo:', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
 
             rawBasicReq.auth.basic = {password: 'foo'}; // no username present
@@ -129,7 +154,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa(':foo'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from(':foo', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
 
             rawBasicReq.auth.basic = {}; // no username and no password present
@@ -139,7 +168,11 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request.headers.toJSON()).to.eql([
-                {key: 'Authorization', value: 'Basic ' + btoa(':'), system: true}
+                {
+                    key: 'Authorization',
+                    value: 'Basic ' + Buffer.from(':', 'utf8').toString('base64'),
+                    system: true
+                }
             ]);
         });
     });
@@ -698,7 +731,7 @@ describe('Auth Handler:', function () {
             });
         });
 
-        it('should return when token type is not known', function () {
+        it('should treat unknown token type as "Bearer"', function () {
             var clonedRequestObj,
                 request,
                 auth,
@@ -707,6 +740,31 @@ describe('Auth Handler:', function () {
 
             clonedRequestObj = _.cloneDeep(requestObj);
             clonedRequestObj.auth.oauth2.tokenType = 'unknown type';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
+        it('should return when token type is MAC', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.tokenType = 'mac';
 
             request = new Request(clonedRequestObj);
             auth = request.auth;
@@ -805,37 +863,6 @@ describe('Auth Handler:', function () {
                     oauth2: {
                         addTokenTo: 'queryParams',
                         tokenType: 'bearer'
-                    }
-                },
-                header: [{key: 'Authorization', value: 'Old-Header'}],
-                url: 'https://postman-echo.com/get?access_token=old-token'
-            }, requestObj);
-
-            request = new Request(requestWithAuthHeader);
-            auth = request.auth;
-            authInterface = createAuthInterface(auth);
-            handler = AuthLoader.getHandler(auth.type);
-
-            handler.sign(authInterface, request, _.noop);
-
-            expect(request.headers.toJSON()).to.eql([{key: 'Authorization', value: 'Old-Header'}]);
-
-            expect(request.url.toJSON()).to.eql({
-                protocol: 'https',
-                path: ['get'],
-                host: ['postman-echo', 'com'],
-                query: [{key: 'access_token', value: 'old-token'}],
-                variable: []
-            });
-
-            // invalid token type
-            requestWithAuthHeader = _.defaults({
-                auth: {
-                    type: 'oauth2',
-                    oauth2: {
-                        accessToken: '123456789abcdefghi',
-                        addTokenTo: 'queryParams',
-                        tokenType: 'micdrop'
                     }
                 },
                 header: [{key: 'Authorization', value: 'Old-Header'}],

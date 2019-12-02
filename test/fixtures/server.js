@@ -1,11 +1,14 @@
 const fs = require('fs'),
     net = require('net'),
+    url = require('url'),
+    dns = require('dns'),
     _ = require('lodash'),
     path = require('path'),
     http = require('http'),
     https = require('https'),
     crypto = require('crypto'),
     GraphQL = require('graphql'),
+    ntlmUtils = require('httpntlm').ntlm,
     enableServerDestroy = require('server-destroy');
 
 /**
@@ -206,6 +209,7 @@ function createHTTPServer () {
  * @param {Object} [options] - Additional options to configure proxy server
  * @param {Object} [options.auth] - Proxy authentication, Basic auth
  * @param {String} [options.agent] - Agent used for http(s).request
+ * @param {Boolean} [options.useIPv6] - If true, force using IPv6 address while forwarding request.
  *
  * @example
  * var s = createProxyServer({
@@ -244,14 +248,22 @@ function createProxyServer (options) {
         req.headers = Object.assign(req.headers, options.headers || {});
 
         // forward request to the origin and pipe the response
-        var fwd = agent.request({
-            host: req.headers.host,
-            path: req.url,
-            method: req.method.toLowerCase(),
-            headers: req.headers
-        }, function (resp) {
-            resp.pipe(res);
-        });
+        var requestUrl = url.parse(req.url),
+            fwd = agent.request({
+                host: requestUrl.hostname,
+                path: requestUrl.path,
+                port: requestUrl.port,
+                method: req.method.toLowerCase(),
+                headers: req.headers,
+                lookup: options.useIPv6 && function (hostname, options, callback) {
+                    !options && (options = {});
+                    options.family = 6;
+
+                    return dns.lookup(hostname, options, callback);
+                }
+            }, function (resp) {
+                resp.pipe(res);
+            });
 
         req.pipe(fwd);
     });
@@ -497,6 +509,106 @@ function createEdgeGridAuthServer (options) {
     return server;
 }
 
+/**
+ * Creates an NTLM server.
+ *
+ * @param {Object} options - The options for the server
+ * @param {String} options.username - Username for authentication
+ * @param {String} options.password - Password for authentication
+ * @param {String} options.domain - Domain name for authentication
+ * @param {String} options.workstation - Workstation for authentication
+ * @param {Boolean} options.debug - Enable logging of requests
+ *
+ * @return {Object} - http server
+ */
+function createNTLMServer (options) {
+    options = options || {};
+
+    var type2Message = 'NTLM ' +
+            'TlRMTVNTUAACAAAAHgAeADgAAAAFgoqiBevywvJykjAAAAAAAAAAAJgAmABWAAAA' +
+            'CgC6RwAAAA9EAEUAUwBLAFQATwBQAC0ASgBTADQAVQBKAFQARAACAB4ARABFAFMA' +
+            'SwBUAE8AUAAtAEoAUwA0AFUASgBUAEQAAQAeAEQARQBTAEsAVABPAFAALQBKAFMA' +
+            'NABVAEoAVABEAAQAHgBEAEUAUwBLAFQATwBQAC0ASgBTADQAVQBKAFQARAADAB4A' +
+            'RABFAFMASwBUAE8AUAAtAEoAUwA0AFUASgBUAEQABwAIADmguzCHn9UBAAAAAA==',
+        parsedType2Message = ntlmUtils.parseType2Message(type2Message, _.noop),
+
+        username = options.username || 'username',
+        password = options.password || 'password',
+        domain = options.domain || '',
+        workstation = options.workstation || '',
+
+        type1Message = ntlmUtils.createType1Message({
+            domain,
+            workstation
+        }),
+        type3Message = ntlmUtils.createType3Message(parsedType2Message, {
+            domain,
+            workstation,
+            username,
+            password
+        }),
+
+        handler = function (req, res) {
+            var authHeaders = req.headers.authorization;
+
+            // send type2 message and ask for type3 message
+            if (authHeaders && authHeaders.startsWith(type1Message.slice(0, 20))) {
+                res.writeHead(401, {
+
+                    // @note we're sending a 'Negotiate' header here to make
+                    // sure that runtime can handle it.
+                    'www-authenticate': [type2Message, 'Negotiate']
+                });
+
+                options.debug && console.info('401: got type1 message');
+            }
+
+            // successful auth
+            // @note we don't check if the username and password are correct
+            // because I don't know how.
+            else if (authHeaders && authHeaders.startsWith(type3Message.slice(0, 100))) {
+                res.writeHead(200);
+
+                options.debug && console.info('200: got type3 message');
+            }
+
+            // no valid auth headers, ask for type1 message
+            else {
+                res.writeHead(401, {
+                    'www-authenticate': ['NTLM', 'Negotiate']
+                });
+
+                options.debug && console.info('401: got no authorization header');
+            }
+
+            res.end();
+        },
+        server = http.createServer(handler);
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
+/**
+ * Custom junk bytes response server.
+ *
+ * `/${bytes}` returns binary response of given bytes size.
+ */
+function createBytesServer () {
+    var server = http.createServer(function (req, res) {
+        var bytes = Number(req.url.substr(1)) || 0; // remove leading /
+
+        res.writeHead(200);
+        res.write(Buffer.alloc(bytes));
+        res.end();
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
 module.exports = {
     createSSLServer,
     createHTTPServer,
@@ -504,5 +616,7 @@ module.exports = {
     createRawEchoServer,
     createGraphQLServer,
     createRedirectServer,
-    createEdgeGridAuthServer
+    createEdgeGridAuthServer,
+    createNTLMServer,
+    createBytesServer
 };
