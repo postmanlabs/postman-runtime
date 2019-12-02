@@ -5,6 +5,61 @@ var expect = require('chai').expect,
 describe('sandbox library - pm api', function () {
     var testrun;
 
+    describe('sanity', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: 'https://postman-echo.com/get',
+                        event: [{
+                            listen: 'test',
+                            script: {
+                                type: 'text/javascript',
+                                exec: `
+                                console.log(pm.request.toJSON());
+                                console.log(pm.response.toJSON());
+                                `
+                            }
+                        }]
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should run the test script successfully', function () {
+            var request = testrun.response.getCall(0).args[3],
+                response = testrun.response.getCall(0).args[2];
+
+            sinon.assert.calledOnce(testrun.script);
+            sinon.assert.calledWith(testrun.script.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.test);
+            sinon.assert.calledWith(testrun.script.getCall(0), null);
+
+            sinon.assert.calledTwice(testrun.console);
+
+            // validate pm.request and pm.response
+            expect(testrun.console.getCall(0).args[2]).to.eql(request.toJSON());
+            expect(testrun.console.getCall(1).args[2]).to.eql(response.toJSON());
+        });
+    });
+
     describe('chai', function () {
         before(function (done) {
             this.run({
