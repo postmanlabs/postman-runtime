@@ -1,4 +1,5 @@
-master:
+7.21.0:
+  date: 2019-12-02
   new features:
     - >-
       GH-937 Added ability to use OAuth2 tokens with unknown types as Bearer
@@ -9,11 +10,11 @@ master:
       GH-939 Fixed a bug where IPv6 localhost request through IPv4 localhost
       proxy was failing.
     - >-
-      GH-929 Fixed a bug where error was thrown when `username` or `password`
-      fields were empty for NTLM auth
-    - >-
       GH-928 Fixed a bug where Basic Auth was failing if credentials had
       non-ASCII characters
+    - >-
+      GH-929 Fixed a bug where error was thrown when `username` or `password`
+      fields were empty for NTLM auth
     - >-
       GH-933 Fixed a bug where NTLM could not complete authentication if
       multiple `www-authenticate` headers were sent
