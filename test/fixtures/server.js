@@ -590,6 +590,25 @@ function createNTLMServer (options) {
     return server;
 }
 
+/**
+ * Custom junk bytes response server.
+ *
+ * `/${bytes}` returns binary response of given bytes size.
+ */
+function createBytesServer () {
+    var server = http.createServer(function (req, res) {
+        var bytes = Number(req.url.substr(1)) || 0; // remove leading /
+
+        res.writeHead(200);
+        res.write(Buffer.alloc(bytes));
+        res.end();
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
 module.exports = {
     createSSLServer,
     createHTTPServer,
@@ -598,5 +617,6 @@ module.exports = {
     createGraphQLServer,
     createRedirectServer,
     createEdgeGridAuthServer,
-    createNTLMServer
+    createNTLMServer,
+    createBytesServer
 };

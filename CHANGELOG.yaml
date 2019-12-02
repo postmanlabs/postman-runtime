@@ -17,6 +17,11 @@ master:
     - >-
       GH-933 Fixed a bug where NTLM could not complete authentication if
       multiple `www-authenticate` headers were sent
+  chores:
+    - >-
+      GH-942 Convert response into a JSON serializable object before executing
+      the script
+    - Updated dependencies
 
 7.20.1:
   date: 2019-11-13
