@@ -42,7 +42,7 @@
     "performance-now": "2.1.0",
     "postman-collection": "3.5.4",
     "postman-request": "2.88.1-postman.16",
-    "postman-sandbox": "3.5.1",
+    "postman-sandbox": "3.5.2",
     "postman-url-encoder": "1.0.3",
     "resolve-from": "5.0.0",
     "serialised-error": "1.1.3",
