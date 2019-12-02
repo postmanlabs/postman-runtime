@@ -1,5 +1,7 @@
 const fs = require('fs'),
     net = require('net'),
+    url = require('url'),
+    dns = require('dns'),
     _ = require('lodash'),
     path = require('path'),
     http = require('http'),
@@ -207,6 +209,7 @@ function createHTTPServer () {
  * @param {Object} [options] - Additional options to configure proxy server
  * @param {Object} [options.auth] - Proxy authentication, Basic auth
  * @param {String} [options.agent] - Agent used for http(s).request
+ * @param {Boolean} [options.useIPv6] - If true, force using IPv6 address while forwarding request.
  *
  * @example
  * var s = createProxyServer({
@@ -245,14 +248,22 @@ function createProxyServer (options) {
         req.headers = Object.assign(req.headers, options.headers || {});
 
         // forward request to the origin and pipe the response
-        var fwd = agent.request({
-            host: req.headers.host,
-            path: req.url,
-            method: req.method.toLowerCase(),
-            headers: req.headers
-        }, function (resp) {
-            resp.pipe(res);
-        });
+        var requestUrl = url.parse(req.url),
+            fwd = agent.request({
+                host: requestUrl.hostname,
+                path: requestUrl.path,
+                port: requestUrl.port,
+                method: req.method.toLowerCase(),
+                headers: req.headers,
+                lookup: options.useIPv6 && function (hostname, options, callback) {
+                    !options && (options = {});
+                    options.family = 6;
+
+                    return dns.lookup(hostname, options, callback);
+                }
+            }, function (resp) {
+                resp.pipe(res);
+            });
 
         req.pipe(fwd);
     });
