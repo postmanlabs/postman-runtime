@@ -21,9 +21,8 @@ module.exports = function (exit) {
     mkdir('-p', '.tmp');
     test('-d', COV_REPORT_PATH) && rm('-rf', COV_REPORT_PATH) && mkdir('-p', COV_REPORT_PATH);
 
-    // @todo: Replace Istanbul with nyc
-    exec(`./node_modules/.bin/istanbul cover --dir ${COV_REPORT_PATH} --colors ` +
-        `--print both node_modules/mocha/bin/_mocha -- ${SPEC_SOURCES} --reporter ${mochaReporter} ` +
+    exec(`./node_modules/.bin/nyc --report-dir ${COV_REPORT_PATH} --colors --reporter=text --reporter=text-summary ` +
+        `mocha -- ${SPEC_SOURCES} --reporter ${mochaReporter} ` +
         `--recursive --prof --colors --timeout 60000 --grep=${specPattern}`, exit);
 };
 
