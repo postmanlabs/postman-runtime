@@ -2,6 +2,7 @@ var fs = require('fs'),
     path = require('path'),
     constants = require('constants'),
     expect = require('chai').expect,
+    process = require('process'),
     server = require('../../fixtures/server'),
 
     forInAsync = function (obj, fn, cb) {
@@ -23,8 +24,16 @@ var fs = require('fs'),
         }
 
         next();
-    };
+    },
+    defaultTLS;
 
+// @note nodeVersionDiscrepancy: v12 onwards, Node chooses TLSv1.3 as the default
+if (process.version >= 'v12.0.0') {
+    defaultTLS = 'TLSv1.3';
+}
+else {
+    defaultTLS = 'TLSv1';
+}
 
 describe('protocolProfileBehavior: tls options', function () {
     var testrun,
@@ -92,7 +101,8 @@ describe('protocolProfileBehavior: tls options', function () {
                     });
                 });
 
-                it('should choose TLSv1 protocol by default', function () {
+                // @note nodeVersionDiscrepancy
+                (defaultTLS === 'TLSv1' ? it : it.skip)('should choose TLSv1 protocol by default', function () {
                     expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
 
                     var response = testrun.response.getCall(0).args[2],
@@ -147,7 +157,8 @@ describe('protocolProfileBehavior: tls options', function () {
                     });
                 });
 
-                it('should get the response correctly', function () {
+                // @note nodeVersionDiscrepancy
+                (defaultTLS === 'TLSv1' ? it : it.skip)('should get the response correctly', function () {
                     expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
 
                     var response = testrun.response.getCall(0).args[2],
@@ -244,7 +255,8 @@ describe('protocolProfileBehavior: tls options', function () {
                     });
                 });
 
-                it('should choose TLSv1.1 protocol by default', function () {
+                // @note nodeVersionDiscrepancy
+                (defaultTLS === 'TLSv1' ? it : it.skip)('should choose TLSv1.1 protocol by default', function () {
                     expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
 
                     var response = testrun.response.getCall(0).args[2],
@@ -299,7 +311,8 @@ describe('protocolProfileBehavior: tls options', function () {
                     });
                 });
 
-                it('should get the response correctly', function () {
+                // @note nodeVersionDiscrepancy
+                (defaultTLS === 'TLSv1' ? it : it.skip)('should get the response correctly', function () {
                     var response = testrun.response.getCall(0).args[2],
                         history = testrun.response.getCall(0).args[6],
                         executionData,
@@ -570,7 +583,10 @@ describe('protocolProfileBehavior: tls options', function () {
 
                     expect(response.reason()).to.eql('OK');
                     expect(response.text()).to.eql('okay');
-                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1.1');
+
+                    // @note nodeVersionDiscrepancy
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol');
+                    expect(sessions[executionData.session.id].tls.protocol).to.be.oneOf(['TLSv1.1', 'TLSv1.3']);
                 });
             });
 
@@ -625,7 +641,10 @@ describe('protocolProfileBehavior: tls options', function () {
 
                     expect(response.reason()).to.eql('OK');
                     expect(response.text()).to.eql('okay');
-                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1');
+
+                    // @note nodeVersionDiscrepancy
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol');
+                    expect(sessions[executionData.session.id].tls.protocol).to.be.oneOf(['TLSv1', 'TLSv1.3']);
                 });
             });
 
@@ -680,7 +699,10 @@ describe('protocolProfileBehavior: tls options', function () {
 
                     expect(response.reason()).to.eql('OK');
                     expect(response.text()).to.eql('okay');
-                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1.1');
+
+                    // @note nodeVersionDiscrepancy
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol');
+                    expect(sessions[executionData.session.id].tls.protocol).to.be.oneOf(['TLSv1.1', 'TLSv1.3']);
                 });
             });
 
@@ -721,7 +743,8 @@ describe('protocolProfileBehavior: tls options', function () {
                     });
                 });
 
-                it('should throw error for unsupported protocol', function () {
+                // @note nodeVersionDiscrepancy
+                (defaultTLS === 'TLSv1' ? it : it.skip)('should throw error for unsupported protocol', function () {
                     expect(testrun.response.getCall(0).calledWith(null)).to.be.false;
                     expect(testrun.response.getCall(0).args[0]).to.be.ok;
                 });
@@ -790,7 +813,10 @@ describe('protocolProfileBehavior: tls options', function () {
 
                     expect(response.reason()).to.eql('OK');
                     expect(response.text()).to.eql('okay');
-                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1.2');
+
+                    // @note nodeVersionDiscrepancy
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol');
+                    expect(sessions[executionData.session.id].tls.protocol).to.be.oneOf(['TLSv1.2', 'TLSv1.3']);
                 });
             });
 
@@ -831,7 +857,8 @@ describe('protocolProfileBehavior: tls options', function () {
                     });
                 });
 
-                it('should throw error for unsupported protocol', function () {
+                // @note nodeVersionDiscrepancy
+                (defaultTLS === 'TLSv1' ? it : it.skip)('should throw error for unsupported protocol', function () {
                     expect(testrun.response.getCall(0).calledWith(null)).to.be.false;
                     expect(testrun.response.getCall(0).args[0]).to.be.ok;
                 });
@@ -903,7 +930,13 @@ describe('protocolProfileBehavior: tls options', function () {
                 expect(response.text()).to.eql('okay');
 
                 expect(sessionData.tls).to.have.property('cipher');
-                expect(sessionData.tls.cipher).to.have.property('name', 'ECDHE-RSA-AES128-GCM-SHA256');
+
+                // @note nodeVersionDiscrepancy
+                expect(sessionData.tls.cipher).to.have.property('name');
+                expect(sessionData.tls.cipher.name).to.be.oneOf([
+                    'TLS_AES_256_GCM_SHA384',
+                    'ECDHE-RSA-AES128-GCM-SHA256'
+                ]);
             });
         });
 
