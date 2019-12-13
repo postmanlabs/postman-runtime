@@ -24,6 +24,11 @@ coverage:
         flags: integration
         target: 70
 
+      # coverage status for integration-legacy tests
+      integration-legacy:
+        flags: integration-legacy
+        target: 45
+
 parsers:
   javascript:
     enable_partials: yes    # use partial line coverage
