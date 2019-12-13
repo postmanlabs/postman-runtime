@@ -25,8 +25,8 @@ coverage:
         target: 70
 
       # coverage status for integration-legacy tests
-      integration-legacy:
-        flags: integration-legacy
+      legacy:
+        flags: legacy
         target: 45
 
 parsers:

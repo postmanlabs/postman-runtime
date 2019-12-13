@@ -18,7 +18,7 @@ jobs:
         - npm run test-integration
         - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F integration
         - npm run test-integration-legacy
-        - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F integration-legacy
+        - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F legacy
 
 #before_install:
 #- echo "$TRAVIS_TAG" "$TRAVIS_PULL_REQUEST";
