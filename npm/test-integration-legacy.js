@@ -1,35 +1,68 @@
 #!/usr/bin/env node
-require('shelljs/global');
-require('colors');
+/* eslint-env node, es6 */
+// ---------------------------------------------------------------------------------------------------------------------
+// This script is intended to execute all integration-legacy tests.
+// ---------------------------------------------------------------------------------------------------------------------
 
-var fs = require('fs'),
-    path = require('path'),
-    Mocha = require('mocha'),
+// set directories and files for test and coverage report
+var path = require('path'),
 
-    SPEC_SOURCE_DIR = './test/integration-legacy';
+    NYC = require('nyc'),
+    sh = require('shelljs'),
+    chalk = require('chalk'),
+    recursive = require('recursive-readdir'),
+
+    COV_REPORT_PATH = '.coverage',
+    SPEC_SOURCE_DIR = path.join(__dirname, '..', 'test', 'integration-legacy');
 
 module.exports = function (exit) {
     // banner line
-    console.info('Running integration tests using mocha on node...'.yellow.bold);
+    console.info(chalk.yellow.bold('Running integration-legacy tests using mocha on node...'));
 
-    var mocha = new Mocha({
-        timeout: 10000
-    });
+    sh.test('-d', COV_REPORT_PATH) && sh.rm('-rf', COV_REPORT_PATH);
+    sh.mkdir('-p', COV_REPORT_PATH);
 
-    fs.readdir(SPEC_SOURCE_DIR, function (err, files) {
-        if (err) { return exit(err); }
-
-        files.filter(function (file) {
-            return (file.substr(-8) === '.test.js');
-        }).forEach(function (file) {
-            mocha.addFile(path.join(SPEC_SOURCE_DIR, file));
+    var Mocha = require('mocha'),
+        nyc = new NYC({
+            hookRequire: true,
+            reporter: ['text', 'lcov', 'text-summary', 'json'],
+            reportDir: COV_REPORT_PATH,
+            tempDirectory: COV_REPORT_PATH
         });
 
-        // start the mocha run
-        mocha.run(exit);
-        mocha = null; // cleanup
+    nyc.reset();
+    nyc.wrap();
+
+    // add all spec files to mocha
+    recursive(SPEC_SOURCE_DIR, function (err, files) {
+        if (err) {
+            console.error(err);
+
+            return exit(1);
+        }
+
+        var mocha = new Mocha({timeout: 1000 * 60});
+
+        files.filter(function (file) { // extract all test files
+            return (file.substr(-8) === '.test.js');
+        }).forEach(mocha.addFile.bind(mocha));
+
+        mocha.run(function (runError) {
+            runError && console.error(runError.stack || runError);
+
+            nyc.writeCoverageFile();
+            nyc.report();
+            nyc.checkCoverage({
+                statements: 50,
+                branches: 35,
+                functions: 45,
+                lines: 50
+            });
+
+            exit(process.exitCode || runError ? 1 : 0);
+        });
     });
 };
 
 // ensure we run this script exports if this is a direct stdin.tty run
-!module.parent && module.exports(exit);
+!module.parent && module.exports(process.exit);

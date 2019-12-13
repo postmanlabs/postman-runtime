@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node npm/test.js",
+    "test": "npm run test-lint && npm run test-system && npm run test-unit && npm run test-integration && npm run test-integration-legacy",
     "test-system": "node npm/test-system.js",
     "test-lint": "node npm/test-lint.js",
     "test-unit": "node npm/test-unit.js",
@@ -61,11 +61,11 @@
     "eslint-plugin-security": "1.4.0",
     "graphql": "14.5.8",
     "http-proxy": "1.18.0",
-    "istanbul": "0.4.5",
     "js-yaml": "3.13.1",
     "jsdoc": "3.6.3",
     "jsdoc-to-markdown": "5.0.3",
     "mocha": "6.2.2",
+    "nyc": "14.1.1",
     "parse-gitignore": "0.5.1",
     "postman-jsdoc-theme": "0.0.3",
     "recursive-readdir": "2.2.2",
