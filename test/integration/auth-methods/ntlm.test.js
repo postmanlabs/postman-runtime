@@ -479,4 +479,330 @@ describe('NTLM', function () {
             expect(response).to.have.property('code', 401);
         });
     });
+
+    describe('with NTLM auth set at collection level', function () {
+        before(function (done) {
+            var localRunOptions = {
+                collection: {
+                    item: {
+                        name: 'NTLM Sample Request',
+                        request: {
+                            url: ntlmServerURL
+                        }
+                    },
+                    auth: {
+                        type: 'ntlm',
+                        ntlm: {
+                            username: USERNAME,
+                            password: PASSWORD,
+                            domain: DOMAIN,
+                            workstation: WORKSTATION
+                        }
+                    }
+                }
+            };
+
+            // perform the collection run
+            this.run(localRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+
+            var err = testrun.request.firstCall.args[0];
+
+            err && console.error(err.stack);
+            expect(err).to.be.null;
+
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request thrice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
+
+            var response = testrun.request.lastCall.args[2];
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('with NTLM auth set at folder level', function () {
+        before(function (done) {
+            var localRunOptions = {
+                collection: {
+                    item: {
+                        name: 'NTLM folder',
+                        item: {
+                            name: 'NTLM Sample Request',
+                            request: {
+                                url: ntlmServerURL
+                            }
+                        },
+                        auth: {
+                            type: 'ntlm',
+                            ntlm: {
+                                username: USERNAME,
+                                password: PASSWORD,
+                                domain: DOMAIN,
+                                workstation: WORKSTATION
+                            }
+                        }
+                    }
+                }
+            };
+
+            // perform the collection run
+            this.run(localRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+
+            var err = testrun.request.firstCall.args[0];
+
+            err && console.error(err.stack);
+            expect(err).to.be.null;
+
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request thrice', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 3
+            });
+
+            var response = testrun.request.lastCall.args[2];
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('with NTLM auth set at request level and 5 iterations', function () {
+        before(function (done) {
+            var localRunOptions = {
+                collection: {
+                    item: {
+                        name: 'NTLM Sample Request',
+                        request: {
+                            url: ntlmServerURL
+                        }
+                    },
+                    auth: {
+                        type: 'ntlm',
+                        ntlm: {
+                            username: USERNAME,
+                            password: PASSWORD,
+                            domain: DOMAIN,
+                            workstation: WORKSTATION
+                        }
+                    }
+                },
+                iterationCount: 5
+            };
+
+            // perform the collection run
+            this.run(localRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+
+            var err = testrun.request.firstCall.args[0];
+
+            err && console.error(err.stack);
+            expect(err).to.be.null;
+
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request 3 * 5 = 15 times', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 15
+            });
+
+            var response0 = testrun.request.getCall(0).args[2],
+                response1 = testrun.request.getCall(1).args[2],
+                response2 = testrun.request.getCall(2).args[2],
+                response5 = testrun.request.getCall(5).args[2],
+                response8 = testrun.request.getCall(8).args[2],
+                response11 = testrun.request.getCall(11).args[2],
+                response14 = testrun.request.getCall(14).args[2];
+
+            expect(response0, 'iteration 1, request 1').to.have.property('code', 401);
+            expect(response1, 'iteration 1, request 2').to.have.property('code', 401);
+            expect(response2, 'iteration 1, request 3').to.have.property('code', 200);
+            expect(response5, 'iteration 2, request 3').to.have.property('code', 200);
+            expect(response8, 'iteration 3, request 3').to.have.property('code', 200);
+            expect(response11, 'iteration 4, request 3').to.have.property('code', 200);
+            expect(response14, 'iteration 5, request 3').to.have.property('code', 200);
+        });
+    });
+
+
+    describe('with NTLM auth set at collection level and 5 iterations', function () {
+        before(function (done) {
+            var localRunOptions = {
+                collection: {
+                    item: {
+                        name: 'NTLM Sample Request',
+                        request: {
+                            url: ntlmServerURL
+                        }
+                    },
+                    auth: {
+                        type: 'ntlm',
+                        ntlm: {
+                            username: USERNAME,
+                            password: PASSWORD,
+                            domain: DOMAIN,
+                            workstation: WORKSTATION
+                        }
+                    }
+                },
+                iterationCount: 5
+            };
+
+            // perform the collection run
+            this.run(localRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+
+            var err = testrun.request.firstCall.args[0];
+
+            err && console.error(err.stack);
+            expect(err).to.be.null;
+
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request 3 * 5 = 15 times', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 15
+            });
+
+            var response0 = testrun.request.getCall(0).args[2],
+                response1 = testrun.request.getCall(1).args[2],
+                response2 = testrun.request.getCall(2).args[2],
+                response5 = testrun.request.getCall(5).args[2],
+                response8 = testrun.request.getCall(8).args[2],
+                response11 = testrun.request.getCall(11).args[2],
+                response14 = testrun.request.getCall(14).args[2];
+
+            expect(response0, 'iteration 1, request 1').to.have.property('code', 401);
+            expect(response1, 'iteration 1, request 2').to.have.property('code', 401);
+            expect(response2, 'iteration 1, request 3').to.have.property('code', 200);
+            expect(response5, 'iteration 2, request 3').to.have.property('code', 200);
+            expect(response8, 'iteration 3, request 3').to.have.property('code', 200);
+            expect(response11, 'iteration 4, request 3').to.have.property('code', 200);
+            expect(response14, 'iteration 5, request 3').to.have.property('code', 200);
+        });
+    });
+
+    describe('with NTLM auth set at folder level and 5 iterations', function () {
+        before(function (done) {
+            var localRunOptions = {
+                collection: {
+                    item: {
+                        name: 'NTLM folder',
+                        item: {
+                            name: 'NTLM Sample Request',
+                            request: {
+                                url: ntlmServerURL
+                            }
+                        },
+                        auth: {
+                            type: 'ntlm',
+                            ntlm: {
+                                username: USERNAME,
+                                password: PASSWORD,
+                                domain: DOMAIN,
+                                workstation: WORKSTATION
+                            }
+                        }
+                    }
+                },
+                iterationCount: 5
+            };
+
+            // perform the collection run
+            this.run(localRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+
+            var err = testrun.request.firstCall.args[0];
+
+            err && console.error(err.stack);
+            expect(err).to.be.null;
+
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request 3 * 5 = 15 times', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 15
+            });
+
+            var response0 = testrun.request.getCall(0).args[2],
+                response1 = testrun.request.getCall(1).args[2],
+                response2 = testrun.request.getCall(2).args[2],
+                response5 = testrun.request.getCall(5).args[2],
+                response8 = testrun.request.getCall(8).args[2],
+                response11 = testrun.request.getCall(11).args[2],
+                response14 = testrun.request.getCall(14).args[2];
+
+            expect(response0, 'iteration 1, request 1').to.have.property('code', 401);
+            expect(response1, 'iteration 1, request 2').to.have.property('code', 401);
+            expect(response2, 'iteration 1, request 3').to.have.property('code', 200);
+            expect(response5, 'iteration 2, request 3').to.have.property('code', 200);
+            expect(response8, 'iteration 3, request 3').to.have.property('code', 200);
+            expect(response11, 'iteration 4, request 3').to.have.property('code', 200);
+            expect(response14, 'iteration 5, request 3').to.have.property('code', 200);
+        });
+    });
 });
