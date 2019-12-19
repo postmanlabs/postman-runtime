@@ -1,4 +1,8 @@
 master:
+  fixed bugs:
+    - >-
+      GH-945 Fixed a bug where NTLM requests were failing for `iterationCount`
+      more that 2
   chores:
     - GH-943 Added `nyc` and `codecov` for code coverage checks
 
