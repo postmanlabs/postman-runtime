@@ -36,7 +36,7 @@ describe('invalid url', function () {
         sinon.assert.calledTwice(testrun.request);
         sinon.assert.calledTwice(testrun.response);
 
-        expect(testrun.request.getCall(0).args[0].message).to.equal('Invalid URI "!http://postman-echo.com"');
-        expect(testrun.request.getCall(1).args[0].message).to.equal('Invalid URI "→%20https://postman-echo.com"');
+        expect(testrun.request.getCall(0).args[0].message).to.equal('Invalid protocol: !http:');
+        expect(testrun.request.getCall(1).args[0].message).to.equal('Invalid protocol: → https:');
     });
 });

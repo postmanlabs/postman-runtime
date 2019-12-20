@@ -279,9 +279,9 @@ describe('requester util', function () {
                 hash: null,
                 search: null,
                 query: null,
-                pathname: null,
-                path: null,
-                href: 'http://'
+                pathname: '/',
+                path: '/',
+                href: 'http:///'
             });
         });
     });
