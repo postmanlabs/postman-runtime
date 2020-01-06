@@ -2,10 +2,6 @@ var expect = require('chai').expect,
     Runner = require('../../lib/runner/'),
     sdk = require('postman-collection');
 
-function getIterationData (data, iteration) {
-    return iteration in data ? data[iteration] : data[data.length - 1];
-}
-
 describe('runner', function () {
     describe('Run', function () {
         it('should be a constructor', function () {
@@ -319,27 +315,6 @@ describe('runner', function () {
                     });
                 });
             });
-        });
-    });
-
-    describe('normaliseIterationData', function () {
-        it('should handle insane arguments correctly', function () {
-            expect(Runner.normaliseIterationData()).to.eql([{}]);
-        });
-
-        it('should trim the provided data set to the specified length', function () {
-            expect(Runner.normaliseIterationData([{foo: 'alpha'}, {bar: 'beta'}], 1)).to.eql([{foo: 'alpha'}]);
-        });
-
-        it('should duplicate the last element of the data set if length is greater', function () {
-            var data = Runner.normaliseIterationData([{foo: 'alpha'}, undefined, {bar: 'beta'}], 6);
-
-            expect(getIterationData(data, 0)).to.eql({foo: 'alpha'});
-            expect(getIterationData(data, 1)).to.eql(undefined);
-            expect(getIterationData(data, 2)).to.eql({bar: 'beta'});
-            expect(getIterationData(data, 3)).to.eql({bar: 'beta'});
-            expect(getIterationData(data, 4)).to.eql({bar: 'beta'});
-            expect(getIterationData(data, 5)).to.eql({bar: 'beta'});
         });
     });
 });
