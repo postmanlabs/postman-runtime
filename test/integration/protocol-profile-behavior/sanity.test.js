@@ -464,6 +464,88 @@ describe('protocolProfileBehavior', function () {
         });
     });
 
+    describe('with disableCookies: false', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                    }],
+                    protocolProfileBehavior: {
+                        disableCookies: false
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should have referer header on redirects', function () {
+            var response = testrun.response.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json()).to.eql({
+                cookies: {
+                    foo: 'bar'
+                }
+            });
+        });
+    });
+
+    describe('with disableCookies: true', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                    }],
+                    protocolProfileBehavior: {
+                        disableCookies: true
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should have referer header on redirects', function () {
+            var response = testrun.response.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json()).to.eql({
+                cookies: {}
+            });
+        });
+    });
+
     describe('with maxRedirects', function () {
         var URL = HOST + '/11/302';
 
