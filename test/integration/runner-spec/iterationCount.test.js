@@ -5,7 +5,7 @@ var collection = {
             script: {
                 exec: `
                     pm.test('should contain data', function () {
-                        pm.expect(pm.variables.get('foo')).to.equal('bar');
+                        pm.expect(pm.iterationData.get('foo')).to.equal('bar');
                     });
                 `
             }
@@ -32,14 +32,16 @@ describe('Run option iterationCount', function () {
                 });
             });
 
-            it('should run collection specified number of times', function () {
+            it('should complete the run successfully', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun.done.getCall(0).args[0]).to.not.exist;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
                     'start.calledOnce': true
                 });
+            });
 
+            it('should run collection specified number of times', function () {
                 expect(testrun.request.callCount).to.equal(3);
             });
         });
@@ -62,14 +64,20 @@ describe('Run option iterationCount', function () {
                 });
             });
 
-            it('should use last data value for iterations with no corresponding data', function () {
+            it('should complete the run successfully', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun.done.getCall(0).args[0]).to.not.exist;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
                     'start.calledOnce': true
                 });
+            });
 
+            it('should run collection specified number of times', function () {
+                expect(testrun.request.callCount).to.equal(4);
+            });
+
+            it('should use last data value for iterations with no corresponding data', function () {
                 var assertions = [
                     testrun.assertion.getCall(0).args[1][0],
                     testrun.assertion.getCall(1).args[1][0],
@@ -104,7 +112,7 @@ describe('Run option iterationCount', function () {
                     iterationCount: 2,
                     data: [
                         {foo: 'bar'},
-                        {foo: 'bar'},
+                        {foo: 'not bar'},
                         {foo: 'bar'}
                     ],
                     collection
@@ -114,14 +122,20 @@ describe('Run option iterationCount', function () {
                 });
             });
 
-            it('should use last data value for iterations with no corresponding data', function () {
+            it('should complete the run successfully', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun.done.getCall(0).args[0]).to.not.exist;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
                     'start.calledOnce': true
                 });
+            });
 
+            it('should run collection specified number of times', function () {
+                expect(testrun.request.callCount).to.equal(2);
+            });
+
+            it('should ignore the data items after the iteration count', function () {
                 var assertions = [
                     testrun.assertion.getCall(0).args[1][0],
                     testrun.assertion.getCall(1).args[1][0]
@@ -133,7 +147,7 @@ describe('Run option iterationCount', function () {
                 });
                 expect(assertions[1]).to.deep.include({
                     name: 'should contain data',
-                    passed: true
+                    passed: false
                 });
             });
         });
@@ -147,7 +161,7 @@ describe('Run option iterationCount', function () {
                 this.run({
                     data: [
                         {foo: 'bar'},
-                        {foo: 'bar'},
+                        {foo: 'not bar'},
                         {foo: 'bar'}
                     ],
                     collection
@@ -157,16 +171,20 @@ describe('Run option iterationCount', function () {
                 });
             });
 
-            it('should set iterations equal to the length of data', function () {
+            it('should complete the run successfully', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun.done.getCall(0).args[0]).to.not.exist;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
                     'start.calledOnce': true
                 });
+            });
 
+            it('should run iterations equal to the length of data', function () {
                 expect(testrun.assertion.callCount).to.equal(3);
+            });
 
+            it('should use proper data elements for each iteration', function () {
                 var assertions = [
                     testrun.assertion.getCall(0).args[1][0],
                     testrun.assertion.getCall(1).args[1][0],
@@ -179,9 +197,9 @@ describe('Run option iterationCount', function () {
                 });
                 expect(assertions[1]).to.deep.include({
                     name: 'should contain data',
-                    passed: true
+                    passed: false
                 });
-                expect(assertions[1]).to.deep.include({
+                expect(assertions[2]).to.deep.include({
                     name: 'should contain data',
                     passed: true
                 });
@@ -200,14 +218,16 @@ describe('Run option iterationCount', function () {
                 });
             });
 
-            it('should run only 1 iteration', function () {
+            it('should complete the run successfully', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun.done.getCall(0).args[0]).to.not.exist;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
                     'start.calledOnce': true
                 });
+            });
 
+            it('should run only 1 iteration', function () {
                 expect(testrun.assertion.callCount).to.equal(1);
 
                 var assertion = testrun.assertion.getCall(0).args[1][0];
