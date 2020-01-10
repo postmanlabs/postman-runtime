@@ -1,4 +1,6 @@
 master:
+  new features:
+    - GH-949 Improved performance for large number of iterations
   chores:
     - GH-943 Added `nyc` and `codecov` for code coverage checks
     - GH-951 Added sanity check for edgegrid auth params in sign function
