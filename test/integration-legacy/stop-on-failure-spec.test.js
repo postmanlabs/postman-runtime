@@ -895,9 +895,14 @@ describe('Option', function () {
                             // The second request fails
                             if (item.name === 'Second Request') {
                                 expect(err).to.be.ok;
-                                // eslint-disable-next-line max-len
-                                expect(err).to.have.property('message', 'getaddrinfo ENOTFOUND somenonexistantdomainnamehere ' +
-                                    'somenonexistantdomainnamehere:443');
+                                expect(err).to.have.property('message');
+
+                                // @note nodeVersionDiscrepancy
+                                expect(err.message).to.be.oneOf([
+                                    // eslint-disable-next-line max-len
+                                    'getaddrinfo ENOTFOUND somenonexistantdomainnamehere somenonexistantdomainnamehere:443',
+                                    'getaddrinfo ENOTFOUND somenonexistantdomainnamehere'
+                                ]);
                             }
                             else {
                                 expect(err).to.be.null;

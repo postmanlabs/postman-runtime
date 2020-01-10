@@ -272,8 +272,14 @@ describe('intermediate requests from auth', function () {
                 ioErr = testrun.io.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];
 
-            expect(err).to.have.property('message', 'getaddrinfo ENOTFOUND bla bla:443');
-            expect(ioErr).to.have.property('message', 'getaddrinfo ENOTFOUND bla bla:443');
+            // @note nodeVersionDiscrepancy
+            expect(err).to.have.property('message');
+            expect(err.message).to.be.oneOf(['getaddrinfo ENOTFOUND bla bla:443', 'getaddrinfo ENOTFOUND bla']);
+
+            // @note nodeVersionDiscrepancy
+            expect(ioErr).to.have.property('message');
+            expect(ioErr.message).to.be.oneOf(['getaddrinfo ENOTFOUND bla bla:443', 'getaddrinfo ENOTFOUND bla']);
+
             expect(request.url.toString()).to.eql('https://bla/blabla');
         });
 

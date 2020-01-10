@@ -261,8 +261,13 @@ describe('Option', function () {
                             // The second request contains a non existent host name.
                             if (item.name === 'Second Request') {
                                 expect(err).to.be.ok;
-                                expect(err).to.have.property('message', 'getaddrinfo ENOTFOUND ' +
-                                    'somenonexistantdomain somenonexistantdomain:443');
+                                expect(err).to.have.property('message');
+
+                                // @note nodeVersionDiscrepancy
+                                expect(err.message).to.be.oneOf([
+                                    'getaddrinfo ENOTFOUND somenonexistantdomain somenonexistantdomain:443',
+                                    'getaddrinfo ENOTFOUND somenonexistantdomain'
+                                ]);
                             }
                             else {
                                 expect(err).to.be.null;
@@ -284,8 +289,13 @@ describe('Option', function () {
                     done: function (error) {
                         // Should Error
                         expect(error).to.be.ok;
-                        expect(error).to.have.property('message', 'getaddrinfo ENOTFOUND ' +
-                            'somenonexistantdomain somenonexistantdomain:443');
+                        expect(error).to.have.property('message');
+
+                        // @note nodeVersionDiscrepancy
+                        expect(error.message).to.be.oneOf([
+                            'getaddrinfo ENOTFOUND somenonexistantdomain somenonexistantdomain:443',
+                            'getaddrinfo ENOTFOUND somenonexistantdomain'
+                        ]);
 
                         expect(testables).to.have.property('started', true);
 

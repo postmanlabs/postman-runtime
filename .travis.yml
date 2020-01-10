@@ -7,6 +7,18 @@ os:
 node_js:
   - '6'
   - '8'
+jobs:
+  include:
+    - name: 'Coverage'
+      node_js: stable
+      os: linux
+      script:
+        - npm run test-unit
+        - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F unit
+        - npm run test-integration
+        - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F integration
+        - npm run test-integration-legacy
+        - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F legacy
 
 #before_install:
 #- echo "$TRAVIS_TAG" "$TRAVIS_PULL_REQUEST";

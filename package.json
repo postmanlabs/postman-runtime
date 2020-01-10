@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "7.21.0",
+  "version": "7.22.0",
   "description": "Underlying library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node npm/test.js",
+    "test": "npm run test-lint && npm run test-system && npm run test-unit && npm run test-integration && npm run test-integration-legacy",
     "test-system": "node npm/test-system.js",
     "test-lint": "node npm/test-lint.js",
     "test-unit": "node npm/test-unit.js",
@@ -33,7 +33,7 @@
     "aws4": "1.9.0",
     "crypto-js": "3.1.9-1",
     "eventemitter3": "4.0.0",
-    "handlebars": "4.5.3",
+    "handlebars": "4.6.0",
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.6",
     "inherits": "2.0.4",
@@ -41,7 +41,7 @@
     "node-oauth1": "1.2.2",
     "performance-now": "2.1.0",
     "postman-collection": "3.5.5",
-    "postman-request": "2.88.1-postman.16",
+    "postman-request": "2.88.1-postman.18",
     "postman-sandbox": "3.5.2",
     "postman-url-encoder": "1.0.3",
     "resolve-from": "5.0.0",
@@ -61,11 +61,11 @@
     "eslint-plugin-security": "1.4.0",
     "graphql": "14.5.8",
     "http-proxy": "1.18.0",
-    "istanbul": "0.4.5",
     "js-yaml": "3.13.1",
     "jsdoc": "3.6.3",
     "jsdoc-to-markdown": "5.0.3",
     "mocha": "6.2.2",
+    "nyc": "14.1.1",
     "parse-gitignore": "0.5.1",
     "postman-jsdoc-theme": "0.0.3",
     "recursive-readdir": "2.2.2",

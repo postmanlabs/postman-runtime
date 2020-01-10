@@ -1,8 +1,24 @@
 var fs = require('fs'),
+    tls = require('tls'),
     path = require('path'),
     constants = require('constants'),
     expect = require('chai').expect,
     server = require('../../fixtures/server'),
+
+    // @note nodeVersionDiscrepancy: v12 onwards, Node chooses TLSv1.3 as the default
+    DEFAULT_TLS_VERSION = tls.DEFAULT_MAX_VERSION,
+    TLSv1_3_SUPPORTED = DEFAULT_TLS_VERSION === 'TLSv1.3',
+
+    DEFAULT_CIPHER = tls.DEFAULT_CIPHERS.split(':').find(function (cipher) {
+        // the cipher starting with "TLS_" are only used for TLSv1.3,
+        // if TLSv1.3 is not supported, the default cipher is the first one not
+        // starting with "TLS_"
+        if (cipher.startsWith('TLS_') && !TLSv1_3_SUPPORTED) {
+            return false;
+        }
+
+        return true;
+    }),
 
     forInAsync = function (obj, fn, cb) {
         if (!(obj && fn)) { return; }
@@ -25,7 +41,6 @@ var fs = require('fs'),
         next();
     };
 
-
 describe('protocolProfileBehavior: tls options', function () {
     var testrun,
         servers = {
@@ -40,11 +55,18 @@ describe('protocolProfileBehavior: tls options', function () {
             res.end('okay');
         };
 
+    TLSv1_3_SUPPORTED && (servers.TLSv1_3 = undefined);
+
     before(function (done) {
         forInAsync(servers, function (protocol, next) {
-            servers[protocol] = server.createSSLServer({
-                secureProtocol: protocol + '_method' // The TLS protocol version to use
-            });
+            servers[protocol] = server.createSSLServer(
+                // use `maxVersion` and `minVersion` options if supported, fallback to secureProtocol
+                tls.DEFAULT_MAX_VERSION ? {
+                    maxVersion: protocol.replace('_', '.'),
+                    minVersion: protocol.replace('_', '.')
+                } : {
+                    secureProtocol: protocol + '_method'
+                });
             servers[protocol].on('/', requestHandler);
             servers[protocol].listen(0, next);
         }, done);
@@ -57,7 +79,7 @@ describe('protocolProfileBehavior: tls options', function () {
     });
 
     describe('tlsDisabledProtocols', function () {
-        describe('TLSv1 server', function () {
+        (TLSv1_3_SUPPORTED ? describe.skip : describe)('TLSv1 server', function () {
             describe('default', function () {
                 before(function (done) {
                     this.run({
@@ -209,8 +231,8 @@ describe('protocolProfileBehavior: tls options', function () {
             });
         });
 
-        describe('TLSv1_1 server', function () {
-            describe('default', function () {
+        (TLSv1_3_SUPPORTED ? describe.skip : describe)('TLSv1_1 server', function () {
+            describe('default TLSv1.1 server', function () {
                 before(function (done) {
                     this.run({
                         fileResolver: fs,
@@ -511,7 +533,160 @@ describe('protocolProfileBehavior: tls options', function () {
             });
         });
 
-        describe('TLSv1 & TLSv1_1 server', function () {
+        (TLSv1_3_SUPPORTED ? describe : describe.skip)('TLSv1.3 server', function () {
+            describe('default TLSv1.3 server', function () {
+                before(function (done) {
+                    this.run({
+                        fileResolver: fs,
+                        requester: {
+                            extendedRootCA: CACertPath,
+                            verbose: true
+                        },
+                        collection: {
+                            item: [{
+                                request: {
+                                    url: servers.TLSv1_3.url,
+                                    header: [{
+                                        key: 'Connection',
+                                        value: 'close'
+                                    }]
+                                }
+                            }]
+                        }
+                    }, function (err, results) {
+                        testrun = results;
+                        done(err);
+                    });
+                });
+
+                it('should complete the run', function () {
+                    expect(testrun).to.be.ok;
+                    expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
+                        'request.calledOnce': true
+                    });
+                });
+
+                it('should choose TLSv1.3 protocol by default', function () {
+                    expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
+
+                    var response = testrun.response.getCall(0).args[2],
+                        history = testrun.response.getCall(0).args[6],
+                        executionData,
+                        sessions;
+
+                    expect(history).to.have.property('execution').that.include.property('sessions');
+                    sessions = history.execution.sessions;
+                    executionData = history.execution.data[0];
+
+                    expect(response.reason()).to.eql('OK');
+                    expect(response.text()).to.eql('okay');
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1.3');
+                });
+            });
+
+            describe('TLSv1.3 with TLSv1_1, TLSv1_2 disabled', function () {
+                before(function (done) {
+                    this.run({
+                        fileResolver: fs,
+                        requester: {
+                            extendedRootCA: CACertPath,
+                            verbose: true
+                        },
+                        collection: {
+                            item: [{
+                                request: {
+                                    url: servers.TLSv1_3.url,
+                                    header: [{
+                                        key: 'Connection',
+                                        value: 'close'
+                                    }]
+                                },
+                                protocolProfileBehavior: {
+                                    tlsDisabledProtocols: ['TLSv1_1', 'TLSv1_2']
+                                }
+                            }]
+                        }
+                    }, function (err, results) {
+                        testrun = results;
+                        done(err);
+                    });
+                });
+
+                it('should complete the run', function () {
+                    expect(testrun).to.be.ok;
+                    expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
+                        'request.calledOnce': true
+                    });
+                });
+
+                it('should get the response correctly', function () {
+                    expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
+
+                    var response = testrun.response.getCall(0).args[2],
+                        history = testrun.response.getCall(0).args[6],
+                        executionData,
+                        sessions;
+
+                    expect(history).to.have.property('execution').that.include.property('sessions');
+                    sessions = history.execution.sessions;
+                    executionData = history.execution.data[0];
+
+                    expect(response.reason()).to.eql('OK');
+                    expect(response.text()).to.eql('okay');
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1.3');
+                });
+            });
+
+            // @todo: Add support for TLS 1.3
+            describe.skip('with TLSv1.3 disabled', function () {
+                before(function (done) {
+                    this.run({
+                        fileResolver: fs,
+                        requester: {
+                            extendedRootCA: CACertPath,
+                            verbose: true
+                        },
+                        collection: {
+                            item: [{
+                                request: {
+                                    url: servers.TLSv1_3.url,
+                                    header: [{
+                                        key: 'Connection',
+                                        value: 'close'
+                                    }]
+                                },
+                                protocolProfileBehavior: {
+                                    tlsDisabledProtocols: ['TLSv1_3']
+                                }
+                            }]
+                        }
+                    }, function (err, results) {
+                        testrun = results;
+                        done(err);
+                    });
+                });
+
+                it('should complete the run', function () {
+                    expect(testrun).to.be.ok;
+                    expect(testrun).to.nested.include({
+                        'done.calledOnce': true,
+                        'start.calledOnce': true,
+                        'request.calledOnce': true
+                    });
+                });
+
+                it('should throw error for unsupported protocol', function () {
+                    expect(testrun.response.getCall(0).calledWith(null)).to.be.false;
+                    expect(testrun.response.getCall(0).args[0]).to.be.ok;
+                });
+            });
+        });
+
+        (TLSv1_3_SUPPORTED ? describe.skip : describe)('TLSv1 & TLSv1_1 server', function () {
             var sslServer;
 
             before(function (done) {
@@ -522,7 +697,7 @@ describe('protocolProfileBehavior: tls options', function () {
                 sslServer.listen(0, done);
             });
 
-            describe('default', function () {
+            describe('default TLSv1 & TLSv1.1 server', function () {
                 before(function (done) {
                     this.run({
                         fileResolver: fs,
@@ -570,7 +745,9 @@ describe('protocolProfileBehavior: tls options', function () {
 
                     expect(response.reason()).to.eql('OK');
                     expect(response.text()).to.eql('okay');
-                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1.1');
+
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol');
+                    expect(sessions[executionData.session.id].tls.protocol).to.equal('TLSv1.1');
                 });
             });
 
@@ -625,7 +802,9 @@ describe('protocolProfileBehavior: tls options', function () {
 
                     expect(response.reason()).to.eql('OK');
                     expect(response.text()).to.eql('okay');
-                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1');
+
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol');
+                    expect(sessions[executionData.session.id].tls.protocol).to.equal('TLSv1');
                 });
             });
 
@@ -680,12 +859,14 @@ describe('protocolProfileBehavior: tls options', function () {
 
                     expect(response.reason()).to.eql('OK');
                     expect(response.text()).to.eql('okay');
-                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1.1');
+
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol');
+                    expect(sessions[executionData.session.id].tls.protocol).to.equal('TLSv1.1');
                 });
             });
 
             describe('with just TLSv1_2 enabled', function () {
-                before(function (done) {
+                before(function (done) { // eslint-disable-line mocha/no-sibling-hooks
                     this.run({
                         fileResolver: fs,
                         requester: {
@@ -774,9 +955,7 @@ describe('protocolProfileBehavior: tls options', function () {
                     });
                 });
 
-                // @note This will fail when TLSv1.3 will be supported/made default.
-                // Refer: https://github.com/nodejs/node/pull/26209
-                it('should choose TLSv1.2 protocol by default', function () {
+                it(`should choose ${TLSv1_3_SUPPORTED ? 'TLSv1.3' : 'TLSv1.2'} protocol by default`, function () {
                     expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
 
                     var response = testrun.response.getCall(0).args[2],
@@ -790,12 +969,15 @@ describe('protocolProfileBehavior: tls options', function () {
 
                     expect(response.reason()).to.eql('OK');
                     expect(response.text()).to.eql('okay');
-                    expect(sessions[executionData.session.id].tls).to.have.property('protocol', 'TLSv1.2');
+
+                    // @note nodeVersionDiscrepancy
+                    expect(sessions[executionData.session.id].tls).to.have.property('protocol');
+                    expect(sessions[executionData.session.id].tls.protocol).to.be.oneOf(['TLSv1.2', 'TLSv1.3']);
                 });
             });
 
-            describe('with just SSLv23 enabled', function () {
-                before(function (done) {
+            (TLSv1_3_SUPPORTED ? describe.skip : describe)('with just SSLv23 enabled', function () {
+                before(function (done) { // eslint-disable-line mocha/no-sibling-hooks
                     this.run({
                         fileResolver: fs,
                         requester: {
@@ -884,8 +1066,7 @@ describe('protocolProfileBehavior: tls options', function () {
                 });
             });
 
-            // @note Might fail with TLSv1_3 if cipher list oder is changed
-            it('should choose ECDHE-RSA-AES128-GCM-SHA256 cipher by default', function () {
+            it(`should choose ${DEFAULT_CIPHER} cipher by default`, function () {
                 expect(testrun.response.getCall(0).calledWith(null)).to.be.true;
 
                 var response = testrun.response.getCall(0).args[2],
@@ -903,7 +1084,9 @@ describe('protocolProfileBehavior: tls options', function () {
                 expect(response.text()).to.eql('okay');
 
                 expect(sessionData.tls).to.have.property('cipher');
-                expect(sessionData.tls.cipher).to.have.property('name', 'ECDHE-RSA-AES128-GCM-SHA256');
+
+                expect(sessionData.tls.cipher).to.have.property('name');
+                expect(sessionData.tls.cipher.name).to.equal(DEFAULT_CIPHER);
             });
         });
 

@@ -2,7 +2,8 @@ var expect = require('chai').expect,
     sdk = require('postman-collection'),
     _ = require('lodash'),
 
-    authorizeRequest = require('../../lib/authorizer').authorizeRequest,
+    authorizer = require('../../lib/authorizer'),
+    authorizeRequest = authorizer.authorizeRequest,
 
     Request = sdk.Request,
     rawRequests = require('../fixtures/auth-requests');
@@ -43,6 +44,22 @@ describe('.authorizeRequest (Static function)', function () {
             expect(err).not.to.be.undefined;
             expect(err.message).to.equal('runtime~authorizeRequest: could not find handler for auth type fake');
             expect(signedRequest).to.be.undefined;
+        });
+    });
+
+    it('should return without error when required auth params are absent', function () {
+        _.forEach(authorizer.AuthLoader.handlers, function (handler, authName) {
+            var authWithoutParams = {type: authName},
+                request;
+
+            // set auth without any params
+            authWithoutParams[authName] = {};
+
+            request = new Request(_.assign({}, rawRequests.basic, {auth: authWithoutParams}));
+
+            authorizeRequest(request, function (err) {
+                expect(err, authName).to.not.be.ok;
+            });
         });
     });
 });

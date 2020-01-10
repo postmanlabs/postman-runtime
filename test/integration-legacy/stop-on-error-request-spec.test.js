@@ -295,8 +295,13 @@ describe('Option', function () {
                             expect(request.url.toString()).to.be.ok;
 
                             if (item.name === 'Second Request') {
-                                expect(err).to.have.property('message', 'getaddrinfo ENOTFOUND somenonexistantdomain ' +
-                                    'somenonexistantdomain:443');
+                                expect(err).to.have.property('message');
+
+                                // @note nodeVersionDiscrepancy
+                                expect(err.message).to.be.oneOf([
+                                    'getaddrinfo ENOTFOUND somenonexistantdomain somenonexistantdomain:443',
+                                    'getaddrinfo ENOTFOUND somenonexistantdomain'
+                                ]);
 
                                 return;
                             }
