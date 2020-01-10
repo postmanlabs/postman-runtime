@@ -317,18 +317,4 @@ describe('runner', function () {
             });
         });
     });
-
-    describe('normaliseIterationData', function () {
-        it('should handle insane arguments correctly', function () {
-            expect(Runner.normaliseIterationData()).to.eql([{}]);
-        });
-
-        it('should trim the provided data set to the specified length', function () {
-            expect(Runner.normaliseIterationData([{foo: 'alpha'}, {bar: 'beta'}], 1)).to.eql([{foo: 'alpha'}]);
-        });
-
-        it('should duplicate the last element of the data set if length is greater', function () {
-            expect(Runner.normaliseIterationData([{foo: 'alpha'}], 2)).to.eql([{foo: 'alpha'}, {foo: 'alpha'}]);
-        });
-    });
 });
