@@ -1,4 +1,5 @@
-master:
+7.22.0:
+  date: 2020-01-10
   new features:
     - GH-949 Improved performance for large number of iterations
     - GH-953 Added support for brotli decompression
