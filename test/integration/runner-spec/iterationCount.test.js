@@ -248,7 +248,7 @@ describe('Run option iterationCount', function () {
         before(function (done) {
             var runner = new Runner();
 
-            runner.run(collection, { iterationCount: iterations }, function (err, run) {
+            runner.run(collection, {iterationCount: iterations}, function (err, run) {
                 testrun = run;
                 done(err);
             });
