@@ -315,6 +315,62 @@ describe('runner', function () {
                     });
                 });
             });
+
+            describe('option iterationCount', function () {
+                describe('when set', function () {
+                    it('should be present in options', function (done) {
+                        var runner = new Runner(),
+                            iterations = 10;
+
+                        runner.run(collection, {iterationCount: iterations}, function (err, run) {
+                            expect(err).to.be.null;
+
+                            expect(run).to.have.property('options');
+                            expect(run.options).to.have.property('iterationCount');
+                            expect(run.options.iterationCount).to.equal(iterations);
+                            done();
+                        });
+                    });
+
+                    it('should not fail to create run for large iterationCount', function (done) {
+                        var runner = new Runner(),
+                            iterations = 99999999;
+
+                        runner.run(collection, {iterationCount: iterations}, function (err, run) {
+                            expect(err).to.be.null;
+
+                            expect(run).to.have.property('options');
+                            expect(run.options).to.have.property('iterationCount');
+                            expect(run.options.iterationCount).to.equal(iterations);
+                            done();
+                        });
+                    });
+                });
+
+                describe('when not set', function () {
+                    it('should be inferred from data', function (done) {
+                        var runner = new Runner(),
+                            data = [
+                                {a: 'b'},
+                                {c: 'd'},
+                                {e: 'f'}
+                            ];
+
+                        runner.run(collection, {data}, function (err, run) {
+                            expect(err).to.be.null;
+
+                            expect(run).to.have.property('options');
+                            expect(run.options).to.have.property('iterationCount');
+                            expect(run.options.iterationCount).to.equal(3);
+
+                            expect(run).to.have.property('state');
+                            expect(run.state).to.have.property('data');
+                            expect(run.state.data).to.eql(data);
+                            done();
+                        });
+                    });
+                });
+            });
         });
     });
 });
