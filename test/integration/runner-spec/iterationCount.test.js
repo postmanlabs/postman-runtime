@@ -1,21 +1,22 @@
-var collection = {
-    item: [{
-        event: [{
-            listen: 'prerequest',
-            script: {
-                exec: `
-                    pm.test('should contain data', function () {
-                        pm.expect(pm.iterationData.get('foo')).to.equal('bar');
-                    });
-                `
+var Runner = require('../../../index.js').Runner,
+    collection = {
+        item: [{
+            event: [{
+                listen: 'prerequest',
+                script: {
+                    exec: `
+                        pm.test('should contain data', function () {
+                            pm.expect(pm.iterationData.get('foo')).to.equal('bar');
+                        });
+                    `
+                }
+            }],
+            request: {
+                url: 'https://postman-echo.com/get',
+                method: 'GET'
             }
-        }],
-        request: {
-            url: 'https://postman-echo.com/get',
-            method: 'GET'
-        }
-    }]
-};
+        }]
+    };
 
 describe('Run option iterationCount', function () {
     describe('when set', function () {
@@ -237,6 +238,25 @@ describe('Run option iterationCount', function () {
                     passed: false
                 });
             });
+        });
+    });
+
+    describe('with a very large iteration count', function () {
+        var testrun,
+            iterations = 99999999;
+
+        before(function (done) {
+            var runner = new Runner();
+
+            runner.run(collection, { iterationCount: iterations }, function (err, run) {
+                testrun = run;
+                done(err);
+            });
+        });
+
+        it('should be able to create a run with large interation count', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.options.iterationCount).to.equal(iterations);
         });
     });
 });
