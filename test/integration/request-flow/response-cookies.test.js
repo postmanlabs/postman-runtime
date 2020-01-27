@@ -12,16 +12,14 @@ describe('Cookies expiry in response callback', function () {
         httpServer = server.createHTTPServer();
 
         httpServer.on('/', function (req, res) {
-            var cookies = [
-                // session cookie (without Max-Age and Expires)
-                'cookie_1=value_1; path=/',
-
-                // with Max-Age > 0
-                'cookie_2=value_2; path=/; Max-Age=1000'
-            ];
-
             res.writeHead(200, {
-                'Set-Cookie': cookies
+                'Set-Cookie': [
+                    // session cookie (without Max-Age and Expires)
+                    'cookie_1=value_1; path=/',
+
+                    // with Max-Age > 0
+                    'cookie_2=value_2; path=/; Max-Age=1000'
+                ]
             });
 
             res.end();
@@ -31,10 +29,7 @@ describe('Cookies expiry in response callback', function () {
             self.run({
                 collection: {
                     item: [{
-                        request: {
-                            url: httpServer.url,
-                            method: 'GET'
-                        }
+                        request: httpServer.url
                     }]
                 }
             }, function (err, result) {
