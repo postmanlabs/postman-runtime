@@ -1,4 +1,8 @@
 master:
+  new features:
+    - >-
+      GH-959 Added an option to disable parameter encoding in Authorization
+      header of OAuth1
   fixed bugs:
     - >-
       GH-957 Fixed a bug where expiry was wrong for cookies passed to response
