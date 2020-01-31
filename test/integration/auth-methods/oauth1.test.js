@@ -78,7 +78,7 @@ describe('oauth 1', function () {
         });
     });
 
-    describe('disableAuthHeaderEncoding: false', function () {
+    describe('encodeAuthHeaderParams: false', function () {
         before(function (done) {
             // perform the collection run
             this.run({
@@ -92,7 +92,52 @@ describe('oauth 1', function () {
                                     consumerSecret: 'secret',
                                     signatureMethod: 'HMAC-SHA1',
                                     addParamsToHeader: true,
-                                    disableAuthHeaderEncoding: false
+                                    encodeAuthHeaderParams: false
+                                }
+                            },
+                            url: 'https://postman-echo.com/get',
+                            method: 'GET'
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should not encode params in Authorization header', function () {
+            var response = testrun.response.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json().headers.authorization).to.contain('oauth_consumer_key="foo!bar"');
+        });
+    });
+
+    describe('encodeAuthHeaderParams: true', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'foo!bar',
+                                    consumerSecret: 'secret',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    addParamsToHeader: true,
+                                    encodeAuthHeaderParams: true
                                 }
                             },
                             url: 'https://postman-echo.com/get',
@@ -123,7 +168,7 @@ describe('oauth 1', function () {
         });
     });
 
-    describe('disableAuthHeaderEncoding: true', function () {
+    describe('encodeAuthHeaderParams: undefined', function () {
         before(function (done) {
             // perform the collection run
             this.run({
@@ -137,7 +182,7 @@ describe('oauth 1', function () {
                                     consumerSecret: 'secret',
                                     signatureMethod: 'HMAC-SHA1',
                                     addParamsToHeader: true,
-                                    disableAuthHeaderEncoding: true
+                                    encodeAuthHeaderParams: undefined
                                 }
                             },
                             url: 'https://postman-echo.com/get',
@@ -160,11 +205,11 @@ describe('oauth 1', function () {
             expect(testrun.done.getCall(0).args[0]).to.be.null;
         });
 
-        it('should not encode params in Authorization header', function () {
+        it('should encode params in Authorization header', function () {
             var response = testrun.response.getCall(0).args[2];
 
             expect(response).to.have.property('code', 200);
-            expect(response.json().headers.authorization).to.contain('oauth_consumer_key="foo!bar"');
+            expect(response.json().headers.authorization).to.contain('oauth_consumer_key="foo%21bar"');
         });
     });
 });
