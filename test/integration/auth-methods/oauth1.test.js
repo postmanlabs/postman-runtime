@@ -78,7 +78,7 @@ describe('oauth 1', function () {
         });
     });
 
-    describe('encodeAuthHeaderParams: false', function () {
+    describe('disableHeaderEncoding: true', function () {
         before(function (done) {
             // perform the collection run
             this.run({
@@ -92,7 +92,7 @@ describe('oauth 1', function () {
                                     consumerSecret: 'secret',
                                     signatureMethod: 'HMAC-SHA1',
                                     addParamsToHeader: true,
-                                    encodeAuthHeaderParams: false
+                                    disableHeaderEncoding: true
                                 }
                             },
                             url: 'https://postman-echo.com/get',
@@ -123,7 +123,7 @@ describe('oauth 1', function () {
         });
     });
 
-    describe('encodeAuthHeaderParams: true', function () {
+    describe('disableHeaderEncoding: false', function () {
         before(function (done) {
             // perform the collection run
             this.run({
@@ -137,7 +137,7 @@ describe('oauth 1', function () {
                                     consumerSecret: 'secret',
                                     signatureMethod: 'HMAC-SHA1',
                                     addParamsToHeader: true,
-                                    encodeAuthHeaderParams: true
+                                    disableHeaderEncoding: false
                                 }
                             },
                             url: 'https://postman-echo.com/get',
@@ -168,7 +168,7 @@ describe('oauth 1', function () {
         });
     });
 
-    describe('encodeAuthHeaderParams: undefined', function () {
+    describe('without disableHeaderEncoding option', function () {
         before(function (done) {
             // perform the collection run
             this.run({
@@ -181,8 +181,7 @@ describe('oauth 1', function () {
                                     consumerKey: 'foo!bar',
                                     consumerSecret: 'secret',
                                     signatureMethod: 'HMAC-SHA1',
-                                    addParamsToHeader: true,
-                                    encodeAuthHeaderParams: undefined
+                                    addParamsToHeader: true
                                 }
                             },
                             url: 'https://postman-echo.com/get',
@@ -205,7 +204,7 @@ describe('oauth 1', function () {
             expect(testrun.done.getCall(0).args[0]).to.be.null;
         });
 
-        it('should encode params in Authorization header', function () {
+        it('should encode params in Authorization header by default', function () {
             var response = testrun.response.getCall(0).args[2];
 
             expect(response).to.have.property('code', 200);
