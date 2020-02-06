@@ -222,7 +222,7 @@ describe('request headers', function () {
             {key: 'Accept', value: '*/*'},
             {key: 'Cache-Control', value: 'no-cache'},
             {key: 'Host', value: 'localhost:5050'},
-            {key: 'Accept-Encoding', value: 'gzip, deflate'},
+            {key: 'Accept-Encoding', value: 'gzip, deflate, br'},
             {key: 'Connection', value: 'keep-alive'}
         ]);
 
@@ -244,7 +244,7 @@ describe('request headers', function () {
             new Header({key: 'Accept', value: '*/*', system: true}),
             new Header({key: 'Cache-Control', value: 'no-cache', system: true}),
             new Header({key: 'Host', value: 'localhost:5050', system: true}),
-            new Header({key: 'Accept-Encoding', value: 'gzip, deflate', system: true}),
+            new Header({key: 'Accept-Encoding', value: 'gzip, deflate, br', system: true}),
             new Header({key: 'Connection', value: 'keep-alive', system: true})
         ]);
     });

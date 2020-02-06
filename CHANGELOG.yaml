@@ -1,6 +1,22 @@
 master:
+  new features:
+    - >-
+      GH-959 Added an option to toggle parameter encoding in Authorization
+      header of OAuth1
+  fixed bugs:
+    - >-
+      GH-957 Fixed a bug where expiry was wrong for cookies passed to response
+      callback when cookies had `Max-Age` field
+
+7.22.0:
+  date: 2020-01-10
+  new features:
+    - GH-949 Improved performance for large number of iterations
+    - GH-953 Added support for brotli decompression
   chores:
     - GH-943 Added `nyc` and `codecov` for code coverage checks
+    - GH-951 Added sanity check for edgegrid auth params in sign function
+    - GH-953 Updated dependencies
 
 7.21.0:
   date: 2019-12-02

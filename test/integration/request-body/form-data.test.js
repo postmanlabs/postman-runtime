@@ -218,4 +218,47 @@ describe('Request Body Mode: formdata', function () {
             expect(responseBody).to.have.deep.property('form', {foo: ''});
         });
     });
+
+    describe('with undefined value of type file', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: HOST,
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [
+                                    {key: 'foo', type: 'file'}
+                                ]
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true,
+                'response.calledOnce': true
+            });
+        });
+
+        it('should post empty form-data', function () {
+            var response = testrun.response.getCall(0).args[2],
+                responseBody = response.json();
+
+            expect(response).to.have.property('code', 200);
+            expect(responseBody).to.have.deep.property('files', {'': 'data:application/octet-stream;base64,'});
+        });
+    });
 });

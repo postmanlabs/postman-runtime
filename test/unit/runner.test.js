@@ -315,20 +315,57 @@ describe('runner', function () {
                     });
                 });
             });
-        });
-    });
 
-    describe('normaliseIterationData', function () {
-        it('should handle insane arguments correctly', function () {
-            expect(Runner.normaliseIterationData()).to.eql([{}]);
-        });
+            describe('option iterationCount', function () {
+                describe('when set', function () {
+                    it('should be present in options', function (done) {
+                        var runner = new Runner();
 
-        it('should trim the provided data set to the specified length', function () {
-            expect(Runner.normaliseIterationData([{foo: 'alpha'}, {bar: 'beta'}], 1)).to.eql([{foo: 'alpha'}]);
-        });
+                        runner.run(collection, {iterationCount: 10}, function (err, run) {
+                            expect(err).to.be.null;
+                            expect(run).to.nested.include({
+                                'options.iterationCount': 10
+                            });
+                            done();
+                        });
+                    });
 
-        it('should duplicate the last element of the data set if length is greater', function () {
-            expect(Runner.normaliseIterationData([{foo: 'alpha'}], 2)).to.eql([{foo: 'alpha'}, {foo: 'alpha'}]);
+                    it('should not fail to create run for large iterationCount', function (done) {
+                        var runner = new Runner();
+
+                        runner.run(collection, {iterationCount: 99999999}, function (err, run) {
+                            expect(err).to.be.null;
+                            expect(run).to.nested.include({
+                                'options.iterationCount': 99999999
+                            });
+                            done();
+                        });
+                    });
+                });
+
+                describe('when not set', function () {
+                    it('should be inferred from data', function (done) {
+                        var runner = new Runner(),
+                            data = [
+                                {a: 'b'},
+                                {c: 'd'},
+                                {e: 'f'}
+                            ];
+
+                        runner.run(collection, {data}, function (err, run) {
+                            expect(err).to.be.null;
+                            expect(run).to.nested.include({
+                                'options.iterationCount': 3
+                            });
+
+                            expect(run).to.nested.include({
+                                'state.data': data
+                            });
+                            done();
+                        });
+                    });
+                });
+            });
         });
     });
 });

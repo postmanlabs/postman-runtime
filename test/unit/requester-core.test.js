@@ -778,7 +778,7 @@ describe('requester util', function () {
                     }, {
                         key: 'userFile',
                         value: '',
-                        options: {contentType: 'application/json'}
+                        options: {contentType: 'application/json', filename: ''}
                     }]);
                 });
 
