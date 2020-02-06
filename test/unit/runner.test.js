@@ -315,6 +315,57 @@ describe('runner', function () {
                     });
                 });
             });
+
+            describe('option iterationCount', function () {
+                describe('when set', function () {
+                    it('should be present in options', function (done) {
+                        var runner = new Runner();
+
+                        runner.run(collection, {iterationCount: 10}, function (err, run) {
+                            expect(err).to.be.null;
+                            expect(run).to.nested.include({
+                                'options.iterationCount': 10
+                            });
+                            done();
+                        });
+                    });
+
+                    it('should not fail to create run for large iterationCount', function (done) {
+                        var runner = new Runner();
+
+                        runner.run(collection, {iterationCount: 99999999}, function (err, run) {
+                            expect(err).to.be.null;
+                            expect(run).to.nested.include({
+                                'options.iterationCount': 99999999
+                            });
+                            done();
+                        });
+                    });
+                });
+
+                describe('when not set', function () {
+                    it('should be inferred from data', function (done) {
+                        var runner = new Runner(),
+                            data = [
+                                {a: 'b'},
+                                {c: 'd'},
+                                {e: 'f'}
+                            ];
+
+                        runner.run(collection, {data}, function (err, run) {
+                            expect(err).to.be.null;
+                            expect(run).to.nested.include({
+                                'options.iterationCount': 3
+                            });
+
+                            expect(run).to.nested.include({
+                                'state.data': data
+                            });
+                            done();
+                        });
+                    });
+                });
+            });
         });
     });
 });
