@@ -352,6 +352,84 @@ describe('protocolProfileBehavior', function () {
         });
     });
 
+    describe('with disableUrlEncoding: false', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: 'https://postman-echo.com/get?q=("*")'
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        disableUrlEncoding: false
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should percent encode URL segments', function () {
+            var response = testrun.response.getCall(0).args[2].json();
+
+            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=(%22*%22)');
+        });
+    });
+
+    describe('with disableUrlEncoding: true', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: 'https://postman-echo.com/get?q=("*")'
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        disableUrlEncoding: true
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should not percent encode URL segments', function () {
+            var response = testrun.response.getCall(0).args[2].json();
+
+            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=("*")');
+        });
+    });
+
     describe('with removeRefererHeaderOnRedirect: false', function () {
         var URL = HOST + '/1/302';
 
