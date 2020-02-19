@@ -171,6 +171,17 @@ describe('requester util', function () {
             });
         });
 
+        it('should use custom URL parser', function () {
+            var request = new sdk.Request({
+                    url: 'http://postman-echo.com/get'
+                }),
+                requestOptions = requesterCore.getRequestOptions(request, {});
+
+            expect(requestOptions.urlParser).to.be.an('object');
+            expect(requestOptions.urlParser.parse).to.be.a('function');
+            expect(requestOptions.urlParser.resolve).to.be.a('function');
+        });
+
         it('should override lookup function for localhost', function () {
             var request = new sdk.Request({
                 url: 'http://localhost:8080/random/path'

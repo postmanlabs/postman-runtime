@@ -190,7 +190,7 @@ function createRedirectServer () {
  */
 function createHTTPServer () {
     var server = http.createServer(function (req, res) {
-        server.emit(req.url, req, res);
+        server.emit(req.url.replace(/(\?.*)/, ''), req, res);
     });
 
     server.on('listening', function () {
