@@ -7,6 +7,7 @@ master:
     - >-
       GH-957 Fixed a bug where expiry was wrong for cookies passed to response
       callback when cookies had `Max-Age` field
+    - GH-973 Fixed request headers updated by AWS auth in manifest
   chores:
     - GH-953 Updated dependencies
 
