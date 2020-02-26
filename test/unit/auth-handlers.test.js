@@ -935,6 +935,40 @@ describe('Auth Handler:', function () {
             expect(headers).to.include.keys(['x-amz-date', 'x-amz-security-token']);
         });
 
+        it('should list all modified headers in manifest', function (done) {
+            var requestJSON = _.assign({}, rawRequests.awsv4, {
+                    header: [],
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello'
+                    }
+                }),
+                request = new Request(requestJSON),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headersInManifest = _.transform(handler.manifest.updates, function (acc, entity) {
+                    if (entity.type === 'header') {
+                        acc.push(entity.property.toLowerCase());
+                    }
+                }, []),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+
+                // ensure that all the headers added are listed in manifest
+                expect(_.difference(Object.keys(headers), headersInManifest)).to.be.empty;
+
+                // ensure that there are no extra headers in manifest that
+                // are not added by the auth
+                expect(headers).to.include.keys(headersInManifest);
+                done();
+            });
+        });
+
         it('should use sensible defaults where applicable', function () {
             var headers,
                 rawReq = _.defaults(rawRequests.awsv4, {
