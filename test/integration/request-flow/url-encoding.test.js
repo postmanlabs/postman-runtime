@@ -28,6 +28,9 @@ describe('URL encoding', function () {
             expectedPath.push(encoder.percentEncodeCharCode(127));
 
             this.run({
+                requester: {
+                    useWhatWGUrlParser: true
+                },
                 collection: {
                     item: {
                         request: `${echoServer.url}/start/${pathToSend.join('/')}/end`
@@ -67,6 +70,9 @@ describe('URL encoding', function () {
             }
 
             this.run({
+                requester: {
+                    useWhatWGUrlParser: true
+                },
                 collection: {
                     item: {
                         request: `${echoServer.url}/start/${pathToSend.join('/')}/end`
@@ -103,6 +109,9 @@ describe('URL encoding', function () {
             expectedValue.push(encoder.percentEncodeCharCode(127));
 
             this.run({
+                requester: {
+                    useWhatWGUrlParser: true
+                },
                 collection: {
                     item: {
                         request: `${echoServer.url}/start?q1=${valueToSend.join('/')}/end`
@@ -144,6 +153,9 @@ describe('URL encoding', function () {
             }
 
             this.run({
+                requester: {
+                    useWhatWGUrlParser: true
+                },
                 collection: {
                     item: {
                         request: {
