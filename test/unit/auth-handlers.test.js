@@ -935,7 +935,7 @@ describe('Auth Handler:', function () {
             expect(headers).to.include.keys(['x-amz-date', 'x-amz-security-token']);
         });
 
-        it.only('should list all modified headers in manifest', function (done) {
+        it('should list all modified headers in manifest', function (done) {
             var requestJSON = _.assign({}, rawRequests.awsv4, {
                     header: [],
                     body: {
