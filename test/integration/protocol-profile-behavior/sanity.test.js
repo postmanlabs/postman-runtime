@@ -387,6 +387,10 @@ describe('protocolProfileBehavior', function () {
                     protocolProfileBehavior: {
                         disableUrlEncoding: false
                     }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
                 }
             }, function (err, results) {
                 testrun = results;
@@ -426,6 +430,10 @@ describe('protocolProfileBehavior', function () {
                     protocolProfileBehavior: {
                         disableUrlEncoding: false
                     }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
                 }
             }, function (err, results) {
                 testrun = results;
@@ -465,6 +473,10 @@ describe('protocolProfileBehavior', function () {
                     protocolProfileBehavior: {
                         disableUrlEncoding: false
                     }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
                 }
             }, function (err, results) {
                 testrun = results;
@@ -504,6 +516,10 @@ describe('protocolProfileBehavior', function () {
                     protocolProfileBehavior: {
                         disableUrlEncoding: true
                     }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
                 }
             }, function (err, results) {
                 testrun = results;
@@ -543,6 +559,10 @@ describe('protocolProfileBehavior', function () {
                     protocolProfileBehavior: {
                         disableUrlEncoding: true
                     }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
                 }
             }, function (err, results) {
                 testrun = results;
@@ -582,6 +602,10 @@ describe('protocolProfileBehavior', function () {
                     protocolProfileBehavior: {
                         disableUrlEncoding: true
                     }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
                 }
             }, function (err, results) {
                 testrun = results;
