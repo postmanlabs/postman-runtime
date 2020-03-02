@@ -1,3 +1,22 @@
+7.23.0:
+  date: 2020-03-02
+  new features:
+    - GH-965 Updated URL encoding behavior as per WHATWG URL standard
+    - >-
+      GH-965 Added `useWhatWGUrlParser` requester option to use WHATWG URL
+      parser and encoder
+    - GH-965 Added `disableUrlEncoding` protocol profile behavior
+    - >-
+      GH-959 Added an option to toggle parameter encoding in Authorization
+      header of OAuth1
+  fixed bugs:
+    - >-
+      GH-957 Fixed a bug where expiry was wrong for cookies passed to response
+      callback when cookies had `Max-Age` field
+    - GH-973 Fixed request headers updated by AWS auth in manifest
+  chores:
+    - GH-953 Updated dependencies
+
 7.22.0:
   date: 2020-01-10
   new features:

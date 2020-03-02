@@ -171,6 +171,30 @@ describe('requester util', function () {
             });
         });
 
+        it('should use custom URL parser when useWhatWGUrlParser is enabled', function () {
+            var request = new sdk.Request({
+                    url: 'http://postman-echo.com/get'
+                }),
+                requestOptions = requesterCore.getRequestOptions(request, {
+                    useWhatWGUrlParser: true
+                });
+
+            expect(requestOptions.urlParser).to.be.an('object');
+            expect(requestOptions.urlParser.parse).to.be.a('function');
+            expect(requestOptions.urlParser.resolve).to.be.a('function');
+        });
+
+        it('should not use custom URL parser when useWhatWGUrlParser is disabled', function () {
+            var request = new sdk.Request({
+                    url: 'http://postman-echo.com/get'
+                }),
+                requestOptions = requesterCore.getRequestOptions(request, {
+                    useWhatWGUrlParser: false
+                });
+
+            expect(requestOptions.urlParser).to.not.be.ok;
+        });
+
         it('should override lookup function for localhost', function () {
             var request = new sdk.Request({
                 url: 'http://localhost:8080/random/path'
@@ -232,7 +256,8 @@ describe('requester util', function () {
                     followRedirects: false,
                     followOriginalHttpMethod: false,
                     maxRedirects: 10,
-                    removeRefererHeaderOnRedirect: false
+                    removeRefererHeaderOnRedirect: false,
+                    useWhatWGUrlParser: true
                 },
                 protocolProfileBehavior = {
                     strictSSL: false,
@@ -279,9 +304,9 @@ describe('requester util', function () {
                 hash: null,
                 search: null,
                 query: null,
-                pathname: null,
-                path: null,
-                href: 'http://'
+                pathname: '/',
+                path: '/',
+                href: 'http:///'
             });
         });
     });

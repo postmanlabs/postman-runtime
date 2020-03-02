@@ -7,6 +7,7 @@ var fs = require('fs'),
 
 describe('protocolProfileBehavior', function () {
     var redirectServer,
+        httpServer,
         testrun,
         hits = [],
         PORT = 5050,
@@ -14,6 +15,7 @@ describe('protocolProfileBehavior', function () {
 
     before(function (done) {
         redirectServer = server.createRedirectServer();
+        httpServer = server.createHTTPServer();
 
         redirectServer.on('hit', function (req) {
             // keep track of all the requests made during redirects.
@@ -30,7 +32,28 @@ describe('protocolProfileBehavior', function () {
             res.end('okay');
         });
 
-        redirectServer.listen(PORT, done);
+        httpServer.on('/redirect', function (req, res) {
+            res.writeHead(301, {
+                'Location': httpServer.url + '/query?q={("*")}'
+            });
+            res.end();
+        });
+
+        httpServer.on('/relative_redirect', function (req, res) {
+            res.writeHead(301, {
+                'Location': '/query?q={("*")}'
+            });
+            res.end();
+        });
+
+        httpServer.on('/query', function (req, res) {
+            res.writeHead(200);
+            res.end(JSON.stringify({url: req.url}));
+        });
+
+        redirectServer.listen(PORT, function () {
+            httpServer.listen(0, done);
+        });
     });
 
     after(function (done) {
@@ -352,6 +375,264 @@ describe('protocolProfileBehavior', function () {
         });
     });
 
+    describe('with disableUrlEncoding: false', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: 'https://postman-echo.com/get?q=("*")'
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        disableUrlEncoding: false
+                    }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should percent encode URL segments', function () {
+            var response = testrun.response.getCall(0).args[2].json();
+
+            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=(%22*%22)');
+        });
+    });
+
+    describe('redirect with disableUrlEncoding: false', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: httpServer.url + '/redirect'
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        disableUrlEncoding: false
+                    }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should percent encode redirect URL segments', function () {
+            var response = testrun.response.getCall(0).args[2].json();
+
+            expect(response).to.have.property('url', '/query?q={(%22*%22)}');
+        });
+    });
+
+    describe('relative redirect with disableUrlEncoding: false', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: httpServer.url + '/relative_redirect'
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        disableUrlEncoding: false
+                    }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should percent encode redirect URL segments', function () {
+            var response = testrun.response.getCall(0).args[2].json();
+
+            expect(response).to.have.property('url', '/query?q={(%22*%22)}');
+        });
+    });
+
+    describe('with disableUrlEncoding: true', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: 'https://postman-echo.com/get?q=("*")'
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        disableUrlEncoding: true
+                    }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should not percent encode URL segments', function () {
+            var response = testrun.response.getCall(0).args[2].json();
+
+            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=("*")');
+        });
+    });
+
+    describe('redirect with disableUrlEncoding: true', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: httpServer.url + '/redirect'
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        disableUrlEncoding: true
+                    }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should not percent encode redirect URL segments', function () {
+            var response = testrun.response.getCall(0).args[2].json();
+
+            expect(response).to.have.property('url', '/query?q={("*")}');
+        });
+    });
+
+    describe('relative redirect with disableUrlEncoding: true', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: httpServer.url + '/relative_redirect'
+                        }
+                    }],
+                    protocolProfileBehavior: {
+                        disableUrlEncoding: true
+                    }
+                },
+                requester: {
+                    // disableUrlEncoding option only works with WHATWG parser
+                    useWhatWGUrlParser: true
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should not percent encode redirect URL segments', function () {
+            var response = testrun.response.getCall(0).args[2].json();
+
+            expect(response).to.have.property('url', '/query?q={("*")}');
+        });
+    });
+
     describe('with removeRefererHeaderOnRedirect: false', function () {
         var URL = HOST + '/1/302';
 
@@ -461,6 +742,88 @@ describe('protocolProfileBehavior', function () {
             expect(hits[1]).to.have.property('method', 'GET');
             expect(hits[1]).to.have.property('headers');
             expect(hits[1].headers).to.not.have.property('referer');
+        });
+    });
+
+    describe('with disableCookies: false', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                    }],
+                    protocolProfileBehavior: {
+                        disableCookies: false
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should have referer header on redirects', function () {
+            var response = testrun.response.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json()).to.eql({
+                cookies: {
+                    foo: 'bar'
+                }
+            });
+        });
+    });
+
+    describe('with disableCookies: true', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                    }],
+                    protocolProfileBehavior: {
+                        disableCookies: true
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should have referer header on redirects', function () {
+            var response = testrun.response.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json()).to.eql({
+                cookies: {}
+            });
         });
     });
 
