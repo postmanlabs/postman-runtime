@@ -41,7 +41,7 @@
     "node-oauth1": "1.2.4",
     "performance-now": "2.1.0",
     "postman-collection": "3.6.0",
-    "postman-request": "2.88.1-postman.18",
+    "postman-request": "2.88.1-postman.19",
     "postman-sandbox": "3.5.2",
     "postman-url-encoder": "2.0.0",
     "resolve-from": "5.0.0",
