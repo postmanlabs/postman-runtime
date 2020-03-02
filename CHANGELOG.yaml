@@ -1,5 +1,10 @@
 master:
   new features:
+    - GH-965 Updated URL encoding behavior as per WHATWG URL standard
+    - >-
+      GH-965 Added `useWhatWGUrlParser` requester option to use WHATWG URL
+      parser and encoder
+    - GH-965 Added `disableUrlEncoding` protocol profile behavior
     - >-
       GH-959 Added an option to toggle parameter encoding in Authorization
       header of OAuth1
