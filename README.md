@@ -101,6 +101,9 @@ runner.run(collection, {
         // Maximum allowed response size in bytes (only supported on Node, ignored in the browser)
         maxResponseSize: 1000000,
 
+        // Enable to use WHATWG URL parser and encoder
+        useWhatWGUrlParser: true,
+
         // Removes the `referer` header when a redirect happens (only supported on Node, ignored in the browser)
         removeRefererHeaderOnRedirect: false,
 

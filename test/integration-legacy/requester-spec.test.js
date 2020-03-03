@@ -3860,7 +3860,7 @@ describe('Requester', function () {
                             });
                             expect(request.headers.one('Accept-Encoding')).to.deep.include({
                                 key: 'Accept-Encoding',
-                                value: 'gzip, deflate'
+                                value: 'gzip, deflate, br'
                             });
                         });
                     },

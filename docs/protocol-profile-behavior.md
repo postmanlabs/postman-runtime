@@ -18,6 +18,9 @@ Set maximum number of redirects to follow.
 - `disableBodyPruning`<br/>
 Control request body pruning for following methods: ```GET, COPY, HEAD, PURGE, UNLOCK```
 
+- `disableUrlEncoding`<br/>
+Disable percent encoding of auth, path, query and fragment URL segments.
+
 - `followOriginalHttpMethod`<br/>
 Redirect with the original HTTP method, by default redirects with HTTP method GET.
 
