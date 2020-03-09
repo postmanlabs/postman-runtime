@@ -26,6 +26,8 @@ describe('requester util', function () {
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     'Content-Type': 'text/plain',
                     Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
                     Host: 'postman-echo.com'
                 },
                 body: '{"alpha": "foo"}',
@@ -81,6 +83,8 @@ describe('requester util', function () {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
                     Host: 'postman-echo.com'
                 },
                 method: 'GET',
@@ -272,6 +276,8 @@ describe('requester util', function () {
                 headers: {
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
                     Host: ''
                 },
                 method: 'GET',
