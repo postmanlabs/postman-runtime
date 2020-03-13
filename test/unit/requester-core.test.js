@@ -26,6 +26,8 @@ describe('requester util', function () {
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     'Content-Type': 'text/plain',
                     Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
                     Host: 'postman-echo.com'
                 },
                 body: '{"alpha": "foo"}',
@@ -81,6 +83,8 @@ describe('requester util', function () {
                     alpha: 'foo',
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
                     Host: 'postman-echo.com'
                 },
                 method: 'GET',
@@ -272,6 +276,8 @@ describe('requester util', function () {
                 headers: {
                     'User-Agent': 'PostmanRuntime/' + runtimeVersion,
                     Accept: '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    Connection: 'keep-alive',
                     Host: ''
                 },
                 method: 'GET',
@@ -308,22 +314,6 @@ describe('requester util', function () {
                 path: '/',
                 href: 'http:///'
             });
-        });
-    });
-
-    describe('.ensureHeaderExists', function () {
-        it('should not mutate the header if it already exists', function () {
-            var headers = {alpha: 'foo', beta: 'bar'};
-
-            requesterCore.ensureHeaderExists(headers, 'alpha');
-            expect(headers).to.eql({alpha: 'foo', beta: 'bar'});
-        });
-
-        it('should correctly set a missing header', function () {
-            var headers = {alpha: 'foo', beta: 'bar'};
-
-            requesterCore.ensureHeaderExists(headers, 'gamma', 'baz');
-            expect(headers).to.eql({alpha: 'foo', beta: 'bar', gamma: 'baz'});
         });
     });
 
