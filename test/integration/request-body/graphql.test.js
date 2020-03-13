@@ -335,4 +335,103 @@ describe('Request Body Mode: graphql', function () {
             });
         });
     });
+
+    describe('custom content-type', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: graphqlServer.url,
+                            header: [{
+                                key: 'content-type',
+                                value: 'something/else'
+                            }],
+                            method: 'POST',
+                            body: {
+                                mode: 'graphql',
+                                graphql: {
+                                    query: '{ hello }'
+                                }
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true,
+                'response.calledOnce': true
+            });
+        });
+
+        it('should honor custom content-type header', function () {
+            var response = testrun.response.getCall(0).args[2],
+                responseBody = JSON.parse(response.stream.toString());
+
+            expect(response).to.have.property('code', 200);
+
+            expect(responseBody.request).to.have.property('headers');
+            expect(responseBody.request.headers).to.have.property('content-type', 'something/else');
+        });
+    });
+
+    describe('disabled content-type', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: graphqlServer.url,
+                            header: [{
+                                key: 'content-type',
+                                value: 'something/else',
+                                disabled: true
+                            }],
+                            method: 'POST',
+                            body: {
+                                mode: 'graphql',
+                                graphql: {
+                                    query: '{ hello }'
+                                }
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true,
+                'response.calledOnce': true
+            });
+        });
+
+        it('should handle disabled content-type header', function () {
+            var response = testrun.response.getCall(0).args[2],
+                responseBody = JSON.parse(response.stream.toString());
+
+            expect(response).to.have.property('code', 200);
+
+            expect(responseBody.request).to.have.property('headers');
+            expect(responseBody.request.headers).to.have.property('content-type', 'application/json');
+        });
+    });
 });

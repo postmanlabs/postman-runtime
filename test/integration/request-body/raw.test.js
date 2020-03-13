@@ -42,6 +42,7 @@ describe('Request Body Mode: raw', function () {
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('data', 'POSTMAN');
+            expect(responseBody.headers).to.have.property('content-type', 'text/plain');
         });
     });
 
@@ -52,6 +53,10 @@ describe('Request Body Mode: raw', function () {
                     item: [{
                         request: {
                             url: HOST,
+                            header: [{
+                                key: 'content-type',
+                                value: 'text/plain'
+                            }],
                             method: 'POST',
                             body: {
                                 mode: 'raw',
@@ -87,6 +92,7 @@ describe('Request Body Mode: raw', function () {
             expect(responseBody).to.have.property('data', JSON.stringify({
                 name: 'POSTMAN'
             }));
+            expect(responseBody.headers).to.have.property('content-type', 'text/plain');
         });
     });
 
@@ -211,6 +217,107 @@ describe('Request Body Mode: raw', function () {
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('data').that.is.empty;
+        });
+    });
+
+    describe('with custom content-type', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: HOST,
+                            header: [{
+                                key: 'content-type',
+                                value: 'application/xml'
+                            }, {
+                                key: 'content-type',
+                                value: 'application/json',
+                                disabled: true
+                            }],
+                            method: 'POST',
+                            body: {
+                                mode: 'raw',
+                                raw: 'POSTMAN'
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true,
+                'response.calledOnce': true
+            });
+        });
+
+        it('should honor custom content-type header', function () {
+            var response = testrun.response.getCall(0).args[2],
+                responseBody = JSON.parse(response.stream.toString());
+
+            expect(response).to.have.property('code', 200);
+            expect(responseBody).to.have.property('data', 'POSTMAN');
+            expect(responseBody.headers).to.have.property('content-type', 'application/xml');
+        });
+    });
+
+    describe('with disabled content-type', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: HOST,
+                            header: [{
+                                key: 'content-type',
+                                value: 'application/xml',
+                                disabled: true
+                            }, {
+                                key: 'content-type',
+                                value: 'application/json',
+                                disabled: true
+                            }],
+                            method: 'POST',
+                            body: {
+                                mode: 'raw',
+                                raw: 'POSTMAN'
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true,
+                'response.calledOnce': true
+            });
+        });
+
+        it('should handle disabled content-type header', function () {
+            var response = testrun.response.getCall(0).args[2],
+                responseBody = JSON.parse(response.stream.toString());
+
+            expect(response).to.have.property('code', 200);
+            expect(responseBody).to.have.property('data', 'POSTMAN');
+            expect(responseBody.headers).to.have.property('content-type', 'text/plain');
         });
     });
 });
