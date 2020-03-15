@@ -1,3 +1,9 @@
+master:
+  new features:
+    - GH-985 Added method `Requester~dryRun` to dry run the given request instance
+  chores:
+    - Updated dependencies
+
 7.23.0:
   date: 2020-03-02
   new features:
