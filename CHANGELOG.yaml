@@ -1,6 +1,14 @@
 master:
   new features:
+    - GH-984 Added `disabledSystemHeaders` protocol profile behavior
     - GH-985 Added method `Requester~dryRun` to dry run the given request instance
+  fixed bugs:
+    - >-
+      GH-982 Fixed a bug where `Content-Type` header was sent even if all the
+      params are disabled for form-data and urlencoded body
+    - >-
+      GH-983 Fixed a bug where the system added `Content-Type` header was not
+      added when the given header is disabled
   chores:
     - Updated dependencies
 
