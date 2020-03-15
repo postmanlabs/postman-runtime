@@ -134,13 +134,13 @@ describe('URL encoding', function () {
             });
         });
 
-        it('should percent-encode SPACE, ("), (#), (&), (\'), (<), (=), and (>)', function (done) {
+        it('should percent-encode SPACE, ("), (#), (\'), (<), and (>)', function (done) {
             var i,
                 char,
                 valueToSend = [],
                 expectedValue = [],
-                encodeSet = new Set([' ', '"', '#', '&', '\'', '<', '=', '>']),
-                reservedPathChars = new Set(['#', '&']);
+                encodeSet = new Set([' ', '"', '#', '\'', '<', '>']),
+                reservedPathChars = new Set(['#']);
 
             for (i = 32; i < 127; i++) {
                 char = String.fromCharCode(i);
