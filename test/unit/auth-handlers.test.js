@@ -587,6 +587,43 @@ describe('Auth Handler:', function () {
                     addEmptyParamsToSign: true
                 });
         });
+
+        it('should generate correct signature for request with disabled query params', function () {
+            var rawReq = _(rawRequests.oauth1).omit(['auth.oauth1.nonce', 'auth.oauth1.timestamp']).merge({
+                    url: {
+                        host: ['postman-echo', 'com'],
+                        path: ['auth', 'oauth1'],
+                        protocol: 'https',
+                        query: [
+                            {key: 'param_1', value: 'value_1'},
+                            {key: 'param_2', value: 'value_2', disabled: true}
+                        ]
+                    },
+                    auth: {
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            timestamp: 1461319769,
+                            nonce: 'ik3oT5',
+                            version: '1.0',
+                            realm: '',
+                            addParamsToHeader: false,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                }).value(),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                expect(request.url.query.get('oauth_signature')).to.eql('e8WDYQsG8SYPoWnxU4CYbqHT1HU=');
+            });
+        });
     });
 
     describe('oauth2', function () {

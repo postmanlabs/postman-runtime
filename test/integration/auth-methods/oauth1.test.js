@@ -78,6 +78,181 @@ describe('oauth 1', function () {
         });
     });
 
+    describe('with urlencoded body having disabled params', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'RKCGzna7bv9YD57c',
+                                    consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    version: '1.0',
+                                    addParamsToHeader: true,
+                                    addEmptyParamsToSign: false
+                                }
+                            },
+                            url: 'https://postman-echo.com/oauth1',
+                            method: 'GET',
+                            body: {
+                                mode: 'urlencoded',
+                                urlencoded: [
+                                    {key: 'param_1', value: 'value_1'},
+                                    {key: 'param_2', value: 'value_2', disabled: true}
+                                ]
+                            }
+                        }
+                    },
+                    protocolProfileBehavior: {
+                        disableBodyPruning: true
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should have passed OAuth 1 authorization', function () {
+            expect(testrun.request.calledOnce).to.be.ok;
+
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('with disabled URL params', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'RKCGzna7bv9YD57c',
+                                    consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    version: '1.0',
+                                    addParamsToHeader: true,
+                                    addEmptyParamsToSign: false
+                                }
+                            },
+                            url: {
+                                host: ['postman-echo', 'com'],
+                                path: ['oauth1'],
+                                protocol: 'https',
+                                query: [
+                                    {key: 'param_1', value: 'value_1'},
+                                    {key: 'param_2', value: 'value_2', disabled: true}
+                                ],
+                                variable: []
+                            },
+                            method: 'GET'
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should have passed OAuth 1 authorization', function () {
+            expect(testrun.request.calledOnce).to.be.ok;
+
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('empty urlencoded body and addParamsToHeader: false', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'RKCGzna7bv9YD57c',
+                                    consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    version: '1.0',
+                                    addParamsToHeader: false,
+                                    addEmptyParamsToSign: false
+                                }
+                            },
+                            url: {
+                                host: ['postman-echo', 'com'],
+                                path: ['post'],
+                                protocol: 'https'
+                            },
+                            method: 'POST',
+                            body: {
+                                mode: 'urlencoded',
+                                urlencoded: [] // empty body
+                            }
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should send auth params in request body', function () {
+            expect(testrun.request.calledOnce).to.be.ok;
+
+            var response = testrun.request.getCall(0).args[2].json();
+
+            expect(response.form).to.include.keys([
+                'oauth_consumer_key',
+                'oauth_signature_method',
+                'oauth_timestamp',
+                'oauth_nonce',
+                'oauth_version',
+                'oauth_signature'
+            ]);
+        });
+    });
+
     describe('disableHeaderEncoding: true', function () {
         before(function (done) {
             // perform the collection run

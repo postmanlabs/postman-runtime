@@ -1,3 +1,9 @@
+master:
+  fixed bugs:
+    - >-
+      GH-994 Fixed a bug where OAuth1 was calculating wrong signature for
+      request with urlencoded body having disabled params
+
 7.24.0:
   date: 2020-03-15
   new features:
