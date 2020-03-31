@@ -20,7 +20,7 @@
 
     "default": {
       "staticFiles": {
-        "include": ["./docs/img"]
+        "include": ["./docs"]
       }
     }
   },
