@@ -33,7 +33,7 @@
     "aws4": "1.9.1",
     "crypto-js": "3.3.0",
     "eventemitter3": "4.0.0",
-    "handlebars": "4.7.3",
+    "handlebars": "4.7.4",
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.6",
     "inherits": "2.0.4",
