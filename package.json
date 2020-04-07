@@ -62,7 +62,7 @@
     "graphql": "14.6.0",
     "http-proxy": "1.18.0",
     "js-yaml": "3.13.1",
-    "jsdoc": "3.6.3",
+    "jsdoc": "3.6.4",
     "jsdoc-to-markdown": "5.0.3",
     "mocha": "7.1.1",
     "nyc": "14.1.1",
