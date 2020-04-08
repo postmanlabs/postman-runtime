@@ -1,3 +1,7 @@
+master:
+  chores:
+    - Updated dependencies
+
 7.24.1:
   date: 2020-03-31
   fixed bugs:
