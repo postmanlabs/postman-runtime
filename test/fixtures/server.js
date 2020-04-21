@@ -8,8 +8,11 @@ const fs = require('fs'),
     https = require('https'),
     crypto = require('crypto'),
     GraphQL = require('graphql'),
+    express = require('express'),
+    passport = require('passport'),
     ntlmUtils = require('httpntlm').ntlm,
-    enableServerDestroy = require('server-destroy');
+    enableServerDestroy = require('server-destroy'),
+    DigestStrategy = require('passport-http').DigestStrategy;
 
 /**
  * Echo raw request message to test
@@ -609,6 +612,41 @@ function createBytesServer () {
     return server;
 }
 
+/**
+ * Creates an Digest server
+ *
+ * @param {Object} options - The options for the server
+ * @param {String} options.username - Username for authentication
+ * @param {String} options.password - Password for authentication
+ * @return {Object} - http server
+ */
+function createDigestServer (options) {
+    options = options || {};
+
+    var app = express(),
+        expectedUsername = options.username || 'username',
+        expectedPassword = options.password || 'password';
+
+    passport.use(new DigestStrategy({qop: 'auth'},
+        function (username, done) {
+            if (username !== expectedUsername) {
+                return done(null, false);
+            }
+
+            return done(null, username, expectedPassword);
+        }
+    ));
+
+    app.all('*',
+        passport.authenticate('digest', {session: false}),
+        function (req, res) {
+            res.send(req.users);
+        }
+    );
+
+    return app;
+}
+
 module.exports = {
     createSSLServer,
     createHTTPServer,
@@ -618,5 +656,6 @@ module.exports = {
     createRedirectServer,
     createEdgeGridAuthServer,
     createNTLMServer,
-    createBytesServer
+    createBytesServer,
+    createDigestServer
 };
