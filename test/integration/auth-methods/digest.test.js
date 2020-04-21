@@ -353,6 +353,73 @@ describe('digest auth', function () {
         });
     });
 
+    describe('with incorrect details (wrong password and advance options not provided)', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: digestServerURL,
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: '{{uname}}',
+                                    password: '{{pass}}'
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: USERNAME
+                    }, {
+                        key: 'pass',
+                        value: 'notpassword'
+                    }]
+                }
+            };
+
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have tried twice', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
+
+            var firstError = testrun.io.firstCall.args[0],
+                secondError = testrun.io.secondCall.args[0],
+                firstResponse = testrun.io.firstCall.args[3],
+                secondResponse = testrun.io.secondCall.args[3];
+
+            expect(firstError).to.be.null;
+            expect(secondError).to.be.null;
+            expect(firstResponse).to.have.property('code', 401);
+            expect(secondResponse).to.have.property('code', 401);
+        });
+    });
+
     describe('with incorrect details (all advance options provided)', function () {
         before(function (done) {
             var runOptions = {
