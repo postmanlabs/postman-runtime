@@ -684,4 +684,81 @@ describe('digest auth', function () {
             expect(authHeader).to.match(/qop=auth/);
         });
     });
+
+    // @todo remove authorization header in the pre-hook for digest and NTLM auth.
+    // this test suite fails because authorization header is present in the first request.
+    // authorization header must be removed before sending request to the server.
+    // if header is not removed in the first request, server might return 400 - Bad Request.
+    describe.skip('with correct details and existing Authorization header', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: digestServerURL,
+                            method: 'GET',
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: USERNAME,
+                                    password: PASSWORD
+                                }
+                            },
+                            header: [
+                                {
+                                    key: 'Authorization',
+                                    value: 'postman'
+                                }
+                            ]
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        // this fails because only one request is sent, as server returns 400 in the first request.
+        it('should have sent two requests internally', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
+
+            var firstError = testrun.io.firstCall.args[0],
+                secondError = testrun.io.secondCall.args[0];
+
+            expect(firstError).to.be.null;
+            expect(secondError).to.be.null;
+        });
+
+        // this fails because we get 400 instead of 401.
+        it('should have passed even if Authorization header is present', function () {
+            var firstCall = testrun.request.getCall(0),
+                secondCall = testrun.request.getCall(1);
+
+            expect(firstCall).to.be.not.null;
+            expect(firstCall.args[2]).to.have.property('code', 401);
+
+            expect(secondCall).to.be.not.null;
+            expect(secondCall.args[2]).to.have.property('code', 200);
+        });
+    });
 });
