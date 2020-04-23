@@ -1,7 +1,30 @@
-var expect = require('chai').expect;
+var expect = require('chai').expect,
+    enableServerDestroy = require('server-destroy'),
+    createDigestServer = require('../../fixtures/server').createDigestServer;
 
 describe('digest auth', function () {
-    var testrun;
+    var PORT,
+        USERNAME = 'postman',
+        PASSWORD = 'password',
+        digestServerURL,
+        digestServer,
+        testrun;
+
+    before(function () {
+        digestServer = createDigestServer({
+            username: USERNAME,
+            password: PASSWORD
+        }).listen(0, function () {
+            PORT = this.address().port;
+            digestServerURL = 'http://localhost:' + PORT;
+        });
+
+        enableServerDestroy(digestServer);
+    });
+
+    after(function () {
+        digestServer.destroy();
+    });
 
     // @todo
     // 1. add a test case with (qop=""). For this we need a Digest server which does not return qop value
@@ -18,7 +41,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: 'https://postman-echo.com/digest-auth',
+                            url: digestServerURL,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -33,10 +56,10 @@ describe('digest auth', function () {
                 environment: {
                     values: [{
                         key: 'uname',
-                        value: 'postman'
+                        value: USERNAME
                     }, {
                         key: 'pass',
-                        value: 'password'
+                        value: PASSWORD
                     }]
                 }
             };
@@ -76,10 +99,10 @@ describe('digest auth', function () {
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(firstRequest.url.toString()).to.eql(digestServerURL);
             expect(firstResponse).to.have.property('code', 401);
 
-            expect(secondRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(secondRequest.url.toString()).to.eql(digestServerURL);
             expect(secondResponse).to.have.property('code', 200);
         });
 
@@ -87,7 +110,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 401);
         });
 
@@ -95,7 +118,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(1).args[3],
                 response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 200);
         });
 
@@ -114,7 +137,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: 'https://postman-echo.com/digest-auth',
+                            url: digestServerURL,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -130,10 +153,10 @@ describe('digest auth', function () {
                 environment: {
                     values: [{
                         key: 'uname',
-                        value: 'postman'
+                        value: USERNAME
                     }, {
                         key: 'pass',
-                        value: 'password'
+                        value: PASSWORD
                     }]
                 }
             };
@@ -173,10 +196,10 @@ describe('digest auth', function () {
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(firstRequest.url.toString()).to.eql(digestServerURL);
             expect(firstResponse).to.have.property('code', 401);
 
-            expect(secondRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(secondRequest.url.toString()).to.eql(digestServerURL);
             expect(secondResponse).to.have.property('code', 200);
         });
 
@@ -184,7 +207,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 401);
         });
 
@@ -192,7 +215,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(1).args[3],
                 response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -204,7 +227,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: 'https://postman-echo.com/digest-auth',
+                            url: digestServerURL,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -220,10 +243,10 @@ describe('digest auth', function () {
                 environment: {
                     values: [{
                         key: 'uname',
-                        value: 'postman'
+                        value: USERNAME
                     }, {
                         key: 'pass',
-                        value: 'password'
+                        value: PASSWORD
                     }]
                 }
             };
@@ -258,19 +281,19 @@ describe('digest auth', function () {
                 response = testrun.io.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 401);
         });
     });
 
-    describe('with incorrect details (advance options not provided)', function () {
+    describe('with incorrect details (wrong username and advance options not provided)', function () {
         before(function (done) {
             var runOptions = {
                 collection: {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: 'https://postman-echo.com/digest-auth',
+                            url: digestServerURL,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -288,7 +311,74 @@ describe('digest auth', function () {
                         value: 'notpostman'
                     }, {
                         key: 'pass',
-                        value: 'password'
+                        value: PASSWORD
+                    }]
+                }
+            };
+
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have tried twice', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
+
+            var firstError = testrun.io.firstCall.args[0],
+                secondError = testrun.io.secondCall.args[0],
+                firstResponse = testrun.io.firstCall.args[3],
+                secondResponse = testrun.io.secondCall.args[3];
+
+            expect(firstError).to.be.null;
+            expect(secondError).to.be.null;
+            expect(firstResponse).to.have.property('code', 401);
+            expect(secondResponse).to.have.property('code', 401);
+        });
+    });
+
+    describe('with incorrect details (wrong password and advance options not provided)', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: digestServerURL,
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: '{{uname}}',
+                                    password: '{{pass}}'
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: USERNAME
+                    }, {
+                        key: 'pass',
+                        value: 'notpassword'
                     }]
                 }
             };
@@ -337,7 +427,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: 'https://postman-echo.com/digest-auth',
+                            url: digestServerURL,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -420,10 +510,10 @@ describe('digest auth', function () {
                 environment: {
                     values: [{
                         key: 'uname',
-                        value: 'postman'
+                        value: USERNAME
                     }, {
                         key: 'pass',
-                        value: 'password'
+                        value: PASSWORD
                     }]
                 }
             };
@@ -506,7 +596,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: 'https://postman-echo.com/digest-auth',
+                            url: digestServerURL,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -521,10 +611,10 @@ describe('digest auth', function () {
                 environment: {
                     values: [{
                         key: 'uname',
-                        value: 'postman'
+                        value: USERNAME
                     }, {
                         key: 'pass',
-                        value: 'password'
+                        value: PASSWORD
                     }]
                 }
             };
@@ -564,10 +654,10 @@ describe('digest auth', function () {
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(firstRequest.url.toString()).to.eql(digestServerURL);
             expect(firstResponse).to.have.property('code', 401);
 
-            expect(secondRequest.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(secondRequest.url.toString()).to.eql(digestServerURL);
             expect(secondResponse).to.have.property('code', 200);
         });
 
@@ -575,7 +665,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 401);
         });
 
@@ -583,7 +673,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(1).args[3],
                 response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 200);
         });
 
@@ -592,6 +682,83 @@ describe('digest auth', function () {
                 authHeader = request.headers.get('authorization');
 
             expect(authHeader).to.match(/qop=auth/);
+        });
+    });
+
+    // @todo remove authorization header in the pre-hook for digest and NTLM auth.
+    // this test suite fails because authorization header is present in the first request.
+    // authorization header must be removed before sending request to the server.
+    // if header is not removed in the first request, server might return 400 - Bad Request.
+    describe.skip('with correct details and existing Authorization header', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'DigestAuth',
+                        request: {
+                            url: digestServerURL,
+                            method: 'GET',
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    algorithm: 'MD5',
+                                    username: USERNAME,
+                                    password: PASSWORD
+                                }
+                            },
+                            header: [
+                                {
+                                    key: 'Authorization',
+                                    value: 'postman'
+                                }
+                            ]
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        // this fails because only one request is sent, as server returns 400 in the first request.
+        it('should have sent two requests internally', function () {
+            expect(testrun).to.nested.include({
+                'io.callCount': 2,
+                'request.callCount': 2
+            });
+
+            var firstError = testrun.io.firstCall.args[0],
+                secondError = testrun.io.secondCall.args[0];
+
+            expect(firstError).to.be.null;
+            expect(secondError).to.be.null;
+        });
+
+        // this fails because we get 400 instead of 401.
+        it('should have passed even if Authorization header is present', function () {
+            var firstCall = testrun.request.getCall(0),
+                secondCall = testrun.request.getCall(1);
+
+            expect(firstCall).to.be.not.null;
+            expect(firstCall.args[2]).to.have.property('code', 401);
+
+            expect(secondCall).to.be.not.null;
+            expect(secondCall.args[2]).to.have.property('code', 200);
         });
     });
 });
