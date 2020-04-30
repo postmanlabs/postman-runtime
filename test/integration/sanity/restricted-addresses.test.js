@@ -14,6 +14,8 @@ describe('restricted addresses', function () {
                     request: 'http://fake.vulnerable.postman.wtf'
                 }, {
                     request: 'http://httpbin.org/redirect-to?url=http%3A%2F%2Fvulnerable.postman.wtf'
+                }, {
+                    request: 'http://邮差.com/get?foo=bar'
                 }]
             },
             network: {
@@ -21,7 +23,8 @@ describe('restricted addresses', function () {
                 hostLookup: {
                     type: 'hostIpMap',
                     hostIpMap: {
-                        'fake.vulnerable.postman.wtf': '169.254.169.254'
+                        'fake.vulnerable.postman.wtf': '169.254.169.254',
+                        'xn--nstq34i.com': '169.254.169.254'
                     }
                 }
             }
@@ -42,50 +45,57 @@ describe('restricted addresses', function () {
 
     it('should not send request for hosts in restricted IP addresses', function () {
         expect(testrun).to.be.ok;
-        var response = testrun.response.getCall(0).args[2];
+        var error = testrun.response.getCall(0).args[0],
+            response = testrun.response.getCall(0).args[2];
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(testrun).to.have.property('request').that.nested.include({
-            'firstCall.args[0].message': 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254'
-        });
+        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND 169.254.169.254');
         expect(response).to.be.undefined;
     });
 
     it('should not send request for hosts that resolve to restricted IP addresses (normal DNS lookup)', function () {
         expect(testrun).to.be.ok;
-        var response = testrun.response.getCall(1).args[2];
+        var error = testrun.response.getCall(1).args[0],
+            response = testrun.response.getCall(1).args[2];
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(testrun).to.have.property('request').that.nested.include({
-            'firstCall.args[0].message': 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254'
-        });
+        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND vulnerable.postman.wtf');
         expect(response).to.be.undefined;
     });
 
     it('should not send request for hosts that resolve to restricted IP addresses (hosts file DNS lookup)',
         function () {
             expect(testrun).to.be.ok;
-            var response = testrun.response.getCall(2).args[2];
+            var error = testrun.response.getCall(2).args[0],
+                response = testrun.response.getCall(2).args[2];
 
             // response will always be undefined because there is no server on this IP
             // the error checks are the more important ones here
-            expect(testrun).to.have.property('request').that.nested.include({
-                'firstCall.args[0].message': 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254'
-            });
+            expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND fake.vulnerable.postman.wtf');
             expect(response).to.be.undefined;
         });
 
     it('should not send request for redirects that resolve to restricted IP addresses', function () {
         expect(testrun).to.be.ok;
-        var response = testrun.response.getCall(3).args[2];
+        var error = testrun.response.getCall(3).args[0],
+            response = testrun.response.getCall(3).args[2];
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(testrun).to.have.property('request').that.nested.include({
-            'firstCall.args[0].message': 'NETERR: getaddrinfo ENOTFOUND 169.254.169.254'
-        });
+        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND vulnerable.postman.wtf');
+        expect(response).to.be.undefined;
+    });
+
+    it('should not send request for punycode hosts that resolve to restricted IP addresses', function () {
+        expect(testrun).to.be.ok;
+        var error = testrun.response.getCall(4).args[0],
+            response = testrun.response.getCall(4).args[2];
+
+        // response will always be undefined because there is no server on this IP
+        // the error checks are the more important ones here
+        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND xn--nstq34i.com');
         expect(response).to.be.undefined;
     });
 });

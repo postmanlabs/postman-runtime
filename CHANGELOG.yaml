@@ -1,6 +1,10 @@
 master:
+  fixed bugs:
+    - >-
+      GH-1005 Fixed a bug where encoded request url was not set in the request
+      and response callbacks
   chores:
-    - Updated digest tests with new local digest server
+    - GH-1000 Updated digest tests with new local digest server
     - Updated dependencies
 
 7.24.2:
