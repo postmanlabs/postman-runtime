@@ -65,7 +65,6 @@ describe('EdgeGrid auth', function () {
                 response = testrun.request.getCall(0).args[2];
 
             expect(request.headers.get('authorization')).to.be.undefined;
-            expect(request.url.toString()).to.eql(edgeGridAuthServer.url);
             expect(response).to.have.property('code', 401);
         });
     });
@@ -130,7 +129,6 @@ describe('EdgeGrid auth', function () {
             expect(header).to.have.have.property('value')
                 .that.match(timestampRegex);
 
-            expect(request.url.toString()).to.eql(edgeGridAuthServer.url);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -200,7 +198,6 @@ describe('EdgeGrid auth', function () {
             expect(header).to.have.have.property('value')
                 .that.match(timestampRegex);
 
-            expect(request.url.toString()).to.eql(edgeGridAuthServer.url);
             expect(response).to.have.property('code', 401);
         });
     });
@@ -269,7 +266,6 @@ describe('EdgeGrid auth', function () {
             expect(header).to.have.have.property('value')
                 .that.match(timestampRegex);
 
-            expect(request.url.toString()).to.eql(edgeGridAuthServer.url);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -341,7 +337,6 @@ describe('EdgeGrid auth', function () {
             expect(header).to.have.have.property('value')
                 .that.match(timestampRegex);
 
-            expect(request.url.toString()).to.eql(edgeGridAuthServer.url);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -410,7 +405,6 @@ describe('EdgeGrid auth', function () {
             expect(header).to.have.have.property('value')
                 .that.match(timestampRegex);
 
-            expect(request.url.toString()).to.eql(edgeGridAuthServer.url);
             expect(response).to.have.property('code', 200);
         });
     });

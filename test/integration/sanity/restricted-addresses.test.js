@@ -15,7 +15,7 @@ describe('restricted addresses', function () {
                 }, {
                     request: 'http://httpbin.org/redirect-to?url=http%3A%2F%2Fvulnerable.postman.wtf'
                 }, {
-                    request: 'http://邮差.com/get?foo=bar'
+                    request: 'http://🦇.com/get?foo=bar'
                 }]
             },
             network: {
@@ -24,7 +24,7 @@ describe('restricted addresses', function () {
                     type: 'hostIpMap',
                     hostIpMap: {
                         'fake.vulnerable.postman.wtf': '169.254.169.254',
-                        'xn--nstq34i.com': '169.254.169.254'
+                        'xn--6s9h.com': '169.254.169.254'
                     }
                 }
             }
@@ -95,7 +95,7 @@ describe('restricted addresses', function () {
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND xn--nstq34i.com');
+        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND xn--6s9h.com');
         expect(response).to.be.undefined;
     });
 });

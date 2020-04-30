@@ -91,34 +91,25 @@ describe('digest auth', function () {
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
-                firstRequest = testrun.io.firstCall.args[4],
                 firstResponse = testrun.io.firstCall.args[3],
-                secondRequest = testrun.io.secondCall.args[4],
                 secondResponse = testrun.io.secondCall.args[3];
 
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(digestServerURL);
             expect(firstResponse).to.have.property('code', 401);
-
-            expect(secondRequest.url.toString()).to.eql(digestServerURL);
             expect(secondResponse).to.have.property('code', 200);
         });
 
         it('should have failed the digest authorization in first attempt', function () {
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2];
+            var response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 401);
         });
 
         it('should have passed the digest authorization in second attempt', function () {
-            var request = testrun.request.getCall(1).args[3],
-                response = testrun.request.getCall(1).args[2];
+            var response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 200);
         });
 
@@ -188,34 +179,25 @@ describe('digest auth', function () {
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
-                firstRequest = testrun.io.firstCall.args[4],
                 firstResponse = testrun.io.firstCall.args[3],
-                secondRequest = testrun.io.secondCall.args[4],
                 secondResponse = testrun.io.secondCall.args[3];
 
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(digestServerURL);
             expect(firstResponse).to.have.property('code', 401);
-
-            expect(secondRequest.url.toString()).to.eql(digestServerURL);
             expect(secondResponse).to.have.property('code', 200);
         });
 
         it('should have failed the digest authorization in first attempt', function () {
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2];
+            var response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 401);
         });
 
         it('should have passed the digest authorization in second attempt', function () {
-            var request = testrun.request.getCall(1).args[3],
-                response = testrun.request.getCall(1).args[2];
+            var response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -277,11 +259,9 @@ describe('digest auth', function () {
             });
 
             var err = testrun.io.firstCall.args[0],
-                request = testrun.io.firstCall.args[4],
                 response = testrun.io.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 401);
         });
     });
@@ -646,34 +626,25 @@ describe('digest auth', function () {
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
-                firstRequest = testrun.io.firstCall.args[4],
                 firstResponse = testrun.io.firstCall.args[3],
-                secondRequest = testrun.io.secondCall.args[4],
                 secondResponse = testrun.io.secondCall.args[3];
 
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(digestServerURL);
             expect(firstResponse).to.have.property('code', 401);
-
-            expect(secondRequest.url.toString()).to.eql(digestServerURL);
             expect(secondResponse).to.have.property('code', 200);
         });
 
         it('should have failed the digest authorization in first attempt', function () {
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2];
+            var response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 401);
         });
 
         it('should have passed the digest authorization in second attempt', function () {
-            var request = testrun.request.getCall(1).args[3],
-                response = testrun.request.getCall(1).args[2];
+            var response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
             expect(response).to.have.property('code', 200);
         });
 
