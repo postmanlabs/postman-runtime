@@ -50,13 +50,13 @@
     "uuid": "3.4.0"
   },
   "devDependencies": {
-    "ajv": "6.12.0",
+    "ajv": "6.12.2",
     "chai": "4.2.0",
     "colors": "1.4.0",
     "editorconfig": "0.15.3",
     "eslint": "5.16.0",
     "eslint-plugin-jsdoc": "8.7.0",
-    "eslint-plugin-lodash": "6.0.0",
+    "eslint-plugin-lodash": "7.1.0",
     "eslint-plugin-mocha": "6.3.0",
     "eslint-plugin-security": "1.4.0",
     "express": "4.17.1",
@@ -65,7 +65,7 @@
     "js-yaml": "3.13.1",
     "jsdoc": "3.6.4",
     "jsdoc-to-markdown": "5.0.3",
-    "mocha": "7.1.1",
+    "mocha": "7.1.2",
     "nyc": "14.1.1",
     "parse-gitignore": "0.5.1",
     "passport": "0.4.1",
@@ -73,10 +73,10 @@
     "postman-jsdoc-theme": "0.0.3",
     "recursive-readdir": "2.2.2",
     "server-destroy": "1.0.1",
-    "shelljs": "0.8.3",
+    "shelljs": "0.8.4",
     "sinon": "8.1.1",
     "teleport-javascript": "1.0.0",
-    "tmp": "0.1.0",
+    "tmp": "0.2.1",
     "yankee": "1.0.8"
   },
   "browser": {
