@@ -1,0 +1,44 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.14.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - async > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - postman-collection > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - postman-sandbox > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - eslint > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - eslint-plugin-jsdoc > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - postman-url-encoder > postman-collection > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - postman-sandbox > uvm > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - eslint > inquirer > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - eslint > table > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - jsdoc > catharsis > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - jsdoc > requizzle > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - mocha > yargs-unparser > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - nyc > istanbul-lib-instrument > @babel/traverse > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - jsdoc-to-markdown > jsdoc-api > jsdoc > catharsis > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - jsdoc-to-markdown > jsdoc-api > jsdoc > requizzle > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - nyc > istanbul-lib-instrument > @babel/traverse > @babel/generator > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - nyc > istanbul-lib-instrument > @babel/traverse > @babel/helper-split-export-declaration > @babel/types > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
+    - nyc > istanbul-lib-instrument > @babel/traverse > @babel/helper-function-name > @babel/helper-get-function-arity > @babel/types > lodash:
+        patched: '2020-05-01T05:33:41.554Z'
