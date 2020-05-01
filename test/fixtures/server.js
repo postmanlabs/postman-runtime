@@ -540,6 +540,8 @@ function createNTLMServer (options) {
         domain = options.domain || '',
         workstation = options.workstation || '',
 
+        challenged = false,
+
         type1Message = ntlmUtils.createType1Message({
             domain,
             workstation
@@ -562,6 +564,7 @@ function createNTLMServer (options) {
                     // sure that runtime can handle it.
                     'www-authenticate': [type2Message, 'Negotiate']
                 });
+                challenged = true;
 
                 options.debug && console.info('401: got type1 message');
             }
@@ -569,7 +572,7 @@ function createNTLMServer (options) {
             // successful auth
             // @note we don't check if the username and password are correct
             // because I don't know how.
-            else if (authHeaders && authHeaders.startsWith(type3Message.slice(0, 100))) {
+            else if (challenged && authHeaders && authHeaders.startsWith(type3Message.slice(0, 100))) {
                 res.writeHead(200);
 
                 options.debug && console.info('200: got type3 message');
