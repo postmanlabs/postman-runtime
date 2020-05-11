@@ -1,6 +1,7 @@
 master:
   chores:
     - Updated digest tests with new local digest server
+    - Updated dependencies
 
 7.24.2:
   date: 2020-04-08
