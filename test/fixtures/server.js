@@ -647,6 +647,26 @@ function createDigestServer (options) {
     return app;
 }
 
+function createResponseErrorServer () {
+    var server = net.createServer(function (socket) {
+        socket.on('data', function (chunk) {
+            socket.write('HTTP/1.1 200 Ok\r\n');
+            socket.write('Content-Length: 1\r\n');
+            socket.write(chunk.toString());
+            socket.end();
+        });
+    });
+
+    server.on('listening', function () {
+        server.port = this.address().port;
+        server.url = 'http://localhost:' + server.port;
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
 module.exports = {
     createSSLServer,
     createHTTPServer,
@@ -657,5 +677,6 @@ module.exports = {
     createEdgeGridAuthServer,
     createNTLMServer,
     createBytesServer,
-    createDigestServer
+    createDigestServer,
+    createResponseErrorServer
 };
