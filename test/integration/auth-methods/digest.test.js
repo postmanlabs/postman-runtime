@@ -1,30 +1,9 @@
-var expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy'),
-    createDigestServer = require('../../fixtures/server').createDigestServer;
+var expect = require('chai').expect;
 
 describe('digest auth', function () {
-    var PORT,
-        USERNAME = 'postman',
+    var USERNAME = 'postman',
         PASSWORD = 'password',
-        digestServerURL,
-        digestServer,
         testrun;
-
-    before(function () {
-        digestServer = createDigestServer({
-            username: USERNAME,
-            password: PASSWORD
-        }).listen(0, function () {
-            PORT = this.address().port;
-            digestServerURL = 'http://localhost:' + PORT;
-        });
-
-        enableServerDestroy(digestServer);
-    });
-
-    after(function () {
-        digestServer.destroy();
-    });
 
     // @todo
     // 1. add a test case with (qop=""). For this we need a Digest server which does not return qop value
@@ -41,7 +20,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -99,10 +78,10 @@ describe('digest auth', function () {
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(digestServerURL);
+            expect(firstRequest.url.toString()).to.eql(global.servers.digest);
             expect(firstResponse).to.have.property('code', 401);
 
-            expect(secondRequest.url.toString()).to.eql(digestServerURL);
+            expect(secondRequest.url.toString()).to.eql(global.servers.digest);
             expect(secondResponse).to.have.property('code', 200);
         });
 
@@ -110,7 +89,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
+            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 401);
         });
 
@@ -118,7 +97,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(1).args[3],
                 response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
+            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 200);
         });
 
@@ -137,7 +116,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -196,10 +175,10 @@ describe('digest auth', function () {
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(digestServerURL);
+            expect(firstRequest.url.toString()).to.eql(global.servers.digest);
             expect(firstResponse).to.have.property('code', 401);
 
-            expect(secondRequest.url.toString()).to.eql(digestServerURL);
+            expect(secondRequest.url.toString()).to.eql(global.servers.digest);
             expect(secondResponse).to.have.property('code', 200);
         });
 
@@ -207,7 +186,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
+            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 401);
         });
 
@@ -215,7 +194,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(1).args[3],
                 response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
+            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -227,7 +206,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -281,7 +260,7 @@ describe('digest auth', function () {
                 response = testrun.io.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql(digestServerURL);
+            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 401);
         });
     });
@@ -293,7 +272,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -360,7 +339,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -427,7 +406,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -596,7 +575,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -654,10 +633,10 @@ describe('digest auth', function () {
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(digestServerURL);
+            expect(firstRequest.url.toString()).to.eql(global.servers.digest);
             expect(firstResponse).to.have.property('code', 401);
 
-            expect(secondRequest.url.toString()).to.eql(digestServerURL);
+            expect(secondRequest.url.toString()).to.eql(global.servers.digest);
             expect(secondResponse).to.have.property('code', 200);
         });
 
@@ -665,7 +644,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
+            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 401);
         });
 
@@ -673,7 +652,7 @@ describe('digest auth', function () {
             var request = testrun.request.getCall(1).args[3],
                 response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(digestServerURL);
+            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 200);
         });
 
@@ -696,7 +675,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             method: 'GET',
                             auth: {
                                 type: 'digest',

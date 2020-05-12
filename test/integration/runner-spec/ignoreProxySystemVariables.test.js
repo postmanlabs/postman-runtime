@@ -1,25 +1,15 @@
 var ProxyConfigList = require('postman-collection').ProxyConfigList,
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('Runner Spec: ignoreProxyEnvironmentVariables', function () {
-    var proxyServer,
-        testrun,
-        PROXY_HOST = 'localhost',
-        PROXY_PORT = 5050,
-        PROXY_URL = `http://${PROXY_HOST}:${PROXY_PORT}`;
+    var testrun;
 
-    before(function (done) {
-        process.env.http_proxy = PROXY_URL; // eslint-disable-line no-process-env
-
-        proxyServer = server.createProxyServer({headers: {'x-postman-proxy': 'true'}});
-        proxyServer.listen(PROXY_PORT, done);
+    before(function () {
+        process.env.http_proxy = global.servers.proxy; // eslint-disable-line no-process-env
     });
 
-    after(function (done) {
+    after(function () {
         delete process.env.http_proxy; // eslint-disable-line no-process-env
-
-        proxyServer.destroy(done);
     });
 
     describe('default', function () {
@@ -47,6 +37,8 @@ describe('Runner Spec: ignoreProxyEnvironmentVariables', function () {
 
         it('should proxy the request as configured in env variable', function () {
             var response = testrun.request.getCall(0).args[2];
+
+            // console.log(PROXY_URL, testrun.request.getCall(0).args)
 
             expect(response.reason()).to.eql('OK');
             expect(response.json()).to.have.nested.property('headers.x-postman-proxy', 'true');
@@ -123,8 +115,8 @@ describe('Runner Spec: ignoreProxyEnvironmentVariables', function () {
                 ignoreProxyEnvironmentVariables: true,
                 proxies: new ProxyConfigList({}, [{
                     match: '*://postman-echo.com/*',
-                    host: PROXY_HOST,
-                    port: PROXY_PORT
+                    host: 'localhost',
+                    port: global.servers.proxy.split(':')[2]
                 }]),
                 collection: {
                     item: {
@@ -150,7 +142,7 @@ describe('Runner Spec: ignoreProxyEnvironmentVariables', function () {
             var response = testrun.request.getCall(0).args[2],
                 request = testrun.request.getCall(0).args[3];
 
-            expect(request.proxy.getProxyUrl()).to.eql(PROXY_URL);
+            expect(request.proxy.getProxyUrl()).to.eql(global.servers.proxy);
             expect(response.reason()).to.eql('OK');
             expect(response.json()).to.have.nested.property('headers.x-postman-proxy', 'true');
         });
