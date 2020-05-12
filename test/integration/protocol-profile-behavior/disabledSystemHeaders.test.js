@@ -1,20 +1,8 @@
 var sinon = require('sinon'),
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('protocolProfileBehavior', function () {
-    var testrun,
-        PORT = 5050,
-        URL = 'http://localhost:' + PORT,
-        echoServer = server.createRawEchoServer();
-
-    before(function (done) {
-        echoServer.listen(PORT, done);
-    });
-
-    after(function (done) {
-        echoServer.destroy(done);
-    });
+    var testrun;
 
     describe('with disabledSystemHeaders: undefined', function () {
         before(function (done) {
@@ -22,7 +10,7 @@ describe('protocolProfileBehavior', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: URL,
+                            url: global.servers.raw,
                             method: 'GET'
                         }
                     }]
@@ -54,7 +42,7 @@ describe('protocolProfileBehavior', function () {
             expect(response).to.include('Accept: */*');
             expect(response).to.include('Cache-Control: no-cache');
             expect(response).to.include('Postman-Token: ');
-            expect(response).to.include('Host: localhost:5050');
+            expect(response).to.include('Host: localhost:');
             expect(response).to.include('Accept-Encoding: gzip, deflate, br');
             expect(response).to.include('Connection: keep-alive');
         });
@@ -66,7 +54,7 @@ describe('protocolProfileBehavior', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: URL,
+                            url: global.servers.raw,
                             method: 'POST',
                             body: {
                                 mode: 'raw',
@@ -120,7 +108,7 @@ describe('protocolProfileBehavior', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: URL,
+                            url: global.servers.raw,
                             method: 'POST',
                             header: [{
                                 key: 'content-type',

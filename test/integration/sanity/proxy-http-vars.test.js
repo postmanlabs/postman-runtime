@@ -1,30 +1,18 @@
-var proxy = require('http-proxy'),
-    expect = require('chai').expect;
+var expect = require('chai').expect;
 
 describe('proxy configuration vars', function () {
-    var server,
-        port = 9090,
-        proxyHost = 'localhost',
-        proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + port;
-
-    before(function (done) {
-        server = new proxy.createProxyServer({
-            target: 'http://postman-echo.com',
-            headers: {
-                'x-postman-proxy': 'true'
-            }
-        });
-        server.listen(port, done);
-    });
-
-    after(function () {
-        server.close();
-    });
+    var testrun;
 
     describe('lowercase', function () {
-        var testrun;
+        var proxyHost,
+            proxyPort,
+            proxyUrlForHttpRequest;
 
         before(function (done) {
+            proxyHost = 'localhost';
+            proxyPort = global.servers.proxy.split(':')[2];
+
+            proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + proxyPort;
             process.env.http_proxy = proxyUrlForHttpRequest; // eslint-disable-line no-process-env
 
             this.run({
@@ -60,9 +48,15 @@ describe('proxy configuration vars', function () {
     });
 
     describe('uppercase', function () {
-        var testrun;
+        var proxyHost,
+            proxyPort,
+            proxyUrlForHttpRequest;
 
         before(function (done) {
+            proxyHost = 'localhost';
+            proxyPort = global.servers.proxy.split(':')[2];
+
+            proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + proxyPort;
             process.env.HTTP_PROXY = proxyUrlForHttpRequest; // eslint-disable-line no-process-env
 
             this.run({

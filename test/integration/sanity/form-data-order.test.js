@@ -1,115 +1,46 @@
 var fs = require('fs'),
     sinon = require('sinon'),
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('form-data with numeric keys', function () {
-    var httpServer,
-        testrun;
-
-    /**
-     * Parse raw form-data content
-     *
-     * @param {String} raw
-     * @returns {Array}
-     *
-     * Reference: https: //tools.ietf.org/html/rfc7578
-     *
-     * @example
-     * --boundary
-     * Content-Disposition: form-data; name="foo"
-     * Content-Type: text/plain
-     *
-     * bar
-     * --boundary
-     *
-     * returns -> [{name: 'foo', contentType: 'text/plain'}]
-     */
-    function parseRaw (raw) {
-        raw = raw.split('\r\n');
-        var boundary = raw[0],
-            result = [],
-            data,
-            match,
-            i,
-            ii;
-
-        for (i = 0, ii = raw.length; i < ii; i++) {
-            if (raw[i] !== boundary) {
-                continue;
-            }
-
-            data = {};
-            match = (/\sname="(.*?)"/).exec(raw[++i]);
-            match && (data.name = match[1]);
-
-            match = (/^Content-Type:\s(.*)$/).exec(raw[++i]);
-            match && (data.contentType = match[1]);
-
-            Object.keys(data).length && result.push(data);
-        }
-
-        return result;
-    }
+    var testrun;
 
     before(function (done) {
-        httpServer = server.createHTTPServer();
-
-        httpServer.on('/', function (req, res) {
-            var rawBody = '';
-
-            req.on('data', function (chunk) {
-                rawBody += chunk.toString(); // decode buffer to string
-            }).on('end', function () {
-                res.writeHead(200, {
-                    'Content-Type': 'application/json',
-                    'Connection': 'close'
-                });
-                res.end(JSON.stringify(parseRaw(rawBody)));
-            });
-        });
-
-        httpServer.listen(5050, function () {
-            this.run({
-                fileResolver: fs,
-                collection: {
-                    item: [{
-                        request: {
-                            url: 'http://localhost:5050/',
-                            method: 'POST',
-                            body: {
-                                mode: 'formdata',
-                                formdata: [{
-                                    key: 'a',
-                                    src: 'test/fixtures/upload-csv',
-                                    type: 'file'
-                                }, {
-                                    key: '1',
-                                    value: 'second_value',
-                                    type: 'text'
-                                }, {
-                                    key: 'A',
-                                    value: 'third_value',
-                                    type: 'text'
-                                }, {
-                                    key: '0',
-                                    src: 'test/fixtures/upload-csv',
-                                    type: 'file',
-                                    contentType: 'text/csv'
-                                }]
-                            }
+        this.run({
+            fileResolver: fs,
+            collection: {
+                item: [{
+                    request: {
+                        url: global.servers.rawContentType,
+                        method: 'POST',
+                        body: {
+                            mode: 'formdata',
+                            formdata: [{
+                                key: 'a',
+                                src: 'test/fixtures/upload-csv',
+                                type: 'file'
+                            }, {
+                                key: '1',
+                                value: 'second_value',
+                                type: 'text'
+                            }, {
+                                key: 'A',
+                                value: 'third_value',
+                                type: 'text'
+                            }, {
+                                key: '0',
+                                src: 'test/fixtures/upload-csv',
+                                type: 'file',
+                                contentType: 'text/csv'
+                            }]
                         }
-                    }]
-                }
-            }, function (err, results) {
-                testrun = results;
-                done(err);
-            });
-        }.bind(this));
-    });
-
-    after(function (done) {
-        httpServer.destroy(done);
+                    }
+                }]
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
     });
 
     it('should complete the run', function () {
