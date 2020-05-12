@@ -23,7 +23,7 @@ module.exports = {
         });
     },
 
-    destroy: function () {
-        _digestServer.destroy();
+    destroy: function (cb) {
+        _digestServer.destroy(cb);
     }
 };
