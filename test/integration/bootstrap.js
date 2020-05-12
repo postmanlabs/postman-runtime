@@ -34,6 +34,8 @@ runtime = function (spec, done) {
 
 before(function () {
     global.expect = expect; // expose global
+    global.servers = require('../fixtures/servers/servers.json');
+    global.isBrowser = typeof window !== 'undefined';
     this.run = runtime;
 });
 

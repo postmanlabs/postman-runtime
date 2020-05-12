@@ -53,7 +53,7 @@ describe('request url', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'https://postman-echo.com/post?name=postman');
+                .property('url', 'http://postman-echo.com/post?name=postman');
         });
 
         it('should normalise the url for https', function () {
@@ -129,7 +129,7 @@ describe('request url', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'https://postman-echo.com/POST?NAME=POSTMAN');
+                .property('url', 'http://postman-echo.com/POST?NAME=POSTMAN');
         });
 
         it('should normalise the url for https', function () {
@@ -205,7 +205,7 @@ describe('request url', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'https://postman-echo.com/PoST?NamE=PosTMaN');
+                .property('url', 'http://postman-echo.com/PoST?NamE=PosTMaN');
         });
 
         it('should normalise the url for https', function () {

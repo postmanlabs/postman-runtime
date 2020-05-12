@@ -1,46 +1,32 @@
 var sinon = require('sinon'),
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('Cookies expiry in response callback', function () {
-    var testrun,
-        httpServer;
+    var testrun;
 
     before(function (done) {
-        var self = this;
-
-        httpServer = server.createHTTPServer();
-
-        httpServer.on('/', function (req, res) {
-            res.writeHead(200, {
-                'Set-Cookie': [
-                    // session cookie (without Max-Age and Expires)
-                    'cookie_1=value_1; path=/',
-
-                    // with Max-Age > 0
-                    'cookie_2=value_2; path=/; Max-Age=1000'
-                ]
-            });
-
-            res.end();
+        this.run({
+            collection: {
+                item: [{
+                    request: {
+                        url: {
+                            host: 'httpbin.org',
+                            path: 'response-headers',
+                            query: [{
+                                key: 'Set-Cookie',
+                                value: 'cookie_1=value_1; path=/'
+                            }, {
+                                key: 'Set-Cookie',
+                                value: 'cookie_2=value_2; path=/; Max-Age=1000'
+                            }]
+                        }
+                    }
+                }]
+            }
+        }, function (err, result) {
+            testrun = result;
+            done(err);
         });
-
-        httpServer.listen(0, function () {
-            self.run({
-                collection: {
-                    item: [{
-                        request: httpServer.url
-                    }]
-                }
-            }, function (err, result) {
-                testrun = result;
-                done(err);
-            });
-        });
-    });
-
-    after(function (done) {
-        httpServer.destroy(done);
     });
 
     it('should complete the run', function () {

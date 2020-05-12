@@ -1,14 +1,11 @@
 var fs = require('fs'),
     path = require('path'),
     expect = require('chai').expect,
-    server = require('../../fixtures/server'),
     CertificateList = require('postman-collection').CertificateList;
 
 describe('certificates', function () {
     var certDataPath = path.join(__dirname, '..', '..', 'fixtures', 'certificates'),
         certificateId = 'test-certificate',
-        port = 9090,
-        sslServer,
         testrun;
 
     describe('valid', function () {
@@ -17,32 +14,15 @@ describe('certificates', function () {
                 clientCertPath = path.join(certDataPath, 'client-crt.pem'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
-                    matches: ['https://localhost:' + port + '/*'],
+                    matches: [global.servers.httpsRequestCert + '/*'],
                     key: {src: clientKeyPath},
                     cert: {src: clientCertPath}
                 }]);
 
-            sslServer = server.createSSLServer({
-                requestCert: true
-            });
-
-            sslServer.on('/', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized');
-                }
-            });
-
-            sslServer.listen(port, 'localhost');
-
             this.run({
                 collection: {
                     item: {
-                        request: 'https://localhost:' + port + '/'
+                        request: global.servers.httpsRequestCert + '/'
                     }
                 },
                 requester: {
@@ -78,10 +58,6 @@ describe('certificates', function () {
                 'certificate.id': certificateId
             });
         });
-
-        after(function (done) {
-            sslServer.destroy(done);
-        });
     });
 
     describe('invalid', function () {
@@ -90,30 +66,15 @@ describe('certificates', function () {
                 clientCertPath = path.join('/tmp/non-existent/', 'client-crt.pem'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
-                    matches: ['https://localhost:' + port + '/*'],
+                    matches: [global.servers.https + '/*'],
                     key: {src: clientKeyPath},
                     cert: {src: clientCertPath}
                 }]);
 
-            sslServer = server.createSSLServer();
-
-            sslServer.on('/', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized');
-                }
-            });
-
-            sslServer.listen(port, 'localhost');
-
             this.run({
                 collection: {
                     item: {
-                        request: 'https://localhost:' + port + '/'
+                        request: global.servers.https + '/verify'
                     }
                 },
                 requester: {
@@ -170,10 +131,6 @@ describe('certificates', function () {
             expect(call2[1]).to.equal('warn');
             expect(call2[2]).to.match(/^certificate ("key"|"cert") load error:/);
         });
-
-        after(function (done) {
-            sslServer.destroy(done);
-        });
     });
 
     describe('PFX: valid', function () {
@@ -181,31 +138,14 @@ describe('certificates', function () {
             var clientPfxPath = path.join(certDataPath, 'client-pkcs12.pfx'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
-                    matches: ['https://localhost:' + port + '/*'],
+                    matches: [global.servers.httpsRequestCert + '/*'],
                     pfx: {src: clientPfxPath}
                 }]);
-
-            sslServer = server.createSSLServer({
-                requestCert: true
-            });
-
-            sslServer.on('/', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized');
-                }
-            });
-
-            sslServer.listen(port, 'localhost');
 
             this.run({
                 collection: {
                     item: {
-                        request: 'https://localhost:' + port + '/'
+                        request: global.servers.httpsRequestCert
                     }
                 },
                 requester: {
@@ -217,10 +157,6 @@ describe('certificates', function () {
                 testrun = results;
                 done(err);
             });
-        });
-
-        after(function (done) {
-            sslServer.destroy(done);
         });
 
         it('should have started and completed the test run', function () {
@@ -253,32 +189,15 @@ describe('certificates', function () {
             var clientPfxPath = path.join(certDataPath, 'client-pkcs12-invalid.pfx'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
-                    matches: ['https://localhost:' + port + '/*'],
+                    matches: [global.servers.httpsRequestCert + '/*'],
                     pfx: {src: clientPfxPath},
                     passphrase: 'random'
                 }]);
 
-            sslServer = server.createSSLServer({
-                requestCert: true
-            });
-
-            sslServer.on('/', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized');
-                }
-            });
-
-            sslServer.listen(port, 'localhost');
-
             this.run({
                 collection: {
                     item: {
-                        request: 'https://localhost:' + port + '/'
+                        request: global.servers.httpsRequestCert
                     }
                 },
                 requester: {
@@ -290,10 +209,6 @@ describe('certificates', function () {
                 testrun = results;
                 done(err);
             });
-        });
-
-        after(function (done) {
-            sslServer.destroy(done);
         });
 
         it('should have started and completed the test run', function () {
@@ -325,29 +240,14 @@ describe('certificates', function () {
             var clientPfxPath = path.join('/tmp/non-existent/', 'client-pkcs12.pfx'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
-                    matches: ['https://localhost:' + port + '/*'],
+                    matches: [global.servers.https + '/*'],
                     pfx: {src: clientPfxPath}
                 }]);
-
-            sslServer = server.createSSLServer();
-
-            sslServer.on('/', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized');
-                }
-            });
-
-            sslServer.listen(port, 'localhost');
 
             this.run({
                 collection: {
                     item: {
-                        request: 'https://localhost:' + port + '/'
+                        request: global.servers.https + '/verify'
                     }
                 },
                 requester: {
@@ -359,10 +259,6 @@ describe('certificates', function () {
                 testrun = results;
                 done(err);
             });
-        });
-
-        after(function (done) {
-            sslServer.destroy(done);
         });
 
         it('should have started and completed the test run', function () {
@@ -410,32 +306,15 @@ describe('certificates', function () {
             var clientPfxPath = path.join(certDataPath, 'client-pkcs12-passphrase.pfx'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
-                    matches: ['https://localhost:' + port + '/*'],
+                    matches: [global.servers.httpsRequestCert + '/*'],
                     pfx: {src: clientPfxPath},
                     passphrase: 'password'
                 }]);
 
-            sslServer = server.createSSLServer({
-                requestCert: true
-            });
-
-            sslServer.on('/', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized');
-                }
-            });
-
-            sslServer.listen(port, 'localhost');
-
             this.run({
                 collection: {
                     item: {
-                        request: 'https://localhost:' + port + '/'
+                        request: global.servers.httpsRequestCert
                     }
                 },
                 requester: {
@@ -447,10 +326,6 @@ describe('certificates', function () {
                 testrun = results;
                 done(err);
             });
-        });
-
-        after(function (done) {
-            sslServer.destroy(done);
         });
 
         it('should have started and completed the test run', function () {
@@ -482,32 +357,15 @@ describe('certificates', function () {
             var clientPfxPath = path.join(certDataPath, 'client-pkcs12-passphrase.pfx'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
-                    matches: ['https://localhost:' + port + '/*'],
+                    matches: [global.servers.httpsRequestCert + '/*'],
                     pfx: {src: clientPfxPath},
                     passphrase: 'random'
                 }]);
 
-            sslServer = server.createSSLServer({
-                requestCert: true
-            });
-
-            sslServer.on('/', function (req, res) {
-                if (req.client.authorized) {
-                    res.writeHead(200, {'Content-Type': 'text/plain'});
-                    res.end('authorized');
-                }
-                else {
-                    res.writeHead(401, {'Content-Type': 'text/plain'});
-                    res.end('unauthorized');
-                }
-            });
-
-            sslServer.listen(port, 'localhost');
-
             this.run({
                 collection: {
                     item: {
-                        request: 'https://localhost:' + port + '/'
+                        request: global.servers.httpsRequestCert
                     }
                 },
                 requester: {
@@ -519,10 +377,6 @@ describe('certificates', function () {
                 testrun = results;
                 done(err);
             });
-        });
-
-        after(function (done) {
-            sslServer.destroy(done);
         });
 
         it('should have started and completed the test run', function () {

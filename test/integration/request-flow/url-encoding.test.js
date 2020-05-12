@@ -1,16 +1,11 @@
 var expect = require('chai').expect,
-    server = require('../../fixtures/server'),
     encoder = require('postman-url-encoder/encoder');
 
 describe('URL encoding', function () {
-    var echoServer = server.createRawEchoServer();
+    var URL;
 
-    before(function (done) {
-        echoServer.listen(done);
-    });
-
-    after(function (done) {
-        echoServer.destroy(done);
+    before(function () {
+        URL = global.servers.raw;
     });
 
     describe('path', function () {
@@ -33,7 +28,7 @@ describe('URL encoding', function () {
                 },
                 collection: {
                     item: {
-                        request: `${echoServer.url}/start/${pathToSend.join('/')}/end`
+                        request: `${URL}/start/${pathToSend.join('/')}/end`
                     }
                 }
             }, function (err, result) {
@@ -75,7 +70,7 @@ describe('URL encoding', function () {
                 },
                 collection: {
                     item: {
-                        request: `${echoServer.url}/start/${pathToSend.join('/')}/end`
+                        request: `${URL}/start/${pathToSend.join('/')}/end`
                     }
                 }
             }, function (err, result) {
@@ -114,7 +109,7 @@ describe('URL encoding', function () {
                 },
                 collection: {
                     item: {
-                        request: `${echoServer.url}/start?q1=${valueToSend.join('/')}/end`
+                        request: `${URL}/start?q1=${valueToSend.join('/')}/end`
                     }
                 }
             }, function (err, result) {
@@ -159,7 +154,7 @@ describe('URL encoding', function () {
                 collection: {
                     item: {
                         request: {
-                            url: `${echoServer.url}/start?q1=${valueToSend.join('\n')}/end`
+                            url: `${URL}/start?q1=${valueToSend.join('\n')}/end`
                         }
                     }
                 }

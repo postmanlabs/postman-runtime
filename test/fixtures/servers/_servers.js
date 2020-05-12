@@ -96,7 +96,7 @@ function createRawEchoServer () {
  */
 function createSSLServer (opts) {
     var server,
-        certDataPath = path.join(__dirname, 'certificates'),
+        certDataPath = path.join(__dirname, '../certificates'),
         options = {
             'key': path.join(certDataPath, 'server-key.pem'),
             'cert': path.join(certDataPath, 'server-crt.pem'),
@@ -145,34 +145,51 @@ function createSSLServer (opts) {
  */
 function createRedirectServer () {
     var server = http.createServer(function (req, res) {
-        var urlTokens,
-            numberOfRedirects,
+        var redirectURL,
+            urlTokens,
             responseCode,
-            redirectURL;
+            numberOfRedirects;
 
-        server.emit('hit', req, res);
+        // rest on first request, redirects with `?`
+        if (!this.hits || !req.url.includes('?')) {
+            this.hits = [];
+        }
 
-        // /<urlPath>/<numberOfRedirects>/<responseCode>
-        if ((/\/\d+\/\d{3}$/).test(req.url)) {
-            urlTokens = req.url.split('/');
-            numberOfRedirects = parseInt(urlTokens[urlTokens.length - 2], 10);
-            responseCode = parseInt(urlTokens[urlTokens.length - 1], 10);
+        // keep track of all the requests made during redirects.
+        this.hits.push({
+            url: req.url,
+            method: req.method,
+            headers: req.headers
+        });
+
+        // /<numberOfRedirects>/<responseCode>?<hits>
+        if ((urlTokens = req.url.match(/^\/(\d+)\/(\d+)/))) {
+            numberOfRedirects = parseInt(urlTokens[1], 10);
+            responseCode = parseInt(urlTokens[2], 10);
 
             // redirect until all hops are covered
             if (numberOfRedirects > 1) {
-                redirectURL = urlTokens.slice(0, -2).join('/') + `/${(numberOfRedirects - 1)}/${responseCode}`;
+                redirectURL = `/${(numberOfRedirects - 1)}/${responseCode}`;
             }
             else {
-                redirectURL = urlTokens.slice(0, -2).join('/') + '/';
+                redirectURL = '/';
             }
 
-            res.writeHead(responseCode, {location: redirectURL});
+            res.writeHead(responseCode, {
+                location: redirectURL + '?',
+                hits: JSON.stringify(this.hits)
+            });
 
             return res.end();
         }
 
         // emit event if this is not a redirect request
-        server.emit(req.url, req, res);
+        server.emit('finally', req, res);
+    });
+
+    server.on('listening', function () {
+        server.port = this.address().port;
+        server.url = 'http://localhost:' + server.port;
     });
 
     enableServerDestroy(server);
@@ -588,6 +605,11 @@ function createNTLMServer (options) {
         },
         server = http.createServer(handler);
 
+    server.on('listening', function () {
+        server.port = this.address().port;
+        server.url = 'http://localhost:' + server.port;
+    });
+
     enableServerDestroy(server);
 
     return server;
@@ -605,6 +627,11 @@ function createBytesServer () {
         res.writeHead(200);
         res.write(Buffer.alloc(bytes));
         res.end();
+    });
+
+    server.on('listening', function () {
+        server.port = this.address().port;
+        server.url = 'http://localhost:' + server.port;
     });
 
     enableServerDestroy(server);
