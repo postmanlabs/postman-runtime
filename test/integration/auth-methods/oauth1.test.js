@@ -1,4 +1,6 @@
-var expect = require('chai').expect;
+var fs = require('fs'),
+    path = require('path'),
+    expect = require('chai').expect;
 
 describe('oauth 1', function () {
     var testrun;
@@ -384,6 +386,109 @@ describe('oauth 1', function () {
 
             expect(response).to.have.property('code', 200);
             expect(response.json().headers.authorization).to.contain('oauth_consumer_key="foo%21bar"');
+        });
+    });
+
+    describe('includeBodyHash: false', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'foo!bar',
+                                    consumerSecret: 'secret',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    addParamsToHeader: false,
+                                    includeBodyHash: false
+                                }
+                            },
+                            url: 'https://postman-echo.com/get',
+                            method: 'GET',
+                            body: {
+                                mode: 'file',
+                                file: {
+                                    src: path.resolve(__dirname, '../../fixtures/upload-file.json')
+                                }
+                            }
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should not include body hash in parameters', function () {
+            var response = testrun.response.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json().args).to.not.have.property('oauth_body_hash');
+        });
+    });
+
+    describe('includeBodyHash: true', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'foo!bar',
+                                    consumerSecret: 'secret',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    addParamsToHeader: false,
+                                    includeBodyHash: true
+                                }
+                            },
+                            url: 'https://postman-echo.com/get',
+                            method: 'GET',
+                            body: {
+                                mode: 'file',
+                                file: {
+                                    src: path.resolve(__dirname, '../../fixtures/upload-file.json')
+                                }
+                            }
+                        }
+                    }
+                },
+                fileResolver: fs
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should include correct body hash in parameters', function () {
+            var response = testrun.response.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.json().args).to.have.property('oauth_body_hash', 'He8B58UeskyhaMwMIldmdODrVpM=');
         });
     });
 });
