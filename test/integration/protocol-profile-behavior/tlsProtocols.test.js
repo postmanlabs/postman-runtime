@@ -4,7 +4,7 @@ var fs = require('fs'),
     constants = require('constants'),
     expect = require('chai').expect,
 
-    IS_NODE = typeof window === undefined,
+    IS_NODE = typeof window === 'undefined',
     server = IS_NODE && require('../../fixtures/servers/_servers'),
     // @note nodeVersionDiscrepancy: v12 onwards, Node chooses TLSv1.3 as the default
     DEFAULT_TLS_VERSION = tls.DEFAULT_MAX_VERSION,
