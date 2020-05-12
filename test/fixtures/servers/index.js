@@ -2,7 +2,7 @@ const fs = require('fs'),
     path = require('path'),
     async = require('async'),
 
-    IGNORE_FILES = ['index.js', '_servers.js', 'servers.json'],
+    IGNORE_FILES = ['index.js', '_servers.js', 'servers.json', '.gitignore'],
     SERVERS = [],
     URLS = {};
 
