@@ -3,11 +3,16 @@ const fs = require('fs'),
     async = require('async'),
 
     IGNORE_FILES = ['index.js', '_servers.js', 'servers.json', '.gitignore'],
+    IGNORE_SERVERS = ['httpIPv6.js'],
     SERVERS = [],
     URLS = {};
 
 fs.readdirSync(__dirname).forEach(function (file) {
     if (IGNORE_FILES.includes(file)) { return; }
+
+    // IPv6 is disabled on Travis
+    // eslint-disable-next-line no-process-env
+    if (process.env.TRAVIS && IGNORE_SERVERS.includes(file)) { return; }
 
     SERVERS.push({
         name: path.basename(file, '.js'),
