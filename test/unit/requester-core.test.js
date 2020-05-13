@@ -123,6 +123,20 @@ describe('requester util', function () {
             });
         });
 
+        it('should allow agent option', function () {
+            var request = new sdk.Request({
+                    url: 'https://postman-echo.com',
+                    method: 'GET'
+                }),
+                agent = 'my agent',
+                requestOptions = requesterCore.getRequestOptions(request, {agent});
+
+            expect(requestOptions).to.have.ownProperty('agent');
+            expect(requestOptions).to.include({
+                agent
+            });
+        });
+
         describe('Should accept URL irrespective of the case', function () {
             it('should accept URL in uppercase', function () {
                 var request = new sdk.Request({
