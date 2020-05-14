@@ -1,33 +1,18 @@
-var expect = require('chai').expect,
-    server = require('../../fixtures/server');
+var expect = require('chai').expect;
 
 describe('http reasons', function () {
-    var httpServer,
-        testrun;
+    var testrun;
 
     before(function (done) {
-        var port,
-            self = this;
-
-        httpServer = server.createHTTPServer();
-
-        httpServer.on('/', function (req, res) {
-            res.writeHead(400, 'Some Custom Reason');
-            res.end();
-        });
-
-        httpServer.listen(0, 'localhost', function () {
-            port = httpServer.address().port;
-            self.run({
-                collection: {
-                    item: {
-                        request: 'http://localhost:' + port + '/'
-                    }
+        this.run({
+            collection: {
+                item: {
+                    request: global.servers.http + '/custom-reason'
                 }
-            }, function (err, results) {
-                testrun = results;
-                done(err);
-            });
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
         });
     });
 
@@ -51,9 +36,5 @@ describe('http reasons', function () {
             name: 'Some Custom Reason',
             detail: 'The request cannot be fulfilled due to bad syntax.'
         });
-    });
-
-    after(function (done) {
-        httpServer.destroy(done);
     });
 });

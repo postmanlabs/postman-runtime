@@ -1,18 +1,18 @@
 var expect = require('chai').expect,
-    _ = require('lodash'),
-
-    server = require('../../fixtures/server');
+    _ = require('lodash');
 
 describe('NTLM', function () {
     // @todo Add '/ntlm' endpoint in echo server
-    var PORT = 2000,
-        USERNAME = 'postman',
+    var USERNAME = 'postman',
         PASSWORD = 'NTLM@123',
         DOMAIN = 'domain',
         WORKSTATION = 'workstation',
-        ntlmServerURL = 'http://localhost:' + PORT,
-        ntlmServer,
+        ntlmServerURL,
         testrun,
+        runOptions;
+
+    before(function () {
+        ntlmServerURL = global.servers.ntlm;
         runOptions = {
             collection: {
                 item: {
@@ -32,19 +32,6 @@ describe('NTLM', function () {
                 }
             }
         };
-
-    before(function (done) {
-        ntlmServer = server.createNTLMServer({
-            // debug: true,
-            username: USERNAME,
-            password: PASSWORD,
-            domain: DOMAIN,
-            workstation: WORKSTATION
-        }).listen(PORT, done);
-    });
-
-    after(function (done) {
-        ntlmServer.destroy(done);
     });
 
     describe('with request server not supporting NTLM', function () {

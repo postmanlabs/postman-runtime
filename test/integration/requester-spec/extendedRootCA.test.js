@@ -1,29 +1,10 @@
 var fs = require('fs'),
     path = require('path'),
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('Requester Spec: extendedRootCA', function () {
-    var sslServer,
-        testrun,
-        PORT = 5050,
-        URL = `https://localhost:${PORT}/`,
+    var testrun,
         CACertPath = path.resolve(__dirname, '../../fixtures/certificates/ca.pem');
-
-    before(function (done) {
-        sslServer = server.createSSLServer();
-
-        sslServer.on('/', function (req, res) {
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('okay');
-        });
-
-        sslServer.listen(PORT, done);
-    });
-
-    after(function (done) {
-        sslServer.destroy(done);
-    });
 
     describe('with extendedRootCA', function () {
         before(function (done) {
@@ -34,7 +15,7 @@ describe('Requester Spec: extendedRootCA', function () {
                 },
                 collection: {
                     item: [{
-                        request: URL
+                        request: global.servers.https
                     }]
                 }
             }, function (err, results) {
@@ -58,7 +39,7 @@ describe('Requester Spec: extendedRootCA', function () {
             var response = testrun.response.getCall(0).args[2];
 
             expect(response.reason()).to.eql('OK');
-            expect(response.text()).to.eql('okay');
+            expect(response.text()).to.eql('Okay!');
         });
     });
 
@@ -105,7 +86,7 @@ describe('Requester Spec: extendedRootCA', function () {
                 fileResolver: fs,
                 collection: {
                     item: [{
-                        request: URL
+                        request: global.servers.https
                     }]
                 }
             }, function (err, results) {
@@ -143,7 +124,7 @@ describe('Requester Spec: extendedRootCA', function () {
                 },
                 collection: {
                     item: [{
-                        request: URL
+                        request: global.servers.https
                     }]
                 }
             }, function (err, results) {
