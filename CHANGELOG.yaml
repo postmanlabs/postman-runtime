@@ -1,4 +1,6 @@
 master:
+  new features:
+    - GH-1008 Added support for bubbling up `history` object along with http error(s)
   chores:
     - Updated digest tests with new local digest server
     - Updated dependencies
