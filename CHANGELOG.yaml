@@ -1,3 +1,20 @@
+master:
+  new features:
+    - |
+      GH-1011 Added following new features in OAuth 1.0
+
+      - Added support for following signature methods:
+        1. HMAC-SHA512
+        2. RSA-SHA1
+        3. RSA-SHA256
+        4. RSA-SHA512
+
+      - Added support for [body hash extension](https://tools.ietf.org/id/draft-eaton-oauth-bodyhash-00.html)
+
+      - Added support for following additional parameters defined in [OAuth 1.0a spec](https://oauth.net/core/1.0a)
+        1. oauth_callback
+        2. oauth_verifier
+
 7.25.0:
   date: 2020-05-15
   new features:
