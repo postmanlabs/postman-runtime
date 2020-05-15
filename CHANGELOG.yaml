@@ -1,4 +1,5 @@
-master:
+7.25.0:
+  date: 2020-05-15
   new features:
     - GH-1014 Added `agent` requester option to define a custom requesting agent
   fixed bugs:
