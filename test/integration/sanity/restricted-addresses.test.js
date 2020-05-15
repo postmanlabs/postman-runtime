@@ -61,7 +61,13 @@ describe('restricted addresses', function () {
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND vulnerable.postman.wtf');
+        // @note nodeVersionDiscrepancy
+        expect(error).to.have.property('message');
+        expect(error.message).to.be.oneOf([
+            'NETERR: getaddrinfo ENOTFOUND vulnerable.postman.wtf',
+            'NETERR: getaddrinfo ENOTFOUND vulnerable.postman.wtf vulnerable.postman.wtf:80'
+        ]);
+
         expect(response).to.be.undefined;
     });
 
@@ -73,7 +79,13 @@ describe('restricted addresses', function () {
 
             // response will always be undefined because there is no server on this IP
             // the error checks are the more important ones here
-            expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND fake.vulnerable.postman.wtf');
+            // @note nodeVersionDiscrepancy
+            expect(error).to.have.property('message');
+            expect(error.message).to.be.oneOf([
+                'NETERR: getaddrinfo ENOTFOUND fake.vulnerable.postman.wtf',
+                'NETERR: getaddrinfo ENOTFOUND fake.vulnerable.postman.wtf fake.vulnerable.postman.wtf:80'
+            ]);
+
             expect(response).to.be.undefined;
         });
 
@@ -84,7 +96,13 @@ describe('restricted addresses', function () {
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND vulnerable.postman.wtf');
+        // @note nodeVersionDiscrepancy
+        expect(error).to.have.property('message');
+        expect(error.message).to.be.oneOf([
+            'NETERR: getaddrinfo ENOTFOUND vulnerable.postman.wtf',
+            'NETERR: getaddrinfo ENOTFOUND vulnerable.postman.wtf vulnerable.postman.wtf:80'
+        ]);
+
         expect(response).to.be.undefined;
     });
 
@@ -95,7 +113,13 @@ describe('restricted addresses', function () {
 
         // response will always be undefined because there is no server on this IP
         // the error checks are the more important ones here
-        expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND xn--6s9h.com');
+        // @note nodeVersionDiscrepancy
+        expect(error).to.have.property('message');
+        expect(error.message).to.be.oneOf([
+            'NETERR: getaddrinfo ENOTFOUND xn--6s9h.com',
+            'NETERR: getaddrinfo ENOTFOUND xn--6s9h.com xn--6s9h.com:80'
+        ]);
+
         expect(response).to.be.undefined;
     });
 });
