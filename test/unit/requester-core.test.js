@@ -123,7 +123,7 @@ describe('requester util', function () {
             });
         });
 
-        it('should allow agent option', function () {
+        it('should accept custom requesting agent', function () {
             var request = new sdk.Request({
                     url: 'https://postman-echo.com',
                     method: 'GET'
@@ -131,10 +131,8 @@ describe('requester util', function () {
                 agent = 'my agent',
                 requestOptions = requesterCore.getRequestOptions(request, {agent});
 
-            expect(requestOptions).to.have.ownProperty('agent');
-            expect(requestOptions).to.include({
-                agent
-            });
+            expect(requestOptions).to.have.ownProperty('agent', agent);
+            expect(requestOptions).to.not.have.property('agentOptions');
         });
 
         describe('Should accept URL irrespective of the case', function () {
