@@ -1,3 +1,9 @@
+master:
+  new features:
+    - >-
+      GH-1018 Added support for using custom Authorization header prefix via 
+      `headerPrefix` property in OAuth 2.0
+
 7.25.0:
   date: 2020-05-15
   new features:
