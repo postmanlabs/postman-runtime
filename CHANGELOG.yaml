@@ -1,4 +1,6 @@
 master:
+  new features:
+    - GH-1014 Added `agent` requester option to define a custom requesting agent
   chores:
     - GH-1000 Updated digest tests with new local digest server
     - GH-1009 Migrated integration tests to use global-local servers
