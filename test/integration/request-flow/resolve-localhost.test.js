@@ -44,7 +44,7 @@ describe('request to *.localhost', function () {
         sinon.assert.calledWith(testrun.response.getCall(0), null);
 
         expect(request).to.be.ok;
-        expect(request.url.toString()).to.equal('localhost:' + port);
+        expect(request.url.toString()).to.equal(`http://localhost:${port}/`);
         expect(response.text()).to.equal('Okay!');
     });
 
@@ -56,7 +56,7 @@ describe('request to *.localhost', function () {
         sinon.assert.calledWith(testrun.response.getCall(1), null);
 
         expect(request).to.be.ok;
-        expect(request.url.toString()).to.equal('subdomain.localhost:' + port);
+        expect(request.url.toString()).to.equal(`http://subdomain.localhost:${port}/`);
         expect(response.text()).to.equal('Okay!');
     });
 });

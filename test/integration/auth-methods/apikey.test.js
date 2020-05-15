@@ -100,7 +100,7 @@ describe('apikey auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(request.url.query.members).to.include.deep.members([
-                new QueryParam({key: 'my-api-param', value: 'ABC123', system: true})
+                new QueryParam({key: 'my-api-param', value: 'ABC123'})
             ]);
 
             expect(response.json()).to.nested.include({
