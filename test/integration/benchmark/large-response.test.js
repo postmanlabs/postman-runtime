@@ -1,21 +1,9 @@
 var sinon = require('sinon'),
-    expect = require('chai').expect,
-    createBytesServer = require('../../fixtures/server').createBytesServer;
+    expect = require('chai').expect;
 
 // @todo move to bipbip
 describe('Benchmark: large response', function () {
-    var testrun,
-        PORT = 5050,
-        URL = 'http://localhost:' + PORT,
-        server = createBytesServer();
-
-    before(function (done) {
-        server.listen(PORT, done);
-    });
-
-    after(function (done) {
-        server.destroy(done);
-    });
+    var testrun;
 
     // @todo increase to 100 MB once we drop support for Node v6
     describe('50 MB response with test script', function () {
@@ -28,7 +16,7 @@ describe('Benchmark: large response', function () {
                 },
                 collection: {
                     item: [{
-                        request: URL + '/' + (RESPONSE_SIZE),
+                        request: global.servers.bytes + '/' + (RESPONSE_SIZE),
                         event: [{
                             listen: 'test',
                             script: {

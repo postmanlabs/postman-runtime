@@ -16,14 +16,22 @@ describe('UTF-8 hostname', function () {
             return self.run({
                 collection: {
                     item: {
-                        request: 'http://邮差.com/get?foo=bar'
+                        request: 'http://邮差.com/get?foo=bar',
+                        event: [{
+                            listen: 'prerequest',
+                            script: {exec: 'console.log(pm.request.url.toString())'}
+                        }, {
+                            listen: 'test',
+                            script: {exec: 'console.log(pm.request.url.toString())'}
+                        }]
                     }
                 },
                 network: {
                     hostLookup: {
                         type: 'hostIpMap',
                         hostIpMap: {
-                            'xn--nstq34i.com': echoIp // 邮差.com is encoded to xn--nstq34i.com while sending request
+                            // 邮差.com is encoded to xn--nstq34i.com while sending request
+                            'xn--nstq34i.com': echoIp
                         }
                     }
                 }
@@ -52,7 +60,16 @@ describe('UTF-8 hostname', function () {
     it('should have used the provided hostIpMap for resolving UTF-8 hostname', function () {
         expect(testrun.response.getCall(0).args[0]).to.be.null;
 
-        var response = testrun.response.firstCall.args[2];
+        var request = testrun.response.firstCall.args[3],
+            response = testrun.response.firstCall.args[2];
+
+        expect(request.url.toString()).to.equal('http://xn--nstq34i.com/get?foo=bar');
+
+        // @note pm.request.url is different in prerequest and test scripts
+        // pm.request in prerequest is what users authored
+        // pm.request in test is what runtime sent
+        expect(testrun.console.firstCall.args[2]).to.equal('http://邮差.com/get?foo=bar');
+        expect(testrun.console.secondCall.args[2]).to.equal('http://xn--nstq34i.com/get?foo=bar');
 
         expect(response).to.have.property('code', 200);
         expect(response.json()).to.deep.include({

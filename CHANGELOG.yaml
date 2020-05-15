@@ -1,3 +1,17 @@
+7.25.0:
+  date: 2020-05-15
+  new features:
+    - GH-1014 Added `agent` requester option to define a custom requesting agent
+  fixed bugs:
+    - >-
+      GH-1005 Fixed a bug where encoded request url was not set in the request
+      and response callbacks
+  chores:
+    - GH-1000 Updated digest tests with new local digest server
+    - GH-1009 Migrated integration tests to use global-local servers
+    - GH-1008 Bubble up history in request and response callback on error
+    - Updated dependencies
+
 7.24.2:
   date: 2020-04-08
   chores:

@@ -1,35 +1,20 @@
 var _ = require('lodash'),
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('multi valued headers', function () {
-    var httpServer,
-        testrun;
+    var testrun;
 
     before(function (done) {
-        var port;
-
-        httpServer = server.createHTTPServer();
-
-        httpServer.on('/', function (req, res) {
-            res.setHeader('x-pm-test', ['one', 'two']); // adds a duplicate header to the response
-            res.end('worked');
-        });
-
-        httpServer.listen(0, 'localhost', function () {
-            port = httpServer.address().port;
-
-            this.run({
-                collection: {
-                    item: {
-                        request: 'http://localhost:' + port + '/'
-                    }
+        this.run({
+            collection: {
+                item: {
+                    request: global.servers.http + '/multi-valued-headers'
                 }
-            }, function (err, results) {
-                testrun = results;
-                done(err);
-            });
-        }.bind(this));
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
     });
 
     it('should have started and completed the test run', function () {
@@ -48,10 +33,6 @@ describe('multi valued headers', function () {
         expect(_.countBy(response.headers.members, function (header) {
             return header.key;
         })['x-pm-test']).to.equal(2); // The "x-pm-test" header should occur twice
-        expect(response.text()).to.equal('worked');
-    });
-
-    after(function (done) {
-        httpServer.destroy(done);
+        expect(response.text()).to.equal('Okay!');
     });
 });

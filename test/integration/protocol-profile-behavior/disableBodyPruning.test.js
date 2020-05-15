@@ -1,21 +1,8 @@
 var sinon = require('sinon'),
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('protocolProfileBehavior', function () {
-    var testrun,
-        PORT = 5050,
-        URL = 'http://localhost:' + PORT,
-        echoServer = server.createRawEchoServer();
-
-    before(function (done) {
-        // Echo raw request message to handle body for http methods (GET, HEAD)
-        echoServer.listen(PORT, done);
-    });
-
-    after(function (done) {
-        echoServer.destroy(done);
-    });
+    var testrun;
 
     describe('with disableBodyPruning: true', function () {
         describe('HTTP GET', function () {
@@ -24,7 +11,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'GET',
                                 body: {
                                     mode: 'raw',
@@ -71,7 +58,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'HEAD',
                                 body: {
                                     mode: 'raw',
@@ -120,7 +107,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'POSTMAN',
                                 body: {
                                     mode: 'raw',
@@ -168,7 +155,7 @@ describe('protocolProfileBehavior', function () {
                         item: [{
                             item: [{
                                 request: {
-                                    url: URL,
+                                    url: global.servers.raw,
                                     method: 'GET',
                                     body: {
                                         mode: 'raw',
@@ -221,7 +208,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'GET',
                                 body: {
                                     mode: 'raw',
@@ -267,7 +254,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'HEAD',
                                 body: {
                                     mode: 'raw',
@@ -315,7 +302,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'POSTMAN',
                                 body: {
                                     mode: 'raw',
@@ -364,7 +351,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'GET',
                                 body: {
                                     mode: 'raw',
@@ -407,7 +394,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'HEAD',
                                 body: {
                                     mode: 'raw',
@@ -452,7 +439,7 @@ describe('protocolProfileBehavior', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: URL,
+                                url: global.servers.raw,
                                 method: 'POSTMAN',
                                 body: {
                                     mode: 'raw',

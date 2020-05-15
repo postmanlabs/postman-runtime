@@ -1,49 +1,30 @@
 var expect = require('chai').expect,
-    sinon = require('sinon'),
-    server = require('../../fixtures/server');
+    sinon = require('sinon');
 
 describe('request to *.localhost', function () {
-    var httpServer,
-        testrun,
-        port;
+    var port,
+        testrun;
 
     before(function (done) {
-        httpServer = server.createHTTPServer();
-
-        httpServer.on('/', function (req, res) {
-            res.writeHead(200);
-            res.end('POSTMAN');
+        port = parseInt(global.servers.http.split(':')[2], 10);
+        this.run({
+            collection: {
+                item: [{
+                    request: {
+                        url: 'localhost:' + port,
+                        method: 'POST'
+                    }
+                }, {
+                    request: {
+                        url: 'subdomain.localhost:' + port,
+                        method: 'POST'
+                    }
+                }]
+            }
+        }, function (err, result) {
+            testrun = result;
+            done(err);
         });
-
-
-        httpServer.listen(0, function (err) {
-            if (err) { return done(err); }
-
-            port = httpServer.port;
-
-            this.run({
-                collection: {
-                    item: [{
-                        request: {
-                            url: 'localhost:' + port,
-                            method: 'POST'
-                        }
-                    }, {
-                        request: {
-                            url: 'subdomain.localhost:' + port,
-                            method: 'POST'
-                        }
-                    }]
-                }
-            }, function (err, result) {
-                testrun = result;
-                done(err);
-            });
-        }.bind(this));
-    });
-
-    after(function (done) {
-        httpServer.destroy(done);
     });
 
     it('should complete the run', function () {
@@ -63,8 +44,8 @@ describe('request to *.localhost', function () {
         sinon.assert.calledWith(testrun.response.getCall(0), null);
 
         expect(request).to.be.ok;
-        expect(request.url.toString()).to.equal('localhost:' + port);
-        expect(response.text()).to.equal('POSTMAN');
+        expect(request.url.toString()).to.equal(`http://localhost:${port}/`);
+        expect(response.text()).to.equal('Okay!');
     });
 
     it('should send correct request and response for subdomain.localhost', function () {
@@ -75,7 +56,7 @@ describe('request to *.localhost', function () {
         sinon.assert.calledWith(testrun.response.getCall(1), null);
 
         expect(request).to.be.ok;
-        expect(request.url.toString()).to.equal('subdomain.localhost:' + port);
-        expect(response.text()).to.equal('POSTMAN');
+        expect(request.url.toString()).to.equal(`http://subdomain.localhost:${port}/`);
+        expect(response.text()).to.equal('Okay!');
     });
 });
