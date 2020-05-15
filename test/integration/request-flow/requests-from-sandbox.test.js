@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 describe('requests from sandbox', function () {
     describe('single .sendRequest', function () {
         var testrun,
-            sandboxRequestUrl = 'postman-echo.com/get?sandbox=true';
+            sandboxRequestUrl = 'https://postman-echo.com/get?sandbox=true';
 
         before(function (done) {
             this.run({
@@ -114,8 +114,8 @@ describe('requests from sandbox', function () {
 
     describe('multiple sends', function () {
         var testrun,
-            sandboxRequestUrl1 = 'postman-echo.com/get?sandbox=true&n=1',
-            sandboxRequestUrl2 = 'postman-echo.com/get?sandbox=true&n=2',
+            sandboxRequestUrl1 = 'https://postman-echo.com/get?sandbox=true&n=1',
+            sandboxRequestUrl2 = 'https://postman-echo.com/get?sandbox=true&n=2',
             testname1 = 'sending-1',
             testname2 = 'sending-2';
 
@@ -357,7 +357,7 @@ describe('requests from sandbox', function () {
 
     describe('sending errors', function () {
         var testrun,
-            sandboxRequestUrl = 'somenonexistentweirddomain.com/get?sandbox=true';
+            sandboxRequestUrl = 'http://somenonexistentweirddomain.com/get?sandbox=true';
 
         before(function (done) {
             this.run({
