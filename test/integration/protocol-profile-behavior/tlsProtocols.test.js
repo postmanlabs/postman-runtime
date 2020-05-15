@@ -3,13 +3,14 @@ var fs = require('fs'),
     path = require('path'),
     constants = require('constants'),
     expect = require('chai').expect,
-    server = require('../../fixtures/server'),
 
+    IS_NODE = typeof window === 'undefined',
+    server = IS_NODE && require('../../fixtures/servers/_servers'),
     // @note nodeVersionDiscrepancy: v12 onwards, Node chooses TLSv1.3 as the default
     DEFAULT_TLS_VERSION = tls.DEFAULT_MAX_VERSION,
     TLSv1_3_SUPPORTED = DEFAULT_TLS_VERSION === 'TLSv1.3',
 
-    DEFAULT_CIPHER = tls.DEFAULT_CIPHERS.split(':').find(function (cipher) {
+    DEFAULT_CIPHER = IS_NODE && tls.DEFAULT_CIPHERS.split(':').find(function (cipher) {
         // the cipher starting with "TLS_" are only used for TLSv1.3,
         // if TLSv1.3 is not supported, the default cipher is the first one not
         // starting with "TLS_"
@@ -41,7 +42,7 @@ var fs = require('fs'),
         next();
     };
 
-describe('protocolProfileBehavior: tls options', function () {
+(IS_NODE ? describe : describe.skip)('protocolProfileBehavior: tls options', function () {
     var testrun,
         servers = {
             // SSLv2 and SSLv3 methods are disabled in Node

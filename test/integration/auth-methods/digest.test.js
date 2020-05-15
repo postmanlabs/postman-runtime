@@ -1,30 +1,9 @@
-var expect = require('chai').expect,
-    enableServerDestroy = require('server-destroy'),
-    createDigestServer = require('../../fixtures/server').createDigestServer;
+var expect = require('chai').expect;
 
 describe('digest auth', function () {
-    var PORT,
-        USERNAME = 'postman',
+    var USERNAME = 'postman',
         PASSWORD = 'password',
-        digestServerURL,
-        digestServer,
         testrun;
-
-    before(function () {
-        digestServer = createDigestServer({
-            username: USERNAME,
-            password: PASSWORD
-        }).listen(0, function () {
-            PORT = this.address().port;
-            digestServerURL = 'http://localhost:' + PORT;
-        });
-
-        enableServerDestroy(digestServer);
-    });
-
-    after(function () {
-        digestServer.destroy();
-    });
 
     // @todo
     // 1. add a test case with (qop=""). For this we need a Digest server which does not return qop value
@@ -41,7 +20,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -128,7 +107,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -209,7 +188,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -273,7 +252,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -340,7 +319,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -407,7 +386,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -576,7 +555,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             auth: {
                                 type: 'digest',
                                 digest: {
@@ -667,7 +646,7 @@ describe('digest auth', function () {
                     item: {
                         name: 'DigestAuth',
                         request: {
-                            url: digestServerURL,
+                            url: global.servers.digest,
                             method: 'GET',
                             auth: {
                                 type: 'digest',

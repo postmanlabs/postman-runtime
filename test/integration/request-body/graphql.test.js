@@ -1,32 +1,7 @@
-var expect = require('chai').expect,
-    server = require('../../fixtures/server');
+var expect = require('chai').expect;
 
 describe('Request Body Mode: graphql', function () {
-    var testrun,
-        graphqlServer = server.createGraphQLServer({
-            schema: `
-                type Query {
-                    hello: String,
-                    square(n: Int!): Int
-                }
-            `,
-            root: {
-                hello: function () {
-                    return 'Hello world!';
-                },
-                square: function (args) {
-                    return args.n * args.n;
-                }
-            }
-        });
-
-    before(function (done) {
-        graphqlServer.listen(0, done);
-    });
-
-    after(function (done) {
-        graphqlServer.destroy(done);
-    });
+    var testrun;
 
     describe('single query', function () {
         before(function (done) {
@@ -34,7 +9,7 @@ describe('Request Body Mode: graphql', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: graphqlServer.url,
+                            url: global.servers.graphql,
                             method: 'POST',
                             body: {
                                 mode: 'graphql',
@@ -84,7 +59,7 @@ describe('Request Body Mode: graphql', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: graphqlServer.url,
+                            url: global.servers.graphql,
                             method: 'POST',
                             body: {
                                 mode: 'graphql',
@@ -136,7 +111,7 @@ describe('Request Body Mode: graphql', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: graphqlServer.url,
+                            url: global.servers.graphql,
                             method: 'POST',
                             body: {
                                 mode: 'graphql',
@@ -182,7 +157,7 @@ describe('Request Body Mode: graphql', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: graphqlServer.url,
+                            url: global.servers.graphql,
                             method: 'POST',
                             body: {
                                 mode: 'graphql',
@@ -236,7 +211,7 @@ describe('Request Body Mode: graphql', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: graphqlServer.url,
+                            url: global.servers.graphql,
                             method: 'POST',
                             body: {
                                 mode: 'graphql',
@@ -289,7 +264,7 @@ describe('Request Body Mode: graphql', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: graphqlServer.url,
+                            url: global.servers.graphql,
                             method: 'POST',
                             body: {
                                 mode: 'graphql',
@@ -342,7 +317,7 @@ describe('Request Body Mode: graphql', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: graphqlServer.url,
+                            url: global.servers.graphql,
                             header: [{
                                 key: 'content-type',
                                 value: 'something/else'
@@ -391,7 +366,7 @@ describe('Request Body Mode: graphql', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: graphqlServer.url,
+                            url: global.servers.graphql,
                             header: [{
                                 key: 'content-type',
                                 value: 'something/else',

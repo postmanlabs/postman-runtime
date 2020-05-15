@@ -1,23 +1,13 @@
 var fs = require('fs'),
     path = require('path'),
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('EdgeGrid auth', function () {
     var credentials = {
-            accessToken: 'postman_access_token',
-            clientToken: 'postman_client_token',
-            clientSecret: 'postman_client_secret'
-        },
-        edgeGridAuthServer = server.createEdgeGridAuthServer(credentials);
-
-    before(function (done) {
-        edgeGridAuthServer.listen(done);
-    });
-
-    after(function (done) {
-        edgeGridAuthServer.destroy(done);
-    });
+        accessToken: 'postman_access_token',
+        clientToken: 'postman_client_token',
+        clientSecret: 'postman_client_secret'
+    };
 
     describe('with missing credentials', function () {
         var testrun;
@@ -32,7 +22,7 @@ describe('EdgeGrid auth', function () {
                                 type: 'edgegrid',
                                 edgegrid: {}
                             },
-                            url: edgeGridAuthServer.url,
+                            url: global.servers.edgegrid,
                             method: 'GET'
                         }
                     }
@@ -82,7 +72,7 @@ describe('EdgeGrid auth', function () {
                                 type: 'edgegrid',
                                 edgegrid: credentials
                             },
-                            url: edgeGridAuthServer.url,
+                            url: global.servers.edgegrid,
                             method: 'GET'
                         }
                     }
@@ -151,7 +141,7 @@ describe('EdgeGrid auth', function () {
                                 type: 'edgegrid',
                                 edgegrid: wrongCrededntials
                             },
-                            url: edgeGridAuthServer.url,
+                            url: global.servers.edgegrid,
                             method: 'GET'
                         }
                     }
@@ -215,7 +205,7 @@ describe('EdgeGrid auth', function () {
                                 type: 'edgegrid',
                                 edgegrid: credentials
                             },
-                            url: edgeGridAuthServer.url,
+                            url: global.servers.edgegrid,
                             method: 'POST',
                             body: {
                                 mode: 'raw',
@@ -283,7 +273,7 @@ describe('EdgeGrid auth', function () {
                                 type: 'edgegrid',
                                 edgegrid: credentials
                             },
-                            url: edgeGridAuthServer.url,
+                            url: global.servers.edgegrid,
                             method: 'POST',
                             body: {
                                 mode: 'file',
@@ -354,7 +344,7 @@ describe('EdgeGrid auth', function () {
                                 type: 'edgegrid',
                                 edgegrid: credentials
                             },
-                            url: edgeGridAuthServer.url,
+                            url: global.servers.edgegrid,
                             method: 'PUT',
                             body: {
                                 mode: 'raw',

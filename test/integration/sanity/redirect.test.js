@@ -1,37 +1,9 @@
 var fs = require('fs'),
     sinon = require('sinon'),
-    expect = require('chai').expect,
-    server = require('../../fixtures/server');
+    expect = require('chai').expect;
 
 describe('redirects', function () {
-    var testrun,
-        redirectServer,
-        PORT = 5050,
-        URL = 'http://localhost:' + PORT;
-
-    before(function (done) {
-        redirectServer = server.createRedirectServer();
-
-        // This will be called on final redirect
-        redirectServer.on('/', function (req, res) {
-            var data = '';
-
-            req.on('data', function (d) {
-                data += d;
-            });
-
-            req.once('end', function () {
-                res.writeHead(200, {connection: 'close'});
-                res.end(data);
-            });
-        });
-
-        redirectServer.listen(PORT, done);
-    });
-
-    after(function (done) {
-        redirectServer.destroy(done);
-    });
+    var testrun;
 
     describe('sanity', function () {
         before(function (done) {
@@ -74,7 +46,7 @@ describe('redirects', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: URL + '/1/301',
+                            url: global.servers.redirects + '/1/301',
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -121,7 +93,7 @@ describe('redirects', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: URL + '/1/307',
+                            url: global.servers.redirects + '/1/307',
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -176,7 +148,7 @@ describe('redirects', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: URL + '/1/308',
+                            url: global.servers.redirects + '/1/308',
                             method: 'POST',
                             body: {
                                 mode: 'formdata',

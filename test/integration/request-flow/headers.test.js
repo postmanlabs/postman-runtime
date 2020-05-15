@@ -1,147 +1,112 @@
-var _ = require('lodash'),
-    sinon = require('sinon'),
+var sinon = require('sinon'),
     expect = require('chai').expect,
     Header = require('postman-collection').Header,
-    cookieJar = require('postman-request').jar(),
-    server = require('../../fixtures/server');
+    cookieJar = require('postman-request').jar();
 
 describe('request headers', function () {
-    var httpServer,
-        testrun,
-        PORT = 5050,
-        HOST = 'http://localhost:' + PORT,
-        COOKIE_HOST = HOST + '/cookie';
-
-    // add 🍪s in the jar
-    cookieJar.setCookieSync('c3=v3; path=/cookie', COOKIE_HOST);
-    cookieJar.setCookieSync('c4=v4; path=/cookie', COOKIE_HOST);
-
-    /**
-     * Converts raw request headers to array of key-value object.
-     *
-     * [ 'User-Agent', 'PostmanRuntime' ] -> [{key: 'User-Agent', value: 'PostmanRuntime'}]
-     *
-     * @param {String[]} rawHeaders - raw request headers
-     * @returns {Object[]}
-     */
-    function parseRawHeaders (rawHeaders) {
-        return _(rawHeaders).chunk(2).map(([key, value]) => {
-            return {key, value};
-        }).value();
-    }
+    var testrun,
+        HEADERS_URL,
+        COOKIES_URL;
 
     before(function (done) {
-        httpServer = server.createHTTPServer();
+        HEADERS_URL = global.servers.http + '/headers';
+        COOKIES_URL = global.servers.http + '/cookies';
 
-        httpServer.on('/', function (req, res) {
-            res.writeHead(200, {'content-type': 'application/json'});
-            res.end(JSON.stringify(parseRawHeaders(req.rawHeaders)));
+        // add 🍪s in the jar
+        cookieJar.setCookieSync('c3=v3; path=/cookies', COOKIES_URL);
+        cookieJar.setCookieSync('c4=v4; path=/cookies', COOKIES_URL);
+
+        this.run({
+            requester: {
+                cookieJar: cookieJar
+            },
+            collection: {
+                item: [{
+                    name: 'Duplicate headers',
+                    request: {
+                        url: HEADERS_URL,
+                        header: [{
+                            key: 'Header-Name',
+                            value: 'value1'
+                        }, {
+                            key: 'Header-Name',
+                            value: 'value2'
+                        }]
+                    }
+                }, {
+                    name: 'Disabled & Falsy headers',
+                    request: {
+                        url: HEADERS_URL,
+                        header: [{
+                            key: 'Header-Name-1',
+                            value: 'value1'
+                        }, {
+                            key: 'Header-Name-2',
+                            value: 'value2',
+                            disabled: true
+                        }, {
+                            key: '',
+                            value: 'value3'
+                        }]
+                    }
+                }, {
+                    name: 'Case Insensitive',
+                    request: {
+                        url: HEADERS_URL,
+                        header: [{
+                            key: 'Header-Name-0',
+                            value: 'value0'
+                        }, {
+                            key: 'Header-Name-1',
+                            value: 'value1'
+                        }, {
+                            key: 'header-name-1',
+                            value: 'value2'
+                        }, {
+                            key: 'HEADER-NAME-2',
+                            value: 'value3'
+                        }]
+                    }
+                }, {
+                    name: 'System headers',
+                    request: {
+                        url: HEADERS_URL,
+                        header: [{
+                            key: 'Header-Name-0',
+                            value: 'value0'
+                        }, {
+                            key: 'accept-encoding',
+                            value: 'disabled-system-header',
+                            disabled: true
+                        }, {
+                            key: 'User-Agent',
+                            value: 'PostmanRuntime/test'
+                        }, {
+                            key: 'Postman-Token',
+                            value: 'someCustomToken'
+                        }, {
+                            key: 'referer',
+                            value: HEADERS_URL
+                        }]
+                    }
+                }, {
+                    name: 'Cookie headers',
+                    request: {
+                        url: COOKIES_URL,
+                        header: [{
+                            key: 'Cookie',
+                            value: 'c1=v1'
+                        }, {
+                            key: 'Cookie',
+                            value: 'c2=v2'
+                        }]
+                    }
+                }]
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
         });
-
-        httpServer.on('/cookie', function (req, res) {
-            res.writeHead(200, {'content-type': 'application/json'});
-            res.end(JSON.stringify(parseRawHeaders(req.rawHeaders)));
-        });
-
-        httpServer.listen(PORT, function (err) {
-            if (err) { return done(err); }
-
-            this.run({
-                requester: {
-                    cookieJar: cookieJar
-                },
-                collection: {
-                    item: [{
-                        name: 'Duplicate headers',
-                        request: {
-                            url: HOST,
-                            header: [{
-                                key: 'Header-Name',
-                                value: 'value1'
-                            }, {
-                                key: 'Header-Name',
-                                value: 'value2'
-                            }]
-                        }
-                    }, {
-                        name: 'Disabled & Falsy headers',
-                        request: {
-                            url: HOST,
-                            header: [{
-                                key: 'Header-Name-1',
-                                value: 'value1'
-                            }, {
-                                key: 'Header-Name-2',
-                                value: 'value2',
-                                disabled: true
-                            }, {
-                                key: '',
-                                value: 'value3'
-                            }]
-                        }
-                    }, {
-                        name: 'Case Insensitive',
-                        request: {
-                            url: HOST,
-                            header: [{
-                                key: 'Header-Name-0',
-                                value: 'value0'
-                            }, {
-                                key: 'Header-Name-1',
-                                value: 'value1'
-                            }, {
-                                key: 'header-name-1',
-                                value: 'value2'
-                            }, {
-                                key: 'HEADER-NAME-2',
-                                value: 'value3'
-                            }]
-                        }
-                    }, {
-                        name: 'System headers',
-                        request: {
-                            url: HOST,
-                            header: [{
-                                key: 'Header-Name-0',
-                                value: 'value0'
-                            }, {
-                                key: 'accept-encoding',
-                                value: 'disabled-system-header',
-                                disabled: true
-                            }, {
-                                key: 'User-Agent',
-                                value: 'PostmanRuntime/test'
-                            }, {
-                                key: 'Postman-Token',
-                                value: 'someCustomToken'
-                            }, {
-                                key: 'referer',
-                                value: HOST
-                            }]
-                        }
-                    }, {
-                        name: 'Cookie headers',
-                        request: {
-                            url: COOKIE_HOST,
-                            header: [{
-                                key: 'Cookie',
-                                value: 'c1=v1'
-                            }, {
-                                key: 'Cookie',
-                                value: 'c2=v2'
-                            }]
-                        }
-                    }]
-                }
-            }, function (err, results) {
-                testrun = results;
-                done(err);
-            });
-        }.bind(this));
-    });
-
-    after(function (done) {
-        httpServer.destroy(done);
     });
 
     it('should complete the run', function () {
@@ -218,10 +183,10 @@ describe('request headers', function () {
             {key: 'Header-Name-0', value: 'value0'},
             {key: 'User-Agent', value: 'PostmanRuntime/test'},
             {key: 'Postman-Token', value: 'someCustomToken'},
-            {key: 'referer', value: HOST},
+            {key: 'referer', value: HEADERS_URL},
             {key: 'Accept', value: '*/*'},
             {key: 'Cache-Control', value: 'no-cache'},
-            {key: 'Host', value: 'localhost:5050'},
+            {key: 'Host', value: HEADERS_URL.split('/')[2]},
             {key: 'Accept-Encoding', value: 'gzip, deflate, br'},
             {key: 'Connection', value: 'keep-alive'}
         ]);
@@ -237,13 +202,13 @@ describe('request headers', function () {
             new Header({key: 'User-Agent', value: 'PostmanRuntime/test'}),
             new Header({key: 'Postman-Token', value: 'someCustomToken'}),
             // requester header(overwritten) not added as system if value is unchanged
-            new Header({key: 'referer', value: HOST}),
+            new Header({key: 'referer', value: HEADERS_URL}),
             // user-defined, disabled header same as one-of system header
             new Header({key: 'accept-encoding', value: 'disabled-system-header', disabled: true}),
             // system headers
             new Header({key: 'Accept', value: '*/*', system: true}),
             new Header({key: 'Cache-Control', value: 'no-cache', system: true}),
-            new Header({key: 'Host', value: 'localhost:5050', system: true}),
+            new Header({key: 'Host', value: HEADERS_URL.split('/')[2], system: true}),
             new Header({key: 'Accept-Encoding', value: 'gzip, deflate, br', system: true}),
             new Header({key: 'Connection', value: 'keep-alive', system: true})
         ]);
