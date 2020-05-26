@@ -801,7 +801,7 @@ describe('Auth Handler:', function () {
                 handler;
 
             clonedRequestObj = _.cloneDeep(requestObj);
-            clonedRequestObj.auth.oauth2.headerPrefix = 'Postman';
+            clonedRequestObj.auth.oauth2.headerPrefix = 'Postman ';
 
             request = new Request(clonedRequestObj);
             auth = request.auth;
@@ -818,7 +818,7 @@ describe('Auth Handler:', function () {
             });
         });
 
-        it('should not add header prefix when headerPrefix = "NO_PREFIX"', function () {
+        it('should add empty header prefix when headerPrefix = ""', function () {
             var clonedRequestObj,
                 request,
                 auth,
@@ -826,7 +826,7 @@ describe('Auth Handler:', function () {
                 handler;
 
             clonedRequestObj = _.cloneDeep(requestObj);
-            clonedRequestObj.auth.oauth2.headerPrefix = 'NO_PREFIX';
+            clonedRequestObj.auth.oauth2.headerPrefix = '';
 
             request = new Request(clonedRequestObj);
             auth = request.auth;
@@ -839,6 +839,31 @@ describe('Auth Handler:', function () {
             expect(request.headers.toJSON()[0]).to.eql({
                 key: 'Authorization',
                 value: requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
+        it('should add default header prefix when headerPrefix = undefined', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.headerPrefix = undefined;
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
                 system: true
             });
         });
