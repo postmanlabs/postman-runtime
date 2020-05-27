@@ -31,7 +31,7 @@
   "dependencies": {
     "async": "2.6.3",
     "aws4": "1.9.1",
-    "crypto-js": "3.3.0",
+    "crypto-js": "4.0.0",
     "eventemitter3": "4.0.4",
     "handlebars": "4.7.6",
     "http-reasons": "0.1.0",
