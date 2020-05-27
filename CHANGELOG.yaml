@@ -1,5 +1,8 @@
 master:
   new features:
+    - >-
+      GH-1018 Added support for using custom Authorization header prefix via 
+      `headerPrefix` property in OAuth 2.0
     - |
       GH-1011 Added support for following signature methods in OAuth 1.0
         1. HMAC-SHA512
