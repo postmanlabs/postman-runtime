@@ -17,6 +17,7 @@ master:
       [OAuth 1.0a spec](https://oauth.net/core/1.0a)
         1. oauth_callback
         2. oauth_verifier
+    - GH-1039 Added support for SHA-256 and SHA-256-sess algorithms in Digest auth
   chores:
     - Updated dependencies
 
