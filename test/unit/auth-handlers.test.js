@@ -524,9 +524,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        // @todo: Unskip following 6 tests when support for SHA-512-256 algorithm is added
-
-        it.skip('should add the Auth header for (algorithm="SHA-512-256", qop=""', function () {
+        it('should add the Auth header for (algorithm="SHA-512-256", qop=""', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -553,7 +551,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it.skip('should add the Auth header for (algorithm="SHA-512-256", qop="auth")', function () {
+        it('should add the Auth header for (algorithm="SHA-512-256", qop="auth")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -581,7 +579,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it.skip('should add the Auth header for (algorithm="SHA-512-256", qop="auth-int")', function () {
+        it('should add the Auth header for (algorithm="SHA-512-256", qop="auth-int")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -609,7 +607,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it.skip('should add the Auth header for (algorithm="SHA-512-256-sess", qop="")', function () {
+        it('should add the Auth header for (algorithm="SHA-512-256-sess", qop="")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -636,7 +634,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it.skip('should add the Auth header for (algorithm="SHA-512-256-sess", qop="auth")', function () {
+        it('should add the Auth header for (algorithm="SHA-512-256-sess", qop="auth")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
@@ -664,7 +662,7 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it.skip('should add the Auth header for (algorithm="SHA-512-256-sess", qop="auth-int")', function () {
+        it('should add the Auth header for (algorithm="SHA-512-256-sess", qop="auth-int")', function () {
             var clonedReqObj = _.merge({}, rawRequests.digest, {
                     auth: {
                         digest: {
