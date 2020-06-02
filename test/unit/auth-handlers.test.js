@@ -524,6 +524,174 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
+        // @todo: Unskip following 6 tests when support for SHA-512-256 algorithm is added
+
+        it.skip('should add the Auth header for (algorithm="SHA-512-256", qop=""', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", response="1676ceef7b880281567d30ca03f2517131fbc4a0c0a16d577cc4ad477b6b8c52", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it.skip('should add the Auth header for (algorithm="SHA-512-256", qop="auth")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256',
+                            qop: 'auth'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth, nc=00000001, cnonce="0a4f113b", response="fb53cf8c6922b758cf05477afd5cd896ad0213f16588ed15089da72a2900cb19", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it.skip('should add the Auth header for (algorithm="SHA-512-256", qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256',
+                            qop: 'auth-int'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="f928c7ae0b0d4e4fe870e2fe66ccb85362e08b7c9ac33dcc527915019dec7aa2", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it.skip('should add the Auth header for (algorithm="SHA-512-256-sess", qop="")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256-sess'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", response="501c722984db1ecab705757c060e359debac8c9ee98bea00fc70c111977fcaba", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it.skip('should add the Auth header for (algorithm="SHA-512-256-sess", qop="auth")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256-sess',
+                            qop: 'auth'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", qop=auth, nc=00000001, cnonce="0a4f113b", response="5b0af1e60cff4aaa751326f6e837ea5d32c77324254f6c0c9882ff6cc0947799", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it.skip('should add the Auth header for (algorithm="SHA-512-256-sess", qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256-sess',
+                            qop: 'auth-int'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="6e12487570a4f493953dd7e378924eee9a61dea0e6f0ee59854cf2c77c223f53", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
         it('should add the Auth header with query params in case of request with the same', function () {
             var request = new Request(rawRequests.digestWithQueryParams),
                 auth = request.auth,
