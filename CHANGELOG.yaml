@@ -17,6 +17,12 @@ master:
       [OAuth 1.0a spec](https://oauth.net/core/1.0a)
         1. oauth_callback
         2. oauth_verifier
+    - |
+      GH-1039 Added support for following algorithms in Digest auth
+        1. SHA-256
+        2. SHA-256-sess
+        3. SHA-512-256
+        4. SHA-512-256-sess
     - >-
       GH-1041 Added support to include AWS auth data in query params using
       `addAuthDataToQuery` option
