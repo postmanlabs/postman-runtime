@@ -1709,6 +1709,89 @@ describe('Auth Handler:', function () {
             });
         });
 
+        it('should list all modified query params in manifest', function (done) {
+            var requestJSON = _.merge({}, rawRequests.awsv4, {
+                    auth: {
+                        awsv4: {
+                            service: 's3',
+                            addAuthDataToQuery: true
+                        }
+                    }
+                }),
+                request = new Request(requestJSON),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                paramsInManifest = _.transform(handler.manifest.updates, function (acc, entity) {
+                    if (entity.type === 'url.param') {
+                        acc.push(entity.property);
+                    }
+                }, []),
+                params;
+
+            handler.sign(authInterface, request, function () {
+                params = request.url.query.toObject();
+
+                // ensure that all the params added are listed in manifest
+                expect(_.difference(Object.keys(params), paramsInManifest)).to.be.empty;
+
+                // ensure that there are no extra params in manifest that
+                // are not added by the auth
+                expect(params).to.include.keys(paramsInManifest);
+                done();
+            });
+        });
+
+        it('should not modify query params when `addAuthDataToQuery: false`', function (done) {
+            var requestJSON = _.merge({}, rawRequests.awsv4, {
+                    auth: {
+                        awsv4: {
+                            service: 's3',
+                            addAuthDataToQuery: false
+                        }
+                    }
+                }),
+                request = new Request(requestJSON),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                expect(request.url.query.count()).to.eql(0);
+                done();
+            });
+        });
+
+        it('should not add auth data to headers when `addAuthDataToQuery: true`', function (done) {
+            var requestJSON = _.merge({}, rawRequests.awsv4, {
+                    auth: {
+                        awsv4: {
+                            service: 's3',
+                            addAuthDataToQuery: true
+                        }
+                    }
+                }),
+                request = new Request(requestJSON),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+
+                expect(headers).to.not.include.keys([
+                    'authorization',
+                    'x-amz-date',
+                    'X-amz-security-token',
+                    'x-amz-content-sha256'
+                ]);
+                done();
+            });
+        });
+
         it('should use sensible defaults where applicable', function () {
             var headers,
                 rawReq = _.defaults(rawRequests.awsv4, {
