@@ -24,6 +24,9 @@ master:
         2. SHA-256-sess
         3. SHA-512-256
         4. SHA-512-256-sess
+    - >-
+      GH-1041 Added support to include AWS auth data in query params using
+      `addAuthDataToQuery` option
   chores:
     - Updated dependencies
 
