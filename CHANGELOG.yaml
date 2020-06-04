@@ -1,7 +1,8 @@
 master:
   new features:
+    - GH-1044 Added `agents` requester option to define custom requesting agents
     - >-
-      GH-1018 Added support for using custom Authorization header prefix via 
+      GH-1018 Added support for using custom Authorization header prefix via
       `headerPrefix` property in OAuth 2.0
     - |
       GH-1011 Added support for following signature methods in OAuth 1.0
