@@ -7,10 +7,13 @@ describe('Requester Spec: agents', function () {
     var testrun;
 
     describe('http agent', function () {
-        var customAgent = new http.Agent(),
-            agentSpy = sinon.spy(customAgent, 'createConnection');
+        var customAgent,
+            agentSpy;
 
         before(function (done) {
+            customAgent = new http.Agent();
+            agentSpy = sinon.spy(customAgent, 'createConnection');
+
             this.run({
                 collection: {
                     item: [{
@@ -48,10 +51,13 @@ describe('Requester Spec: agents', function () {
     });
 
     describe('https agent', function () {
-        var customAgent = new https.Agent(),
-            agentSpy = sinon.spy(customAgent, 'createConnection');
+        var customAgent,
+            agentSpy;
 
         before(function (done) {
+            customAgent = new https.Agent();
+            agentSpy = sinon.spy(customAgent, 'createConnection');
+
             this.run({
                 collection: {
                     item: [{
@@ -89,10 +95,16 @@ describe('Requester Spec: agents', function () {
     });
 
     describe('http to https redirection', function () {
-        var httpAgentSpy = sinon.spy(http.Agent.prototype, 'createConnection'),
-            httpsAgentSpy = sinon.spy(https.Agent.prototype, 'createConnection');
+        var httpAgentSpy,
+            httpsAgentSpy;
 
         before(function (done) {
+            var httpAgent = new http.Agent(),
+                httpsAgent = new https.Agent();
+
+            httpAgentSpy = sinon.spy(httpAgent, 'createConnection');
+            httpsAgentSpy = sinon.spy(httpsAgent, 'createConnection');
+
             this.run({
                 collection: {
                     item: [{
@@ -101,13 +113,8 @@ describe('Requester Spec: agents', function () {
                 },
                 requester: {
                     agents: {
-                        http: {
-                            agentClass: http.Agent
-                        },
-                        https: {
-                            agentClass: https.Agent,
-                            agentOptions: {foo: 'bar'}
-                        }
+                        http: httpAgent,
+                        https: httpsAgent
                     }
                 }
             }, function (err, results) {
@@ -136,12 +143,9 @@ describe('Requester Spec: agents', function () {
 
             expect(httpsAgentOpts).to.have.property('agent').that.be.an.instanceof(http.Agent);
             expect(httpAgentOpts).to.have.property('host').that.equal('postman-echo.com');
-            // inherited from requester.keepAlive because agentOptions are not provided
-            expect(httpAgentOpts.agent).to.have.property('options').that.include({keepAlive: true});
 
             expect(httpsAgentOpts).to.have.property('agent').that.be.an.instanceof(https.Agent);
             expect(httpsAgentOpts).to.have.property('host').that.equal('httpbin.org');
-            expect(httpsAgentOpts.agent).to.have.property('options').that.include({foo: 'bar'});
 
             expect(response.reason()).to.equal('OK');
         });
