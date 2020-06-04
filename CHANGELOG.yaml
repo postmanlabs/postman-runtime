@@ -27,6 +27,8 @@ master:
     - >-
       GH-1041 Added support to include AWS auth data in query params using
       `addAuthDataToQuery` option
+  fixed bugs:
+    - GH-1045 Fetch cookies on `Requester~dryRun` using the encoded URL object
   chores:
     - Updated dependencies
 
