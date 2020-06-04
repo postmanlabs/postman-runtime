@@ -137,7 +137,7 @@ describe('requester util', function () {
                 requestOptions = requesterCore.getRequestOptions(request, {agents});
 
             expect(requestOptions).to.have.ownProperty('agents', agents);
-            expect(requestOptions).to.not.have.property('agentOptions');
+            expect(requestOptions).to.have.property('agentOptions');
         });
 
         describe('Should accept URL irrespective of the case', function () {
