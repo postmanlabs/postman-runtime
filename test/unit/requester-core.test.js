@@ -123,15 +123,20 @@ describe('requester util', function () {
             });
         });
 
-        it('should accept custom requesting agent', function () {
+        it('should accept custom requesting agents', function () {
             var request = new sdk.Request({
                     url: 'https://postman-echo.com',
                     method: 'GET'
                 }),
-                agent = 'my agent',
-                requestOptions = requesterCore.getRequestOptions(request, {agent});
+                agents = {
+                    http: 'http.Agent',
+                    https: {
+                        agentClass: 'https.Agent'
+                    }
+                },
+                requestOptions = requesterCore.getRequestOptions(request, {agents});
 
-            expect(requestOptions).to.have.ownProperty('agent', agent);
+            expect(requestOptions).to.have.ownProperty('agents', agents);
             expect(requestOptions).to.not.have.property('agentOptions');
         });
 
