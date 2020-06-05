@@ -358,6 +358,338 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
+        it('should add the Auth header for (algorithm="SHA-256", qop=""', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-256'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256", response="640a149858bc1b2a90a02453a328bad01c1bad5dad6ba92cf0bf7832fd7dcae2", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-256", qop="auth")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-256',
+                            qop: 'auth'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256", qop=auth, nc=00000001, cnonce="0a4f113b", response="6025934347a57283989281f03d9c4e1adbb3ee50af57827c83182d87e0cb7ec0", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-256", qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-256',
+                            qop: 'auth-int'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="06ba0831e0043ddc784784a1915acfd6d58792ab8203edaff5082800f8d294a5", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-256-sess", qop="")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-256-sess'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256-sess", response="0b4e18576fd9f4850dda49eab2a581a5f40bb50f6ecaa17ab4340cd416497e13", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-256-sess", qop="auth")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-256-sess',
+                            qop: 'auth'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256-sess", qop=auth, nc=00000001, cnonce="0a4f113b", response="9388df8d879c3d988419aafca225ccc4626eb089192e992239b5595a532e243d", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-256-sess", qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-256-sess',
+                            qop: 'auth-int'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256-sess", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="31ecccb1899773a8d2478e6f7042f3174485ce18949731e84c572a1dd48d1539", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-512-256", qop=""', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", response="1676ceef7b880281567d30ca03f2517131fbc4a0c0a16d577cc4ad477b6b8c52", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-512-256", qop="auth")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256',
+                            qop: 'auth'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth, nc=00000001, cnonce="0a4f113b", response="fb53cf8c6922b758cf05477afd5cd896ad0213f16588ed15089da72a2900cb19", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-512-256", qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256',
+                            qop: 'auth-int'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="f928c7ae0b0d4e4fe870e2fe66ccb85362e08b7c9ac33dcc527915019dec7aa2", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-512-256-sess", qop="")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256-sess'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", response="501c722984db1ecab705757c060e359debac8c9ee98bea00fc70c111977fcaba", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-512-256-sess", qop="auth")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256-sess',
+                            qop: 'auth'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", qop=auth, nc=00000001, cnonce="0a4f113b", response="5b0af1e60cff4aaa751326f6e837ea5d32c77324254f6c0c9882ff6cc0947799", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add the Auth header for (algorithm="SHA-512-256-sess", qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256-sess',
+                            qop: 'auth-int'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="6e12487570a4f493953dd7e378924eee9a61dea0e6f0ee59854cf2c77c223f53", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
         it('should add the Auth header with query params in case of request with the same', function () {
             var request = new Request(rawRequests.digestWithQueryParams),
                 auth = request.auth,
@@ -373,6 +705,42 @@ describe('Auth Handler:', function () {
                 'algorithm="MD5", response="24dfb8851ee27e4b00252a13b1fd8ec3", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             expect(authHeader.toString()).to.eql(expectedHeader);
+        });
+
+        it('should give error for unsupported algorithm', function () {
+            var request = new Request(_.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'Unknown algorithm'
+                        }
+                    }
+                })),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function (err) {
+                expect(err).to.be.ok;
+            });
+        });
+
+        it('should default to MD5 algorithm when not provided', function () {
+            var request = new Request(_.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: null
+                        }
+                    }
+                })),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                authHeader;
+
+            handler.sign(authInterface, request, _.noop);
+            authHeader = request.headers.one('Authorization');
+
+            expect(authHeader.toString()).to.include('algorithm="MD5"');
         });
 
         it('should bail out for invalid requests', function () {
@@ -475,8 +843,54 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
-        it('should bail out if the auth params are invalid', function () {
+        it('should bail out if consumerKey is absent', function () {
             var request = new Request(_.omit(rawRequests.oauth1, ['header', 'auth.oauth1.consumerKey'])),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+        });
+
+        it('should bail out if consumerSecret is absent for HMAC signature', function () {
+            var request = new Request(_.omit(rawRequests.oauth1, ['header', 'auth.oauth1.consumerSecret'])),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+        });
+
+        it('should bail out if consumerSecret is absent for PLAINTEXT signature', function () {
+            var request = new Request(_(rawRequests.oauth1).omit(['header', 'auth.oauth1.consumerSecret']).merge({
+                    auth: {
+                        oauth1: {
+                            signatureMethod: 'PLAINTEXT'
+                        }
+                    }
+                }).value()),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.is.empty;
+        });
+
+        it('should bail out if privateKey is absent for RSA signature', function () {
+            var request = new Request(_(rawRequests.oauth1).omit(['header', 'auth.oauth1.consumerSecret']).merge({
+                    auth: {
+                        oauth1: {
+                            signatureMethod: 'RSA-SHA1',
+                            privateKey: undefined
+                        }
+                    }
+                }).value()),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type);
@@ -586,6 +1000,220 @@ describe('Auth Handler:', function () {
                     autoAddParam: true,
                     addEmptyParamsToSign: true
                 });
+        });
+
+        it('should include body hash when includeBodyHash:true', function () {
+            var rawReq = _.merge({}, rawRequests.oauth1, {
+                    auth: {
+                        oauth1: {
+                            includeBodyHash: true
+                        }
+                    },
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.get('Authorization')).to.include('oauth_body_hash');
+        });
+
+        it('should not include body hash when includeBodyHash:false', function () {
+            var rawReq = _.merge({}, rawRequests.oauth1, {
+                    auth: {
+                        oauth1: {
+                            includeBodyHash: false
+                        }
+                    },
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.get('Authorization')).to.not.include('oauth_body_hash');
+        });
+
+        it('should not include body hash for url-encoded body when includeBodyHash:true', function () {
+            var rawReq = _.merge({}, rawRequests.oauth1, {
+                    auth: {
+                        oauth1: {
+                            includeBodyHash: true
+                        }
+                    },
+                    body: {
+                        mode: 'urlencoded',
+                        urlencoded: [{
+                            key: 'haha',
+                            value: 'somevalue'
+                        }]
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.get('Authorization')).to.not.include('oauth_body_hash');
+        });
+
+        it('should include correct body hash for empty body', function () {
+            var rawReq = _.merge({}, rawRequests.oauth1, {
+                    auth: {
+                        oauth1: {
+                            addParamsToHeader: false,
+                            includeBodyHash: true
+                        }
+                    },
+                    body: {}
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.get('oauth_body_hash')).to.eql('2jmj7l5rSw0yVb/vlWAYkK/YBwk=');
+        });
+
+        it('should include correct body hash for raw body', function () {
+            var rawReq = _.merge({}, rawRequests.oauth1, {
+                    auth: {
+                        oauth1: {
+                            addParamsToHeader: false,
+                            includeBodyHash: true
+                        }
+                    },
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello World!!'
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.get('oauth_body_hash')).to.eql('pqfIFYs01VSVSkySGxRPgtddtoM=');
+        });
+
+        it('should include correct body hash for GraphQL body', function () {
+            var rawReq = _.merge({}, rawRequests.oauth1, {
+                    auth: {
+                        oauth1: {
+                            addParamsToHeader: false,
+                            includeBodyHash: true
+                        }
+                    },
+                    body: {
+                        mode: 'graphql',
+                        graphql: {
+                            query: 'query Test { hello }',
+                            operationName: 'Test',
+                            variables: '{"foo":"bar"}'
+                        }
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.get('oauth_body_hash')).to.eql('2jwsdzjZEuFdm6ubMtk0HZi34+U=');
+        });
+
+        it('should include all non-empty oauth1 params in request', function () {
+            var rawReq = {
+                    url: 'https://postman-echo.com/oauth1',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            timestamp: '1461319769',
+                            nonce: 'ik3oT5',
+                            version: '1.0',
+                            realm: 'foo',
+                            verifier: 'bar',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: false,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                expect(request.url.query.toObject()).to.include({
+                    oauth_consumer_key: 'RKCGzna7bv9YD57c',
+                    oauth_token: 'foo',
+                    oauth_signature_method: 'HMAC-SHA1',
+                    oauth_timestamp: '1461319769',
+                    oauth_nonce: 'ik3oT5',
+                    oauth_version: '1.0',
+                    oauth_callback: 'http://postman.com',
+                    oauth_verifier: 'bar',
+                    oauth_signature: 'WHnpdWcwWzBM3bHcRQNshHVh2Og='
+                });
+            });
+        });
+
+        it('should generate correct signature for RSA based signature method', function () {
+            // eslint-disable-next-line max-len
+            var privateKey = '-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgFKLvzM9zbm3I0+HWcHlBSqpfRY/bKs6NDLclERrzfnReFV4utjkhjaEQPPT6tHVHKrZkcxmIgwe3XrkJkUjcuingXIF+Fc3KpY61qJ4HSM50qIuHdi+C5YfuXwNrh6OOeZAhhqgSw2e2XqPfATbkYYwpIFpdVdcH/Pb2ynpd6VXAgMBAAECgYAbQE+LFyhH25Iou0KCpJ0kDHhjU+UIUlrRP8kjHYQOqXzUmtr0p903OkpHNPsc8wJX1SQxGra60aXE4HVR9fYFQNliAnSmA/ztGR4ddnirK1Gzog4y2OOkicTdSqJ/1XXtTEDSRkA0Z2DIqcWgudeSDzVjUpreYwQ/rCEZbi50AQJBAJcf9wi5bU8tdZUCg3/8MNDwHhr4If4V/9kmhsgNp+M/9tHwCbD05hCbiGS7g58DPF+6V2K30qQYq7yvBP8Te4ECQQCL1GhX/YwkD6rexi0E1bjz+RqhNLTR9kexkTfSYmL6zHeeIFSH8ROioGOJMU51lUtMNkkrKEeki5SZpkfaQOzXAkAvBnJPU6vQ7HtfH8YdiDMEgQNNLxMcxmmzf4qHK8CnNRsvnnrVho8kcdFSTwsY6t/Zhdl1TXANQeQGtYtfeAeBAkEAhUB351JSWJMtrHqCsFbTmHxNKk7F+kiObeMLpUvpM0PiwifhJmNQ6Oubr0Pzlw4c4ZXiCGSsUVxK0lmpo423pQJATYDoxVhZrKA3xDAifWoyxbyxf/WXtUGDaAOuZc/naVN5TKiqaEO6G+k3NpmOXNKsYU/Zd9e6P/TnfU74TyDDDA==\n-----END RSA PRIVATE KEY-----',
+                // eslint-disable-next-line max-len
+                signature = 'Bi/ocoeczWLcYlMpYtW9HdFh41YMEFXSWpdzFZkJKJ8T7rBsuYoC/VDeCUx52DLiHMlkrnfVwmNfnvwyUusEPIOq61Ytb0w3Oq3V2G5jE58+SYMmgKEZQuP6znqfadWq+u8z3nv1oiN4xacJpIRtFh4M1iDz8q+pLvxl3of+toE=',
+                rawReq = _.merge({}, rawRequests.oauth1, {
+                    auth: {
+                        oauth1: {
+                            signatureMethod: 'RSA-SHA1',
+                            addParamsToHeader: false,
+                            includeBodyHash: true,
+                            privateKey: privateKey
+                        }
+                    },
+                    body: {
+                        mode: 'graphql',
+                        graphql: {
+                            query: 'query Test { hello }',
+                            operationName: 'Test',
+                            variables: '{"foo":"bar"}'
+                        }
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.get('oauth_signature')).to.eql(signature);
         });
 
         it('should generate correct signature for request with disabled query params', function () {
@@ -777,6 +1405,81 @@ describe('Auth Handler:', function () {
 
             clonedRequestObj = _.cloneDeep(requestObj);
             clonedRequestObj.auth.oauth2.tokenType = 'unknown type';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Bearer ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
+        it('should use custom header prefix when provided', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.headerPrefix = 'Postman ';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
+                key: 'Authorization',
+                value: 'Postman ' + requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
+        it('should add empty header prefix when headerPrefix = ""', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.headerPrefix = '';
+
+            request = new Request(clonedRequestObj);
+            auth = request.auth;
+            authInterface = createAuthInterface(auth);
+            handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.headers.all()).to.be.an('array').that.has.lengthOf(1);
+            expect(request.headers.toJSON()[0]).to.eql({
+                key: 'Authorization',
+                value: requestObj.auth.oauth2.accessToken,
+                system: true
+            });
+        });
+
+        it('should add default header prefix when headerPrefix = undefined', function () {
+            var clonedRequestObj,
+                request,
+                auth,
+                authInterface,
+                handler;
+
+            clonedRequestObj = _.cloneDeep(requestObj);
+            clonedRequestObj.auth.oauth2.headerPrefix = undefined;
 
             request = new Request(clonedRequestObj);
             auth = request.auth;
@@ -1002,6 +1705,89 @@ describe('Auth Handler:', function () {
                 // ensure that there are no extra headers in manifest that
                 // are not added by the auth
                 expect(headers).to.include.keys(headersInManifest);
+                done();
+            });
+        });
+
+        it('should list all modified query params in manifest', function (done) {
+            var requestJSON = _.merge({}, rawRequests.awsv4, {
+                    auth: {
+                        awsv4: {
+                            service: 's3',
+                            addAuthDataToQuery: true
+                        }
+                    }
+                }),
+                request = new Request(requestJSON),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                paramsInManifest = _.transform(handler.manifest.updates, function (acc, entity) {
+                    if (entity.type === 'url.param') {
+                        acc.push(entity.property);
+                    }
+                }, []),
+                params;
+
+            handler.sign(authInterface, request, function () {
+                params = request.url.query.toObject();
+
+                // ensure that all the params added are listed in manifest
+                expect(_.difference(Object.keys(params), paramsInManifest)).to.be.empty;
+
+                // ensure that there are no extra params in manifest that
+                // are not added by the auth
+                expect(params).to.include.keys(paramsInManifest);
+                done();
+            });
+        });
+
+        it('should not modify query params when `addAuthDataToQuery: false`', function (done) {
+            var requestJSON = _.merge({}, rawRequests.awsv4, {
+                    auth: {
+                        awsv4: {
+                            service: 's3',
+                            addAuthDataToQuery: false
+                        }
+                    }
+                }),
+                request = new Request(requestJSON),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                expect(request.url.query.count()).to.eql(0);
+                done();
+            });
+        });
+
+        it('should not add auth data to headers when `addAuthDataToQuery: true`', function (done) {
+            var requestJSON = _.merge({}, rawRequests.awsv4, {
+                    auth: {
+                        awsv4: {
+                            service: 's3',
+                            addAuthDataToQuery: true
+                        }
+                    }
+                }),
+                request = new Request(requestJSON),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+
+                expect(headers).to.not.include.keys([
+                    'authorization',
+                    'x-amz-date',
+                    'X-amz-security-token',
+                    'x-amz-content-sha256'
+                ]);
                 done();
             });
         });
