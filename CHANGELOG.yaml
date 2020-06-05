@@ -29,6 +29,9 @@ master:
       `addAuthDataToQuery` option
   fixed bugs:
     - GH-1045 Fetch cookies on `Requester~dryRun` using the encoded URL object
+    - >-
+      GH-1046 Treat query params and urlencoded body params as case-sensitive
+      in `Requester~dryRun`
   chores:
     - Updated dependencies
 
