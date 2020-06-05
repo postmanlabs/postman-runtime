@@ -1,4 +1,5 @@
-master:
+7.26.0:
+  date: 2020-06-05
   new features:
     - GH-1044 Added `agents` requester option to define custom requesting agents
     - >-
@@ -30,8 +31,8 @@ master:
   fixed bugs:
     - GH-1045 Fetch cookies on `Requester~dryRun` using the encoded URL object
     - >-
-      GH-1046 Treat query params and urlencoded body params as case-sensitive
-      in `Requester~dryRun`
+      GH-1046 Treat query params and urlencoded body params as case-sensitive in
+      `Requester~dryRun`
   chores:
     - Updated dependencies
 
