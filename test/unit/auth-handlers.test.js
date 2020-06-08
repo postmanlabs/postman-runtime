@@ -900,6 +900,24 @@ describe('Auth Handler:', function () {
             expect(request.headers.all()).to.be.an('array').that.is.empty;
         });
 
+        it('should pass invalid privateKey error in callback for RSA signature', function () {
+            var request = new Request(_(rawRequests.oauth1).omit(['header', 'auth.oauth1.consumerSecret']).merge({
+                    auth: {
+                        oauth1: {
+                            signatureMethod: 'RSA-SHA1',
+                            privateKey: 'invalid key'
+                        }
+                    }
+                }).value()),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function (err) {
+                expect(err).to.be.ok;
+            });
+        });
+
         it('should apply sensible defaults where applicable', function () {
             var rawReq = _(rawRequests.oauth1).omit(['auth.oauth1.nonce', 'auth.oauth1.timestamp']).merge({
                     url: {
