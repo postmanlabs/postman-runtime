@@ -690,6 +690,110 @@ describe('Auth Handler:', function () {
             expect(authHeader.system).to.be.true;
         });
 
+        it('should add correct Auth header for request with raw body and (qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256',
+                            qop: 'auth-int'
+                        }
+                    },
+                    body: {
+                        mode: 'raw',
+                        raw: 'Hello Postman!!!'
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="08af7d82b032a502331788f1e56e16337910c11a887b99c60abf86e9c26fab2a", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add correct Auth header for request with urlencoded body and (qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256',
+                            qop: 'auth-int'
+                        }
+                    },
+                    body: {
+                        mode: 'urlencoded',
+                        urlencoded: [
+                            {key: 'foo', value: 'bar'},
+                            {key: 'postman', value: '邮差'},
+                            {key: 'alpha', value: 'beta', disabled: true}
+                        ]
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="cbfd61ad1bc2a4c9bb3d058e2b9b9d231e11501261c2115a8f23f787d296d6f4", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
+        it('should add correct Auth header for request with GraphQL body and (qop="auth-int")', function () {
+            var clonedReqObj = _.merge({}, rawRequests.digest, {
+                    auth: {
+                        digest: {
+                            algorithm: 'SHA-512-256',
+                            qop: 'auth-int'
+                        }
+                    },
+                    body: {
+                        mode: 'graphql',
+                        graphql: {
+                            query: 'query Test { hello }',
+                            operationName: 'Test',
+                            variables: '{"foo":"bar"}'
+                        }
+                    }
+                }),
+                request = new Request(clonedReqObj),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHeader,
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="88f80bf9c08dd1250ae6fa848f48147aaebc0d56b7f41f04ccd8de4f217d0256", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            handler.sign(authInterface, request, _.noop);
+            headers = request.headers.all();
+            authHeader = headers[0];
+
+            expect(headers).to.have.lengthOf(1);
+            expect(authHeader.toString()).to.eql(expectedHeader);
+            expect(authHeader.system).to.be.true;
+        });
+
         it('should add the Auth header with query params in case of request with the same', function () {
             var request = new Request(rawRequests.digestWithQueryParams),
                 auth = request.auth,
