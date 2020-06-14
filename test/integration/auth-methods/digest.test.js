@@ -1,4 +1,6 @@
-var expect = require('chai').expect;
+var fs = require('fs'),
+    path = require('path'),
+    expect = require('chai').expect;
 
 describe('digest auth', function () {
     var USERNAME = 'postman',
@@ -632,6 +634,64 @@ describe('digest auth', function () {
                 authHeader = request.headers.get('authorization');
 
             expect(authHeader).to.match(/qop=auth/);
+        });
+    });
+
+    describe('with binary body and qop=auth-int', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    username: 'postman',
+                                    realm: 'Users',
+                                    password: 'password',
+                                    nonce: 'bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp',
+                                    nonceCount: '00000001',
+                                    algorithm: 'MD5',
+                                    qop: 'auth-int',
+                                    clientNonce: '0a4f113b',
+                                    opaque: '5ccc069c403ebaf9f0171e9517f40e'
+                                }
+                            },
+                            url: 'https://postman-echo.com/get',
+                            method: 'GET',
+                            body: {
+                                mode: 'file',
+                                file: {
+                                    src: path.resolve(__dirname, '../../fixtures/upload-file.json')
+                                }
+                            }
+                        }
+                    }
+                },
+                fileResolver: fs
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should send correct Auth header', function () {
+            var response = testrun.response.getCall(0).args[2],
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/get", algorithm="MD5", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="a6745c111f25f5816f3b14c9d23c2cb1", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            expect(response.json().headers).to.have.property('authorization', expectedHeader);
         });
     });
 
