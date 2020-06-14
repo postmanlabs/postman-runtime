@@ -4,6 +4,8 @@ master:
     - >-
       GH-1052 Fixed a bug where digest auth was not generating correct
       Authorization header when `qop` field was set to `auth-int`
+  chores:
+    - Updated dependencies
 
 7.26.0:
   date: 2020-06-05
