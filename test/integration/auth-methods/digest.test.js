@@ -1,4 +1,6 @@
-var expect = require('chai').expect;
+var fs = require('fs'),
+    path = require('path'),
+    expect = require('chai').expect;
 
 describe('digest auth', function () {
     var USERNAME = 'postman',
@@ -70,34 +72,25 @@ describe('digest auth', function () {
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
-                firstRequest = testrun.io.firstCall.args[4],
                 firstResponse = testrun.io.firstCall.args[3],
-                secondRequest = testrun.io.secondCall.args[4],
                 secondResponse = testrun.io.secondCall.args[3];
 
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(global.servers.digest);
             expect(firstResponse).to.have.property('code', 401);
-
-            expect(secondRequest.url.toString()).to.eql(global.servers.digest);
             expect(secondResponse).to.have.property('code', 200);
         });
 
         it('should have failed the digest authorization in first attempt', function () {
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2];
+            var response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 401);
         });
 
         it('should have passed the digest authorization in second attempt', function () {
-            var request = testrun.request.getCall(1).args[3],
-                response = testrun.request.getCall(1).args[2];
+            var response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 200);
         });
 
@@ -167,34 +160,25 @@ describe('digest auth', function () {
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
-                firstRequest = testrun.io.firstCall.args[4],
                 firstResponse = testrun.io.firstCall.args[3],
-                secondRequest = testrun.io.secondCall.args[4],
                 secondResponse = testrun.io.secondCall.args[3];
 
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(global.servers.digest);
             expect(firstResponse).to.have.property('code', 401);
-
-            expect(secondRequest.url.toString()).to.eql(global.servers.digest);
             expect(secondResponse).to.have.property('code', 200);
         });
 
         it('should have failed the digest authorization in first attempt', function () {
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2];
+            var response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 401);
         });
 
         it('should have passed the digest authorization in second attempt', function () {
-            var request = testrun.request.getCall(1).args[3],
-                response = testrun.request.getCall(1).args[2];
+            var response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -256,11 +240,9 @@ describe('digest auth', function () {
             });
 
             var err = testrun.io.firstCall.args[0],
-                request = testrun.io.firstCall.args[4],
                 response = testrun.io.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 401);
         });
     });
@@ -625,34 +607,25 @@ describe('digest auth', function () {
 
             var firstError = testrun.io.firstCall.args[0],
                 secondError = testrun.io.secondCall.args[0],
-                firstRequest = testrun.io.firstCall.args[4],
                 firstResponse = testrun.io.firstCall.args[3],
-                secondRequest = testrun.io.secondCall.args[4],
                 secondResponse = testrun.io.secondCall.args[3];
 
             expect(firstError).to.be.null;
             expect(secondError).to.be.null;
 
-            expect(firstRequest.url.toString()).to.eql(global.servers.digest);
             expect(firstResponse).to.have.property('code', 401);
-
-            expect(secondRequest.url.toString()).to.eql(global.servers.digest);
             expect(secondResponse).to.have.property('code', 200);
         });
 
         it('should have failed the digest authorization in first attempt', function () {
-            var request = testrun.request.getCall(0).args[3],
-                response = testrun.request.getCall(0).args[2];
+            var response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 401);
         });
 
         it('should have passed the digest authorization in second attempt', function () {
-            var request = testrun.request.getCall(1).args[3],
-                response = testrun.request.getCall(1).args[2];
+            var response = testrun.request.getCall(1).args[2];
 
-            expect(request.url.toString()).to.eql(global.servers.digest);
             expect(response).to.have.property('code', 200);
         });
 
@@ -661,6 +634,64 @@ describe('digest auth', function () {
                 authHeader = request.headers.get('authorization');
 
             expect(authHeader).to.match(/qop=auth/);
+        });
+    });
+
+    describe('with binary body and qop=auth-int', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'digest',
+                                digest: {
+                                    username: 'postman',
+                                    realm: 'Users',
+                                    password: 'password',
+                                    nonce: 'bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp',
+                                    nonceCount: '00000001',
+                                    algorithm: 'MD5',
+                                    qop: 'auth-int',
+                                    clientNonce: '0a4f113b',
+                                    opaque: '5ccc069c403ebaf9f0171e9517f40e'
+                                }
+                            },
+                            url: 'https://postman-echo.com/get',
+                            method: 'GET',
+                            body: {
+                                mode: 'file',
+                                file: {
+                                    src: path.resolve(__dirname, '../../fixtures/upload-file.json')
+                                }
+                            }
+                        }
+                    }
+                },
+                fileResolver: fs
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should send correct Auth header', function () {
+            var response = testrun.response.getCall(0).args[2],
+
+                // eslint-disable-next-line max-len
+                expectedHeader = 'Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/get", algorithm="MD5", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="a6745c111f25f5816f3b14c9d23c2cb1", opaque="5ccc069c403ebaf9f0171e9517f40e"';
+
+            expect(response.json().headers).to.have.property('authorization', expectedHeader);
         });
     });
 

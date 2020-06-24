@@ -135,6 +135,15 @@ runner.run(collection, {
                 }
             },
             restrictedAddresses: {'192.168.1.1': true} // Allows restricting IP/host in requests
+        },
+
+        // Custom requesting agents (only supported on Node, ignored in the browser)
+        agents: {
+            http: {
+                agentClass: http.Agent,
+                agentOptions: { keepAlive: true, timeout: 399 }
+            },
+            https: new https.Agent({ keepAlive: true })
         }
     },
 

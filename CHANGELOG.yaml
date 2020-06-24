@@ -1,7 +1,63 @@
-master:
+7.26.1:
+  date: 2020-06-14
+  fixed bugs:
+    - GH-1050 Handle invalid private key errors in OAuth1 RSA signatures
+    - >-
+      GH-1052 Fixed a bug where digest auth was not generating correct
+      Authorization header when `qop` field was set to `auth-int`
+  chores:
+    - Updated dependencies
+
+7.26.0:
+  date: 2020-06-05
+  new features:
+    - GH-1044 Added `agents` requester option to define custom requesting agents
+    - >-
+      GH-1018 Added support for using custom Authorization header prefix via
+      `headerPrefix` property in OAuth 2.0
+    - |
+      GH-1011 Added support for following signature methods in OAuth 1.0
+        1. HMAC-SHA512
+        2. RSA-SHA1
+        3. RSA-SHA256
+        4. RSA-SHA512
+    - >-
+      GH-1011 Added support for OAuth 1.0 [body hash extension]
+      (https://tools.ietf.org/id/draft-eaton-oauth-bodyhash-00.html)
+    - |
+      GH-1011 Added support for following additional parameters defined in
+      [OAuth 1.0a spec](https://oauth.net/core/1.0a)
+        1. oauth_callback
+        2. oauth_verifier
+    - |
+      GH-1039 Added support for following algorithms in Digest auth
+        1. SHA-256
+        2. SHA-256-sess
+        3. SHA-512-256
+        4. SHA-512-256-sess
+    - >-
+      GH-1041 Added support to include AWS auth data in query params using
+      `addAuthDataToQuery` option
+  fixed bugs:
+    - GH-1045 Fetch cookies on `Requester~dryRun` using the encoded URL object
+    - >-
+      GH-1046 Treat query params and urlencoded body params as case-sensitive in
+      `Requester~dryRun`
+  chores:
+    - Updated dependencies
+
+7.25.0:
+  date: 2020-05-15
+  new features:
+    - GH-1014 Added `agent` requester option to define a custom requesting agent
+  fixed bugs:
+    - >-
+      GH-1005 Fixed a bug where encoded request url was not set in the request
+      and response callbacks
   chores:
     - GH-1000 Updated digest tests with new local digest server
     - GH-1009 Migrated integration tests to use global-local servers
+    - GH-1008 Bubble up history in request and response callback on error
     - Updated dependencies
 
 7.24.2:

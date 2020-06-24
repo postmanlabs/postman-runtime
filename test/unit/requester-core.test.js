@@ -123,6 +123,23 @@ describe('requester util', function () {
             });
         });
 
+        it('should accept custom requesting agents', function () {
+            var request = new sdk.Request({
+                    url: 'https://postman-echo.com',
+                    method: 'GET'
+                }),
+                agents = {
+                    http: 'http.Agent',
+                    https: {
+                        agentClass: 'https.Agent'
+                    }
+                },
+                requestOptions = requesterCore.getRequestOptions(request, {agents});
+
+            expect(requestOptions).to.have.ownProperty('agents', agents);
+            expect(requestOptions).to.have.property('agentOptions');
+        });
+
         describe('Should accept URL irrespective of the case', function () {
             it('should accept URL in uppercase', function () {
                 var request = new sdk.Request({
