@@ -11,7 +11,7 @@ describe('request timeout', function () {
                 }
             },
             timeout: {
-                request: 300 // ms
+                request: 1000 // ms
             }
         }, function (err, results) {
             testrun = results;
