@@ -89,7 +89,8 @@ describe('restricted addresses', function () {
             expect(response).to.be.undefined;
         });
 
-    it('should not send request for redirects that resolve to restricted IP addresses', function () {
+    // @todo un-skip https://github.com/postmanlabs/httpbin/issues/617
+    it.skip('should not send request for redirects that resolve to restricted IP addresses', function () {
         expect(testrun).to.be.ok;
         var error = testrun.response.getCall(3).args[0],
             response = testrun.response.getCall(3).args[2];
