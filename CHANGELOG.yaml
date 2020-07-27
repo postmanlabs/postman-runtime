@@ -1,3 +1,7 @@
+master:
+  new features:
+    - GH-1059 Added `statusMessageEncoding` option to decode status message with specific encoding
+
 7.26.2:
   date: 2020-07-13
   chores:
