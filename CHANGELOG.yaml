@@ -1,6 +1,6 @@
 master:
-  new features:
-    - GH-1059 Added `statusMessageEncoding` option to decode status message with specific encoding
+  fixed bugs:
+    - GH-1059 Fixed decoding of status messages with utf8 characters by using `statusMessageEncoding` option
 
 7.26.2:
   date: 2020-07-13
