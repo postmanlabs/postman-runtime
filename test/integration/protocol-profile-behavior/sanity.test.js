@@ -219,7 +219,8 @@ describe('protocolProfileBehavior', function () {
         });
     });
 
-    describe('with followAuthorizationHeader: false', function () {
+    // @todo un-skip https://github.com/postmanlabs/httpbin/issues/617
+    describe.skip('with followAuthorizationHeader: false', function () {
         var URL = 'https://httpbin.org/redirect-to?url=https://postman-echo.com/get';
 
         before(function (done) {
@@ -266,7 +267,8 @@ describe('protocolProfileBehavior', function () {
         });
     });
 
-    describe('with followAuthorizationHeader: true', function () {
+    // @todo un-skip https://github.com/postmanlabs/httpbin/issues/617
+    describe.skip('with followAuthorizationHeader: true', function () {
         var URL = 'https://httpbin.org/redirect-to?url=https://postman-echo.com/get';
 
         before(function (done) {

@@ -675,7 +675,7 @@ describe('UVM', function () {
                                 }
                             ],
                             'request': {
-                                'url': 'https://postman-echo.com/redirect-to?url=https://postman-echo.com/get',
+                                'url': 'https://postman-echo.com/get',
                                 'method': 'GET'
                             }
                         }
