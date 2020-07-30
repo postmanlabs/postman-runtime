@@ -1,6 +1,10 @@
 master:
   fixed bugs:
-    - GH-1059 Fixed decoding of status messages with utf8 characters by using `statusMessageEncoding` option
+    - >-
+      GH-1059 Fixed a bug where response status messages with utf8 characters
+      were not encoded properly
+  chores:
+    - Updated dependencies
 
 7.26.2:
   date: 2020-07-13
