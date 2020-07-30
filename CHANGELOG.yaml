@@ -1,4 +1,5 @@
-master:
+7.26.3:
+  date: 2020-07-30
   fixed bugs:
     - >-
       GH-1059 Fixed a bug where response status messages with utf8 characters
