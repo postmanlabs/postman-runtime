@@ -7,7 +7,8 @@ var _ = require('lodash'),
 
 describe('Requester', function () {
     describe('Option Redirect', function () {
-        it('should be able to avoid redirects', function (mochaDone) {
+        // @todo un-skip https://github.com/postmanlabs/httpbin/issues/617
+        it.skip('should be able to avoid redirects', function (mochaDone) {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
@@ -232,7 +233,8 @@ describe('Requester', function () {
             });
         });
 
-        it('should follow redirects by default', function (mochaDone) {
+        // @todo un-skip https://github.com/postmanlabs/httpbin/issues/617
+        it.skip('should follow redirects by default', function (mochaDone) {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {

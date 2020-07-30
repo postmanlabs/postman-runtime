@@ -43,6 +43,11 @@ function createRawEchoServer () {
                 this.data = '';
 
                 setTimeout(() => {
+                    // write the raw packet as it is received in the /raw-echo request body
+                    if (this.data.includes('/raw-echo HTTP/1.1')) {
+                        return socket.end(this.data.substring(this.data.indexOf('\r\n\r\n')));
+                    }
+
                     // Status Line
                     socket.write('HTTP/1.1 200 ok\r\n');
 
