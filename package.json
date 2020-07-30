@@ -62,7 +62,7 @@
     "express": "4.17.1",
     "graphql": "15.3.0",
     "js-yaml": "3.14.0",
-    "jsdoc": "3.6.4",
+    "jsdoc": "3.6.5",
     "jsdoc-to-markdown": "6.0.0",
     "mocha": "7.2.0",
     "nyc": "14.1.1",
