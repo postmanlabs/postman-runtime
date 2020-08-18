@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('Requester Spec: useWhatWGUrlParser', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: useWhatWGUrlParser', function () {
     var testrun,
         URL = 'https://postman-echo.com/get?q=(%{^*^}%)',
         collection = {

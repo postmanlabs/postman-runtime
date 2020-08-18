@@ -1,7 +1,7 @@
 var sinon = require('sinon'),
     expect = require('chai').expect;
 
-describe('Cookies expiry in response callback', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Cookies expiry in response callback', function () {
     var testrun;
 
     before(function (done) {

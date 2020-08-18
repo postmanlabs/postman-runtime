@@ -3,7 +3,7 @@ var sinon = require('sinon'),
     https = require('https'),
     expect = require('chai').expect;
 
-describe('Requester Spec: agents', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: agents', function () {
     var testrun;
 
     describe('http agent', function () {

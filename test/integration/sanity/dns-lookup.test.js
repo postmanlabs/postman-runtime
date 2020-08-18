@@ -1,7 +1,7 @@
 var dns = require('dns'),
     expect = require('chai').expect;
 
-describe('DNS lookup', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('DNS lookup', function () {
     var testrun;
 
     before(function (done) {

@@ -3,7 +3,7 @@ var fs = require('fs'),
     expect = require('chai').expect,
     sinon = require('sinon');
 
-describe('File uploads', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('File uploads', function () {
     var testrun;
 
     before(function (done) {

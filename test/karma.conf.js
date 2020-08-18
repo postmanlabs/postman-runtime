@@ -22,8 +22,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            '../index.js': ['browserify'], // Mention path as per your test js folder
-            '../test/unit/**/*.js': ['browserify'], // Mention path as per your library js folder
+            '../index.js': ['browserify'],
+            '../test/unit/**/*.js': ['browserify'],
             '../test/integration/**/*.js': ['browserify']
         },
         // test results reporter to use

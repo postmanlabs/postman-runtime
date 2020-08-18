@@ -1,7 +1,7 @@
 var sinon = require('sinon'),
     expect = require('chai').expect;
 
-describe('Requester Spec: maxResponseSize', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: maxResponseSize', function () {
     var testrun,
         HOST = 'https://httpbin.org/bytes/10';
 

@@ -1,7 +1,7 @@
 var _ = require('lodash'),
     expect = require('chai').expect;
 
-describe('multi valued headers', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('multi valued headers', function () {
     var testrun;
 
     before(function (done) {

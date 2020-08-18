@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('request timeout', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('request timeout', function () {
     var testrun;
 
     before(function (done) {

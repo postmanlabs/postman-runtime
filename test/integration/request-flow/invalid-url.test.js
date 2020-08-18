@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     sinon = require('sinon');
 
-describe('invalid url', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('invalid url', function () {
     describe('with useWhatWGUrlParser: true', function () {
         var testrun;
 

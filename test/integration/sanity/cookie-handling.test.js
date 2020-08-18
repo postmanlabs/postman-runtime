@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('cookies', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('cookies', function () {
     var _ = require('lodash'),
         testrun;
 
