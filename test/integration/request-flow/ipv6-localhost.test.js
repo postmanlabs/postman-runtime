@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 // IPv6 is disabled on Travis
 // eslint-disable-next-line no-process-env
-(process.env.TRAVIS ? describe.skip : describe)('IPv6 server', function () {
+(process.env.TRAVIS || typeof window !== 'undefined' ? describe.skip : describe)('IPv6 server', function () {
     var testrun;
 
     before(function (done) {
