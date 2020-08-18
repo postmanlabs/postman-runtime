@@ -21,7 +21,9 @@
     "build-wiki": "node npm/build-wiki.js",
     "publish-docs": "node npm/publish-docs.js",
     "publish-wiki": "node npm/build-wiki.js",
-    "memory-check": "npm/memory-check.sh"
+    "memory-check": "npm/memory-check.sh",
+    "dist": "rm -rf ./dist && npx browserify index.js --standalone PostmanRuntime -o dist/index.js && npx terser dist/index.js -c -m -o dist/index.js",
+    "prepublish": "npm run dist"
   },
   "repository": {
     "type": "git",
@@ -83,6 +85,7 @@
     "shelljs": "0.8.4",
     "sinon": "8.1.1",
     "teleport-javascript": "1.0.0",
+    "terser": "5.1.0",
     "tmp": "0.2.1",
     "yankee": "1.0.8"
   },
