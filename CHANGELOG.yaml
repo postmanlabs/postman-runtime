@@ -1,4 +1,8 @@
 master:
+  fixed bugs:
+    - >-
+      GH-1063 Fixed a bug where OAuth1 helper was calculating wrong signature
+      when callback and verifier parameters are left empty
   chores:
     - Updated dependencies
 
