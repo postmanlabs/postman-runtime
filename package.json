@@ -22,7 +22,7 @@
     "publish-docs": "node npm/publish-docs.js",
     "publish-wiki": "node npm/build-wiki.js",
     "memory-check": "npm/memory-check.sh",
-    "dist": "rm -rf ./dist && npx browserify index.js --standalone PostmanRuntime -o dist/index.js && npx terser dist/index.js -c -m -o dist/index.js",
+    "dist": "rm -rf ./dist && ./node_modules/browserify/bin/cmd.js index.js --standalone PostmanRuntime -o dist/index.js && ./node_modules/terser/bin/terser dist/index.js -c -m -o dist/index.js",
     "prepublish": "npm run dist"
   },
   "repository": {
