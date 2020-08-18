@@ -1,4 +1,5 @@
-master:
+7.26.4:
+  date: 2020-08-18
   fixed bugs:
     - >-
       GH-1063 Fixed a bug where OAuth1 helper was calculating wrong signature
