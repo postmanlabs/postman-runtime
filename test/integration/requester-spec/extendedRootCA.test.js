@@ -2,7 +2,7 @@ var fs = require('fs'),
     path = require('path'),
     expect = require('chai').expect;
 
-describe('Requester Spec: extendedRootCA', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: extendedRootCA', function () {
     var testrun,
         CACertPath = path.resolve(__dirname, '../../fixtures/certificates/ca.pem');
 

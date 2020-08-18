@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     sinon = require('sinon');
 
-describe('Requester Spec: history', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: history', function () {
     var testrun;
 
     describe('default', function () {

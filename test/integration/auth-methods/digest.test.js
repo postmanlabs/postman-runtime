@@ -637,7 +637,7 @@ describe('digest auth', function () {
         });
     });
 
-    describe('with binary body and qop=auth-int', function () {
+    (typeof window === 'undefined' ? describe : describe.skip)('with binary body and qop=auth-int', function () {
         before(function (done) {
             // perform the collection run
             this.run({

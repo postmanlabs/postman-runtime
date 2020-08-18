@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('Requester Spec: timings', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: timings', function () {
     var testrun,
         URL = 'https://postman-echo.com/get',
         collection = {

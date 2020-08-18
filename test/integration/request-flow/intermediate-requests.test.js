@@ -267,7 +267,8 @@ describe('intermediate requests from auth', function () {
             expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
         });
 
-        it('should have sent the intermediate request, and passed error', function () {
+        (typeof window === 'undefined' ?
+            it : it.skip)('should have sent the intermediate request, and passed error', function () {
             var err = testrun.request.firstCall.args[0],
                 ioErr = testrun.io.firstCall.args[0],
                 request = testrun.request.firstCall.args[3];

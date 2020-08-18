@@ -1,7 +1,7 @@
 var ProxyConfigList = require('postman-collection').ProxyConfigList,
     expect = require('chai').expect;
 
-describe('proxy', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('proxy', function () {
     var testrun;
 
     describe('sanity', function () {

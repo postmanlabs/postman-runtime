@@ -133,6 +133,10 @@ describe('project repository', function () {
             it('should have valid content', function () {
                 expect(gitignore).to.not.be.empty;
             });
+
+            it('should ignore the dist directory', function () {
+                expect(gitignore).to.include('dist/**');
+            });
         });
 
         describe(npmignorePath, function () {
@@ -143,10 +147,15 @@ describe('project repository', function () {
             it('should have valid content', function () {
                 expect(npmignore).to.not.be.empty;
             });
+
+            it('should not ignore the dist directory', function () {
+                expect(npmignore).not.to.include('dist/**');
+            });
         });
 
-        it('should have .gitignore coverage must be a subset of .npmignore coverage', function () {
-            expect(_.intersection(gitignore, npmignore)).to.eql(gitignore);
+        // eslint-disable-next-line mocha/valid-test-description
+        it('.gitignore coverage must be a subset of .npmignore coverage (except dist directory)', function () {
+            expect(_.intersection(gitignore, _.union(npmignore, ['dist/**']))).to.eql(gitignore);
         });
     });
 

@@ -1,6 +1,7 @@
 var fs = require('fs'),
     path = require('path'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('oauth 1', function () {
     var testrun;
@@ -80,7 +81,7 @@ describe('oauth 1', function () {
         });
     });
 
-    describe('with urlencoded body having disabled params', function () {
+    (IS_BROWSER ? describe.skip : describe)('with urlencoded body having disabled params', function () {
         before(function (done) {
             // perform the collection run
             this.run({
@@ -440,7 +441,8 @@ describe('oauth 1', function () {
         });
     });
 
-    describe('includeBodyHash: true', function () {
+    (IS_BROWSER ? describe.skip : describe)('includeBodyHash: true', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             // perform the collection run
             this.run({
@@ -475,6 +477,7 @@ describe('oauth 1', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun).to.nested.include({

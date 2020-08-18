@@ -2,7 +2,7 @@ var fs = require('fs'),
     sinon = require('sinon'),
     expect = require('chai').expect;
 
-describe('content-type', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('content-type', function () {
     var URL,
         testrun;
 

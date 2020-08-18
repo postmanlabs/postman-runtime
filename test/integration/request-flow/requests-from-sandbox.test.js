@@ -410,7 +410,7 @@ describe('requests from sandbox', function () {
             });
         });
 
-        it('should error out on the first request', function () {
+        (typeof window === 'undefined' ? it : it.skip)('should error out on the first request', function () {
             var error = testrun.io.firstCall.args[0],
                 request = testrun.io.firstCall.args[4],
                 response = testrun.io.firstCall.args[3],
@@ -428,7 +428,8 @@ describe('requests from sandbox', function () {
             });
         });
 
-        it('should have provided the error to the sandbox sendrequest function', function () {
+        (typeof window === 'undefined' ?
+            it : it.skip)('should have provided the error to the sandbox sendrequest function', function () {
             var assertion = testrun.assertion.firstCall.args[1][0];
 
             expect(assertion).to.deep.include({

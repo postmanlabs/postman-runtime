@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     encoder = require('postman-url-encoder/encoder');
 
-describe('URL encoding', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('URL encoding', function () {
     var URL;
 
     before(function () {

@@ -1,7 +1,7 @@
 var sinon = require('sinon'),
     expect = require('chai').expect;
 
-describe('protocolProfileBehavior', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('protocolProfileBehavior', function () {
     var testrun;
 
     describe('with disabledSystemHeaders: undefined', function () {

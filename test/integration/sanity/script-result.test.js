@@ -88,7 +88,7 @@ describe('script result format', function () {
             expect(test).to.have.deep.property('data', {});
         });
 
-        it('should have cookies in the result', function () {
+        (typeof window === 'undefined' ? it : it.skip)('should have cookies in the result', function () {
             var prerequest = testrun.script.firstCall.args[2],
                 test = testrun.script.secondCall.args[2];
 

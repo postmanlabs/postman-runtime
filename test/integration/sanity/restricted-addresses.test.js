@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('restricted addresses', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('restricted addresses', function () {
     var testrun;
 
     before(function (done) {

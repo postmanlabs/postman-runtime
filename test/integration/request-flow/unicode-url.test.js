@@ -1,7 +1,7 @@
 var dns = require('dns'),
     expect = require('chai').expect;
 
-describe('UTF-8 hostname', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('UTF-8 hostname', function () {
     var testrun;
 
     before(function (done) {

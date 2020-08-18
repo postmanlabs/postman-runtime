@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     _ = require('lodash');
 
-describe('NTLM', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('NTLM', function () {
     // @todo Add '/ntlm' endpoint in echo server
     var USERNAME = 'postman',
         PASSWORD = 'NTLM@123',

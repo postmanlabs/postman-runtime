@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('response status message', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('response status message', function () {
     var testrun;
 
     before(function (done) {

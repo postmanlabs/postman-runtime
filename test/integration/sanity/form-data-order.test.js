@@ -2,7 +2,7 @@ var fs = require('fs'),
     sinon = require('sinon'),
     expect = require('chai').expect;
 
-describe('form-data with numeric keys', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('form-data with numeric keys', function () {
     var testrun;
 
     before(function (done) {

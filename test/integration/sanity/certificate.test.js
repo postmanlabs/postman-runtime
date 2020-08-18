@@ -3,7 +3,7 @@ var fs = require('fs'),
     expect = require('chai').expect,
     CertificateList = require('postman-collection').CertificateList;
 
-describe('certificates', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('certificates', function () {
     var certDataPath = path.join(__dirname, '..', '..', 'fixtures', 'certificates'),
         certificateId = 'test-certificate',
         testrun;

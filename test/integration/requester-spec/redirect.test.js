@@ -1,7 +1,7 @@
 var sinon = require('sinon'),
     expect = require('chai').expect;
 
-describe('Requester Spec: redirect', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: redirect', function () {
     var testrun;
 
     describe('with followOriginalHttpMethod: false', function () {

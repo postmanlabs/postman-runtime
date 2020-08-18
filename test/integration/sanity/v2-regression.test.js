@@ -1,7 +1,7 @@
 var request = require('postman-request'),
     expect = require('chai').expect;
 
-describe('V2 regressions', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('V2 regressions', function () {
     var testrun;
 
     before(function (done) {

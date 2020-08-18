@@ -1305,6 +1305,70 @@ describe('Auth Handler:', function () {
             });
         });
 
+        // issue: https://github.com/postmanlabs/postman-app-support/issues/8737
+        it('should generate correct signature for empty callback and addEmptyParamsToSign:true', function () {
+            var rawReq = {
+                    url: 'https://postman-echo.com/oauth1',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            timestamp: '1461319769',
+                            nonce: 'ik3oT5',
+                            version: '1.0',
+                            verifier: 'bar',
+                            callback: '',
+                            addParamsToHeader: false,
+                            addEmptyParamsToSign: true
+                        }
+                    }
+                },
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                expect(request.url.query.get('oauth_signature')).to.eql('w8WS1SXfe/dtJu/4tH5DaD7qZgM=');
+            });
+        });
+
+        // issue: https://github.com/postmanlabs/postman-app-support/issues/8737
+        it('should generate correct signature for empty verifier and addEmptyParamsToSign:true', function () {
+            var rawReq = {
+                    url: 'https://postman-echo.com/oauth1',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            timestamp: '1461319769',
+                            nonce: 'ik3oT5',
+                            version: '1.0',
+                            verifier: '',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: false,
+                            addEmptyParamsToSign: true
+                        }
+                    }
+                },
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function () {
+                expect(request.url.query.get('oauth_signature')).to.eql('WO1RMBRLIM5Anfxxt8P7Kbt82b4=');
+            });
+        });
+
         it('should generate correct signature for RSA based signature method', function () {
             // eslint-disable-next-line max-len
             var privateKey = '-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgFKLvzM9zbm3I0+HWcHlBSqpfRY/bKs6NDLclERrzfnReFV4utjkhjaEQPPT6tHVHKrZkcxmIgwe3XrkJkUjcuingXIF+Fc3KpY61qJ4HSM50qIuHdi+C5YfuXwNrh6OOeZAhhqgSw2e2XqPfATbkYYwpIFpdVdcH/Pb2ynpd6VXAgMBAAECgYAbQE+LFyhH25Iou0KCpJ0kDHhjU+UIUlrRP8kjHYQOqXzUmtr0p903OkpHNPsc8wJX1SQxGra60aXE4HVR9fYFQNliAnSmA/ztGR4ddnirK1Gzog4y2OOkicTdSqJ/1XXtTEDSRkA0Z2DIqcWgudeSDzVjUpreYwQ/rCEZbi50AQJBAJcf9wi5bU8tdZUCg3/8MNDwHhr4If4V/9kmhsgNp+M/9tHwCbD05hCbiGS7g58DPF+6V2K30qQYq7yvBP8Te4ECQQCL1GhX/YwkD6rexi0E1bjz+RqhNLTR9kexkTfSYmL6zHeeIFSH8ROioGOJMU51lUtMNkkrKEeki5SZpkfaQOzXAkAvBnJPU6vQ7HtfH8YdiDMEgQNNLxMcxmmzf4qHK8CnNRsvnnrVho8kcdFSTwsY6t/Zhdl1TXANQeQGtYtfeAeBAkEAhUB351JSWJMtrHqCsFbTmHxNKk7F+kiObeMLpUvpM0PiwifhJmNQ6Oubr0Pzlw4c4ZXiCGSsUVxK0lmpo423pQJATYDoxVhZrKA3xDAifWoyxbyxf/WXtUGDaAOuZc/naVN5TKiqaEO6G+k3NpmOXNKsYU/Zd9e6P/TnfU74TyDDDA==\n-----END RSA PRIVATE KEY-----',
