@@ -9,6 +9,10 @@ node_js:
   - '8'
 jobs:
   include:
+    - name: 'Browser Tests'
+      node_js: stable
+      os: linux
+      script: npm run test-browser
     - name: 'Coverage'
       node_js: stable
       os: linux

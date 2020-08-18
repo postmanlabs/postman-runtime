@@ -1,6 +1,7 @@
 var expect = require('chai').expect,
     sinon = require('sinon'),
-    postmanRequest = require('postman-request');
+    postmanRequest = require('postman-request'),
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('sandbox library - pm api', function () {
     var testrun;
@@ -60,7 +61,7 @@ describe('sandbox library - pm api', function () {
         });
     });
 
-    describe('chai', function () {
+    (IS_BROWSER ? describe.skip : describe)('chai', function () {
         before(function (done) {
             this.run({
                 collection: {
@@ -140,7 +141,8 @@ describe('sandbox library - pm api', function () {
         });
     });
 
-    describe('sendRequest', function () {
+    (IS_BROWSER ? describe.skip : describe)('sendRequest', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.run({
                 collection: {
@@ -173,6 +175,7 @@ describe('sandbox library - pm api', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should complete the run', function () {
             expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
@@ -186,6 +189,7 @@ describe('sandbox library - pm api', function () {
             sinon.assert.calledWith(testrun.response.getCall(0), null);
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should run the test script successfully', function () {
             sinon.assert.calledOnce(testrun.script);
             sinon.assert.calledWith(testrun.script.getCall(0), null);
@@ -206,7 +210,7 @@ describe('sandbox library - pm api', function () {
     });
 
 
-    describe('cookies.jar', function () {
+    (IS_BROWSER ? describe.skip : describe)('cookies.jar', function () {
         describe('get', function () {
             before(function (done) {
                 this.run({

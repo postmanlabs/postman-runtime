@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('proxy configuration vars', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('proxy configuration vars', function () {
     var testrun;
 
     describe('lowercase', function () {

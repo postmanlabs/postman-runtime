@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('econnrefused', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('econnrefused', function () {
     var _ = require('lodash'),
         testrun;
 

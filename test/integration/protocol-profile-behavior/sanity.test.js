@@ -4,7 +4,7 @@ var fs = require('fs'),
     expect = require('chai').expect,
     CertificateList = require('postman-collection').CertificateList;
 
-describe('protocolProfileBehavior', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('protocolProfileBehavior', function () {
     var testrun;
 
     describe('with followRedirects: false', function () {

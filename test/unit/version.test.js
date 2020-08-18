@@ -4,7 +4,7 @@ var expect = require('chai').expect,
     collectionPackage = require('../../node_modules/postman-collection/package.json'),
     runtime = require('../../');
 
-describe('version', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('version', function () {
     var moduleData = {
             version: runtimePackage.version,
             dependencies: {

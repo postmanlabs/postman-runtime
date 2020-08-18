@@ -3,7 +3,7 @@ var sinon = require('sinon'),
     Header = require('postman-collection').Header,
     cookieJar = require('postman-request').jar();
 
-describe('request headers', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('request headers', function () {
     var testrun,
         HEADERS_URL,
         COOKIES_URL;

@@ -1,7 +1,7 @@
 var expect = require('chai').expect,
     sdk = require('postman-collection');
 
-describe('systemProxy', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('systemProxy', function () {
     var testrun;
 
     describe('valid output config', function () {

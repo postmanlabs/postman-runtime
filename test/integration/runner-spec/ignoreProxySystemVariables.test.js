@@ -1,7 +1,7 @@
 var ProxyConfigList = require('postman-collection').ProxyConfigList,
     expect = require('chai').expect;
 
-describe('Runner Spec: ignoreProxyEnvironmentVariables', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Runner Spec: ignoreProxyEnvironmentVariables', function () {
     var testrun;
 
     before(function () {

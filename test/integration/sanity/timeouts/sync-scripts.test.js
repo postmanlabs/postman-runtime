@@ -167,7 +167,7 @@ describe('synchronous script timeouts', function () {
             });
         });
 
-        describe('script timeout', function () {
+        (typeof window === 'undefined' ? describe : describe.skip)('script timeout', function () {
             var testrun;
 
             before(function (done) {

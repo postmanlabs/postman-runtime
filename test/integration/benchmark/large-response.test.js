@@ -2,7 +2,7 @@ var sinon = require('sinon'),
     expect = require('chai').expect;
 
 // @todo move to bipbip
-describe('Benchmark: large response', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('Benchmark: large response', function () {
     var testrun;
 
     // @todo increase to 100 MB once we drop support for Node v6

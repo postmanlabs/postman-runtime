@@ -1,11 +1,12 @@
 var sinon = require('sinon'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('protocolProfileBehavior', function () {
     var testrun;
 
     describe('with disableBodyPruning: true', function () {
-        describe('HTTP GET', function () {
+        (IS_BROWSER ? describe.skip : describe)('HTTP GET', function () {
             before(function (done) {
                 this.run({
                     collection: {
@@ -52,7 +53,8 @@ describe('protocolProfileBehavior', function () {
             });
         });
 
-        describe('HTTP HEAD', function () {
+        (IS_BROWSER ? describe.skip : describe)('HTTP HEAD', function () {
+            // eslint-disable-next-line mocha/no-sibling-hooks
             before(function (done) {
                 this.run({
                     collection: {
@@ -76,6 +78,7 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
+            // eslint-disable-next-line mocha/no-identical-title
             it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
@@ -148,7 +151,8 @@ describe('protocolProfileBehavior', function () {
             });
         });
 
-        describe('HTTP GET + Inherit Protocol Profile Behavior', function () {
+        (IS_BROWSER ? describe.skip : describe)('HTTP GET + Inherit Protocol Profile Behavior', function () {
+            // eslint-disable-next-line mocha/no-sibling-hooks
             before(function (done) {
                 this.run({
                     collection: {
@@ -177,6 +181,7 @@ describe('protocolProfileBehavior', function () {
                 });
             });
 
+            // eslint-disable-next-line mocha/no-identical-title
             it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 sinon.assert.calledOnce(testrun.start);
@@ -184,6 +189,7 @@ describe('protocolProfileBehavior', function () {
                 sinon.assert.calledWith(testrun.done.getCall(0), null);
             });
 
+            // eslint-disable-next-line mocha/no-identical-title
             it('should send body with GET method', function () {
                 sinon.assert.calledOnce(testrun.request);
                 sinon.assert.calledWith(testrun.request.getCall(0), null);
@@ -344,7 +350,7 @@ describe('protocolProfileBehavior', function () {
         });
     });
 
-    describe('with disableBodyPruning: undefined', function () {
+    (IS_BROWSER ? describe.skip : describe)('with disableBodyPruning: undefined', function () {
         describe('HTTP GET', function () {
             before(function (done) {
                 this.run({

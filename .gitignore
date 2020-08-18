@@ -39,3 +39,6 @@ Thumbs.db
 
 # - Prevent unit test coverage reports from being committed to the repository
 .coverage
+
+# - Don't commit dist (but include is publish packaged)
+/dist/

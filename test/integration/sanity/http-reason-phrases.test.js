@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('http reasons', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('http reasons', function () {
     var testrun;
 
     before(function (done) {

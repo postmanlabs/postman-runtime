@@ -1,11 +1,12 @@
 var fs = require('fs'),
     expect = require('chai').expect,
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('file upload in request body', function () {
     var testrun;
 
-    describe('with mode formdata & file', function () {
+    (IS_BROWSER ? describe.skip : describe)('with mode formdata & file', function () {
         before(function (done) {
             this.run({
                 fileResolver: fs,
@@ -186,7 +187,7 @@ describe('file upload in request body', function () {
                 .to.equal('Form param `userData`, file load error: missing file source');
         });
 
-        it('should warn for missing src in binary mode', function () {
+        (IS_BROWSER ? it.skip : it)('should warn for missing src in binary mode', function () {
             sinon.assert.calledWith(testrun.request.getCall(2), null);
 
             expect(testrun.console.getCall(2).args[1]).to.equal('warn');
@@ -248,7 +249,7 @@ describe('file upload in request body', function () {
             });
         });
 
-        describe('false', function () {
+        (IS_BROWSER ? describe.skip : describe)('false', function () {
             before(function (done) {
                 this.run({
                     fileResolver: fs,
@@ -344,7 +345,8 @@ describe('file upload in request body', function () {
         });
     });
 
-    describe('with missing file', function () {
+    (IS_BROWSER ? describe.skip : describe)('with missing file', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.run({
                 fileResolver: fs,
@@ -392,6 +394,7 @@ describe('file upload in request body', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should complete the run', function () {
             expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
@@ -429,7 +432,8 @@ describe('file upload in request body', function () {
         });
     });
 
-    describe('with src being a directory', function () {
+    (IS_BROWSER ? describe.skip : describe)('with src being a directory', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.run({
                 fileResolver: fs,
@@ -451,6 +455,7 @@ describe('file upload in request body', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should complete the run', function () {
             expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
@@ -467,7 +472,8 @@ describe('file upload in request body', function () {
         });
     });
 
-    describe('with file permission denied', function () {
+    (IS_BROWSER ? describe.skip : describe)('with file permission denied', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.run({
                 fileResolver: {
@@ -494,6 +500,7 @@ describe('file upload in request body', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should complete the run', function () {
             expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
@@ -510,7 +517,8 @@ describe('file upload in request body', function () {
         });
     });
 
-    describe('with supported fileResolver', function () {
+    (IS_BROWSER ? describe.skip : describe)('with supported fileResolver', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.run({
                 fileResolver: {
@@ -541,6 +549,7 @@ describe('file upload in request body', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should complete the run', function () {
             expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);

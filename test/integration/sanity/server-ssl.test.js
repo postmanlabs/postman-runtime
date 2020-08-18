@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('SSL', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('SSL', function () {
     var testrun;
 
     before(function (done) {

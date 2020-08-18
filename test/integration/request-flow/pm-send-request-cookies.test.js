@@ -1,7 +1,7 @@
 var _ = require('lodash'),
     expect = require('chai').expect;
 
-describe('cookie sandbox request interaction', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('cookie sandbox request interaction', function () {
     var cookieUrl = 'https://postman-echo.com/cookies';
 
     describe('intra-sandbox', function () {

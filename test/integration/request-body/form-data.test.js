@@ -1,4 +1,5 @@
-var expect = require('chai').expect;
+var expect = require('chai').expect,
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('Request Body Mode: formdata', function () {
     var testrun,
@@ -219,7 +220,7 @@ describe('Request Body Mode: formdata', function () {
         });
     });
 
-    describe('with undefined value of type file', function () {
+    (IS_BROWSER ? describe.skip : describe)('with undefined value of type file', function () {
         before(function (done) {
             this.run({
                 collection: {
@@ -307,7 +308,8 @@ describe('Request Body Mode: formdata', function () {
         });
     });
 
-    describe('with invalid content-type', function () {
+    (IS_BROWSER ? describe.skip : describe)('with invalid content-type', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.run({
                 collection: {
@@ -334,6 +336,7 @@ describe('Request Body Mode: formdata', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;
@@ -358,7 +361,8 @@ describe('Request Body Mode: formdata', function () {
         });
     });
 
-    describe('with invalid content-type and disabled header', function () {
+    (IS_BROWSER ? describe.skip : describe)('with invalid content-type and disabled header', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.run({
                 collection: {
@@ -390,6 +394,7 @@ describe('Request Body Mode: formdata', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should have completed the run', function () {
             expect(testrun).to.be.ok;
             expect(testrun.done.getCall(0).args[0]).to.be.null;

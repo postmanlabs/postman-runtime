@@ -1,6 +1,7 @@
 var fs = require('fs'),
     sinon = require('sinon'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('http methods', function () {
     var testrun,
@@ -143,7 +144,7 @@ describe('http methods', function () {
                 });
             });
 
-            describe('urlencoded', function () {
+            (IS_BROWSER ? describe.skip : describe)('urlencoded', function () {
                 before(function (done) {
                     this.run({
                         collection: {
@@ -243,7 +244,8 @@ describe('http methods', function () {
                 });
             });
 
-            describe('file', function () {
+            (IS_BROWSER ? describe.skip : describe)('file', function () {
+                // eslint-disable-next-line mocha/no-sibling-hooks
                 before(function (done) {
                     this.run({
                         fileResolver: fs,
@@ -267,6 +269,7 @@ describe('http methods', function () {
                     });
                 });
 
+                // eslint-disable-next-line mocha/no-identical-title
                 it('should complete the run', function () {
                     expect(testrun).to.be.ok;
                     sinon.assert.calledOnce(testrun.start);

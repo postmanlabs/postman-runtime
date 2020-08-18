@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 
-describe('UVM allowed globals', function () {
+(typeof window === 'undefined' ? describe : describe.skip)('UVM allowed globals', function () {
     var testrun,
         globals = ['isNaN', 'SyntaxError', 'ArrayBuffer', 'JSON', 'unescape', 'URIError', 'TypeError', 'WeakSet',
             'Array', 'parseFloat', 'EvalError', 'parseInt', 'Error', 'Object', 'Int16Array',

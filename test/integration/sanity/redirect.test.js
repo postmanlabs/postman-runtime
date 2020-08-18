@@ -1,6 +1,7 @@
 var fs = require('fs'),
     sinon = require('sinon'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('redirects', function () {
     var testrun;
@@ -87,7 +88,7 @@ describe('redirects', function () {
         });
     });
 
-    describe('307 redirect', function () {
+    (IS_BROWSER ? describe.skip : describe)('307 redirect', function () {
         before(function (done) {
             this.run({
                 fileResolver: fs,
@@ -142,7 +143,8 @@ describe('redirects', function () {
         });
     });
 
-    describe('308 redirect', function () {
+    (IS_BROWSER ? describe.skip : describe)('308 redirect', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.run({
                 fileResolver: fs,
@@ -172,6 +174,7 @@ describe('redirects', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should complete the run', function () {
             expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
