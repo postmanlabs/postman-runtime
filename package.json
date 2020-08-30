@@ -32,7 +32,7 @@
   "author": "Postman Labs <help@getpostman.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "async": "2.6.3",
+    "async": "3.2.0",
     "aws4": "1.10.1",
     "eventemitter3": "4.0.7",
     "handlebars": "4.7.6",
