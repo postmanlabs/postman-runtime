@@ -79,7 +79,7 @@
     "passport": "0.4.1",
     "passport-http": "0.3.0",
     "postman-jsdoc-theme": "0.0.3",
-    "puppeteer": "1.18.1",
+    "puppeteer": "5.2.1",
     "recursive-readdir": "2.2.2",
     "server-destroy": "1.0.1",
     "shelljs": "0.8.4",
