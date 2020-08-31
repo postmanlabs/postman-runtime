@@ -1,4 +1,8 @@
 master:
+  fixed bugs:
+    - >-
+      GH-1086 Fixed a bug where custom header prefix in OAuth2 was being used
+      without trimming
   chores:
     - Updated dependencies
 
