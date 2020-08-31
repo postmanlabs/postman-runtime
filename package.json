@@ -34,7 +34,7 @@
   "dependencies": {
     "async": "2.6.3",
     "aws4": "1.10.1",
-    "eventemitter3": "4.0.4",
+    "eventemitter3": "4.0.7",
     "handlebars": "4.7.6",
     "http-reasons": "0.1.0",
     "httpntlm": "1.7.6",
@@ -85,7 +85,7 @@
     "shelljs": "0.8.4",
     "sinon": "8.1.1",
     "teleport-javascript": "1.0.0",
-    "terser": "5.2.0",
+    "terser": "5.2.1",
     "tmp": "0.2.1",
     "yankee": "1.0.8"
   },
