@@ -1,3 +1,12 @@
+7.26.5:
+  date: 2020-08-31
+  fixed bugs:
+    - >-
+      GH-1086 Fixed a bug where custom header prefix in OAuth2 was being used
+      without trimming
+  chores:
+    - Updated dependencies
+
 7.26.4:
   date: 2020-08-18
   fixed bugs:
