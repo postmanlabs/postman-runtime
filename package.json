@@ -13,6 +13,7 @@
     "test-lint": "node npm/test-lint.js",
     "test-unit": "node npm/test-unit.js",
     "test-browser": "node npm/test-browser.js",
+    "test-electron": "node npm/test-electron.js",
     "test-integration": "node npm/test-integration.js",
     "test-integration-legacy": "node npm/test-integration-legacy.js",
     "test-integration-newman": "node npm/test-integration-newman.js",
