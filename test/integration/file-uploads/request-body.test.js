@@ -650,13 +650,14 @@ describe('file upload in request body', function () {
         });
     });
 
-    describe('should upload large files correctly', function () {
+    (IS_BROWSER ? describe.skip : describe)('should upload large files correctly', function () {
         var testUploadFile = 'test/fixtures/upload-file-large.json';
 
         afterEach(function () {
             sh.rm('-rf', testUploadFile);
         });
 
+        // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.enableTimeouts(false);
             if (IS_DARWIN) {
@@ -689,6 +690,7 @@ describe('file upload in request body', function () {
             });
         });
 
+        // eslint-disable-next-line mocha/no-identical-title
         it('should complete the run', function () {
             expect(testrun).to.be.ok;
             sinon.assert.calledOnce(testrun.start);
@@ -697,7 +699,7 @@ describe('file upload in request body', function () {
             sinon.assert.callCount(testrun.request, 1);
         });
 
-        it('should upload the file correctly', function () {
+        it('should upload the large file correctly', function () {
             sinon.assert.calledWith(testrun.request.getCall(0), null);
 
             var resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
