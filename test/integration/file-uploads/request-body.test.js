@@ -2,11 +2,31 @@ var fs = require('fs'),
     expect = require('chai').expect,
     sinon = require('sinon'),
     IS_BROWSER = typeof window !== 'undefined',
-    IS_LINUX = process.platform === 'linux',
-    IS_DARWIN = process.platform === 'darwin',
-    IS_WIN32 = process.platform === 'win32',
+    TEST_UPLOAD_FILE_LARGE = 'test/fixtures/upload-file-large.json',
     // don't import shelljs if tests are running within browser
-    sh = IS_BROWSER ? null : require('shelljs');
+    sh = IS_BROWSER ? null : require('shelljs'),
+
+    // Creates 50M size file based on current execution platform
+    createLargeTestFileForPlatform = function () {
+        switch (process.platform) {
+            case 'linux':
+                sh.exec('dd if=/dev/zero of=' + TEST_UPLOAD_FILE_LARGE + ' bs=50M count=1');
+                break;
+
+            case 'win32':
+                // 52428800 bytes corresponds to 50 MB file size as fsutil takes size param in bytes
+                sh.exec('fsutil file createnew ' + TEST_UPLOAD_FILE_LARGE + ' 52428800');
+                break;
+
+            case 'darwin':
+                sh.exec('mkfile 50M ' + TEST_UPLOAD_FILE_LARGE);
+                break;
+
+            default:
+                // eslint-disable-next-line no-console
+                console.log('Platform is not supported.');
+        }
+    };
 
 describe('file upload in request body', function () {
     var testrun;
@@ -651,26 +671,16 @@ describe('file upload in request body', function () {
         });
     });
 
-    (IS_BROWSER ? describe.skip : describe)('should upload large files correctly', function () {
-        var testUploadFile = 'test/fixtures/upload-file-large.json';
-
+    (IS_BROWSER ? describe.skip : describe)('large file upload in request body', function () {
         afterEach(function () {
-            sh.rm('-rf', testUploadFile);
+            sh.rm('-rf', TEST_UPLOAD_FILE_LARGE);
         });
 
         // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
             this.enableTimeouts(false);
-            if (IS_DARWIN) {
-                sh.exec('mkfile 50M ' + testUploadFile);
-            }
-            else if (IS_LINUX) {
-                sh.exec('dd if=/dev/zero of=' + testUploadFile + ' bs=50M count=1');
-            }
-            else if (IS_WIN32) {
-                // 52428800 bytes corresponds to 50 MB file size as fsutil takes size param in bytes
-                sh.exec('fsutil file createnew ' + testUploadFile + ' 52428800');
-            }
+            createLargeTestFileForPlatform();
+
             this.run({
                 fileResolver: fs,
                 collection: {
@@ -680,7 +690,20 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'file',
-                                file: {src: testUploadFile}
+                                file: {src: TEST_UPLOAD_FILE_LARGE}
+                            }
+                        }
+                    }, {
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'file',
+                                    src: TEST_UPLOAD_FILE_LARGE,
+                                    type: 'file'
+                                }]
                             }
                         }
                     }]
@@ -697,7 +720,7 @@ describe('file upload in request body', function () {
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
-            sinon.assert.callCount(testrun.request, 1);
+            sinon.assert.callCount(testrun.request, 2);
         });
 
         it('should upload the large file correctly', function () {
@@ -709,6 +732,18 @@ describe('file upload in request body', function () {
                 'headers.content-length': '52428800'
             });
             expect(resp.headers['content-type']).to.equal('application/json');
+        });
+
+        it('should upload the large file in formdata mode correctly', function () {
+            sinon.assert.calledWith(testrun.request.getCall(1), null);
+
+            var resp = JSON.parse(testrun.response.getCall(1).args[2].stream.toString());
+
+            expect(resp.files).to.have.property('upload-file-large.json');
+            expect(resp).to.nested.include({
+                'headers.content-length': '52429026'
+            });
+            expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
         });
     });
 });
