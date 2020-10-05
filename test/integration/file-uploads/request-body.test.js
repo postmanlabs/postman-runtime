@@ -5,7 +5,8 @@ var fs = require('fs'),
     IS_LINUX = process.platform === 'linux',
     IS_DARWIN = process.platform === 'darwin',
     IS_WIN32 = process.platform === 'win32',
-    sh = require('shelljs');
+    // don't import shelljs if tests are running within browser
+    sh = IS_BROWSER ? null : require('shelljs');
 
 describe('file upload in request body', function () {
     var testrun;
