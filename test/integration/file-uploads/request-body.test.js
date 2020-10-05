@@ -1,7 +1,11 @@
 var fs = require('fs'),
     expect = require('chai').expect,
     sinon = require('sinon'),
-    IS_BROWSER = typeof window !== 'undefined';
+    IS_BROWSER = typeof window !== 'undefined',
+    IS_LINUX = process.platform === 'linux',
+    IS_DARWIN = process.platform === 'darwin',
+    IS_WIN32 = process.platform === 'win32',
+    sh = require('shelljs');
 
 describe('file upload in request body', function () {
     var testrun;
@@ -643,6 +647,65 @@ describe('file upload in request body', function () {
             expect(testrun.console.getCall(0).args[1]).to.equal('warn');
             expect(testrun.console.getCall(0).args[2])
                 .to.equal('Binary file load error: file resolver interface mismatch');
+        });
+    });
+
+    describe('should upload large files correctly', function () {
+        var testUploadFile = 'test/fixtures/upload-file-large.json';
+
+        afterEach(function () {
+            sh.rm('-rf', testUploadFile);
+        });
+
+        before(function (done) {
+            this.enableTimeouts(false);
+            if (IS_DARWIN) {
+                sh.exec('mkfile 50M ' + testUploadFile);
+            }
+            else if (IS_LINUX) {
+                sh.exec('dd if=/dev/zero of=' + testUploadFile + ' bs=50M count=1');
+            }
+            else if (IS_WIN32) {
+                // 52428800 bytes corresponds to 50 MB file size as fsutil takes size param in bytes
+                sh.exec('fsutil file createnew ' + testUploadFile + ' 52428800');
+            }
+            this.run({
+                fileResolver: fs,
+                collection: {
+                    item: [{
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST',
+                            body: {
+                                mode: 'file',
+                                file: {src: testUploadFile}
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.callCount(testrun.request, 1);
+        });
+
+        it('should upload the file correctly', function () {
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            var resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
+
+            expect(resp).to.nested.include({
+                'headers.content-length': '52428800'
+            });
+            expect(resp.headers['content-type']).to.equal('application/json');
         });
     });
 });
