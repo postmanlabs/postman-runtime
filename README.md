@@ -1,4 +1,4 @@
-# Postman Runtime [![Build Status](https://travis-ci.org/postmanlabs/postman-runtime.svg?branch=develop)](https://travis-ci.org/postmanlabs/postman-runtime) [![codecov](https://codecov.io/gh/postmanlabs/postman-runtime/branch/develop/graph/badge.svg)](https://codecov.io/gh/postmanlabs/postman-runtime)
+# Postman Runtime [![Build Status](https://travis-ci.org/postmanlabs/postman-runtime.svg?branch=develop)](https://travis-ci.com/github/postmanlabs/postman-runtime) [![codecov](https://codecov.io/gh/postmanlabs/postman-runtime/branch/develop/graph/badge.svg)](https://codecov.io/gh/postmanlabs/postman-runtime)
 
 > This is a low-level library used as the backbone for all Collection running & Request sending functionality, in
 > the Postman App, and allied systems ([Postman Monitoring](https://www.getpostman.com/docs/schedule_cloud_runs),
