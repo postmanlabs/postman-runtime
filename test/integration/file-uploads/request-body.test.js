@@ -672,7 +672,7 @@ describe('file upload in request body', function () {
     });
 
     (IS_BROWSER ? describe.skip : describe)('large file upload in request body', function () {
-        afterEach(function () {
+        after(function () {
             sh.rm('-rf', TEST_UPLOAD_FILE_LARGE);
         });
 
