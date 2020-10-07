@@ -1,18 +1,38 @@
+/* eslint-disable no-multi-spaces */
 var expect = require('chai').expect;
 
 (typeof window === 'undefined' ? describe : describe.skip)('UVM allowed globals', function () {
     var testrun,
-        globals = ['isNaN', 'SyntaxError', 'ArrayBuffer', 'JSON', 'unescape', 'URIError', 'TypeError', 'WeakSet',
-            'Array', 'parseFloat', 'EvalError', 'parseInt', 'Error', 'Object', 'Int16Array',
-            'NaN', 'Uint8ClampedArray', 'Uint32Array', 'Date', 'ReferenceError', 'Proxy', 'Reflect',
-            'Uint16Array', 'Int8Array', 'Boolean', 'RangeError', 'isFinite', 'encodeURIComponent', 'encodeURI',
-            'decodeURI', 'String', 'undefined', 'Symbol', 'Set', 'WeakMap', 'Math', 'DataView', 'Int32Array',
-            'Function', 'Number', 'Infinity', 'Promise', 'Float64Array', 'Float32Array', 'Map', 'RegExp',
-            'decodeURIComponent', 'escape', 'Uint8Array', 'globals', 'environment', 'data',
-            'iteration', 'request', 'responseCookies', 'responseBody', 'responseCode', 'responseHeaders',
-            'responseTime', 'tests', '_', 'CryptoJS', 'tv4', 'cheerio', 'Backbone', 'atob', 'btoa', 'Buffer',
-            'xml2Json', 'postman', 'setTimeout', 'setInterval', 'setImmediate', 'clearTimeout', 'clearInterval',
-            'clearImmediate', 'console', 'pm'];
+        globals = [
+            'Array',           'ArrayBuffer',        'Atomics',
+            'Backbone',        'BigInt',             'BigInt64Array',
+            'BigUint64Array',  'Boolean',            'Buffer',
+            'CryptoJS',        'DataView',           'Date',
+            'Error',           'EvalError',          'Float32Array',
+            'Float64Array',    'Function',           'Infinity',
+            'Int16Array',      'Int32Array',         'Int8Array',
+            'JSON',            'Map',                'Math',
+            'NaN',             'Number',             'Object',
+            'Promise',         'Proxy',              'RangeError',
+            'ReferenceError',  'Reflect',            'RegExp',
+            'Set',             'SharedArrayBuffer',  'String',
+            'Symbol',          'SyntaxError',        'TypeError',
+            'URIError',        'Uint16Array',        'Uint32Array',
+            'Uint8Array',      'Uint8ClampedArray',  'WeakMap',
+            'WeakSet',         '_',                  'atob',
+            'btoa',            'cheerio',            'clearImmediate',
+            'clearInterval',   'clearTimeout',       'console',
+            'data',            'decodeURI',          'decodeURIComponent',
+            'encodeURI',       'encodeURIComponent', 'environment',
+            'escape',          'globals',            'isFinite',
+            'isNaN',           'iteration',          'parseFloat',
+            'parseInt',        'pm',                 'postman',
+            'request',         'responseBody',       'responseCode',
+            'responseCookies', 'responseHeaders',    'responseTime',
+            'setImmediate',    'setInterval',        'setTimeout',
+            'tests',           'tv4',                'undefined',
+            'unescape',        'xml2Json'
+        ];
 
     if (typeof window !== 'undefined') {
         globals.push('XMLHttpRequest');
