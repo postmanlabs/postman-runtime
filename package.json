@@ -24,7 +24,7 @@
     "publish-wiki": "node npm/build-wiki.js",
     "memory-check": "npm/memory-check.sh",
     "dist": "node npm/dist.js",
-    "prepublish": "npm run dist"
+    "prepack": "npm run dist"
   },
   "repository": {
     "type": "git",
