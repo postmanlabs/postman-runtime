@@ -8,7 +8,8 @@ describe('npm publish', function () {
     // @todo remove when drop support for Node < 10
     if (nodeVersion < 10) { return; }
 
-    const packageInfo = JSON.parse(exec('npm pack --dry-run --json'))[0],
+    const stdout = exec('npm pack --dry-run --json').toString(),
+        packageInfo = JSON.parse(stdout.substring(stdout.indexOf('[')))[0],
         packagedFiles = packageInfo.files.map(function (file) { return file.path; });
 
     it('should have a valid package name', function () {
