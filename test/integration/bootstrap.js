@@ -21,13 +21,14 @@ runtime = function (spec, done) {
         callbacks[eventName] = sinon.spy();
     });
 
-    // the final done callback needs special attention
-    callbacks.done = sinon.spy(function () {
-        done(null, callbacks, spec);
-    });
-
     // eslint-disable-next-line handle-callback-err
     runner.run(new Collection(spec.collection), _.omit(spec, ['collection', 'options']), function (err, run) {
+        // the final done callback needs special attention
+        callbacks.done = sinon.spy(function () {
+            setTimeout(function () { run.host.dispose(); }, spec.__disposeTimeout || 0);
+            done(null, callbacks, spec);
+        });
+
         run.start(callbacks);
     });
 };
