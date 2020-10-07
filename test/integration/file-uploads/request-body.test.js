@@ -10,16 +10,16 @@ var fs = require('fs'),
     createLargeTestFileForPlatform = function () {
         switch (process.platform) {
             case 'linux':
-                sh.exec('dd if=/dev/zero of=' + TEST_UPLOAD_FILE_LARGE + ' bs=1M count=1');
+                sh.exec('dd if=/dev/zero of=' + TEST_UPLOAD_FILE_LARGE + ' bs=50M count=1');
                 break;
 
             case 'win32':
                 // 52428800 bytes corresponds to 50 MB file size as fsutil takes size param in bytes
-                sh.exec('fsutil file createnew ' + TEST_UPLOAD_FILE_LARGE + ' 1048576');
+                sh.exec('fsutil file createnew ' + TEST_UPLOAD_FILE_LARGE + ' 52428800');
                 break;
 
             case 'darwin':
-                sh.exec('mkfile 1M ' + TEST_UPLOAD_FILE_LARGE);
+                sh.exec('mkfile 50M ' + TEST_UPLOAD_FILE_LARGE);
                 break;
 
             default:
@@ -729,7 +729,7 @@ describe('file upload in request body', function () {
             var resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
 
             expect(resp).to.nested.include({
-                'headers.content-length': '1048576'
+                'headers.content-length': '52428800'
             });
             expect(resp.headers['content-type']).to.equal('application/json');
         });
@@ -741,7 +741,7 @@ describe('file upload in request body', function () {
 
             expect(resp.files).to.have.property('upload-file-large.json');
             expect(resp).to.nested.include({
-                'headers.content-length': '1048802'
+                'headers.content-length': '52429026'
             });
             expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
         });
