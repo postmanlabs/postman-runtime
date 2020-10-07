@@ -23,6 +23,7 @@
     "publish-docs": "node npm/publish-docs.js",
     "publish-wiki": "node npm/build-wiki.js",
     "memory-check": "npm/memory-check.sh",
+    "release": "node npm/create-release.js",
     "dist": "node npm/dist.js",
     "prepack": "npm run dist"
   },
@@ -54,6 +55,7 @@
     "uuid": "3.4.0"
   },
   "devDependencies": {
+    "@postman/shipit": "0.2.0",
     "ajv": "6.12.5",
     "browserify": "16.5.2",
     "chai": "4.2.0",
