@@ -35,14 +35,12 @@ browserify(INPUT, {standalone: 'PostmanRuntime'}).bundle((err, bundle) => {
             format: {
                 comments: false // Omit comments in the output
             }
-        })
-            .then(({code}) => {
-                fs.writeFileSync(OUTPUT, code);
-            })
-            .catch((err) => {
-                console.error(err);
-                process.exit(1);
-            });
+        }).then(({code}) => {
+            fs.writeFileSync(OUTPUT, code);
+        }).catch((err) => {
+            console.error(err);
+            process.exit(1);
+        });
     }
     catch (error) {
         console.error(chalk.red.bold('Compression failed!', error));
