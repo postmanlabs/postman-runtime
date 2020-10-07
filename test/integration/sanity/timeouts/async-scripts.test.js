@@ -112,7 +112,8 @@ describe('asynchronous script timeouts', function () {
                     },
                     timeout: {
                         global: 2000
-                    }
+                    },
+                    __disposeTimeout: 2000 // don't dispose sandbox in bootstrap.js immediately
                 }, function (err, results) {
                     testrun = results;
                     done(err);

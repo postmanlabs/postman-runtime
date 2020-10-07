@@ -190,7 +190,8 @@ describe('synchronous script timeouts', function () {
                     },
                     timeout: {
                         script: 500
-                    }
+                    },
+                    __disposeTimeout: 2000 // don't dispose sandbox in bootstrap.js immediately
                 }, function (err, results) {
                     // @todo fix multiple callbacks
                     !testrun && (testrun = results) && done(err);
