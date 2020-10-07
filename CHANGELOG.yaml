@@ -4,6 +4,7 @@ master:
       files in the published package
     - GH-1096 Added system test for published package content
     - GH-1097 Updated dependencies
+    - GH-1098 Automated releases and publish process
 
 7.26.6:
   date: 2020-09-16
