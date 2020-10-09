@@ -2,31 +2,7 @@ var fs = require('fs'),
     expect = require('chai').expect,
     sinon = require('sinon'),
     IS_BROWSER = typeof window !== 'undefined',
-    TEST_UPLOAD_FILE_LARGE = 'test/fixtures/upload-file-large.json',
-    // don't import shelljs if tests are running within browser
-    sh = IS_BROWSER ? null : require('shelljs'),
-
-    // Creates 50M size file based on current execution platform
-    createLargeTestFileForPlatform = function () {
-        switch (process.platform) {
-            case 'linux':
-                sh.exec('dd if=/dev/zero of=' + TEST_UPLOAD_FILE_LARGE + ' bs=50M count=1');
-                break;
-
-            case 'win32':
-                // 52428800 bytes corresponds to 50 MB file size as fsutil takes size param in bytes
-                sh.exec('fsutil file createnew ' + TEST_UPLOAD_FILE_LARGE + ' 52428800');
-                break;
-
-            case 'darwin':
-                sh.exec('mkfile 50M ' + TEST_UPLOAD_FILE_LARGE);
-                break;
-
-            default:
-                // eslint-disable-next-line no-console
-                console.log('Platform is not supported.');
-        }
-    };
+    {Readable} = require('stream');
 
 describe('file upload in request body', function () {
     var testrun;
@@ -672,36 +648,90 @@ describe('file upload in request body', function () {
     });
 
     (IS_BROWSER ? describe.skip : describe)('large file upload in request body', function () {
-        after(function () {
-            sh.rm('-rf', TEST_UPLOAD_FILE_LARGE);
+        const inStream = new Readable({
+            // eslint-disable-next-line no-empty-function
+            read () {}
         });
 
         // eslint-disable-next-line mocha/no-sibling-hooks
         before(function (done) {
-            this.enableTimeouts(false);
-            createLargeTestFileForPlatform();
-
             this.run({
-                fileResolver: fs,
+                // using a custom file-resolver since we don't want to create
+                // actual file size of 50MB for testing large file uploads
+                fileResolver: {
+                    stat: function (src, cb) {
+                        cb(null, {isFile: function () { return true; }, mode: 33188});
+                    },
+                    createReadStream: function () {
+                        // creating buffer of size 52428800 bytes corresponds to 50 MB
+                        inStream.push(Buffer.alloc(50 * 1024 * 1024));
+                        inStream.push(null);
+
+                        return inStream;
+                    }
+                },
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: global.servers.http + '/file-upload',
                             method: 'POST',
                             body: {
                                 mode: 'file',
-                                file: {src: TEST_UPLOAD_FILE_LARGE}
+                                file: {src: 'test/fixtures/upload-file-large-dummy'}
                             }
                         }
-                    }, {
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        // eslint-disable-next-line mocha/no-identical-title
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.callCount(testrun.request, 1);
+        });
+
+        it('should upload the large file correctly', function () {
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response.reason()).to.eql('OK');
+            // 52428800 bytes corresponds to 50 MB
+            expect(response.text()).to.include('received-content-length:52428800');
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+        });
+    });
+
+    (IS_BROWSER ? describe.skip : describe)('large file upload in form-data mode', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
+        before(function (done) {
+            this.run({
+                // using a custom file-resolver since we don't want to create
+                // actual file size of 50MB for testing large file uploads
+                fileResolver: {
+                    stat: function (src, cb) {
+                        cb(null, {isFile: function () { return true; }, mode: 33188});
+                    },
+                    createReadStream: function () {
+                        // creating buffer of size 52428800 bytes corresponds to 50 MB
+                        return Buffer.alloc(50 * 1024 * 1024);
+                    }
+                },
+                collection: {
+                    item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: global.servers.http + '/file-upload',
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
                                 formdata: [{
                                     key: 'file',
-                                    src: TEST_UPLOAD_FILE_LARGE,
+                                    src: 'test/fixtures/upload-file-large-dummy',
                                     type: 'file'
                                 }]
                             }
@@ -720,30 +750,15 @@ describe('file upload in request body', function () {
             sinon.assert.calledOnce(testrun.start);
             sinon.assert.calledOnce(testrun.done);
             sinon.assert.calledWith(testrun.done.getCall(0), null);
-            sinon.assert.callCount(testrun.request, 2);
+            sinon.assert.callCount(testrun.request, 1);
         });
 
-        it('should upload the large file correctly', function () {
+        it('should upload the file in formdata mode correctly', function () {
+            var response = testrun.request.getCall(0).args[2];
+
             sinon.assert.calledWith(testrun.request.getCall(0), null);
-
-            var resp = JSON.parse(testrun.response.getCall(0).args[2].stream.toString());
-
-            expect(resp).to.nested.include({
-                'headers.content-length': '52428800'
-            });
-            expect(resp.headers['content-type']).to.equal('application/json');
-        });
-
-        it('should upload the large file in formdata mode correctly', function () {
-            sinon.assert.calledWith(testrun.request.getCall(1), null);
-
-            var resp = JSON.parse(testrun.response.getCall(1).args[2].stream.toString());
-
-            expect(resp.files).to.have.property('upload-file-large.json');
-            expect(resp).to.nested.include({
-                'headers.content-length': '52429026'
-            });
-            expect(resp.headers['content-type']).to.match(/multipart\/form-data/);
+            expect(response.reason()).to.eql('OK');
+            expect(response.text()).to.include('received-content-length:52428999');
         });
     });
 });
