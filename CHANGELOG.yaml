@@ -1,3 +1,7 @@
+master:
+    chores:
+        - GH-1094 Added integration test for large files upload
+
 7.26.7:
   date: 2020-10-07
   chores:
