@@ -1,7 +1,8 @@
 var fs = require('fs'),
     expect = require('chai').expect,
     sinon = require('sinon'),
-    IS_BROWSER = typeof window !== 'undefined';
+    IS_BROWSER = typeof window !== 'undefined',
+    {Readable} = require('stream');
 
 describe('file upload in request body', function () {
     var testrun;
@@ -643,6 +644,125 @@ describe('file upload in request body', function () {
             expect(testrun.console.getCall(0).args[1]).to.equal('warn');
             expect(testrun.console.getCall(0).args[2])
                 .to.equal('Binary file load error: file resolver interface mismatch');
+        });
+    });
+
+    (IS_BROWSER ? describe.skip : describe)('large file upload in request body', function () {
+        const inStream = new Readable({
+            // eslint-disable-next-line no-empty-function
+            read () {}
+        });
+
+        // eslint-disable-next-line mocha/no-sibling-hooks
+        before(function (done) {
+            this.run({
+                // using a custom file-resolver since we don't want to create
+                // actual file size of 50MB for testing large file uploads
+                fileResolver: {
+                    stat: function (src, cb) {
+                        cb(null, {isFile: function () { return true; }, mode: 33188});
+                    },
+                    createReadStream: function () {
+                        // creating buffer of size 52428800 bytes corresponds to 50 MB
+                        inStream.push(Buffer.alloc(50 * 1024 * 1024));
+                        inStream.push(null);
+
+                        return inStream;
+                    }
+                },
+                collection: {
+                    item: [{
+                        request: {
+                            url: global.servers.http + '/upload',
+                            method: 'POST',
+                            body: {
+                                mode: 'file',
+                                file: {src: 'test/fixtures/upload-file-large-dummy'}
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        // eslint-disable-next-line mocha/no-identical-title
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.callCount(testrun.request, 1);
+        });
+
+        it('should upload the large file correctly', function () {
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response.reason()).to.eql('OK');
+            // 52428800 bytes corresponds to 50 MB
+            expect(response.json()).to.nested.include({
+                'received-content-length': 52428800
+            });
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+        });
+    });
+
+    (IS_BROWSER ? describe.skip : describe)('large file upload in form-data mode', function () {
+        // eslint-disable-next-line mocha/no-sibling-hooks
+        before(function (done) {
+            this.run({
+                // using a custom file-resolver since we don't want to create
+                // actual file size of 50MB for testing large file uploads
+                fileResolver: {
+                    stat: function (src, cb) {
+                        cb(null, {isFile: function () { return true; }, mode: 33188});
+                    },
+                    createReadStream: function () {
+                        // creating buffer of size 52428800 bytes corresponds to 50 MB
+                        return Buffer.alloc(50 * 1024 * 1024);
+                    }
+                },
+                collection: {
+                    item: [{
+                        request: {
+                            url: global.servers.http + '/upload',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    key: 'file',
+                                    src: 'test/fixtures/upload-file-large-dummy',
+                                    type: 'file'
+                                }]
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        // eslint-disable-next-line mocha/no-identical-title
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+            sinon.assert.callCount(testrun.request, 1);
+        });
+
+        it('should upload the file in formdata mode correctly', function () {
+            var response = testrun.request.getCall(0).args[2];
+
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+            expect(response.reason()).to.eql('OK');
+            expect(response.json()).to.nested.include({
+                'received-content-length': 52428999
+            });
         });
     });
 });

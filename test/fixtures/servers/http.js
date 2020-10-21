@@ -48,4 +48,27 @@ httpServer.on('/custom-reason', function (req, res) {
     res.end();
 });
 
+httpServer.on('/upload', function (req, res) {
+    if (req.method === 'POST') {
+        let body = [];
+
+        req.on('data', function (data) {
+            body.push(data);
+        });
+
+        req.on('end', function () {
+            res.writeHead(200, {'content-type': 'application/json'});
+            let response = {
+                'received-content-length': Buffer.concat(body).byteLength
+            };
+
+            res.end(JSON.stringify(response));
+        });
+    }
+    else {
+        res.writeHead(200, {'content-type': 'text/plain'});
+        res.end('Okay!');
+    }
+});
+
 module.exports = httpServer;
