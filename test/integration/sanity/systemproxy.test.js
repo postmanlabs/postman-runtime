@@ -9,8 +9,8 @@ var expect = require('chai').expect,
             proxyUrlForHttpRequest,
             systemProxyCalled = false,
             proxyHost = 'localhost',
-            sampleHttpUrl = 'http://google.com',
-            sampleHttpsUrl = 'https://google.com';
+            sampleHttpUrl = 'http://postman.com',
+            sampleHttpsUrl = 'https://postman.com';
 
         before(function (done) {
             proxyPort = global.servers.proxy.split(':')[2];
@@ -119,8 +119,8 @@ var expect = require('chai').expect,
             proxyUrlForHttpRequest,
             proxyHost = 'localhost',
             systemProxyCalled = false,
-            sampleHttpUrl = 'http://google.com',
-            sampleHttpsUrl = 'https://google.com';
+            sampleHttpUrl = 'http://postman.com',
+            sampleHttpsUrl = 'https://postman.com';
 
         before(function (done) {
             globalProxyPort = global.servers.proxy.split(':')[2];

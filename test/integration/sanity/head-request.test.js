@@ -8,21 +8,8 @@ describe('HEAD requests', function () {
             collection: {
                 item: [{
                     request: {
-                        url: 'http://google.com',
-                        method: 'HEAD',
-                        body: {
-                            mode: 'formdata',
-                            formdata: []
-                        }
-                    }
-                }, {
-                    request: {
-                        url: 'http://github.com',
-                        method: 'HEAD',
-                        body: {
-                            mode: 'formdata',
-                            formdata: []
-                        }
+                        url: global.servers.http,
+                        method: 'HEAD'
                     }
                 }]
             }
@@ -35,15 +22,10 @@ describe('HEAD requests', function () {
     it('should have completed the HEAD requests successfully', function () {
         expect(testrun).to.be.ok;
         expect(testrun).to.nested.include({
-            'request.calledTwice': true
+            'request.calledOnce': true
         });
 
         expect(testrun.request.getCall(0)).to.nested.include({
-            'args[0]': null,
-            'args[2].code': 200
-        });
-
-        expect(testrun.request.getCall(1)).to.nested.include({
             'args[0]': null,
             'args[2].code': 200
         });

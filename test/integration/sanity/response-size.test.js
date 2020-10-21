@@ -9,7 +9,7 @@ describe('response size', function () {
                 item: [{
                     request: 'https://postman-echo.com/get'
                 }, {
-                    request: 'https://google.com/'
+                    request: 'https://httpbin.org/get'
                 }]
             }
         }, function (err, results) {
