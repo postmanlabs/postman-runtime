@@ -8,8 +8,8 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
         var proxyPort,
             proxyHost,
             proxyUrlForHttpRequest,
-            sampleHttpUrl = 'http://google.com',
-            sampleHttpsUrl = 'https://google.com';
+            sampleHttpUrl = 'http://localhost',
+            sampleHttpsUrl = 'https://localhost';
 
         before(function (done) {
             proxyHost = 'localhost';
