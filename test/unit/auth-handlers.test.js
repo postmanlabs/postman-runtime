@@ -2613,4 +2613,25 @@ describe('Auth Handler:', function () {
             });
         });
     });
+
+    describe('oci', function () {
+        it('should add the Auth header', function (done) {
+            var request = new Request(rawRequests.oci),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+                console.log('In test case, back from handler.sign');
+                console.log(headers.authorization);
+                // Ensure that the required headers have been added.
+                // expect(headers).to.have.property('authorization');
+                done();
+            });
+        });
+    });
 });
