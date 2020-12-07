@@ -2623,13 +2623,17 @@ describe('Auth Handler:', function () {
                 headers;
 
             handler.sign(authInterface, request, function () {
-                headers = request.getHeaders({
-                    ignoreCase: true
-                });
+                // headers = request.getHeaders({
+                //     ignoreCase: true
+                // });
                 console.log('In test case, back from handler.sign');
-                console.log(headers.authorization);
+                // console.log(headers.authorization);
                 // Ensure that the required headers have been added.
                 // expect(headers).to.have.property('authorization');
+                console.log('printing all headers')
+                request.headers.all().forEach(function (each) {
+                    console.log(each.key, each.value);
+                });
                 done();
             });
         });
