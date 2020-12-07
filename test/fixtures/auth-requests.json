@@ -253,12 +253,12 @@
         "type": "oci",
         "oci": {
           "tenancy": "ocid1.tenancy.oc1..aaaaaaaa5h4h55rwzjwrufcfaqp4h5gxcqv65ozk7rytrvcltwujfj45g25a",
-          "user": "ocid1.user.oc1..aaaaaaaag4r7qnp7q5dtnklgl4xzjlawksq3ql3o5so6wajhxtgry3fsvfga",
+          "user": "ocid1.user.oc1..aaaaaaaax4esyzwnhlxdb6h5dfopzkuw5kujtffz3y4yvczqnjwlpbnk7q7q",
           "fingerprint": "42:34:8b:df:0a:9c:b0:c8:b6:ac:7a:c2:ce:7e:45:85",
           "private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAvOxs9ybstMcalgCEbNIHeNh7oqVBLAC0+bhi7KEr2xYFSQws\nu4MdPXqSCTQu1/4fsMoCbRLZMRmC8YonjjhdRyVFZrAkE5Q9WfF3N40s/GVK8Myb\nWxBS5hZnc4td/d+OoGLE5aKNwaFNoTn7iDCU1JfG+d4l7Z5twzHESs3XnzNSeRms\n/MAFk3zdjlpOm9pbafFqFoim6Be8dRXtWU0xN5VRHD3txisQJlcLVNMm6IK9UWUg\nJzmn8d5ASwvU75/nJKc8DLoQ0cVeYaIhXWGME6ApXyb62zKmccPpkRzRZSJYPeUo\nLK2JC/w/os1NAi0mTGb/KqOzd7BJf1RO0SQYHwIDAQABAoIBAGRS4KJ2hyiQuquB\nZtEqz1D7FNyQCQXG8lPR+KZUCCf1j6T01CRXQgXNuxMsJNwKVOXawGMPqUqLk5+U\nj+DUSaRoRGx9iQrko5fJxFc5nvQBDkTFQpKfHoaUyybukWEpgGHnUUvogIKcl87Q\nLaRqt/4VA1LZByciBIOtP+HBYYlmGlg6UDeOFTku9nFbraz8FlzqLAy7xSUB3aDs\n1JeDwR9PBQsRG72GQkJR/EmPbD2Y/r+zmZP25/97pouO/ji9DJwDcVc1qFpn4JKf\nLABBUEwfWEIWa4cefbDi0dCzVKxrS/RU9EYB6HtMklcy3qyxbdcLmFY8qgsxjG8K\nw2iD2iECgYEA+AtmXff5lnSZq3CJhcxBpi+MuCByWH7gB2/G50XSduRmW+lzI6iv\n+r8ADEI87+KBIju++qNvj886N9H1sm+k6j3nEE51i2nwwKB79Xzu0J23+XMSCV0D\nYb6bvNogGCOhKslQNC51ZvgsZlTu6F8/EkPlboEL8E2h4eYwx3L6UbcCgYEAwvub\nB+rhUk4+TwXVnfNZEcmQiz90yU7CI/TjDrHVq+ZJIKRHILB+7Mt7Mpi+7Ie2Cx/f\nA1Alv8I44wmLhZX63Du9hwoz3t4Y0+AiT/RMp3EkmxKIkPFZNKsmY659dNzROMG9\nEVYEmBYode17mrSc4UJi8I4iHCv1A83BC3DhzNkCgYBSE8Od2I5YQOEQn76B7aLT\nkOxpiSMNMX6EN3KD2NDZ0p4kT81vwUPqHwWvCMQNRNAiOc7qNOaXmaTUD7/TeaoC\ncNViyfOPXFD0DKa4Bs0nbukPvAn92y9hSqdSCIOSOUf9VnwZqD3lAr3+ZqBfeBTw\nwFLNDBqdO7MTgw4lEWDPZQKBgQCIm3c2yN0sqR0GiHPtwfz5dVsL9F2CXOewAXbD\naNznHuTFNdOPl5iVlsqt3E6HsV1d1eqNi62m+BCbIKjb4wRrIH/dCMzmrHyAlVv0\n4JiEB8U50HZV9oIlYHP5Ctti8QK03Sf16Wo2k++tD8G11izDtZtUJoDHdBSpoZJK\nzb+loQKBgQC0/VewDbcRW5FymBPJiEnrTtpHk40x14pNfRbRrNDIx/jIx/gnqwyI\n6ud7uJkK+LAHw+r2HjHtSMVE9I54zr+QG8fAe8alJQ3mSP1tlpLbMaMb7LpomKo/\nfVVz1laGP3tcpXDEp80hbrDxO7aOexUgCFKHrYTAgVCm8Eqzz8HdsQ==\n-----END RSA PRIVATE KEY-----"
         }
       },
-      "url": "https://postman-echo.com/auth/yolo",
+      "url": "https://identity.ap-hyderabad-1.oraclecloud.com/20160918/users/ocid1.user.oc1..aaaaaaaax4esyzwnhlxdb6h5dfopzkuw5kujtffz3y4yvczqnjwlpbnk7q7q",
       "method": "GET"
     }
 }

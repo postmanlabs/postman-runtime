@@ -2630,11 +2630,16 @@ describe('Auth Handler:', function () {
                 // console.log(headers.authorization);
                 // Ensure that the required headers have been added.
                 // expect(headers).to.have.property('authorization');
-                console.log('printing all headers')
+                console.log('printing all headers');
+                const rawHeaders = {};
+
                 request.headers.all().forEach(function (each) {
                     console.log(each.key, each.value);
+                    rawHeaders[each.key] = each.value;
                 });
+                console.log(request.headers.get('authorization'))
                 done();
+
             });
         });
     });
