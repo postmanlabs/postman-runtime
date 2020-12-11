@@ -2615,31 +2615,60 @@ describe('Auth Handler:', function () {
     });
 
     describe('oci', function () {
-        it('should add the Auth header', function (done) {
-            var request = new Request(rawRequests.oci),
+        it('should have all necessary headers', function (done) {
+            var request = new Request(rawRequests.ociWithoutBody),
                 auth = request.auth,
                 authInterface = createAuthInterface(auth),
                 handler = AuthLoader.getHandler(auth.type),
                 headers;
 
             handler.sign(authInterface, request, function () {
-                // headers = request.getHeaders({
-                //     ignoreCase: true
-                // });
-                console.log('In test case, back from handler.sign');
-                // console.log(headers.authorization);
-                // Ensure that the required headers have been added.
-                // expect(headers).to.have.property('authorization');
-                console.log('printing all headers');
-                const rawHeaders = {};
-
-                request.headers.all().forEach(function (each) {
-                    console.log(each.key, each.value);
-                    rawHeaders[each.key] = each.value;
+                headers = request.getHeaders({
+                    ignoreCase: true
                 });
-                console.log(request.headers.get('authorization'))
+                expect(headers).to.have.property('authorization');
+                expect(headers).to.have.property('x-date');
                 done();
+            });
+        });
+        it('should have correct structure of auth header - without body', function (done) {
+            var request = new Request(rawRequests.ociWithoutBody),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
 
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+                expect(Object.keys(headers)).to.eql(['authorization', 'x-date'])
+                expect(headers).to.have.property('authorization');
+                expect(headers.authorization).to.include('Signature version="1"');
+                expect(headers.authorization).to.include('x-date (request-target) host');
+                expect(headers.authorization).to.include('algorithm="rsa-sha256"');
+                done();
+            });
+        });
+
+        it('should have correct structure of auth header - with body', function (done) {
+            var request = new Request(rawRequests.ociWithBody),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+                expect(Object.keys(headers).sort())
+                    .to.eql(['authorization', 'x-date', 'content-length', 'x-content-sha256', 'content-type'].sort())
+                expect(headers.authorization).to.include('Signature version="1"');
+                expect(headers.authorization)
+                    .to.include('x-date (request-target) host content-type content-length x-content-sha256');
+                expect(headers.authorization).to.include('algorithm="rsa-sha256"');
+                done();
             });
         });
     });
