@@ -2692,5 +2692,19 @@ describe('Auth Handler:', function () {
                 done();
             });
         });
+        it('should not allow sign to be reached if required parameters arent there', function (done) {
+            var rawRequest = _.cloneDeep(rawRequests.ociWithBody);
+
+            rawRequest.auth.oci.privatekey = undefined;
+            var request = new Request(rawRequest),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.pre(authInterface, function (a, b) {
+                expect(b).to.be.eql(false);
+                done();
+            });
+        });
     });
 });
