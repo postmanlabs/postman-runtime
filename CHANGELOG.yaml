@@ -1,3 +1,7 @@
+master:
+  chores:
+    - GH-1110 Updated browser requester to accept custom agentClass
+
 7.26.8:
   date: 2020-10-21
   chores:
