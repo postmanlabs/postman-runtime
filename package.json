@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@postman/shipit": "0.2.0",
-    "ajv": "6.12.6",
+    "ajv": "7.0.1",
     "browserify": "16.5.2",
     "chai": "4.2.0",
     "colors": "1.4.0",
