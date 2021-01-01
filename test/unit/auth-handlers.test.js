@@ -2613,4 +2613,98 @@ describe('Auth Handler:', function () {
             });
         });
     });
+
+    describe('oci', function () {
+        it('should have correct structure of auth header - without body', function (done) {
+            var request = new Request(_.cloneDeep(rawRequests.ociWithoutBody)),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+                expect(Object.keys(headers)).to.eql(['authorization', 'x-date']);
+                expect(headers).to.have.property('authorization');
+                expect(headers.authorization).to.include('Signature version="1"');
+                expect(headers.authorization).to.include('x-date (request-target) host');
+                expect(headers.authorization).to.include('algorithm="rsa-sha256"');
+                done();
+            });
+        });
+        it('should have correct structure of auth header - with body', function (done) {
+            var request = new Request(_.cloneDeep(rawRequests.ociWithBody)),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+                expect(Object.keys(headers).sort())
+                    .to.eql(['authorization', 'x-date', 'content-length', 'x-content-sha256', 'content-type'].sort());
+                expect(headers.authorization).to.include('Signature version="1"');
+                expect(headers.authorization)
+                    .to.include('x-date (request-target) host content-type content-length x-content-sha256');
+                expect(headers.authorization).to.include('algorithm="rsa-sha256"');
+                done();
+            });
+        });
+        it('should have correct structure of auth header - with body but force disabled', function (done) {
+            var rawRequest = _.merge(
+                    _.cloneDeep(rawRequests.ociWithBody),
+                    {auth: {oci: {forceDisableBodyHashing: true}}}
+                ),
+                request = new Request(rawRequest),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers;
+
+            handler.sign(authInterface, request, function () {
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+                expect(Object.keys(headers)).to.eql(['authorization', 'x-date']);
+                expect(headers).to.have.property('authorization');
+                expect(headers.authorization).to.include('Signature version="1"');
+                expect(headers.authorization).to.include('x-date (request-target) host');
+                expect(headers.authorization).to.include('algorithm="rsa-sha256"');
+                done();
+            });
+        });
+        it('should not work when content type is not JSON', function (done) {
+            var rawRequest = _.merge(
+                    _.cloneDeep(rawRequests.ociWithBody),
+                    {header: [{key: 'content-type', value: 'foobar'}]}
+                ),
+                request = new Request(rawRequest),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, function (res) {
+                expect(res).to.be.an.instanceof(Error);
+                done();
+            });
+        });
+        it('should not allow sign to be reached if required parameters arent there', function (done) {
+            var rawRequest = _.cloneDeep(rawRequests.ociWithBody);
+
+            rawRequest.auth.oci.privatekey = undefined;
+            var request = new Request(rawRequest),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.pre(authInterface, function (a, b) {
+                expect(b).to.be.eql(false);
+                done();
+            });
+        });
+    });
 });
