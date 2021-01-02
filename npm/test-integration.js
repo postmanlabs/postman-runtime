@@ -65,7 +65,7 @@ module.exports = function (exit) {
                     statements: 75,
                     branches: 65,
                     functions: 75,
-                    lines: 80
+                    lines: 75
                 });
 
                 servers.close(function (err) {
