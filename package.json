@@ -96,11 +96,6 @@
     "postman-request": "./lib/requester/browser/request.js"
   },
   "engines": {
-    "node": ">=4"
-  },
-  "greenkeeper": {
-    "ignore": [
-      "eslint-plugin-jsdoc"
-    ]
+    "node": ">=8"
   }
 }
