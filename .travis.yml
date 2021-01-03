@@ -5,8 +5,8 @@ os:
   - linux
   - windows
 node_js:
-  - 6
   - 8
+  - 10
 
 jobs:
   include:
@@ -18,7 +18,7 @@ jobs:
 
     # run tests in Node.js stable and publish code coverage
     - name: 'Coverage'
-      node_js: stable
+      node_js: 12
       os: linux
       script:
         - npm run test-unit

@@ -27,7 +27,7 @@ describe('travis.yml', function () {
     describe('structure', function () {
         it('should have the language set to node', function () {
             expect(travisYAML.language).to.equal('node_js');
-            expect(travisYAML.node_js).to.eql([6, 8]);
+            expect(travisYAML.node_js).to.eql([8, 10]);
         });
 
         it.skip('node version must match rest of the tests', function () {
