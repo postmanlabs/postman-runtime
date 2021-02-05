@@ -58,7 +58,7 @@
     "@postman/shipit": "0.2.0",
     "ajv": "6.12.6",
     "browserify": "16.5.2",
-    "chai": "4.2.0",
+    "chai": "4.3.0",
     "colors": "1.4.0",
     "editorconfig": "0.15.3",
     "eslint": "5.16.0",
