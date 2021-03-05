@@ -80,7 +80,7 @@ var fs = require('fs'),
     });
 
     describe('tlsDisabledProtocols', function () {
-        (TLSv1_3_SUPPORTED ? describe.skip : describe)('TLSv1 server', function () {
+        describe('TLSv1 server', function () {
             describe('default', function () {
                 before(function (done) {
                     this.run({
@@ -133,7 +133,7 @@ var fs = require('fs'),
                 });
             });
 
-            describe('with TLSv1_1, TLSv1_2 disabled', function () {
+            describe('with TLSv1_1, TLSv1_2, TLSv1_3 disabled', function () {
                 before(function (done) {
                     this.run({
                         fileResolver: fs,
@@ -151,7 +151,7 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['TLSv1_1', 'TLSv1_2']
+                                    tlsDisabledProtocols: ['TLSv1_1', 'TLSv1_2', 'TLSv1_3']
                                 }
                             }]
                         }
@@ -232,7 +232,7 @@ var fs = require('fs'),
             });
         });
 
-        (TLSv1_3_SUPPORTED ? describe.skip : describe)('TLSv1_1 server', function () {
+        describe('TLSv1_1 server', function () {
             describe('default TLSv1.1 server', function () {
                 before(function (done) {
                     this.run({
@@ -285,7 +285,7 @@ var fs = require('fs'),
                 });
             });
 
-            describe('with TLSv1, TLSv1_2 disabled', function () {
+            describe('with TLSv1, TLSv1_2, TLSv1_3 disabled', function () {
                 before(function (done) {
                     this.run({
                         fileResolver: fs,
@@ -303,7 +303,7 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_2']
+                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_2', 'TLSv1_3']
                                 }
                             }]
                         }
@@ -435,7 +435,7 @@ var fs = require('fs'),
                 });
             });
 
-            describe('with TLSv1, TLSv1_1 disabled', function () {
+            describe('with TLSv1, TLSv1_1, TLSv1_3 disabled', function () {
                 before(function (done) {
                     this.run({
                         fileResolver: fs,
@@ -453,7 +453,7 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_1']
+                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_1', 'TLSv1_3']
                                 }
                             }]
                         }
@@ -587,7 +587,7 @@ var fs = require('fs'),
                 });
             });
 
-            describe('TLSv1.3 with TLSv1_1, TLSv1_2 disabled', function () {
+            describe('TLSv1.3 with TLSv1, TLSv1_1, TLSv1_2 disabled', function () {
                 before(function (done) {
                     this.run({
                         fileResolver: fs,
@@ -605,7 +605,7 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['TLSv1_1', 'TLSv1_2']
+                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_1', 'TLSv1_2']
                                 }
                             }]
                         }
@@ -642,8 +642,7 @@ var fs = require('fs'),
                 });
             });
 
-            // @todo: Add support for TLS 1.3
-            describe.skip('with TLSv1.3 disabled', function () {
+            describe('with TLSv1.3 disabled', function () {
                 before(function (done) {
                     this.run({
                         fileResolver: fs,
@@ -687,12 +686,14 @@ var fs = require('fs'),
             });
         });
 
-        (TLSv1_3_SUPPORTED ? describe.skip : describe)('TLSv1 & TLSv1_1 server', function () {
+        describe('TLSv1 & TLSv1_1 server', function () {
             var sslServer;
 
             before(function (done) {
                 sslServer = server.createSSLServer({
-                    secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_TLSv1_2 // Disable SSLv3 and TLSv1_2
+                    maxVersion: 'TLSv1.1',
+                    minVersion: 'TLSv1',
+                    secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_TLSv1_2
                 });
                 sslServer.on('/', requestHandler);
                 sslServer.listen(0, done);
@@ -770,7 +771,7 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1_1', 'TLSv1_2']
+                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1_1', 'TLSv1_2', 'TLSv1_3']
                                 }
                             }]
                         }
@@ -827,7 +828,7 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_2']
+                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_2', 'TLSv1_3']
                                 }
                             }]
                         }
@@ -884,7 +885,7 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_1']
+                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_1', 'TLSv1_3']
                                 }
                             }]
                         }
@@ -917,6 +918,10 @@ var fs = require('fs'),
                 sslServer = server.createSSLServer();
                 sslServer.on('/', requestHandler);
                 sslServer.listen(0, done);
+            });
+
+            after(function (done) {
+                sslServer.destroy(done);
             });
 
             describe('default', function () {
