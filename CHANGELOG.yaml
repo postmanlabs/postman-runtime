@@ -1,6 +1,6 @@
 master:
   new features:
-    - GH-1130 Added support to disable TLSv1.3 in tlsDisabledProtocols protocol profile behavior.
+    - GH-1130 Added support to disable TLSv1.3 in tlsDisabledProtocols protocol profile behavior
 
 7.26.10:
   date: 2021-01-03
