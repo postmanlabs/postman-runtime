@@ -487,6 +487,40 @@ describe('extractRunnableItems', function () {
                 }
             );
         });
+
+        describe('Preserve Order', function () {
+            it('should work correctly when not specified', function (done) {
+                extractRunnableItems(
+                    collection, {
+                        execute: ['ID6', 'ID2'],
+                        preserveOrder: false,
+                        lookupStrategy: 'multipleIdOrName'
+                    },
+                    function (err, runnableItems) {
+                        expect(err).to.be.null;
+                        expect(runnableItems).to.have.length(2);
+                        expect(_.map(runnableItems, 'name')).to.eql(['F2.R1', 'R1']);
+                        done();
+                    }
+                );
+            });
+
+            it('should work correctly when specified', function (done) {
+                extractRunnableItems(
+                    collection, {
+                        execute: ['ID6', 'ID2'],
+                        preserveOrder: true,
+                        lookupStrategy: 'multipleIdOrName'
+                    },
+                    function (err, runnableItems) {
+                        expect(err).to.be.null;
+                        expect(runnableItems).to.have.length(2);
+                        expect(_.map(runnableItems, 'name')).to.eql(['R1', 'F2.R1']);
+                        done();
+                    }
+                );
+            });
+        });
     });
 
     describe('lookupStrategy: followOrder', function () {
