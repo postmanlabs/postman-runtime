@@ -87,7 +87,7 @@
     "shelljs": "0.8.4",
     "sinon": "8.1.1",
     "teleport-javascript": "1.0.0",
-    "terser": "5.5.1",
+    "terser": "5.6.1",
     "tmp": "0.2.1",
     "yankee": "1.0.8"
   },
