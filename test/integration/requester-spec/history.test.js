@@ -185,4 +185,75 @@ var expect = require('chai').expect,
             expect(executionData.session).to.be.undefined;
         });
     });
+
+    describe('on redirects', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: global.servers.followRedirects + '/2/302',
+                            method: 'GET',
+                            header: [{
+                                key: 'foo',
+                                value: 'bar'
+                            }]
+                        }
+                    }]
+                },
+                requester: {
+                    verbose: true
+                }
+            }, function (err, result) {
+                testrun = result;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+        });
+
+        it('should contain history object for all the redirects', function () {
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledOnce(testrun.response);
+
+            var history = testrun.request.getCall(0).lastArg,
+                executionData;
+
+            // `history` should be present
+            expect(history).to.be.an('object').to.have.property('execution');
+            expect(history.execution).to.be.an('object').that.has.all.keys(['verbose', 'sessions', 'data']);
+
+            // same as response history
+            expect(history).to.eql(testrun.response.getCall(0).lastArg);
+
+            // include all redirects
+            expect(history.execution.data).to.be.an('array').that.have.lengthOf(3);
+
+            executionData = history.execution.data[0];
+            expect(executionData).to.have.all.keys(['request', 'response', 'session', 'timings']);
+            expect(executionData.request).to.be.an('object')
+                .that.has.all.keys(['headers', 'href', 'httpVersion', 'method', 'proxy']);
+            expect(executionData.response).to.be.an('object')
+                .that.has.all.keys(['headers', 'httpVersion', 'statusCode']);
+
+            executionData = history.execution.data[1];
+            expect(executionData).to.have.all.keys(['request', 'response', 'session', 'timings']);
+            expect(executionData.request).to.be.an('object')
+                .that.has.all.keys(['headers', 'href', 'httpVersion', 'method', 'proxy']);
+            expect(executionData.response).to.be.an('object')
+                .that.has.all.keys(['headers', 'httpVersion', 'statusCode']);
+
+            executionData = history.execution.data[2];
+            expect(executionData).to.have.all.keys(['request', 'response', 'session', 'timings']);
+            expect(executionData.request).to.be.an('object')
+                .that.has.all.keys(['headers', 'href', 'httpVersion', 'method', 'proxy']);
+            expect(executionData.response).to.be.an('object')
+                .that.has.all.keys(['headers', 'httpVersion', 'statusCode']);
+        });
+    });
 });
