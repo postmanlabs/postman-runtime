@@ -2,6 +2,8 @@ master:
   new features:
     - GH-1130 Added support to disable TLSv1.3 in tlsDisabledProtocols protocol profile behavior
     - GH-1128 Added `systemHeaders` requester option to add default system headers
+  chores:
+    - Updated dependencies
 
 7.26.10:
   date: 2021-01-03
