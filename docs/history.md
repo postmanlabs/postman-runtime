@@ -114,12 +114,14 @@ The history object has the following top-level properties:
     - **request** `<Object>` The information of the request sent.
         - *method* `<String>` Request method. For example, `GET`, `POST`.
         - *href* `<String>` Request URL.
+        - *headers* `<Object>` Request headers.
         - *proxy* `<Object>` Request Proxy details if enabled.
             - *href* `<String>` Proxy URL.
         - *httpVersion* `<String>` Request HTTP Version. For example, `1.1`
     - **response** `<Object>` The response of the request.
       - *statusCode* `<Number>` Response status code.
       - *httpVersion* `<String>` Response HTTP Version.
+      - *headers* `<Object>` Response headers.
     - **session** `<Object>` Session used by this request connection (referred in `sessions`).
       - *id* `<String>` Unique session ID (UUID).
       - *reused* `<Boolean>` Is session reused (persistent connection connection).
@@ -209,11 +211,17 @@ runner.run(collection, {
         "request": {
           "method": "GET",
           "href": "https://getpostman.com/",
-          "httpVersion": "1.1"
+          "httpVersion": "1.1",
+          "headers": {
+              "User-Agent": "PostmanRuntime"
+          }
         },
         "response": {
           "statusCode": 301,
-          "httpVersion": "1.1"
+          "httpVersion": "1.1",
+          "headers": {
+              "Location": "https://www.getpostman.com/"
+          }
         },
         "timings": {
           "start": 1552926961425,
@@ -234,11 +242,17 @@ runner.run(collection, {
         "request": {
           "method": "GET",
           "href": "https://www.getpostman.com/",
-          "httpVersion": "1.1"
+          "httpVersion": "1.1",
+          "headers": {
+              "User-Agent": "PostmanRuntime"
+          }
         },
         "response": {
           "statusCode": 200,
-          "httpVersion": "1.1"
+          "httpVersion": "1.1",
+          "headers": {
+              "Cookie": "foo=bar"
+          }
         },
         "timings": {
           "start": 1552926961425,
