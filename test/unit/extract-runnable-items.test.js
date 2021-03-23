@@ -488,8 +488,8 @@ describe('extractRunnableItems', function () {
             );
         });
 
-        describe('Preserve Order', function () {
-            it('should work correctly when not specified', function (done) {
+        describe('With preserve Order', function () {
+            it('should follow the collection order when unset', function (done) {
                 extractRunnableItems(
                     collection, {
                         execute: ['ID6', 'ID2'],
@@ -505,7 +505,7 @@ describe('extractRunnableItems', function () {
                 );
             });
 
-            it('should work correctly when specified', function (done) {
+            it('should follow the actual order when unset', function (done) {
                 extractRunnableItems(
                     collection, {
                         execute: ['ID6', 'ID2'],
