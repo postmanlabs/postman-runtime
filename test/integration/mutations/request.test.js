@@ -1,5 +1,6 @@
 var fs = require('fs'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('request mutations', function () {
     var testrun;
@@ -287,7 +288,7 @@ describe('request mutations', function () {
             });
         });
 
-        describe('file accessible', function () {
+        (IS_BROWSER ? describe.skip : describe)('file accessible', function () {
             before(function (done) {
                 this.run({
                     fileResolver: fs,
