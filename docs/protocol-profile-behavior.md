@@ -21,6 +21,9 @@ Control request body pruning for following methods: ```GET, COPY, HEAD, PURGE, U
 - `disableUrlEncoding`<br/>
 Disable percent encoding of auth, path, query and fragment URL segments.
 
+- `disabledSystemHeaders: Object`<br/>
+Disable system headers which get added implicitly.
+
 - `followOriginalHttpMethod`<br/>
 Redirect with the original HTTP method, by default redirects with HTTP method GET.
 

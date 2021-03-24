@@ -122,6 +122,9 @@ runner.run(collection, {
         // Implicitly add `Postman-Token` system header in request (only supported on Node, ignored in the browser)
         implicitTraceHeader: true,
 
+        // Add system headers to all requests which cannot be overridden or disabled
+        systemHeaders: { 'User-Agent': 'PostmanRuntime' }
+
         // Extend well known "root" CAs with the extra certificates in file. The file should consist of one or more trusted certificates in PEM format. (only supported on Node, ignored in the browser)
         extendedRootCA: 'path/to/extra/CA/certs.pem',
 

@@ -6,6 +6,9 @@ var _ = require('lodash'),
 
     runtime;
 
+// by default Node 12 throws error on using anything below TLSv1.2
+require('tls').DEFAULT_MIN_VERSION = 'TLSv1';
+
 runtime = function (spec, done) {
     // restores all spies created through sandbox in the previous run
     // @todo avoid restore on the first run

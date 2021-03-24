@@ -1,3 +1,16 @@
+7.27.0:
+  date: 2021-03-24
+  new features:
+    - >-
+      GH-1130 Added support to disable TLSv1.3 in tlsDisabledProtocols protocol
+      profile behavior
+    - >-
+      GH-1128 Added `systemHeaders` requester option to add default system
+      headers
+    - GH-1139 Added support for request body mutation via prerequest scripts
+  chores:
+    - Updated dependencies
+
 7.26.10:
   date: 2021-01-03
   chores:
