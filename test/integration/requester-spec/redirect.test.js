@@ -109,7 +109,8 @@ var sinon = require('sinon'),
             URL = global.servers.followRedirects + '/1/302';
             this.run({
                 requester: {
-                    removeRefererHeaderOnRedirect: false
+                    removeRefererHeaderOnRedirect: false,
+                    verbose: true
                 },
                 collection: {
                     item: [{
@@ -142,7 +143,7 @@ var sinon = require('sinon'),
             sinon.assert.calledWith(testrun.response.getCall(0), null);
         });
 
-        it('should have referer header on redirects', function () {
+        it('should not have referer header in the first request on redirects', function () {
             var request = testrun.response.getCall(0).args[3],
                 response = testrun.response.getCall(0).args[2],
                 hits;
@@ -158,10 +159,17 @@ var sinon = require('sinon'),
             expect(hits[1]).to.have.property('headers');
             expect(hits[1].headers).to.have.property('referer', URL);
 
-            // this also checks that referer header is updated in the request
             expect(request.headers.reference).to.have.property('referer');
-            expect(request.headers).to.have.nested.property('reference.referer.value', URL);
-            expect(request.headers).to.have.nested.property('reference.referer.system', true);
+            expect(request.headers).to.have.nested.property('reference.referer.value', 'POSTMAN');
+        });
+
+        it('should have referer header in the subsequent requests on redirects', function () {
+            var history = testrun.request.getCall(0).lastArg.execution.data;
+
+            expect(history).to.be.an('array').that.have.lengthOf(2);
+
+            expect(history[1].request).to.be.an('object').that.has.property('headers');
+            expect(history[1].request.headers).to.have.property('referer', URL);
         });
     });
 
