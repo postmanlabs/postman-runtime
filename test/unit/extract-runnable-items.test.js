@@ -488,7 +488,7 @@ describe('extractRunnableItems', function () {
             );
         });
 
-        describe('With preserve Order', function () {
+        describe('With preserveOrder', function () {
             it('should follow the collection order when unset', function (done) {
                 extractRunnableItems(
                     collection, {
@@ -505,7 +505,7 @@ describe('extractRunnableItems', function () {
                 );
             });
 
-            it('should follow the actual order when unset', function (done) {
+            it('should follow the order of folders/items in entrypoint when unset', function (done) {
                 extractRunnableItems(
                     collection, {
                         execute: ['ID6', 'ID2'],
