@@ -192,7 +192,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: global.servers.followRedirects + '/2/302',
+                            url: 'https://cutt.ly/axOnfoK',
                             method: 'GET',
                             header: [{
                                 key: 'foo',
@@ -223,6 +223,10 @@ var expect = require('chai').expect,
 
             var history = testrun.request.getCall(0).lastArg,
                 executionData;
+
+            // console.log(history.execution.data[0].request.headers);
+            // console.log(history.execution.data[1].request.headers);
+            // console.log(history.execution.data[2].request.headers);
 
             // `history` should be present
             expect(history).to.be.an('object').to.have.property('execution');

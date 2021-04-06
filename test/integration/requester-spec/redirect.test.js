@@ -169,7 +169,7 @@ var sinon = require('sinon'),
             expect(history).to.be.an('array').that.have.lengthOf(2);
 
             expect(history[1].request).to.be.an('object').that.has.property('headers');
-            expect(history[1].request.headers).to.have.property('referer', URL);
+            expect(history[1].request.headers).to.deep.include({key: 'referer', value: URL});
         });
     });
 
