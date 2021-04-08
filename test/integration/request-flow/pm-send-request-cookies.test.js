@@ -189,11 +189,13 @@ var _ = require('lodash'),
                 });
 
                 it('should clear the cookies outside the sandbox as well', function () {
-                    var resOne = testrun.io.firstCall.args[3];
+                    var resOne = testrun.io.firstCall.args[3],
+                        historyOne = testrun.response.firstCall.lastArg,
+                        headers = historyOne.execution.data[1].request.headers;
 
-                    // Both reqOne and reqTwo represent the call from pre-request script.
-                    // It will not have cookie header, because no cookie is being sent
-                    // The redirect call from it will have the cookie header, with sails.sid cookie only
+                    // cookies are set after the first response in redirect
+                    expect(headers[headers.length - 1]).to.have.property('key', 'Cookie');
+                    expect(headers[headers.length - 1].value).to.not.include('foo=bar');
 
                     expect(resOne.json()).to.eql({cookies: {}});
                     expect(testrun.request.secondCall.args[2].json()).to.eql({cookies: {foo: 'bar'}});
@@ -417,7 +419,6 @@ var _ = require('lodash'),
                         resOne = testrun.request.firstCall.args[2],
                         resTwo = testrun.io.secondCall.args[3];
 
-                    // first call has only 'foo=bar', redirect call will have 'foo=bar; sail.sid=....'
                     expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
                     // eslint-disable-next-line max-len
                     expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
@@ -486,13 +487,8 @@ var _ = require('lodash'),
                 it('should expose cookies outside the sandbox as well', function () {
                     var resOne = testrun.request.firstCall.args[2],
                         reqTwo = testrun.io.secondCall.args[4],
-                        resTwo = testrun.io.secondCall.args[3];
-
-                    // redirect will have this, first request request wont have
-
-                    // possible solution:
-                    // eslint-disable-next-line one-var
-                    var historyOne = testrun.response.firstCall.lastArg,
+                        resTwo = testrun.io.secondCall.args[3],
+                        historyOne = testrun.response.firstCall.lastArg,
                         headers = historyOne.execution.data[1].request.headers;
 
                     expect(headers[headers.length - 1]).to.have.property('key', 'Cookie');
