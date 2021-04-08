@@ -121,7 +121,7 @@ The history object has the following top-level properties:
     - **response** `<Object>` The response of the request.
       - *statusCode* `<Number>` Response status code.
       - *httpVersion* `<String>` Response HTTP Version.
-      - *headers* `<Array>` Array of request headers in form [ {key: 'agent', value: 'postman'} ].
+      - *headers* `<Array>` Array of response headers in form [ {key: 'agent', value: 'postman'} ].
     - **session** `<Object>` Session used by this request connection (referred in `sessions`).
       - *id* `<String>` Unique session ID (UUID).
       - *reused* `<Boolean>` Is session reused (persistent connection connection).
