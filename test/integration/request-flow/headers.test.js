@@ -4,7 +4,7 @@ var sinon = require('sinon'),
     Header = require('postman-collection').Header,
     cookieJar = require('postman-request').jar();
 
-(typeof window === 'undefined' ? describe : describe.skip)('request headers', function () {
+(typeof window === 'undefined' ? describe.only : describe.skip)('request headers', function () {
     var testrun,
         HEADERS_URL,
         COOKIES_URL;
@@ -131,8 +131,8 @@ var sinon = require('sinon'),
         sinon.assert.calledOnce(testrun.done);
         sinon.assert.calledWith(testrun.done.getCall(0), null);
 
-        sinon.assert.callCount(testrun.request, 5);
-        sinon.assert.callCount(testrun.response, 5);
+        sinon.assert.callCount(testrun.request, 6);
+        sinon.assert.callCount(testrun.response, 6);
     });
 
     it('should handle duplicate headers correctly', function () {
