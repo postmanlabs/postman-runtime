@@ -1,7 +1,7 @@
 master:
   new features:
     - >-
-      GH-1143 Updated request headers to match actual headers on redirects
+      GH-1143 Updated history object to include headers
 
 7.27.0:
   date: 2021-03-24

@@ -143,13 +143,17 @@ var sinon = require('sinon'),
             sinon.assert.calledWith(testrun.response.getCall(0), null);
         });
 
-        it('should not have referer header in the first request on redirects', function () {
-            var request = testrun.response.getCall(0).args[3],
-                response = testrun.response.getCall(0).args[2],
+        it('should have referer header in subsequent requests on redirects', function () {
+            var response = testrun.response.getCall(0).args[2],
+                history = testrun.request.getCall(0).lastArg.execution.data,
                 hits;
 
             expect(response).to.have.property('code', 200);
             expect(response).to.have.property('stream');
+
+            expect(history).to.be.an('array').that.have.lengthOf(2);
+            expect(history[1].request).to.be.an('object').that.has.property('headers');
+            expect(history[1].request.headers).to.deep.include({key: 'referer', value: URL});
 
             hits = response.json();
 
@@ -158,18 +162,13 @@ var sinon = require('sinon'),
             expect(hits[1]).to.have.property('method', 'GET');
             expect(hits[1]).to.have.property('headers');
             expect(hits[1].headers).to.have.property('referer', URL);
+        });
+
+        it('should preserve referer header set in the initial request', function () {
+            var request = testrun.response.getCall(0).args[3];
 
             expect(request.headers.reference).to.have.property('referer');
             expect(request.headers).to.have.nested.property('reference.referer.value', 'POSTMAN');
-        });
-
-        it('should have referer header in the subsequent requests on redirects', function () {
-            var history = testrun.request.getCall(0).lastArg.execution.data;
-
-            expect(history).to.be.an('array').that.have.lengthOf(2);
-
-            expect(history[1].request).to.be.an('object').that.has.property('headers');
-            expect(history[1].request.headers).to.deep.include({key: 'referer', value: URL});
         });
     });
 

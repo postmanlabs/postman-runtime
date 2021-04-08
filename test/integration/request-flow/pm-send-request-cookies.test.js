@@ -190,7 +190,7 @@ var _ = require('lodash'),
 
                 it('should clear the cookies outside the sandbox as well', function () {
                     var resOne = testrun.io.firstCall.args[3],
-                        historyOne = testrun.response.firstCall.lastArg,
+                        historyOne = testrun.request.firstCall.lastArg,
                         headers = historyOne.execution.data[1].request.headers;
 
                     // cookies are set after the first response in redirect
