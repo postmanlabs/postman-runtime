@@ -42,8 +42,6 @@ var expect = require('chai').expect;
         expect(testrun.test.getCall(0).args[0]).to.be.null;
         expect(_.find(testrun.test.getCall(0).args[2][0].result.cookies, {name: 'foo'})).to.have
             .property('value', 'bar');
-        expect(_.get(testrun.test.getCall(0).args[2], '0.result.request.headers.reference.cookie.value')).to
-            .match(/foo=bar;/);
 
         expect(testrun.test.getCall(1).args[0]).to.be.null;
         expect(_.find(testrun.test.getCall(1).args[2][0].result.cookies, {name: 'foo'})).to.have

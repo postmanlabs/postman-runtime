@@ -189,14 +189,13 @@ var _ = require('lodash'),
                 });
 
                 it('should clear the cookies outside the sandbox as well', function () {
-                    var reqOne = testrun.io.firstCall.args[4],
-                        reqTwo = testrun.request.firstCall.args[3],
-                        resOne = testrun.io.firstCall.args[3];
+                    var resOne = testrun.io.firstCall.args[3],
+                        historyOne = testrun.request.firstCall.lastArg,
+                        headers = historyOne.execution.data[1].request.headers;
 
-                    // eslint-disable-next-line max-len
-                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
-                    // eslint-disable-next-line max-len
-                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
+                    // cookies are set after the first response in redirect
+                    expect(headers[headers.length - 1]).to.have.property('key', 'Cookie');
+                    expect(headers[headers.length - 1].value).to.not.include('foo=bar');
 
                     expect(resOne.json()).to.eql({cookies: {}});
                     expect(testrun.request.secondCall.args[2].json()).to.eql({cookies: {foo: 'bar'}});
@@ -264,11 +263,9 @@ var _ = require('lodash'),
                 });
 
                 it('should expose the cookies outside the sandbox as well', function () {
-                    var reqOne = testrun.io.firstCall.args[4],
-                        reqTwo = testrun.request.secondCall.args[3],
+                    var reqTwo = testrun.request.secondCall.args[3],
                         resOne = testrun.io.firstCall.args[3];
 
-                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
                     expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
 
                     expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
@@ -422,7 +419,7 @@ var _ = require('lodash'),
                         resOne = testrun.request.firstCall.args[2],
                         resTwo = testrun.io.secondCall.args[3];
 
-                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar;');
+                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
                     // eslint-disable-next-line max-len
                     expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
                     expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
@@ -488,12 +485,15 @@ var _ = require('lodash'),
                 });
 
                 it('should expose cookies outside the sandbox as well', function () {
-                    var reqOne = testrun.request.firstCall.args[3],
-                        resOne = testrun.request.firstCall.args[2],
+                    var resOne = testrun.request.firstCall.args[2],
                         reqTwo = testrun.io.secondCall.args[4],
-                        resTwo = testrun.io.secondCall.args[3];
+                        resTwo = testrun.io.secondCall.args[3],
+                        historyOne = testrun.response.firstCall.lastArg,
+                        headers = historyOne.execution.data[1].request.headers;
 
-                    expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar;');
+                    expect(headers[headers.length - 1]).to.have.property('key', 'Cookie');
+                    expect(headers[headers.length - 1].value).to.include('foo=bar;');
+
                     expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
 
