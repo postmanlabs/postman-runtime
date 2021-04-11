@@ -1,3 +1,10 @@
+7.28.0:
+  date: 2021-04-11
+  new features:
+    - GH-1143 Updated history object to include request and response headers
+  chores:
+    - Updated dependencies
+
 7.27.0:
   date: 2021-03-24
   new features:

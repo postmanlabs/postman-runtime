@@ -1,5 +1,6 @@
 var sinon = require('sinon'),
     expect = require('chai').expect,
+    fs = require('fs'),
     Header = require('postman-collection').Header,
     cookieJar = require('postman-request').jar();
 
@@ -20,6 +21,7 @@ var sinon = require('sinon'),
             requester: {
                 cookieJar: cookieJar
             },
+            fileResolver: fs,
             collection: {
                 item: [{
                     name: 'Duplicate headers',
@@ -101,6 +103,20 @@ var sinon = require('sinon'),
                             value: 'c2=v2'
                         }]
                     }
+                }, {
+                    name: 'content-length',
+                    request: {
+                        url: 'https://postman-echo.com/post',
+                        method: 'POST',
+                        body: {
+                            mode: 'formdata',
+                            formdata: [{
+                                key: 'file',
+                                src: 'test/fixtures/upload-file.json',
+                                type: 'file'
+                            }]
+                        }
+                    }
                 }]
             }
         }, function (err, results) {
@@ -115,8 +131,8 @@ var sinon = require('sinon'),
         sinon.assert.calledOnce(testrun.done);
         sinon.assert.calledWith(testrun.done.getCall(0), null);
 
-        sinon.assert.callCount(testrun.request, 5);
-        sinon.assert.callCount(testrun.response, 5);
+        sinon.assert.callCount(testrun.request, 6);
+        sinon.assert.callCount(testrun.response, 6);
     });
 
     it('should handle duplicate headers correctly', function () {
@@ -222,7 +238,6 @@ var sinon = require('sinon'),
             response = testrun.response.getCall(4).args[2],
             requestHeaders = JSON.parse(response.stream);
 
-
         // make sure there's only 1 cookie header
         expect(requestHeaders.filter(function (h) { return h.key.toLowerCase() === 'cookie'; }))
             .to.have.lengthOf(1);
@@ -233,6 +248,21 @@ var sinon = require('sinon'),
         // make sure duplicates (multiple cookie headers) are removed
         expect(request.headers.reference.cookie).to.deep.eql(
             new Header({key: 'Cookie', value: 'c1=v1; c2=v2; c3=v3; c4=v4', system: true})
+        );
+    });
+
+    it('should handle content-length header correctly', function () {
+        sinon.assert.calledWith(testrun.request.getCall(5), null);
+        sinon.assert.calledWith(testrun.response.getCall(5), null);
+
+        var request = testrun.response.getCall(5).args[3],
+            response = testrun.response.getCall(5).args[2],
+            requestHeaders = JSON.parse(response.stream).headers;
+
+        expect(requestHeaders).to.have.property('content-length', '253');
+
+        expect(request.headers.members[request.headers.count() - 1]).to.deep.equal(
+            new Header({key: 'Content-Length', 'system': true, value: '253'})
         );
     });
 });
