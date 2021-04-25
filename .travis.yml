@@ -18,7 +18,7 @@ jobs:
 
     # run tests in Node.js stable and publish code coverage
     - name: 'Coverage'
-      node_js: 12
+      node_js: stable
       os: linux
       script:
         - npm run test-unit
