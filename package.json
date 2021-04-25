@@ -8,6 +8,7 @@
     "test": "test"
   },
   "scripts": {
+    "codecov": "node npm/publish-coverage.js",
     "test": "npm run test-lint && npm run test-system && npm run test-unit && npm run test-integration && npm run test-integration-legacy",
     "test-system": "node npm/test-system.js",
     "test-lint": "node npm/test-lint.js",

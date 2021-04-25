@@ -22,11 +22,11 @@ jobs:
       os: linux
       script:
         - npm run test-unit
-        - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F unit
+        - npm run codecov -- -c -Z -f .coverage/coverage-final.json -F unit
         - npm run test-integration
-        - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F integration
+        - npm run codecov -- -c -Z -f .coverage/coverage-final.json -F integration
         - npm run test-integration-legacy
-        - bash <(curl -s https://codecov.io/bash) -c -Z -f .coverage/coverage-final.json -F legacy
+        - npm run codecov -- -c -Z -f .coverage/coverage-final.json -F legacy
 
 
     # create a new release if $CREATE_RELEASE is set
