@@ -32,7 +32,7 @@ jobs:
     # create a new release if $CREATE_RELEASE is set
     - stage: Create Release
       if: env(CREATE_RELEASE) = true AND type = api AND tag IS blank
-      os: osx
+      os: linux
       node_js: 12
       git:
         depth: false # disable --depth
@@ -56,7 +56,7 @@ jobs:
     # publish npm package on tagged builds
     - stage: Publish Package
       if: tag IS present
-      os: osx
+      os: linux
       node_js: 12
       git:
         depth: false # disable --depth
@@ -67,8 +67,8 @@ jobs:
         - TAG=$(echo $TRAVIS_TAG | sed 's/^.*-\([a-z]*\).*$/\1/')
         # set to `latest` in case of no suffix
         - TAG=$([ "${TAG}" = "$TRAVIS_TAG" ] && echo "latest" || echo $TAG)
-        # make sure `latest` tag is create from master branch
-        - '[ "$TAG" = "latest" ] && [ $(git rev-parse HEAD) != $(git rev-parse origin/master) ] && return 1 || return 0'
+        # make sure `latest` tag is create from main branch
+        - '[ "$TAG" = "latest" ] && [ $(git rev-parse HEAD) != $(git rev-parse origin/main) ] && return 1 || return 0'
         - set +e
       deploy:
         edge: true # opt in to dpl v2
@@ -77,6 +77,11 @@ jobs:
         on:
           tags: true
           all_branches: true
+
+before_install:
+  - '[[ -z "$CREATE_RELEASE" ]] && unset encrypted_05f822b6caa8_key || true'
+  - '[[ -z "$CREATE_RELEASE" ]] && unset encrypted_05f822b6caa8_iv || true'
+  - '[[ -z "$TRAVIS_TAG" ]] && unset NPM_API_TOKEN || true'
 
 notifications:
   slack:
