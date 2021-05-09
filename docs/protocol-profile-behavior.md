@@ -24,6 +24,19 @@ Disable percent encoding of auth, path, query and fragment URL segments.
 - `disabledSystemHeaders: Object`<br/>
 Disable system headers which get added implicitly.
 
+```javascript
+{
+    'cache-control': true,
+    'postman-token': true,
+    'content-type': true,
+    'content-length': true,
+    'accept-encoding': true,
+    'connection': true,
+    'host': true
+}
+```
+
+
 - `followOriginalHttpMethod: Boolean`<br/>
 Redirect with the original HTTP method, by default redirects with HTTP method GET.
 
@@ -33,13 +46,13 @@ Retain `authorization` header when a redirect happens to a different hostname.
 - `removeRefererHeaderOnRedirect: Boolean`<br/>
 Removes the `referer` header when a redirect happens.
 
-- `tlsPreferServerCiphers:Boolean`<br/>
+- `tlsPreferServerCiphers: Boolean`<br/>
 Use the server's cipher suite order instead of the client's during negotiation
 
-- `tlsDisabledProtocols:Array`<br/>
+- `tlsDisabledProtocols: Array`<br/>
 the SSL and TLS protocol versions to disabled during negotiation
 
-- `tlsCipherSelection:Array`<br/>
+- `tlsCipherSelection: Array`<br/>
 Order of cipher suites that the SSL server profile uses to establish a secure connection
 
 **A collection with protocol profile behaviors:**
