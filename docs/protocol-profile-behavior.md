@@ -6,31 +6,31 @@ These are used to remove the dependency of agent specific configurations to make
 
 The behavior can be protocol specific or requester options. Currently supported protocol profile behaviors are:
 
-- `strictSSL`<br/>
+- `strictSSL: Boolean`<br/>
 Enable or disable certificate verification.
 
-- `followRedirects`<br/>
+- `followRedirects: Boolean`<br/>
 Follow HTTP 3xx responses as redirects.
 
-- `maxRedirects`<br/>
+- `maxRedirects: Number`<br/>
 Set maximum number of redirects to follow.
 
-- `disableBodyPruning`<br/>
+- `disableBodyPruning: Boolean`<br/>
 Control request body pruning for following methods: ```GET, COPY, HEAD, PURGE, UNLOCK```
 
-- `disableUrlEncoding`<br/>
+- `disableUrlEncoding: Boolean`<br/>
 Disable percent encoding of auth, path, query and fragment URL segments.
 
 - `disabledSystemHeaders: Object`<br/>
 Disable system headers which get added implicitly.
 
-- `followOriginalHttpMethod`<br/>
+- `followOriginalHttpMethod: Boolean`<br/>
 Redirect with the original HTTP method, by default redirects with HTTP method GET.
 
-- `followAuthorizationHeader`<br/>
+- `followAuthorizationHeader: Boolean`<br/>
 Retain `authorization` header when a redirect happens to a different hostname.
 
-- `removeRefererHeaderOnRedirect`<br/>
+- `removeRefererHeaderOnRedirect: Boolean`<br/>
 Removes the `referer` header when a redirect happens.
 
 - `tlsPreferServerCiphers:Boolean`<br/>
