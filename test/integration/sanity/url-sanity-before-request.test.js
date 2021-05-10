@@ -188,7 +188,7 @@ describe('url', function () {
         });
 
         it('should have called request event once', function () {
-            var emptyUrlErrorMessage = 'runtime:extenstions~request: request url is empty';
+            var emptyUrlErrorMessage = 'runtime:extensions~request: request url is empty';
 
             expect(testrun).to.nested.include({
                 'request.callCount': 1
