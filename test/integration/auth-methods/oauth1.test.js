@@ -21,7 +21,7 @@ describe('oauth 1', function () {
                                     token: '',
                                     tokenSecret: '',
                                     signatureMethod: 'HMAC-SHA1',
-                                    timeStamp: 1461319769,
+                                    timestamp: 1461319769,
                                     nonce: 'ik3oT5',
                                     version: '1.0',
                                     realm: '',
