@@ -494,4 +494,60 @@ describe('oauth 1', function () {
             expect(response.json().args).to.have.property('oauth_body_hash', 'He8B58UeskyhaMwMIldmdODrVpM=');
         });
     });
+
+    describe('query parameter encoding', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'RKCGzna7bv9YD57c',
+                                    consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    version: '1.0',
+                                    addParamsToHeader: false,
+                                    addEmptyParamsToSign: false
+                                }
+                            },
+                            url: {
+                                host: ['postman-echo', 'com'],
+                                path: ['oauth1'],
+                                protocol: 'https',
+                                query: [
+                                    {key: 'param_1', value: 'value_1,value_2,value_3'},
+                                    {key: 'param_2', value: 'value_4&value_5'},
+                                    {key: 'param_3', value: 'value_1%2Cvalue_2%2Cvalue_3'}
+                                ],
+                                variable: []
+                            },
+                            method: 'GET'
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have passed OAuth 1 authorization', function () {
+            expect(testrun.request.calledOnce).to.be.ok;
+
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+        });
+
+        it('should send query parameters encoded with RFC-3986 standards', function () {
+            var request = testrun.request.getCall(0).args[3];
+
+            expect(request.url.query.get('param_1')).to.eql('value_1%2Cvalue_2%2Cvalue_3');
+            expect(request.url.query.get('param_2')).to.eql('value_4%26value_5');
+            expect(request.url.query.get('param_3')).to.eql('value_1%2Cvalue_2%2Cvalue_3');
+        });
+    });
 });
