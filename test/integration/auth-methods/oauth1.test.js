@@ -550,4 +550,101 @@ describe('oauth 1', function () {
             expect(request.url.query.get('param_3')).to.eql('value_1%2Cvalue_2%2Cvalue_3');
         });
     });
+
+    // Authorization is failing when query parameters have duplicate keys
+    // e.g. {key: 'param_1', value: 'value_1'}, {key: 'param_1', value: 'value_2'},
+    describe.skip('with duplicate query params', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'RKCGzna7bv9YD57c',
+                                    consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    version: '1.0',
+                                    addParamsToHeader: false,
+                                    addEmptyParamsToSign: false
+                                }
+                            },
+                            url: {
+                                host: ['postman-echo', 'com'],
+                                path: ['oauth1'],
+                                protocol: 'https',
+                                query: [
+                                    {key: 'param_1', value: 'value_1'},
+                                    {key: 'param_1', value: 'value_2'}
+                                ],
+                                variable: []
+                            },
+                            method: 'GET'
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have passed OAuth 1 authorization', function () {
+            expect(testrun.request.calledOnce).to.be.ok;
+
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    // Authorization is failing when query parameters have an empty key
+    // e.g. {key: '', value: 'value_1'}, request: www.xyz.com/a?=value_1
+    describe.skip('with query params having empty keys', function () {
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'oauth1',
+                                oauth1: {
+                                    consumerKey: 'RKCGzna7bv9YD57c',
+                                    consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                                    signatureMethod: 'HMAC-SHA1',
+                                    version: '1.0',
+                                    addParamsToHeader: false,
+                                    addEmptyParamsToSign: false
+                                }
+                            },
+                            url: {
+                                host: ['postman-echo', 'com'],
+                                path: ['oauth1'],
+                                protocol: 'https',
+                                query: [
+                                    {key: '', value: 'value_1'}
+                                ],
+                                variable: []
+                            },
+                            method: 'GET'
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have passed OAuth 1 authorization', function () {
+            expect(testrun.request.calledOnce).to.be.ok;
+
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
 });
