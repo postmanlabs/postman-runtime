@@ -1438,6 +1438,74 @@ describe('Auth Handler:', function () {
                 expect(request.url.query.get('oauth_signature')).to.eql('e8WDYQsG8SYPoWnxU4CYbqHT1HU%3D');
             });
         });
+
+        it('should encode query params with RFC-3986 standards', function () {
+            var rawReq = _.merge(rawRequests.oauth1, {
+                    url: {
+                        host: ['postman-echo', 'com'],
+                        path: ['auth', 'oauth1'],
+                        protocol: 'https',
+                        query: [{
+                            key: 'testParam',
+                            value: 'this.is~a,test_value?for&RFC-3986!'
+                        },
+                        {
+                            key: 'testParam2',
+                            value: 'first,second&third'
+                        },
+                        {
+                            key: 'testParam3',
+                            value: 'first%2Csecond%26third'
+                        }],
+                        variable: []
+                    },
+                    auth: {
+                        oauth1: {
+                            addEmptyParamsToSign: true,
+                            addParamsToHeader: false
+                        }
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+            expect(request.url.query.get('testParam')).to.eql('this.is~a%2Ctest_value%3Ffor%26RFC-3986%21');
+            expect(request.url.query.get('testParam2')).to.eql('first%2Csecond%26third');
+            expect(request.url.query.get('testParam3')).to.eql('first%2Csecond%26third');
+        });
+
+        it('should not remove query params when keys are empty', function () {
+            var _rawReq = {
+                    url: 'https://postman-echo.com/oauth1?=bar&testParam=testValue',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            timestamp: '1461319769',
+                            nonce: 'ik3oT5',
+                            version: '1.0',
+                            verifier: '',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: true,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                request = new Request(_rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+            expect(request.url.query.count()).to.eql(2);
+        });
     });
 
     describe('oauth2', function () {
