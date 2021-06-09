@@ -534,6 +534,14 @@ describe('oauth 1', function () {
             });
         });
 
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.calledOnce).to.be.ok;
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun.start.calledOnce).to.be.ok;
+        });
+
         it('should have passed OAuth 1 authorization', function () {
             expect(testrun.request.calledOnce).to.be.ok;
 
@@ -591,6 +599,14 @@ describe('oauth 1', function () {
             });
         });
 
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.calledOnce).to.be.ok;
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun.start.calledOnce).to.be.ok;
+        });
+
         it('should have passed OAuth 1 authorization', function () {
             expect(testrun.request.calledOnce).to.be.ok;
 
@@ -637,6 +653,14 @@ describe('oauth 1', function () {
                 testrun = results;
                 done(err);
             });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.calledOnce).to.be.ok;
+            testrun.done.getCall(0).args[0] && console.error(testrun.done.getCall(0).args[0].stack);
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun.start.calledOnce).to.be.ok;
         });
 
         it('should have passed OAuth 1 authorization', function () {
