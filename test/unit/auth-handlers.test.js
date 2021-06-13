@@ -1210,7 +1210,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.url.query.get('oauth_body_hash')).to.eql('2jmj7l5rSw0yVb/vlWAYkK/YBwk=');
+            expect(request.url.query.get('oauth_body_hash')).to.eql('2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D');
         });
 
         it('should include correct body hash for raw body', function () {
@@ -1233,7 +1233,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.url.query.get('oauth_body_hash')).to.eql('pqfIFYs01VSVSkySGxRPgtddtoM=');
+            expect(request.url.query.get('oauth_body_hash')).to.eql('pqfIFYs01VSVSkySGxRPgtddtoM%3D');
         });
 
         it('should include correct body hash for GraphQL body', function () {
@@ -1260,7 +1260,7 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.url.query.get('oauth_body_hash')).to.eql('2jwsdzjZEuFdm6ubMtk0HZi34+U=');
+            expect(request.url.query.get('oauth_body_hash')).to.eql('2jwsdzjZEuFdm6ubMtk0HZi34%2BU%3D');
         });
 
         it('should include all non-empty oauth1 params in request', function () {
@@ -1298,9 +1298,9 @@ describe('Auth Handler:', function () {
                     oauth_timestamp: '1461319769',
                     oauth_nonce: 'ik3oT5',
                     oauth_version: '1.0',
-                    oauth_callback: 'http://postman.com',
+                    oauth_callback: 'http%3A%2F%2Fpostman.com',
                     oauth_verifier: 'bar',
-                    oauth_signature: 'WHnpdWcwWzBM3bHcRQNshHVh2Og='
+                    oauth_signature: 'WHnpdWcwWzBM3bHcRQNshHVh2Og%3D'
                 });
             });
         });
@@ -1333,7 +1333,7 @@ describe('Auth Handler:', function () {
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, function () {
-                expect(request.url.query.get('oauth_signature')).to.eql('w8WS1SXfe/dtJu/4tH5DaD7qZgM=');
+                expect(request.url.query.get('oauth_signature')).to.eql('w8WS1SXfe%2FdtJu%2F4tH5DaD7qZgM%3D');
             });
         });
 
@@ -1365,7 +1365,7 @@ describe('Auth Handler:', function () {
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, function () {
-                expect(request.url.query.get('oauth_signature')).to.eql('WO1RMBRLIM5Anfxxt8P7Kbt82b4=');
+                expect(request.url.query.get('oauth_signature')).to.eql('WO1RMBRLIM5Anfxxt8P7Kbt82b4%3D');
             });
         });
 
@@ -1373,7 +1373,7 @@ describe('Auth Handler:', function () {
             // eslint-disable-next-line max-len
             var privateKey = '-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgFKLvzM9zbm3I0+HWcHlBSqpfRY/bKs6NDLclERrzfnReFV4utjkhjaEQPPT6tHVHKrZkcxmIgwe3XrkJkUjcuingXIF+Fc3KpY61qJ4HSM50qIuHdi+C5YfuXwNrh6OOeZAhhqgSw2e2XqPfATbkYYwpIFpdVdcH/Pb2ynpd6VXAgMBAAECgYAbQE+LFyhH25Iou0KCpJ0kDHhjU+UIUlrRP8kjHYQOqXzUmtr0p903OkpHNPsc8wJX1SQxGra60aXE4HVR9fYFQNliAnSmA/ztGR4ddnirK1Gzog4y2OOkicTdSqJ/1XXtTEDSRkA0Z2DIqcWgudeSDzVjUpreYwQ/rCEZbi50AQJBAJcf9wi5bU8tdZUCg3/8MNDwHhr4If4V/9kmhsgNp+M/9tHwCbD05hCbiGS7g58DPF+6V2K30qQYq7yvBP8Te4ECQQCL1GhX/YwkD6rexi0E1bjz+RqhNLTR9kexkTfSYmL6zHeeIFSH8ROioGOJMU51lUtMNkkrKEeki5SZpkfaQOzXAkAvBnJPU6vQ7HtfH8YdiDMEgQNNLxMcxmmzf4qHK8CnNRsvnnrVho8kcdFSTwsY6t/Zhdl1TXANQeQGtYtfeAeBAkEAhUB351JSWJMtrHqCsFbTmHxNKk7F+kiObeMLpUvpM0PiwifhJmNQ6Oubr0Pzlw4c4ZXiCGSsUVxK0lmpo423pQJATYDoxVhZrKA3xDAifWoyxbyxf/WXtUGDaAOuZc/naVN5TKiqaEO6G+k3NpmOXNKsYU/Zd9e6P/TnfU74TyDDDA==\n-----END RSA PRIVATE KEY-----',
                 // eslint-disable-next-line max-len
-                signature = 'Bi/ocoeczWLcYlMpYtW9HdFh41YMEFXSWpdzFZkJKJ8T7rBsuYoC/VDeCUx52DLiHMlkrnfVwmNfnvwyUusEPIOq61Ytb0w3Oq3V2G5jE58+SYMmgKEZQuP6znqfadWq+u8z3nv1oiN4xacJpIRtFh4M1iDz8q+pLvxl3of+toE=',
+                signature = 'Bi%2FocoeczWLcYlMpYtW9HdFh41YMEFXSWpdzFZkJKJ8T7rBsuYoC%2FVDeCUx52DLiHMlkrnfVwmNfnvwyUusEPIOq61Ytb0w3Oq3V2G5jE58%2BSYMmgKEZQuP6znqfadWq%2Bu8z3nv1oiN4xacJpIRtFh4M1iDz8q%2BpLvxl3of%2BtoE%3D',
                 rawReq = _.merge({}, rawRequests.oauth1, {
                     auth: {
                         oauth1: {
@@ -1435,8 +1435,76 @@ describe('Auth Handler:', function () {
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, function () {
-                expect(request.url.query.get('oauth_signature')).to.eql('e8WDYQsG8SYPoWnxU4CYbqHT1HU=');
+                expect(request.url.query.get('oauth_signature')).to.eql('e8WDYQsG8SYPoWnxU4CYbqHT1HU%3D');
             });
+        });
+
+        it('should encode query params with RFC-3986 standards', function () {
+            var rawReq = _.merge(rawRequests.oauth1, {
+                    url: {
+                        host: ['postman-echo', 'com'],
+                        path: ['auth', 'oauth1'],
+                        protocol: 'https',
+                        query: [{
+                            key: 'testParam',
+                            value: 'this.is~a,test_value?for&RFC-3986!'
+                        },
+                        {
+                            key: 'testParam2',
+                            value: 'first,second&third'
+                        },
+                        {
+                            key: 'testParam3',
+                            value: 'first%2Csecond%26third'
+                        }],
+                        variable: []
+                    },
+                    auth: {
+                        oauth1: {
+                            addEmptyParamsToSign: true,
+                            addParamsToHeader: false
+                        }
+                    }
+                }),
+                request = new Request(rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+            expect(request.url.query.get('testParam')).to.eql('this.is~a%2Ctest_value%3Ffor%26RFC-3986%21');
+            expect(request.url.query.get('testParam2')).to.eql('first%2Csecond%26third');
+            expect(request.url.query.get('testParam3')).to.eql('first%2Csecond%26third');
+        });
+
+        it('should not remove query params when keys are empty', function () {
+            var _rawReq = {
+                    url: 'https://postman-echo.com/oauth1?=bar&testParam=testValue',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            timestamp: '1461319769',
+                            nonce: 'ik3oT5',
+                            version: '1.0',
+                            verifier: '',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: true,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                request = new Request(_rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+            expect(request.url.query.count()).to.eql(2);
         });
     });
 
