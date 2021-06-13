@@ -70,7 +70,7 @@
     "express": "4.17.1",
     "graphql": "15.5.0",
     "js-yaml": "4.1.0",
-    "jsdoc": "3.6.6",
+    "jsdoc": "3.6.7",
     "jsdoc-to-markdown": "7.0.1",
     "karma": "3.1.4",
     "karma-browserify": "6.1.0",
@@ -88,7 +88,7 @@
     "shelljs": "0.8.4",
     "sinon": "8.1.1",
     "teleport-javascript": "1.0.0",
-    "terser": "5.6.1",
+    "terser": "5.7.0",
     "tmp": "0.2.1",
     "yankee": "1.0.8"
   },
