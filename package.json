@@ -1,6 +1,6 @@
 {
   "name": "postman-runtime",
-  "version": "7.28.0",
+  "version": "7.28.1",
   "description": "Underlying library of executing Postman Collections (used by Newman)",
   "main": "index.js",
   "directories": {
@@ -8,6 +8,7 @@
     "test": "test"
   },
   "scripts": {
+    "codecov": "node npm/publish-coverage.js",
     "test": "npm run test-lint && npm run test-system && npm run test-unit && npm run test-integration && npm run test-integration-legacy",
     "test-system": "node npm/test-system.js",
     "test-lint": "node npm/test-lint.js",
@@ -39,7 +40,7 @@
     "eventemitter3": "4.0.7",
     "handlebars": "4.7.7",
     "http-reasons": "0.1.0",
-    "httpntlm": "1.7.6",
+    "httpntlm": "1.7.7",
     "inherits": "2.0.4",
     "js-sha512": "0.8.0",
     "lodash": "4.17.21",
@@ -55,7 +56,7 @@
     "uuid": "3.4.0"
   },
   "devDependencies": {
-    "@postman/shipit": "0.2.0",
+    "@postman/shipit": "0.3.0",
     "ajv": "6.12.6",
     "browserify": "16.5.2",
     "chai": "4.3.4",
@@ -68,8 +69,8 @@
     "eslint-plugin-security": "1.4.0",
     "express": "4.17.1",
     "graphql": "15.5.0",
-    "js-yaml": "4.0.0",
-    "jsdoc": "3.6.6",
+    "js-yaml": "4.1.0",
+    "jsdoc": "3.6.7",
     "jsdoc-to-markdown": "7.0.1",
     "karma": "3.1.4",
     "karma-browserify": "6.1.0",
@@ -87,7 +88,7 @@
     "shelljs": "0.8.4",
     "sinon": "8.1.1",
     "teleport-javascript": "1.0.0",
-    "terser": "5.6.1",
+    "terser": "5.7.0",
     "tmp": "0.2.1",
     "yankee": "1.0.8"
   },

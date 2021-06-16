@@ -6,40 +6,53 @@ These are used to remove the dependency of agent specific configurations to make
 
 The behavior can be protocol specific or requester options. Currently supported protocol profile behaviors are:
 
-- `strictSSL`<br/>
+- `strictSSL: Boolean`<br/>
 Enable or disable certificate verification.
 
-- `followRedirects`<br/>
+- `followRedirects: Boolean`<br/>
 Follow HTTP 3xx responses as redirects.
 
-- `maxRedirects`<br/>
+- `maxRedirects: Number`<br/>
 Set maximum number of redirects to follow.
 
-- `disableBodyPruning`<br/>
+- `disableBodyPruning: Boolean`<br/>
 Control request body pruning for following methods: ```GET, COPY, HEAD, PURGE, UNLOCK```
 
-- `disableUrlEncoding`<br/>
+- `disableUrlEncoding: Boolean`<br/>
 Disable percent encoding of auth, path, query and fragment URL segments.
 
 - `disabledSystemHeaders: Object`<br/>
 Disable system headers which get added implicitly.
 
-- `followOriginalHttpMethod`<br/>
+```javascript
+{
+    'cache-control': true,
+    'postman-token': true,
+    'content-type': true,
+    'content-length': true,
+    'accept-encoding': true,
+    'connection': true,
+    'host': true
+}
+```
+
+
+- `followOriginalHttpMethod: Boolean`<br/>
 Redirect with the original HTTP method, by default redirects with HTTP method GET.
 
-- `followAuthorizationHeader`<br/>
+- `followAuthorizationHeader: Boolean`<br/>
 Retain `authorization` header when a redirect happens to a different hostname.
 
-- `removeRefererHeaderOnRedirect`<br/>
+- `removeRefererHeaderOnRedirect: Boolean`<br/>
 Removes the `referer` header when a redirect happens.
 
-- `tlsPreferServerCiphers:Boolean`<br/>
+- `tlsPreferServerCiphers: Boolean`<br/>
 Use the server's cipher suite order instead of the client's during negotiation
 
-- `tlsDisabledProtocols:Array`<br/>
+- `tlsDisabledProtocols: Array`<br/>
 the SSL and TLS protocol versions to disabled during negotiation
 
-- `tlsCipherSelection:Array`<br/>
+- `tlsCipherSelection: Array`<br/>
 Order of cipher suites that the SSL server profile uses to establish a secure connection
 
 **A collection with protocol profile behaviors:**
