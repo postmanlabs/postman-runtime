@@ -1,4 +1,8 @@
 unreleased:
+  fixed bugs:
+    - >-
+      GH-1158 Fixed a bug where invalid OAuth 1.0 signature was generated for
+      encoded query parameters
   chores:
     - Added secure codecov publish script
     - Updated dependencies
