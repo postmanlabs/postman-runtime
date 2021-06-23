@@ -3,6 +3,9 @@ unreleased:
     - >-
       GH-1161 Fixed a bug where cookies set in the request and response callback
       don't account for redirects
+  chores:
+    - Bumped postman-collection dependency to v4
+    - Updated dependencies
 
 7.28.1:
   date: 2021-06-16
