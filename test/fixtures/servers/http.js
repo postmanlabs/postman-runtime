@@ -48,4 +48,11 @@ httpServer.on('/custom-reason', function (req, res) {
     res.end();
 });
 
+httpServer.on('/redirect-to', function (req, res) {
+    res.writeHead(301, {
+        location: decodeURI(req.url.substr(req.url.indexOf('?url=') + 5))
+    });
+    res.end();
+});
+
 module.exports = httpServer;
