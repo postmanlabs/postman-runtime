@@ -78,7 +78,7 @@ var expect = require('chai').expect;
             'response.calledThrice': true
         });
 
-        const c1 = testrun.response.getCall(1).args[5],
+        const c1 = testrun.response.getCall(0).args[5],
             c2 = testrun.response.getCall(1).args[5],
             c3 = testrun.response.getCall(2).args[5];
 
