@@ -1,4 +1,5 @@
-unreleased:
+7.28.2:
+  date: 2021-06-24
   fixed bugs:
     - >-
       GH-1161 Fixed a bug where cookies set in the request and response callback
