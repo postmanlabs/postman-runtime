@@ -225,7 +225,7 @@ describe('request mutations', function () {
                 responseBody = JSON.parse(response.stream.toString());
 
             expect(request.auth).to.have.property('type', 'basic');
-            expect(request.auth.current()).to.eql({username: 'postman', password: 'password'});
+            expect(request.auth.parameters().toObject()).to.eql({username: 'postman', password: 'password'});
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('authenticated', true);
