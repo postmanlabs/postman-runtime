@@ -1506,6 +1506,192 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
             expect(request.url.query.count()).to.eql(2);
         });
+
+        it('should encode query params when the disableUrlEncoding option is false', function () {
+            var _rawReq = {
+                    url: 'https://postman-echo.com/oauth1?foo,+?=bar*+=&testParam/*=testValue$@',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: true,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                protocolProfileBehavior = {
+                    disableUrlEncoding: false
+                },
+                request = new Request(_rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.count()).to.eql(2);
+            expect(request.url.query.get('foo%2C%20%3F')).to.eql('bar%2A%20%3D');
+            expect(request.url.query.get('testParam%2F%2A')).to.eql('testValue%24%40');
+        });
+
+        it('should not encode query params when the disableUrlEncoding option is true', function () {
+            var _rawReq = {
+                    url: 'https://postman-echo.com/oauth1?foo,+?=bar*+=&testParam/*=testValue$@',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: true,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                protocolProfileBehavior = {
+                    disableUrlEncoding: true
+                },
+                request = new Request(_rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.count()).to.eql(2);
+            expect(request.url.query.get('foo,+?')).to.eql('bar*+=');
+            expect(request.url.query.get('testParam/*')).to.eql('testValue$@');
+        });
+
+        // This test is to make sure that in the absence of a setting, the standard is followed
+        it('should encode query params when protocolProfilebehavior is not passed to authInterface', function () {
+            var _rawReq = {
+                    url: 'https://postman-echo.com/oauth1?foo,+?=bar*+=&testParam/*=testValue$@',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: true,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                request = new Request(_rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.count()).to.eql(2);
+            expect(request.url.query.get('foo%2C%20%3F')).to.eql('bar%2A%20%3D');
+            expect(request.url.query.get('testParam%2F%2A')).to.eql('testValue%24%40');
+        });
+
+        // protocolProfileBehavior is a part of the OAuth1 flow now and is set externally, hence
+        // this check is necessary
+        it('should encode query params when protocolProfilebehavior is undefined', function () {
+            var _rawReq = {
+                    url: 'https://postman-echo.com/oauth1?foo,+?=bar*+=&testParam/*=testValue$@',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: true,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                protocolProfileBehavior,
+                request = new Request(_rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.count()).to.eql(2);
+            expect(request.url.query.get('foo%2C%20%3F')).to.eql('bar%2A%20%3D');
+            expect(request.url.query.get('testParam%2F%2A')).to.eql('testValue%24%40');
+        });
+
+        it('should encode signature params in query when the disableUrlEncoding option is false', function () {
+            var _rawReq = {
+                    url: 'https://postman-echo.com/oauth1',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: false,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                protocolProfileBehavior = {
+                    disableUrlEncoding: false
+                },
+                request = new Request(_rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.get('oauth_callback')).to.eql('http%3A%2F%2Fpostman.com');
+        });
+
+        it('should not encode signature params in query when the disableUrlEncoding option is true', function () {
+            var _rawReq = {
+                    url: 'https://postman-echo.com/oauth1',
+                    auth: {
+                        type: 'oauth1',
+                        oauth1: {
+                            consumerKey: 'RKCGzna7bv9YD57c',
+                            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
+                            token: 'foo',
+                            tokenSecret: 'bar',
+                            signatureMethod: 'HMAC-SHA1',
+                            callback: 'http://postman.com',
+                            addParamsToHeader: false,
+                            addEmptyParamsToSign: false
+                        }
+                    }
+                },
+                protocolProfileBehavior = {
+                    disableUrlEncoding: true
+                },
+                request = new Request(_rawReq),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                handler = AuthLoader.getHandler(auth.type);
+
+            handler.sign(authInterface, request, _.noop);
+
+            expect(request.url.query.get('oauth_callback')).to.eql('http://postman.com');
+        });
     });
 
     describe('oauth2', function () {
