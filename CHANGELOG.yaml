@@ -1,3 +1,12 @@
+7.28.3:
+  date: 2021-07-25
+  fixed bugs:
+    - >-
+      GH-1163 Fixed a bug where `protocolProfileBehavior.disableUrlEncoding`
+      option was not respected in OAuth 1.0 authorizer
+  chores:
+    - Updated dependencies
+
 7.28.2:
   date: 2021-06-24
   fixed bugs:
