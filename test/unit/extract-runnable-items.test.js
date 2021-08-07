@@ -275,16 +275,18 @@ describe('extractRunnableItems', function () {
             );
         });
 
-        it('should bail out if any of the given entrypoint is not found. ', function (done) {
+        it('should bail out with an error if any of the given entrypoint is not found. ', function (done) {
             extractRunnableItems(
                 collection, {
-                    execute: ['ID3', 'RANDOM'],
-                    lookupStrategy: 'multipleIdOrName'
+                    execute: ['RANDOM', 'F1.R1', 'F2.R1'],
+                    lookupStrategy: 'multipleIdOrName',
+                    abortOnError: true
                 },
                 function (err, runnableItems, entrypoint) {
-                    expect(err).to.be.null;
-                    expect(runnableItems).to.eql([]);
+                    expect(err.message).to.equal('Unable to find an entry point');
+                    expect(runnableItems).to.be.undefined;
                     expect(entrypoint).to.be.undefined;
+
                     done();
                 }
             );
