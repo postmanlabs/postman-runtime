@@ -3,6 +3,8 @@ unreleased:
     - >-
       Fixed a bug where NTLM could not complete authentication if a single
       `www-authenticate` header was sent with multiple schemes
+  chores:
+    - Updated dependencies
 
 7.28.3:
   date: 2021-07-25
