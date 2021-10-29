@@ -68,7 +68,7 @@
     "eslint-plugin-mocha": "6.3.0",
     "eslint-plugin-security": "1.4.0",
     "express": "4.17.1",
-    "graphql": "15.5.1",
+    "graphql": "16.0.0",
     "js-yaml": "4.1.0",
     "jsdoc": "3.6.7",
     "jsdoc-to-markdown": "7.0.1",
