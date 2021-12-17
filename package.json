@@ -67,7 +67,7 @@
     "eslint-plugin-lodash": "7.3.0",
     "eslint-plugin-mocha": "6.3.0",
     "eslint-plugin-security": "1.4.0",
-    "express": "4.17.1",
+    "express": "4.17.2",
     "graphql": "15.5.1",
     "js-yaml": "4.1.0",
     "jsdoc": "3.6.7",
