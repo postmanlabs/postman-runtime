@@ -80,7 +80,7 @@
     "mocha": "7.2.0",
     "nyc": "14.1.1",
     "parse-gitignore": "0.5.1",
-    "passport": "0.4.1",
+    "passport": "0.5.2",
     "passport-http": "0.3.0",
     "postman-jsdoc-theme": "0.0.3",
     "recursive-readdir": "2.2.2",
