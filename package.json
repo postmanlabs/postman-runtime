@@ -97,6 +97,6 @@
     "postman-request": "./lib/requester/browser/request.js"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   }
 }
