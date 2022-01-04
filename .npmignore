@@ -47,6 +47,7 @@ npm/
 test/
 docs/
 .eslintrc
+.nycrc.js
 codecov.yml
 .travis.yml
 .editorconfig
