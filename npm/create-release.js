@@ -22,7 +22,7 @@ shipit({
     preReleaseSuffix: preReleaseSuffix,
     // make sure that following dependencies are up to date
     dependencyList: [
-        'http-reasons', 'node-oauth1', 'postman-collection', 'postman-request',
+        'node-oauth1', 'postman-collection', 'postman-request',
         'postman-url-encoder', 'postman-sandbox', 'serialised-error'
     ]
 }).then((version) => {
