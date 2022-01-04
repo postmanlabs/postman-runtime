@@ -10,10 +10,10 @@ describe('sandbox test for `undefined` test values', function () {
                     request: 'https://postman-echo.com/get',
                     event: [
                         {
-                            'listen': 'test',
-                            'script': {
-                                'type': 'text/javascript',
-                                'exec': [
+                            listen: 'test',
+                            script: {
+                                type: 'text/javascript',
+                                exec: [
                                     'tests[\'undefined\'] = undefined;',
                                     'tests[\'true\'] = true;',
                                     'tests[\'false\'] = false;'
@@ -24,7 +24,7 @@ describe('sandbox test for `undefined` test values', function () {
                 }
             },
             environment: {
-                values: [{key: 'testVar', value: 'test-var-value'}]
+                values: [{ key: 'testVar', value: 'test-var-value' }]
             }
         }, function (err, results) {
             testrun = results;

@@ -48,7 +48,7 @@ describe('Request Body Mode: graphql', function () {
 
             expect(responseBody.request).to.have.property('body', '{"query":"{ hello }"}');
             expect(responseBody.result).to.eql({
-                data: {hello: 'Hello world!'}
+                data: { hello: 'Hello world!' }
             });
         });
     });
@@ -100,7 +100,7 @@ describe('Request Body Mode: graphql', function () {
             expect(responseBody.request).to.have.property('body',
                 '{"query":"query Test { hello } query Test2 { hello }","operationName":"Test"}');
             expect(responseBody.result).to.eql({
-                data: {hello: 'Hello world!'}
+                data: { hello: 'Hello world!' }
             });
         });
     });
@@ -167,7 +167,7 @@ describe('Request Body Mode: graphql', function () {
                                             square(n: $ten)
                                         }
                                     `,
-                                    variables: {ten: 10}
+                                    variables: { ten: 10 }
                                 }
                             }
                         }
@@ -200,7 +200,7 @@ describe('Request Body Mode: graphql', function () {
             expect(responseBody.request.headers).to.have.property('content-type', 'application/json');
 
             expect(responseBody.result).to.eql({
-                data: {square: 100}
+                data: { square: 100 }
             });
         });
     });
@@ -220,7 +220,7 @@ describe('Request Body Mode: graphql', function () {
                                         query Square($ten: Int!) { square(n: $ten) }
                                         query Test { hello }
                                     `,
-                                    variables: JSON.stringify({ten: 2}) // stringified JSON
+                                    variables: JSON.stringify({ ten: 2 }) // stringified JSON
                                 }
                             }
                         }
@@ -306,7 +306,7 @@ describe('Request Body Mode: graphql', function () {
             expect(responseBody.request).to.have.property('body',
                 '{"query":"query Test { hello }","operationName":"Test"}');
             expect(responseBody.result).to.eql({
-                data: {hello: 'Hello world!'}
+                data: { hello: 'Hello world!' }
             });
         });
     });

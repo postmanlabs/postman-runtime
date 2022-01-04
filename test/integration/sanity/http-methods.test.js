@@ -20,7 +20,7 @@ describe('http methods', function () {
                         request: {
                             url: URL,
                             method: 'GET',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }]
                 }
@@ -303,7 +303,7 @@ describe('http methods', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: {url: URL}
+                        request: { url: URL }
                     }]
                 }
             }, function (err, results) {

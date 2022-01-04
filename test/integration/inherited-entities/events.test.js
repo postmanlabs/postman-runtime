@@ -11,10 +11,10 @@ describe('Events', function () {
                         event: [
                             {
                                 listen: 'prerequest',
-                                script: {exec: 'console.log("request level prerequest script")'}
+                                script: { exec: 'console.log("request level prerequest script")' }
                             }, {
                                 listen: 'test',
-                                script: {exec: 'console.log("request level test script")'}
+                                script: { exec: 'console.log("request level test script")' }
                             }
                         ],
                         request: 'https://postman-echo.com/get'
@@ -63,11 +63,11 @@ describe('Events', function () {
                         event: [
                             {
                                 listen: 'prerequest',
-                                script: {exec: 'console.log("folder level prerequest script")'}
+                                script: { exec: 'console.log("folder level prerequest script")' }
                             },
                             {
                                 listen: 'test',
-                                script: {exec: 'console.log("folder level test script")'}
+                                script: { exec: 'console.log("folder level test script")' }
                             }
                         ],
                         item: {
@@ -116,11 +116,11 @@ describe('Events', function () {
                     event: [
                         {
                             listen: 'prerequest',
-                            script: {exec: 'console.log("collection level prerequest script")'}
+                            script: { exec: 'console.log("collection level prerequest script")' }
                         },
                         {
                             listen: 'test',
-                            script: {exec: 'console.log("collection level test script")'}
+                            script: { exec: 'console.log("collection level test script")' }
                         }
                     ],
                     item: {
@@ -168,26 +168,26 @@ describe('Events', function () {
                     event: [
                         {
                             listen: 'prerequest',
-                            script: {exec: 'console.log("collection level prerequest script 1")'}
+                            script: { exec: 'console.log("collection level prerequest script 1")' }
                         },
                         {
                             listen: 'prerequest',
-                            script: {exec: 'console.log("collection level prerequest script 2")'}
+                            script: { exec: 'console.log("collection level prerequest script 2")' }
                         },
                         {
                             listen: 'test',
-                            script: {exec: 'console.log("collection level test script")'}
+                            script: { exec: 'console.log("collection level test script")' }
                         }
                     ],
                     item: {
                         event: [
                             {
                                 listen: 'prerequest',
-                                script: {exec: 'console.log("request level prerequest script")'}
+                                script: { exec: 'console.log("request level prerequest script")' }
                             },
                             {
                                 listen: 'test',
-                                script: {exec: 'console.log("request level test script")'}
+                                script: { exec: 'console.log("request level test script")' }
                             }
                         ],
                         request: 'https://postman-echo.com/get'
@@ -239,22 +239,22 @@ describe('Events', function () {
                     event: [
                         {
                             listen: 'prerequest',
-                            script: {exec: 'console.log("collection level prerequest script")'}
+                            script: { exec: 'console.log("collection level prerequest script")' }
                         },
                         {
                             listen: 'test',
-                            script: {exec: 'console.log("collection level test script")'}
+                            script: { exec: 'console.log("collection level test script")' }
                         }
                     ],
                     item: [{
                         event: [
                             {
                                 listen: 'prerequest',
-                                script: {exec: 'console.log("folder level prerequest script")'}
+                                script: { exec: 'console.log("folder level prerequest script")' }
                             },
                             {
                                 listen: 'test',
-                                script: {exec: 'console.log("folder level test script")'}
+                                script: { exec: 'console.log("folder level test script")' }
                             }
                         ],
                         item: {
@@ -308,23 +308,23 @@ describe('Events', function () {
                         {
                             disabled: true,
                             listen: 'prerequest',
-                            script: {exec: 'console.log("collection level prerequest script")'}
+                            script: { exec: 'console.log("collection level prerequest script")' }
                         },
                         {
                             listen: 'test',
-                            script: {exec: 'console.log("collection level test script")'}
+                            script: { exec: 'console.log("collection level test script")' }
                         }
                     ],
                     item: [{
                         event: [
                             {
                                 listen: 'prerequest',
-                                script: {exec: 'console.log("folder level prerequest script")'}
+                                script: { exec: 'console.log("folder level prerequest script")' }
                             },
                             {
                                 disabled: true,
                                 listen: 'test',
-                                script: {exec: 'console.log("folder level test script")'}
+                                script: { exec: 'console.log("folder level test script")' }
                             }
                         ],
                         item: {
@@ -332,11 +332,11 @@ describe('Events', function () {
                                 {
                                     disabled: true,
                                     listen: 'prerequest',
-                                    script: {exec: 'console.log("request level prerequest script")'}
+                                    script: { exec: 'console.log("request level prerequest script")' }
                                 },
                                 {
                                     listen: 'test',
-                                    script: {exec: 'console.log("request level test script")'}
+                                    script: { exec: 'console.log("request level test script")' }
                                 }
                             ],
                             request: 'https://postman-echo.com/get'

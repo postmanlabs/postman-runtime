@@ -26,19 +26,19 @@ describe('requests replayed', function () {
              */
             var replayCount = 0,
                 fakeHandler = {
-                    init: function (auth, response, done) {
+                    init (auth, response, done) {
                         done(null);
                     },
 
-                    pre: function (auth, done) {
+                    pre (auth, done) {
                         done(null, true);
                     },
 
-                    post: function (auth, response, done) {
+                    post (auth, response, done) {
                         done(null, replayCount++ === 1);
                     },
 
-                    sign: function (auth, request, done) {
+                    sign (auth, request, done) {
                         done();
                     }
                 };
@@ -127,19 +127,19 @@ describe('requests replayed', function () {
             var replayCount = 0,
                 intermediateReqCount = 0,
                 fakeHandler = {
-                    init: function (auth, response, done) {
+                    init (auth, response, done) {
                         done(null);
                     },
 
-                    pre: function (auth, done) {
+                    pre (auth, done) {
                         done(null, intermediateReqCount++ >= 1, 'https://postman-echo.com/fake/url');
                     },
 
-                    post: function (auth, response, done) {
+                    post (auth, response, done) {
                         done(null, replayCount++ === 1);
                     },
 
-                    sign: function (auth, request, done) {
+                    sign (auth, request, done) {
                         done();
                     }
                 };
@@ -241,19 +241,19 @@ describe('requests replayed', function () {
              * @constructor
              */
             var fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
 
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, true);
                 },
 
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, false);
                 },
 
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             };
@@ -309,19 +309,19 @@ describe('requests replayed', function () {
              * @constructor
              */
             var fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
 
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, false, 'https://postman-echo.com/get');
                 },
 
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, false);
                 },
 
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             };

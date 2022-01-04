@@ -104,8 +104,8 @@ describe('oauth 1', function () {
                             body: {
                                 mode: 'urlencoded',
                                 urlencoded: [
-                                    {key: 'param_1', value: 'value_1'},
-                                    {key: 'param_2', value: 'value_2', disabled: true}
+                                    { key: 'param_1', value: 'value_1' },
+                                    { key: 'param_2', value: 'value_2', disabled: true }
                                 ]
                             }
                         }
@@ -161,8 +161,8 @@ describe('oauth 1', function () {
                                 path: ['oauth1'],
                                 protocol: 'https',
                                 query: [
-                                    {key: 'param_1', value: 'value_1'},
-                                    {key: 'param_2', value: 'value_2', disabled: true}
+                                    { key: 'param_1', value: 'value_1' },
+                                    { key: 'param_2', value: 'value_2', disabled: true }
                                 ],
                                 variable: []
                             },
@@ -518,9 +518,9 @@ describe('oauth 1', function () {
                                 path: ['oauth1'],
                                 protocol: 'https',
                                 query: [
-                                    {key: 'param_1', value: 'value_1,value_2,value_3'},
-                                    {key: 'param_2', value: 'value_4&value_5'},
-                                    {key: 'param_3', value: 'value_1%2Cvalue_2%2Cvalue_3'}
+                                    { key: 'param_1', value: 'value_1,value_2,value_3' },
+                                    { key: 'param_2', value: 'value_4&value_5' },
+                                    { key: 'param_3', value: 'value_1%2Cvalue_2%2Cvalue_3' }
                                 ],
                                 variable: []
                             },
@@ -584,8 +584,8 @@ describe('oauth 1', function () {
                                 path: ['oauth1'],
                                 protocol: 'https',
                                 query: [
-                                    {key: 'param_1', value: 'value_1'},
-                                    {key: 'param_1', value: 'value_2'}
+                                    { key: 'param_1', value: 'value_1' },
+                                    { key: 'param_1', value: 'value_2' }
                                 ],
                                 variable: []
                             },
@@ -641,7 +641,7 @@ describe('oauth 1', function () {
                                 path: ['oauth1'],
                                 protocol: 'https',
                                 query: [
-                                    {key: '', value: 'value_1'}
+                                    { key: '', value: 'value_1' }
                                 ],
                                 variable: []
                             },
@@ -695,8 +695,8 @@ describe('oauth 1', function () {
                                 path: ['oauth1'],
                                 protocol: 'https',
                                 query: [
-                                    {key: 'param_1', value: 'value_1,value_2,value_3'},
-                                    {key: 'param_2', value: 'value_4/value_5'}
+                                    { key: 'param_1', value: 'value_1,value_2,value_3' },
+                                    { key: 'param_2', value: 'value_4/value_5' }
                                 ],
                                 variable: []
                             },
@@ -760,8 +760,8 @@ describe('oauth 1', function () {
                                 path: ['oauth1'],
                                 protocol: 'https',
                                 query: [
-                                    {key: 'param_1', value: 'value_1,value_2,value_3'},
-                                    {key: 'param_2', value: 'value_4/value_5'}
+                                    { key: 'param_1', value: 'value_1,value_2,value_3' },
+                                    { key: 'param_2', value: 'value_4/value_5' }
                                 ],
                                 variable: []
                             },

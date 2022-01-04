@@ -19,14 +19,14 @@ describe('runner util', function () {
                 call,
                 func = sinon.spy();
 
-            err = runnerUtil.safeCall(func, {alpha: 'foo'}, 'bar', 'baz');
+            err = runnerUtil.safeCall(func, { alpha: 'foo' }, 'bar', 'baz');
 
             expect(err).to.be.undefined;
             expect(func.calledOnce).to.be.true;
 
             call = func.getCall(0);
             expect(call).to.deep.include({
-                thisValue: {alpha: 'foo'},
+                thisValue: { alpha: 'foo' },
                 args: ['bar', 'baz']
             });
         });
@@ -68,8 +68,8 @@ describe('runner util', function () {
 
     describe('.syncObject', function () {
         it('should synchronize the provided objects correctly', function () {
-            var target = {delta: 4},
-                source = {alpha: 0, beta: 2, gamma: 3};
+            var target = { delta: 4 },
+                source = { alpha: 0, beta: 2, gamma: 3 };
 
             runnerUtil.syncObject(target, source);
             expect(target).to.eql(source);

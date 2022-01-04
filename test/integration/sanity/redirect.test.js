@@ -10,7 +10,7 @@ describe('redirects', function () {
     describe.skip('sanity', function () {
         before(function (done) {
             this.run({
-                requester: {followRedirects: false},
+                requester: { followRedirects: false },
                 collection: {
                     item: [{
                         request: 'https://postman-echo.com/redirect-to?url=https://postman-echo.com/get'

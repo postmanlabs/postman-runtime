@@ -50,7 +50,7 @@ var dns = require('dns'),
 
         expect(response).to.have.property('code', 200);
         expect(response.json()).to.deep.include({
-            args: {foo: 'bar'}
+            args: { foo: 'bar' }
         });
     });
 });

@@ -354,7 +354,7 @@ describe('sandbox library - pm api', function () {
                     name: 'jar.set in pre-request'
                 });
 
-                expect(JSON.parse(response)).to.eql({cookies: {hello: 'world'}});
+                expect(JSON.parse(response)).to.eql({ cookies: { hello: 'world' } });
             });
         });
 
@@ -419,8 +419,8 @@ describe('sandbox library - pm api', function () {
                     name: 'jar.clear in pre-request'
                 });
 
-                expect(JSON.parse(firstResponse)).to.eql({cookies: {foo: 'bar'}});
-                expect(JSON.parse(secondResponse)).to.eql({cookies: {}});
+                expect(JSON.parse(firstResponse)).to.eql({ cookies: { foo: 'bar' } });
+                expect(JSON.parse(secondResponse)).to.eql({ cookies: {} });
             });
         });
 
@@ -434,7 +434,7 @@ describe('sandbox library - pm api', function () {
 
                 this.run({
                     requester: {
-                        cookieJar: cookieJar
+                        cookieJar
                     },
                     collection: {
                         item: [{
@@ -492,8 +492,8 @@ describe('sandbox library - pm api', function () {
                 var firstResponse = testrun.response.getCall(0).args[2].stream.toString(),
                     secondResponse = testrun.response.getCall(1).args[2].stream.toString();
 
-                expect(JSON.parse(firstResponse)).to.eql({cookies: {}});
-                expect(JSON.parse(secondResponse)).to.eql({cookies: {hello: 'world'}});
+                expect(JSON.parse(firstResponse)).to.eql({ cookies: {} });
+                expect(JSON.parse(secondResponse)).to.eql({ cookies: { hello: 'world' } });
 
                 sinon.assert.calledTwice(testrun.script);
                 sinon.assert.calledWith(testrun.script.getCall(0), null);
@@ -573,7 +573,7 @@ describe('sandbox library - pm api', function () {
             var visualizerResults = testrun.item.getCall(0).args[3];
 
             expect(visualizerResults).to.deep.include({
-                data: {name: 'Postman'},
+                data: { name: 'Postman' },
                 processedTemplate: '<h1>Postman</h1>'
             });
         });

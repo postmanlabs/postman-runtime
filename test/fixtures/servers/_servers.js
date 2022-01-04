@@ -103,9 +103,9 @@ function createSSLServer (opts) {
     var server,
         certDataPath = path.join(__dirname, '../certificates'),
         options = {
-            'key': path.join(certDataPath, 'server-key.pem'),
-            'cert': path.join(certDataPath, 'server-crt.pem'),
-            'ca': path.join(certDataPath, 'ca.pem')
+            key: path.join(certDataPath, 'server-key.pem'),
+            cert: path.join(certDataPath, 'server-crt.pem'),
+            ca: path.join(certDataPath, 'ca.pem')
         },
         optionsWithFilePath = ['key', 'cert', 'ca', 'pfx'];
 
@@ -252,9 +252,8 @@ function createProxyServer (options) {
 
     // pre calculate proxy-authorization header value
     if (options.auth) {
-        proxyAuthHeader = 'Basic ' + Buffer.from(
-            `${options.auth.username}:${options.auth.password}`
-        ).toString('base64');
+        proxyAuthHeader = 'Basic ' +
+            Buffer.from(`${options.auth.username}:${options.auth.password}`).toString('base64');
     }
 
     // listen on every incoming request
@@ -310,8 +309,8 @@ function createGraphQLServer (options) {
             'content-type': 'application/json'
         });
         res.end(JSON.stringify({
-            request: request,
-            error: error
+            request,
+            error
         }));
     }
 
@@ -330,8 +329,7 @@ function createGraphQLServer (options) {
             return badRequest(res, request, 'Invalid JSON body');
         }
 
-        GraphQL.graphql(
-            options.schema,
+        GraphQL.graphql(options.schema,
             jsonBody.query,
             options.root,
             options.context,
@@ -659,22 +657,20 @@ function createDigestServer (options) {
         expectedUsername = options.username || 'username',
         expectedPassword = options.password || 'password';
 
-    passport.use(new DigestStrategy({qop: 'auth'},
+    passport.use(new DigestStrategy({ qop: 'auth' },
         function (username, done) {
             if (username !== expectedUsername) {
                 return done(null, false);
             }
 
             return done(null, username, expectedPassword);
-        }
-    ));
+        }));
 
     app.all('*',
-        passport.authenticate('digest', {session: false}),
+        passport.authenticate('digest', { session: false }),
         function (req, res) {
             res.send(req.users);
-        }
-    );
+        });
 
     return app;
 }

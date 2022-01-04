@@ -116,8 +116,8 @@ describe('request mutations', function () {
                         request: {
                             url: 'https://postman-echo.com/get',
                             header: [
-                                {key: 'h0', value: 'v0'},
-                                {key: 'h1', value: 'v0'}
+                                { key: 'h0', value: 'v0' },
+                                { key: 'h1', value: 'v0' }
                             ]
                         },
                         event: [{
@@ -165,7 +165,7 @@ describe('request mutations', function () {
                     h3: 'v3'
                 };
 
-            expect(initialHeaders).to.eql({h0: 'v0', h1: 'v0'});
+            expect(initialHeaders).to.eql({ h0: 'v0', h1: 'v0' });
             expect(requestHeaders).to.deep.include(headers);
             expect(requestHeaders).to.not.have.property('h0');
 
@@ -225,7 +225,7 @@ describe('request mutations', function () {
                 responseBody = JSON.parse(response.stream.toString());
 
             expect(request.auth).to.have.property('type', 'basic');
-            expect(request.auth.parameters().toObject()).to.eql({username: 'postman', password: 'password'});
+            expect(request.auth.parameters().toObject()).to.eql({ username: 'postman', password: 'password' });
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('authenticated', true);
@@ -281,10 +281,10 @@ describe('request mutations', function () {
                     response = testrun.response.getCall(0).args[2],
                     responseBody = JSON.parse(response.stream.toString());
 
-                expect(request.body).to.deep.include({mode: 'raw', raw: 'postman-updated'});
+                expect(request.body).to.deep.include({ mode: 'raw', raw: 'postman-updated' });
 
                 expect(response).to.have.property('code', 200);
-                expect(responseBody).to.deep.include({data: 'postman-updated'});
+                expect(responseBody).to.deep.include({ data: 'postman-updated' });
             });
         });
 
@@ -337,7 +337,7 @@ describe('request mutations', function () {
                     responseBody = JSON.parse(response.stream.toString());
 
                 expect(response).to.have.property('code', 200);
-                expect(responseBody.data).to.be.eql({key1: 'value1', key2: 2});
+                expect(responseBody.data).to.be.eql({ key1: 'value1', key2: 2 });
             });
         });
 
@@ -345,10 +345,10 @@ describe('request mutations', function () {
             before(function (done) {
                 this.run({
                     fileResolver: {
-                        stat: function (path, callback) {
+                        stat (path, callback) {
                             callback(new Error('File not accessible'));
                         },
-                        createReadStream: function () {
+                        createReadStream () {
                             return null;
                         }
                     },
@@ -398,11 +398,11 @@ describe('request mutations', function () {
                     responseBody = JSON.parse(response.stream.toString()),
                     consoleLogs = testrun.console.getCall(0).args[2];
 
-                expect(request.body).to.deep.include({file: {src: 'test/fixtures/upload-file.json', value: null}});
+                expect(request.body).to.deep.include({ file: { src: 'test/fixtures/upload-file.json', value: null } });
 
                 expect(response).to.have.property('code', 200);
                 expect(consoleLogs).to.include('File not accessible');
-                expect(responseBody).to.deep.include({data: {}});
+                expect(responseBody).to.deep.include({ data: {} });
             });
         });
 
@@ -410,10 +410,10 @@ describe('request mutations', function () {
             before(function (done) {
                 this.run({
                     fileResolver: {
-                        stat: function (path, callback) {
+                        stat (path, callback) {
                             callback(new Error('File not accessible'));
                         },
-                        createReadStream: function () {
+                        createReadStream () {
                             return null;
                         }
                     },
@@ -465,7 +465,7 @@ describe('request mutations', function () {
 
                 expect(response).to.have.property('code', 200);
                 expect(consoleLogs).to.include('File not accessible');
-                expect(responseBody).to.deep.include({files: {}});
+                expect(responseBody).to.deep.include({ files: {} });
             });
         });
 
@@ -514,10 +514,10 @@ describe('request mutations', function () {
                     response = testrun.response.getCall(0).args[2],
                     responseBody = JSON.parse(response.stream.toString());
 
-                expect(request.body).to.deep.include({mode: 'raw', raw: 'postman-updated'});
+                expect(request.body).to.deep.include({ mode: 'raw', raw: 'postman-updated' });
 
                 expect(response).to.have.property('code', 200);
-                expect(responseBody).to.deep.include({data: 'postman-updated'});
+                expect(responseBody).to.deep.include({ data: 'postman-updated' });
             });
         });
     });
@@ -591,12 +591,12 @@ describe('request mutations', function () {
 
             expect(request).to.have.property('method', 'POST');
             expect(request.url.toString()).to.equal('https://postman-echo.com/post');
-            expect(request.getHeaders()).to.deep.include({h0: 'v0'});
+            expect(request.getHeaders()).to.deep.include({ h0: 'v0' });
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
             expect(responseBody).to.have.property('data', 'new-postman');
-            expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
+            expect(responseBody).to.have.property('headers').that.deep.include({ h0: 'v0' });
         });
     });
 
@@ -658,12 +658,12 @@ describe('request mutations', function () {
 
             expect(request).to.have.property('method', 'POST');
             expect(request.url.toString()).to.equal('https://postman-echo.com/post');
-            expect(request.getHeaders()).to.deep.include({h0: 'v0'});
+            expect(request.getHeaders()).to.deep.include({ h0: 'v0' });
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
             expect(responseBody).to.have.property('data', 'new-postman');
-            expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
+            expect(responseBody).to.have.property('headers').that.deep.include({ h0: 'v0' });
         });
 
         it('should not persist request mutations across iterations', function () {
@@ -678,12 +678,12 @@ describe('request mutations', function () {
 
             expect(request).to.have.property('method', 'POST');
             expect(request.url.toString()).to.equal('https://postman-echo.com/post');
-            expect(request.getHeaders()).to.deep.include({h0: 'v0'});
+            expect(request.getHeaders()).to.deep.include({ h0: 'v0' });
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
             expect(responseBody).to.have.property('data', 'new-postman');
-            expect(responseBody).to.have.property('headers').that.deep.include({h0: 'v0'});
+            expect(responseBody).to.have.property('headers').that.deep.include({ h0: 'v0' });
         });
     });
 });

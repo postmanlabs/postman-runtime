@@ -28,16 +28,16 @@ describe('auth control flow', function () {
     describe('with error in pre', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(new Error('Pre Error!'));
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
@@ -98,16 +98,16 @@ describe('auth control flow', function () {
     describe('with error in post, and true in pre', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, true);
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(new Error('Post Error!'));
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
@@ -172,16 +172,16 @@ describe('auth control flow', function () {
     describe('with error in post, and false in pre', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, false);
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(new Error('Post Error!'));
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
@@ -245,16 +245,16 @@ describe('auth control flow', function () {
     describe('with error in pre and post', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(new Error('Pre Error!'), false);
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(new Error('Post Error!'));
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
@@ -319,16 +319,16 @@ describe('auth control flow', function () {
     describe('with error in sign, and success in pre', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, true);
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done(new Error('Sign Error!'));
                 }
             },
@@ -393,16 +393,16 @@ describe('auth control flow', function () {
     describe('with error in init', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(new Error('Init Error!'));
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, false, 'https://postman-echo.com/get');
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done(null);
                 }
             },

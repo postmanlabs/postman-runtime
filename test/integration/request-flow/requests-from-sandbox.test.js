@@ -585,7 +585,7 @@ describe('requests from sandbox', function () {
 
                 expect(response.json().files).to.be.empty;
                 expect(response.json()).to.deep.include({
-                    form: {bar: 'baz'}
+                    form: { bar: 'baz' }
                 });
             });
         });

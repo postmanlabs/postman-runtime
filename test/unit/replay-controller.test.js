@@ -11,7 +11,7 @@ describe('ReplayController', function () {
 
         it('should construct state from replayState if present', function () {
             var run = {},
-                replayController = new ReplayController({count: 1}, run);
+                replayController = new ReplayController({ count: 1 }, run);
 
             expect(replayController).to.deep.include({
                 count: 1,
@@ -22,8 +22,8 @@ describe('ReplayController', function () {
 
     describe('.getReplayState', function () {
         it('should return state always', function () {
-            expect(new ReplayController().getReplayState()).to.eql({count: 0});
-            expect(new ReplayController({count: 1}).getReplayState()).to.eql({count: 1});
+            expect(new ReplayController().getReplayState()).to.eql({ count: 0 });
+            expect(new ReplayController({ count: 1 }).getReplayState()).to.eql({ count: 1 });
         });
     });
 
@@ -31,7 +31,7 @@ describe('ReplayController', function () {
         // this handles retries exceeding max count
         // success cases are handled in integration tests
         it('should not send request and invoke failure callback', function () {
-            var replayController = new ReplayController({count: 10}, {});
+            var replayController = new ReplayController({ count: 10 }, {});
 
             replayController.requestReplay({}, {}, {}, function () {
                 // we shouldn't be here

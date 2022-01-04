@@ -32,7 +32,7 @@ var _ = require('lodash'),
                                 }],
                                 request: {
                                     url: cookieUrl,
-                                    header: [{key: 'Cookie', value: 'foo=bar;'}]
+                                    header: [{ key: 'Cookie', value: 'foo=bar;' }]
                                 }
                             }
                         }
@@ -60,7 +60,7 @@ var _ = require('lodash'),
                     expect(reqOne).to.have.property('headers').that.nested.include({
                         'reference.cookie.value': 'foo=bar;'
                     });
-                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
+                    expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
                     expect(resOne.cookies.reference).to.be.empty;
                 });
             });
@@ -122,7 +122,7 @@ var _ = require('lodash'),
 
                     expect(reqOne.headers.reference).to.not.have.property('cookie');
                     expect(resOne).to.deep.nested.include({
-                        'cookies.reference': {foo: 'bar'}
+                        'cookies.reference': { foo: 'bar' }
                     });
                 });
             });
@@ -167,7 +167,7 @@ var _ = require('lodash'),
                                 }],
                                 request: {
                                     url: cookieUrl,
-                                    header: [{key: 'Cookie', value: 'foo=bar'}]
+                                    header: [{ key: 'Cookie', value: 'foo=bar' }]
                                 }
                             }
                         }
@@ -197,8 +197,8 @@ var _ = require('lodash'),
                     expect(headers[headers.length - 1]).to.have.property('key', 'Cookie');
                     expect(headers[headers.length - 1].value).to.not.include('foo=bar');
 
-                    expect(resOne.json()).to.eql({cookies: {}});
-                    expect(testrun.request.secondCall.args[2].json()).to.eql({cookies: {foo: 'bar'}});
+                    expect(resOne.json()).to.eql({ cookies: {} });
+                    expect(testrun.request.secondCall.args[2].json()).to.eql({ cookies: { foo: 'bar' } });
 
                     // @TODO: The following assertion is flaky
                     // eslint-disable-next-line max-len
@@ -268,8 +268,8 @@ var _ = require('lodash'),
 
                     expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
 
-                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
-                    expect(testrun.request.secondCall.args[2].json()).to.eql({cookies: {foo: 'bar'}});
+                    expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
+                    expect(testrun.request.secondCall.args[2].json()).to.eql({ cookies: { foo: 'bar' } });
 
                     expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
@@ -315,7 +315,7 @@ var _ = require('lodash'),
                                 }],
                                 request: {
                                     url: cookieUrl,
-                                    header: [{key: 'Cookie', value: 'foo=bar'}]
+                                    header: [{ key: 'Cookie', value: 'foo=bar' }]
                                 }
                             }
                         }
@@ -350,7 +350,7 @@ var _ = require('lodash'),
 
                     expect(resOne.headers.reference['set-cookie'].value).to.not.include('foo=bar');
 
-                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
+                    expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
 
                     expect(resOne.cookies.reference).to.be.empty;
                     expect(resTwo.cookies.reference).to.be.empty;
@@ -392,7 +392,7 @@ var _ = require('lodash'),
                                 }],
                                 request: {
                                     url: cookieUrl + '/delete?foo',
-                                    header: [{key: 'Cookie', value: 'foo=bar'}]
+                                    header: [{ key: 'Cookie', value: 'foo=bar' }]
                                 }
                             }
                         }
@@ -422,8 +422,8 @@ var _ = require('lodash'),
                     expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
                     // eslint-disable-next-line max-len
                     expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
-                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
-                    expect(resTwo.json()).to.eql({cookies: {}});
+                    expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
+                    expect(resTwo.json()).to.eql({ cookies: {} });
 
                     expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', '')), 'foo=bar;').to
                         .be.true;
@@ -497,8 +497,8 @@ var _ = require('lodash'),
                     expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
 
-                    expect(resOne.json()).to.eql({cookies: {foo: 'bar'}});
-                    expect(resTwo.json()).to.eql({cookies: {foo: 'bar'}});
+                    expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
+                    expect(resTwo.json()).to.eql({ cookies: { foo: 'bar' } });
 
                     expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar;');
                     expect(!_.includes(_.get(resTwo, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to

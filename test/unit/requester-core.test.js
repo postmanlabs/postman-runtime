@@ -44,7 +44,7 @@ describe('requester util', function () {
                 removeRefererHeader: undefined,
                 encoding: null,
                 extraCA: undefined,
-                agentOptions: {keepAlive: undefined},
+                agentOptions: { keepAlive: undefined },
                 time: undefined,
                 verbose: undefined,
                 disableUrlEncoding: true
@@ -100,7 +100,7 @@ describe('requester util', function () {
                 removeRefererHeader: undefined,
                 encoding: null,
                 extraCA: undefined,
-                agentOptions: {keepAlive: undefined},
+                agentOptions: { keepAlive: undefined },
                 time: undefined,
                 verbose: undefined,
                 disableUrlEncoding: true
@@ -134,7 +134,7 @@ describe('requester util', function () {
                         agentClass: 'https.Agent'
                     }
                 },
-                requestOptions = requesterCore.getRequestOptions(request, {agents});
+                requestOptions = requesterCore.getRequestOptions(request, { agents });
 
             expect(requestOptions).to.have.ownProperty('agents', agents);
             expect(requestOptions).to.have.property('agentOptions');
@@ -310,7 +310,7 @@ describe('requester util', function () {
                 removeRefererHeader: true,
                 encoding: null,
                 extraCA: undefined,
-                agentOptions: {keepAlive: undefined},
+                agentOptions: { keepAlive: undefined },
                 time: undefined,
                 verbose: undefined,
                 disableUrlEncoding: true
@@ -339,7 +339,7 @@ describe('requester util', function () {
             var request = new sdk.Request({
                 url: 'postman-echo.com/post',
                 method: 'POST',
-                body: {mode: 'formdata'}
+                body: { mode: 'formdata' }
             });
 
             expect(requesterCore.getRequestBody(request)).to.be.undefined;
@@ -372,7 +372,7 @@ describe('requester util', function () {
 
             delete request.method;
             expect(requesterCore.getRequestBody(request, {})).to.eql({
-                formData: [{key: 'foo', value: 'bar'}]
+                formData: [{ key: 'foo', value: 'bar' }]
             });
         });
 
@@ -398,17 +398,17 @@ describe('requester util', function () {
                 body: {
                     mode: 'urlencoded',
                     urlencoded: [
-                        {key: 'alpha', value: 'foo', type: 'text'},
-                        {key: 'beta', value: 'bar', type: 'text'},
-                        {key: 'gamma', value: 'baz', type: 'text', disabled: true},
-                        {key: 'alpha', value: 'other', type: 'text'},
-                        {key: 'alpha', value: 'next', type: 'text'}
+                        { key: 'alpha', value: 'foo', type: 'text' },
+                        { key: 'beta', value: 'bar', type: 'text' },
+                        { key: 'gamma', value: 'baz', type: 'text', disabled: true },
+                        { key: 'alpha', value: 'other', type: 'text' },
+                        { key: 'alpha', value: 'next', type: 'text' }
                     ]
                 }
             });
 
             expect(requesterCore.getRequestBody(request)).to.eql({
-                form: {alpha: ['foo', 'other', 'next'], beta: 'bar'}
+                form: { alpha: ['foo', 'other', 'next'], beta: 'bar' }
             });
         });
 
@@ -419,21 +419,21 @@ describe('requester util', function () {
                 body: {
                     mode: 'formdata',
                     formdata: [
-                        {key: 'alpha', value: 'foo', type: 'text'},
-                        {key: 'beta', value: 'bar', type: 'text'},
-                        {key: 'gamma', value: 'baz', type: 'text', disabled: true},
-                        {key: 'alpha', value: 'other', type: 'text'},
-                        {key: 'alpha', value: 'next', type: 'text'}
+                        { key: 'alpha', value: 'foo', type: 'text' },
+                        { key: 'beta', value: 'bar', type: 'text' },
+                        { key: 'gamma', value: 'baz', type: 'text', disabled: true },
+                        { key: 'alpha', value: 'other', type: 'text' },
+                        { key: 'alpha', value: 'next', type: 'text' }
                     ]
                 }
             });
 
             expect(requesterCore.getRequestBody(request)).to.eql({
                 formData: [
-                    {key: 'alpha', value: 'foo'},
-                    {key: 'beta', value: 'bar'},
-                    {key: 'alpha', value: 'other'},
-                    {key: 'alpha', value: 'next'}
+                    { key: 'alpha', value: 'foo' },
+                    { key: 'beta', value: 'bar' },
+                    { key: 'alpha', value: 'other' },
+                    { key: 'alpha', value: 'next' }
                 ]
             });
         });
@@ -444,7 +444,7 @@ describe('requester util', function () {
                 method: 'POST',
                 body: {
                     mode: 'file',
-                    file: {src: 'random.txt'}
+                    file: { src: 'random.txt' }
                 }
             });
 
@@ -514,7 +514,7 @@ describe('requester util', function () {
                 });
 
                 expect(request.headers.has('Content-Type')).to.be.false;
-                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"bar"}'});
+                expect(requesterCore.getRequestBody(request)).to.eql({ body: '{"beta":"bar"}' });
                 expect(request.headers.has('Content-Type')).to.be.true;
                 expect(request.headers.toJSON()).to.deep.include({
                     key: 'Content-Type',
@@ -534,7 +534,7 @@ describe('requester util', function () {
                 });
 
                 expect(request.headers.has('Content-Type')).to.be.false;
-                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"bar"}'});
+                expect(requesterCore.getRequestBody(request)).to.eql({ body: '{"beta":"bar"}' });
                 expect(request.headers.toJSON()).to.deep.include({
                     key: 'Content-Type',
                     value: 'text/plain',
@@ -558,7 +558,7 @@ describe('requester util', function () {
                 });
 
                 expect(request.headers.has('Content-Type')).to.be.false;
-                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"bar"}'});
+                expect(requesterCore.getRequestBody(request)).to.eql({ body: '{"beta":"bar"}' });
                 expect(request.headers.toJSON()).to.deep.include({
                     key: 'Content-Type',
                     value: 'text/plain',
@@ -580,7 +580,7 @@ describe('requester util', function () {
                 });
 
                 expect(request.headers.has('Content-Type')).to.be.false;
-                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"foo"}'});
+                expect(requesterCore.getRequestBody(request)).to.eql({ body: '{"beta":"foo"}' });
                 expect(request.headers.toJSON()).to.deep.include({
                     key: 'Content-Type',
                     value: 'text/plain',
@@ -607,8 +607,8 @@ describe('requester util', function () {
                     }
                 });
 
-                expect(requesterCore.getRequestBody(request)).to.eql({body: '{"beta":"bar"}'});
-                expect(request.headers.toJSON()).to.deep.include({key: 'Content-Type', value: 'application/xml'});
+                expect(requesterCore.getRequestBody(request)).to.eql({ body: '{"beta":"bar"}' });
+                expect(request.headers.toJSON()).to.deep.include({ key: 'Content-Type', value: 'application/xml' });
             });
         });
 
@@ -645,7 +645,7 @@ describe('requester util', function () {
                 expect(requesterCore.getRequestBody(request, {
                     disableBodyPruning: true
                 })).to.eql({
-                    formData: [{key: 'foo', value: 'bar'}]
+                    formData: [{ key: 'foo', value: 'bar' }]
                 });
             });
 
@@ -665,7 +665,7 @@ describe('requester util', function () {
                 expect(requesterCore.getRequestBody(request, {
                     disableBodyPruning: true
                 })).to.eql({
-                    formData: [{key: 'foo', value: 'bar'}]
+                    formData: [{ key: 'foo', value: 'bar' }]
                 });
             });
 
@@ -685,7 +685,7 @@ describe('requester util', function () {
                 expect(requesterCore.getRequestBody(request, {
                     disableBodyPruning: false
                 })).to.eql({
-                    formData: [{key: 'foo', value: 'bar'}]
+                    formData: [{ key: 'foo', value: 'bar' }]
                 });
             });
         });
@@ -699,16 +699,16 @@ describe('requester util', function () {
                         body: {
                             mode: 'formdata',
                             formdata: [
-                                {key: 'constructor', value: 'builds away!'},
-                                {key: 'foo', value: 'bar'}
+                                { key: 'constructor', value: 'builds away!' },
+                                { key: 'foo', value: 'bar' }
                             ]
                         }
                     });
 
                     expect(requesterCore.getRequestBody(request)).to.eql({
                         formData: [
-                            {key: 'constructor', value: 'builds away!'},
-                            {key: 'foo', value: 'bar'}
+                            { key: 'constructor', value: 'builds away!' },
+                            { key: 'foo', value: 'bar' }
                         ]
                     });
                 });
@@ -720,18 +720,18 @@ describe('requester util', function () {
                         body: {
                             mode: 'formdata',
                             formdata: [
-                                {key: 'constructor', value: 'I\'ll be back'},
-                                {key: 'constructor', value: 'Come with me if you want to live!'},
-                                {key: 'foo', value: 'bar'}
+                                { key: 'constructor', value: 'I\'ll be back' },
+                                { key: 'constructor', value: 'Come with me if you want to live!' },
+                                { key: 'foo', value: 'bar' }
                             ]
                         }
                     });
 
                     expect(requesterCore.getRequestBody(request)).to.eql({
                         formData: [
-                            {key: 'constructor', value: 'I\'ll be back'},
-                            {key: 'constructor', value: 'Come with me if you want to live!'},
-                            {key: 'foo', value: 'bar'}
+                            { key: 'constructor', value: 'I\'ll be back' },
+                            { key: 'constructor', value: 'Come with me if you want to live!' },
+                            { key: 'foo', value: 'bar' }
                         ]
                     });
                 });
@@ -745,14 +745,14 @@ describe('requester util', function () {
                         body: {
                             mode: 'urlencoded',
                             urlencoded: [
-                                {key: 'constructor', value: 'builds away!'},
-                                {key: 'foo', value: 'bar'}
+                                { key: 'constructor', value: 'builds away!' },
+                                { key: 'foo', value: 'bar' }
                             ]
                         }
                     });
 
                     expect(requesterCore.getRequestBody(request)).to.eql({
-                        form: {constructor: 'builds away!', foo: 'bar'}
+                        form: { constructor: 'builds away!', foo: 'bar' }
                     });
                 });
 
@@ -763,9 +763,9 @@ describe('requester util', function () {
                         body: {
                             mode: 'urlencoded',
                             urlencoded: [
-                                {key: 'constructor', value: 'I\'ll be back'},
-                                {key: 'constructor', value: 'Come with me if you want to live!'},
-                                {key: 'foo', value: 'bar'}
+                                { key: 'constructor', value: 'I\'ll be back' },
+                                { key: 'constructor', value: 'Come with me if you want to live!' },
+                                { key: 'foo', value: 'bar' }
                             ]
                         }
                     });
@@ -806,11 +806,11 @@ describe('requester util', function () {
                     expect(requestBody.formData).to.eql([{
                         key: 'userData',
                         value: '{"name": "userName"}',
-                        options: {contentType: 'application/json'}
+                        options: { contentType: 'application/json' }
                     }, {
                         key: 'userFile',
                         value: '',
-                        options: {contentType: 'application/json', filename: ''}
+                        options: { contentType: 'application/json', filename: '' }
                     }]);
                 });
 
@@ -829,7 +829,7 @@ describe('requester util', function () {
                         }),
                         requestBody = requesterCore.getRequestBody(request);
 
-                    expect(requestBody.formData).to.eql([{key: 'foo', value: 'bar'}]);
+                    expect(requestBody.formData).to.eql([{ key: 'foo', value: 'bar' }]);
                 });
 
                 it('should not support fileName & fileLength', function () {
@@ -851,7 +851,7 @@ describe('requester util', function () {
                         }),
                         requestBody = requesterCore.getRequestBody(request);
 
-                    expect(requestBody.formData).to.eql([{key: 'foo', value: 'bar'}]);
+                    expect(requestBody.formData).to.eql([{ key: 'foo', value: 'bar' }]);
                 });
             });
         });
@@ -873,13 +873,13 @@ describe('requester util', function () {
         it('should correctly convert an array of pairs to an object', function () {
             var obj = requesterCore.arrayPairsToObject(['a', 'b', 'c', 'd']);
 
-            expect(obj).to.eql({a: 'b', c: 'd'});
+            expect(obj).to.eql({ a: 'b', c: 'd' });
         });
 
         it('should correctly handle multi valued keys', function () {
             var obj = requesterCore.arrayPairsToObject(['a', 'b', 'c', 'd', 'a', 'e']);
 
-            expect(obj).to.eql({a: ['b', 'e'], c: 'd'});
+            expect(obj).to.eql({ a: ['b', 'e'], c: 'd' });
         });
     });
 });

@@ -1,6 +1,6 @@
 const server = require('./_servers');
 
-var sslServer = server.createSSLServer({requestCert: true});
+var sslServer = server.createSSLServer({ requestCert: true });
 
 sslServer.on('/', function (req, res) {
     if (req.client.authorized) {

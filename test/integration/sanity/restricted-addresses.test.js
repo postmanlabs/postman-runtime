@@ -19,7 +19,7 @@ var expect = require('chai').expect;
                 }]
             },
             network: {
-                restrictedAddresses: {'169.254.169.254': true},
+                restrictedAddresses: { '169.254.169.254': true },
                 hostLookup: {
                     type: 'hostIpMap',
                     hostIpMap: {

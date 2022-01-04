@@ -74,11 +74,11 @@ var fs = require('fs'),
         sinon.assert.calledTwice(testrun.request);
 
         sinon.assert.calledWith(testrun.request.getCall(0), null);
-        expect(_.find(testrun.request.getCall(0).args[3].headers.members, {key: 'Content-Length'}))
+        expect(_.find(testrun.request.getCall(0).args[3].headers.members, { key: 'Content-Length' }))
             .to.have.property('value', '253');
 
         sinon.assert.calledWith(testrun.request.getCall(1), null);
-        expect(_.find(testrun.request.getCall(1).args[3].headers.members, {key: 'Content-Length'}))
+        expect(_.find(testrun.request.getCall(1).args[3].headers.members, { key: 'Content-Length' }))
             .to.have.property('value', '33');
     });
 });
