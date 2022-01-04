@@ -29,8 +29,8 @@ describe('project repository', function () {
             it('should have valid name, description and author', function () {
                 expect(json).to.deep.include({
                     name: 'postman-runtime',
-                    description: 'Underlying library of executing Postman Collections (used by Newman)',
-                    author: 'Postman Labs <help@getpostman.com>',
+                    description: 'Underlying library of executing Postman Collections',
+                    author: 'Postman Inc.',
                     license: 'Apache-2.0'
                 });
             });
