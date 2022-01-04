@@ -1,14 +1,17 @@
 #!/usr/bin/env node
-require('shelljs/global');
-require('colors');
+// ---------------------------------------------------------------------------------------------------------------------
+// This script is intended to execute all Newman tests with the local Runtime version.
+// ---------------------------------------------------------------------------------------------------------------------
 
-var path = require('path'),
+const path = require('path'),
+
+    tmp = require('tmp'),
+    chalk = require('chalk'),
     async = require('async'),
-    tmp = require('tmp');
+    { exec, rm, pushd, popd } = require('shelljs');
 
 module.exports = function (exit) {
-    // banner line
-    console.info('Running newman integration tests...'.yellow.bold);
+    console.info(chalk.yellow.bold('Running newman integration tests...'));
 
     tmp.dir(function (err, dir, cleanup) {
         if (err || dir.length < 4) {
@@ -17,19 +20,19 @@ module.exports = function (exit) {
             return exit(1);
         }
 
-        var installDir = path.join('node_modules', 'newman');
+        const installDir = path.join('node_modules', 'newman');
 
         pushd(dir);
 
         return async.waterfall([
             function (next) {
-                console.info(('Setting up integration package at ' + dir).green);
+                console.info(chalk.green('Setting up integration package at ' + dir));
                 exec('npm i newman --loglevel error', function (code, out, err) {
                     next(code === 0 ? null : err);
                 });
             },
             function (next) {
-                console.info(('Installing dev dependencies of newman at ' + installDir).green);
+                console.info(chalk.green('Installing dev dependencies of newman at ' + installDir));
                 pushd(installDir);
                 exec('npm i . --loglevel error', function (code, out, err) {
                     popd();
@@ -37,7 +40,7 @@ module.exports = function (exit) {
                 });
             },
             function (next) {
-                console.info(('Migrating local runtime to ' + installDir).green);
+                console.info(chalk.green('Migrating local runtime to ' + installDir));
                 pushd(installDir);
                 exec('npm i ' + path.join(__dirname, '..') + ' --loglevel error', function (code, out, err) {
                     popd();
@@ -45,7 +48,7 @@ module.exports = function (exit) {
                 });
             },
             function (next) {
-                console.info('Running newman tests...'.green);
+                console.info(chalk.green('Running newman tests...'));
                 pushd(installDir);
                 // @todo figure out a way to bypass packity
                 exec('npm run test-unit && npm run test-integration && npm run test-cli', function (code, out, err) {
@@ -64,4 +67,4 @@ module.exports = function (exit) {
 };
 
 // ensure we run this script exports if this is a direct stdin.tty run
-!module.parent && module.exports(exit);
+!module.parent && module.exports(process.exit);
