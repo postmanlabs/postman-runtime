@@ -1,3 +1,10 @@
+unreleased:
+  chores:
+    - GH-1188 Dropped Node.js v8 step from travis build
+    - GH-1188 Updated nyc configuration
+    - GH-1188 Updated ESLint rules
+    - GH-1188 Updated dependencies
+
 7.28.4:
   date: 2021-08-16
   fixed bugs:
