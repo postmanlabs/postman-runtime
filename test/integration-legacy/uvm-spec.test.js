@@ -9,22 +9,22 @@ describe('UVM', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    'variables': [],
-                    'info': {
-                        'name': 'Testing general sandbox functionality',
-                        '_postman_id': '37a82a6b-1af6-18f5-442d-2e973fa34214',
-                        'description': '',
-                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
+                    variables: [],
+                    info: {
+                        name: 'Testing general sandbox functionality',
+                        _postman_id: '37a82a6b-1af6-18f5-442d-2e973fa34214',
+                        description: '',
+                        schema: 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    'item': [
+                    item: [
                         {
-                            'name': 'r1',
-                            'event': [
+                            name: 'r1',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'try {',
                                             '    var jsonObject = xml2Json(responseBody);',
                                             '    tests["xml2Json"]=true;',
@@ -55,33 +55,33 @@ describe('UVM', function () {
                                     }
                                 },
                                 {
-                                    'listen': 'prerequest',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': 'postman.setGlobalVariable("g1", "0");'
+                                    listen: 'prerequest',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: 'postman.setGlobalVariable("g1", "0");'
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/type/xml',
-                                'method': 'GET',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                            request: {
+                                url: 'https://postman-echo.com/type/xml',
+                                method: 'GET',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'r2',
-                            'event': [
+                            name: 'r2',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'tests["Status code is 200"] = responseCode.code === 200;',
                                             'var jsonData = JSON.parse(responseBody);',
                                             // eslint-disable-next-line max-len
@@ -98,213 +98,213 @@ describe('UVM', function () {
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/post',
-                                'method': 'POST',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': [
+                            request: {
+                                url: 'https://postman-echo.com/post',
+                                method: 'POST',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: [
                                         {
-                                            'key': 'k1',
-                                            'value': 'v1',
-                                            'type': 'text',
-                                            'enabled': true
+                                            key: 'k1',
+                                            value: 'v1',
+                                            type: 'text',
+                                            enabled: true
                                         },
                                         {
-                                            'key': 'k2',
-                                            'value': 'v2',
-                                            'type': 'text',
-                                            'enabled': true
+                                            key: 'k2',
+                                            value: 'v2',
+                                            type: 'text',
+                                            enabled: true
                                         },
                                         {
-                                            'key': 'guid',
-                                            'value': '{{$guid}}',
-                                            'type': 'text',
-                                            'enabled': true
+                                            key: 'guid',
+                                            value: '{{$guid}}',
+                                            type: 'text',
+                                            enabled: true
                                         },
                                         {
-                                            'key': 'timestamp',
-                                            'value': '{{$timestamp}}',
-                                            'type': 'text',
-                                            'enabled': true
+                                            key: 'timestamp',
+                                            value: '{{$timestamp}}',
+                                            type: 'text',
+                                            enabled: true
                                         },
                                         {
-                                            'key': 'randomInt',
-                                            'value': '{{$randomInt}}',
-                                            'type': 'text',
-                                            'enabled': true
+                                            key: 'randomInt',
+                                            value: '{{$randomInt}}',
+                                            type: 'text',
+                                            enabled: true
                                         },
                                         {
-                                            'key': 'global',
-                                            'value': '{{g1}}',
-                                            'type': 'text',
-                                            'enabled': true
+                                            key: 'global',
+                                            value: '{{g1}}',
+                                            type: 'text',
+                                            enabled: true
                                         },
                                         {
-                                            'key': 'envValue',
-                                            'value': '{{e1}}',
-                                            'type': 'text',
-                                            'enabled': true
+                                            key: 'envValue',
+                                            value: '{{e1}}',
+                                            type: 'text',
+                                            enabled: true
                                         }
                                     ]
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'r3',
-                            'event': [
+                            name: 'r3',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/put',
-                                'method': 'PUT',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                            request: {
+                                url: 'https://postman-echo.com/put',
+                                method: 'PUT',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'r4',
-                            'event': [
+                            name: 'r4',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/patch',
-                                'method': 'PATCH',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                            request: {
+                                url: 'https://postman-echo.com/patch',
+                                method: 'PATCH',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'delete',
-                            'event': [
+                            name: 'delete',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/delete',
-                                'method': 'DELETE',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                            request: {
+                                url: 'https://postman-echo.com/delete',
+                                method: 'DELETE',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'head',
-                            'event': [
+                            name: 'head',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'tests["Status code is 200"] = responseCode.code === 200;',
                                             'tests["Body is correct"] = responseBody === "";'
                                         ]
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/get',
-                                'method': 'HEAD',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                            request: {
+                                url: 'https://postman-echo.com/get',
+                                method: 'HEAD',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'options',
-                            'event': [
+                            name: 'options',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'tests["Status code is 200"] = responseCode.code === 200;',
                                             'tests["Body is correct"] = !_.isEmpty(responseBody.split(","));'
                                         ]
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/get',
-                                'method': 'OPTIONS',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                            request: {
+                                url: 'https://postman-echo.com/get',
+                                method: 'OPTIONS',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'r2 copy',
-                            'event': [
+                            name: 'r2 copy',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/post',
-                                'method': 'POST',
-                                'header': [],
-                                'body': {
-                                    'mode': 'raw',
-                                    'raw': 'RAWDATA'
+                            request: {
+                                url: 'https://postman-echo.com/post',
+                                method: 'POST',
+                                header: [],
+                                body: {
+                                    mode: 'raw',
+                                    raw: 'RAWDATA'
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'BasicAuth',
-                            'event': [
+                            name: 'BasicAuth',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'var jsonData = JSON.parse(responseBody);',
                                             // eslint-disable-next-line max-len
                                             'tests["Correct auth header"] = jsonData.headers.authorization.indexOf("YWJoaWppdDprYW5l")>-1;'
@@ -312,112 +312,112 @@ describe('UVM', function () {
                                     }
                                 }
                             ],
-                            'request': {
-                                'auth': {
-                                    'type': 'basic',
-                                    'basic': {
-                                        'username': 'abhijit',
-                                        'password': 'kane',
-                                        'saveHelperData': true,
-                                        'showPassword': false
+                            request: {
+                                auth: {
+                                    type: 'basic',
+                                    basic: {
+                                        username: 'abhijit',
+                                        password: 'kane',
+                                        saveHelperData: true,
+                                        showPassword: false
                                     }
                                 },
-                                'url': 'https://postman-echo.com/post',
-                                'method': 'POST',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                                url: 'https://postman-echo.com/post',
+                                method: 'POST',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'DigestAuth',
-                            'event': [
+                            name: 'DigestAuth',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'var jsonData = JSON.parse(responseBody);',
                                             'tests["Authenticated"] = jsonData.authenticated === true;'
                                         ]
                                     }
                                 }
                             ],
-                            'request': {
-                                'auth': {
-                                    'type': 'digest',
-                                    'digest': {
-                                        'algorithm': '',
-                                        'username': 'postman',
-                                        'realm': 'Users',
-                                        'password': 'password',
-                                        'nonce': '',
-                                        'nonceCount': '',
-                                        'clientNonce': '',
-                                        'opaque': '',
-                                        'qop': ''
+                            request: {
+                                auth: {
+                                    type: 'digest',
+                                    digest: {
+                                        algorithm: '',
+                                        username: 'postman',
+                                        realm: 'Users',
+                                        password: 'password',
+                                        nonce: '',
+                                        nonceCount: '',
+                                        clientNonce: '',
+                                        opaque: '',
+                                        qop: ''
                                     }
                                 },
-                                'url': 'https://postman-echo.com/digest-auth',
-                                'method': 'GET',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                                url: 'https://postman-echo.com/digest-auth',
+                                method: 'GET',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'Recursive Res',
-                            'event': [
+                            name: 'Recursive Res',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'var jsonData = JSON.parse(responseBody);',
                                             '//tests["Recur. res. working"] = jsonData.args.a == "kane";'
                                         ]
                                     }
                                 },
                                 {
-                                    'listen': 'prerequest',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'prerequest',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'postman.setGlobalVariable("name1", "kane");',
                                             'postman.setGlobalVariable("i", "1");'
                                         ]
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/get?a={{name{{i}}}}',
-                                'method': 'GET',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                            request: {
+                                url: 'https://postman-echo.com/get?a={{name{{i}}}}',
+                                method: 'GET',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         },
                         {
-                            'name': 'Buffer and JSON',
-                            'request': 'postman-echo.com/get',
-                            'event': [
+                            name: 'Buffer and JSON',
+                            request: 'postman-echo.com/get',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'tests[\'global JSON object\'] = typeof JSON.stringify === \'function\';',
                                             'tests[\'global Buffer object\'] = !!Buffer'
                                         ]
@@ -454,14 +454,14 @@ describe('UVM', function () {
                 iterationCount: 1,
                 abortOnFailure: true,
                 requester: {
-                    cookieJar: cookieJar
+                    cookieJar
                 }
             }, function (err, run) {
                 var runStore = {}; // Used for validations *during* the run. Cursor increments, etc.
 
                 expect(err).to.be.null;
                 run.start({
-                    start: function (err, cursor) {
+                    start (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -481,7 +481,7 @@ describe('UVM', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor) {
+                    beforeIteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -489,7 +489,7 @@ describe('UVM', function () {
                             runStore.iteration = cursor.iteration;
                         });
                     },
-                    iteration: function (err, cursor) {
+                    iteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.have.property('iteration', runStore.iteration);
@@ -497,7 +497,7 @@ describe('UVM', function () {
                             testables.iterationsComplete.push(cursor.iteration);
                         });
                     },
-                    beforeItem: function (err, cursor, item) {
+                    beforeItem (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -507,7 +507,7 @@ describe('UVM', function () {
                             runStore.ref = cursor.ref;
                         });
                     },
-                    item: function (err, cursor, item) {
+                    item (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -519,7 +519,7 @@ describe('UVM', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor) {
+                    beforePrerequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -531,7 +531,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    prerequest: function (err, cursor) {
+                    prerequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -543,7 +543,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    beforeTest: function (err, cursor) {
+                    beforeTest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -555,7 +555,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    test: function (err, cursor, results) {
+                    test (err, cursor, results) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -584,7 +584,7 @@ describe('UVM', function () {
                             // });
                         });
                     },
-                    beforeRequest: function (err, cursor) {
+                    beforeRequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -596,7 +596,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    response: function (err, cursor, response, request) {
+                    response (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -613,7 +613,7 @@ describe('UVM', function () {
                             expect(request).to.be.ok;
                         });
                     },
-                    done: function (err) {
+                    done (err) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -646,23 +646,23 @@ describe('UVM', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    'variables': [],
-                    'info': {
-                        'name': 'NewmanSetNextRequest',
-                        '_postman_id': 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
-                        'description': '',
-                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
+                    variables: [],
+                    info: {
+                        name: 'NewmanSetNextRequest',
+                        _postman_id: 'd6f7bb29-2258-4e1b-9576-b2315cf5b77e',
+                        description: '',
+                        schema: 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    'item': [
+                    item: [
                         {
-                            'id': 'bf0a6006-c987-253a-525d-9f6be7071210',
-                            'name': 'First Request',
-                            'event': [
+                            id: 'bf0a6006-c987-253a-525d-9f6be7071210',
+                            name: 'First Request',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': [
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
                                             'var d = new Date(1470659144696);', // Monday, Aug 08, 2016
                                             'tests[\'date prototype\'] = (\'Monday\' === d.format(\'{Weekday}\'));',
                                             'tests[\'string prototype\'] = \'asdasd\'.has(\'as\');',
@@ -674,9 +674,9 @@ describe('UVM', function () {
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/get',
-                                'method': 'GET'
+                            request: {
+                                url: 'https://postman-echo.com/get',
+                                method: 'GET'
                             }
                         }
                     ]
@@ -707,17 +707,17 @@ describe('UVM', function () {
 
                 expect(err).to.be.null;
                 run.start({
-                    exception: function (err) {
+                    exception (err) {
                         check(function () {
                             expect(err).to.be.null;
                         });
                     },
-                    error: function (err) {
+                    error (err) {
                         check(function () {
                             expect(err).to.be.null;
                         });
                     },
-                    start: function (err, cursor) {
+                    start (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -737,7 +737,7 @@ describe('UVM', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor) {
+                    beforeIteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -745,7 +745,7 @@ describe('UVM', function () {
                             runStore.iteration = cursor.iteration;
                         });
                     },
-                    iteration: function (err, cursor) {
+                    iteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.have.property('iteration', runStore.iteration);
@@ -753,7 +753,7 @@ describe('UVM', function () {
                             testables.iterationsComplete.push(cursor.iteration);
                         });
                     },
-                    beforeItem: function (err, cursor, item) {
+                    beforeItem (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -763,7 +763,7 @@ describe('UVM', function () {
                             runStore.ref = cursor.ref;
                         });
                     },
-                    item: function (err, cursor, item) {
+                    item (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -775,7 +775,7 @@ describe('UVM', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor) {
+                    beforePrerequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -787,7 +787,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    prerequest: function (err, cursor) {
+                    prerequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -799,7 +799,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    beforeTest: function (err, cursor, events) {
+                    beforeTest (err, cursor, events) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -814,7 +814,7 @@ describe('UVM', function () {
                             expect(events).to.have.lengthOf(1);
                         });
                     },
-                    test: function (err, cursor, results) {
+                    test (err, cursor, results) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -836,7 +836,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    beforeRequest: function (err, cursor) {
+                    beforeRequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -848,7 +848,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    request: function (err, cursor, response, request) {
+                    request (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -863,7 +863,7 @@ describe('UVM', function () {
                             expect(request).to.be.ok;
                         });
                     },
-                    done: function (err) {
+                    done (err) {
                         check(function () {
                             err && console.error(err.stack);
                             expect(err).to.be.null;
@@ -878,37 +878,37 @@ describe('UVM', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    'variables': [],
-                    'info': {
-                        'name': 'SugarJS and native prototypes work',
-                        '_postman_id': '8f31aeff-c5b5-5c42-9540-fae109785538',
-                        'description': 'A set of requests to test Array, String, Date, and Function prototypes',
-                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
+                    variables: [],
+                    info: {
+                        name: 'SugarJS and native prototypes work',
+                        _postman_id: '8f31aeff-c5b5-5c42-9540-fae109785538',
+                        description: 'A set of requests to test Array, String, Date, and Function prototypes',
+                        schema: 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    'item': [
+                    item: [
                         {
-                            'name': 'objectPrototype',
-                            'event': [
+                            name: 'objectPrototype',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
                                         // eslint-disable-next-line max-len
-                                        'exec': '// Extended Array prototype tests\ntests["Array prototype none"] = [\'a\', \'b\', \'c\'].none(\'d\');\ntests["Array prototype any"] = [ [1,2], [2,3] ].any([2,3]);\ntests["Array prototype average"] = [ 1, 2, 3, 4, 5 ].average() === 3;\n\n// Extended Date prototype tests\nconsole.log(Object.keys(new Date()));\ntests["Date prototype getTime"] = Date.now()==(new Date()).getTime();\ntests["Date prototype isFuture"] = Date.create(\'next week\').isFuture();\ntests["Date prototype isLeapYear"] = Date.create(\'2000\').isLeapYear();\ntests["Date prototype isPast"] = Date.create(\'last week\').isPast();\ntests["Date prototype isValid"] = new Date().isValid();\ntests["Date prototype negated isValid"] = !(new Date(\'random string\').isValid());\n\n// Extended Function prototype tests\nvar fCount = 0;\nvar fn = (function() {\n  fCount++;\n}).once(); fn(); fn(); fn();\ntests["Function prototype once"] = fCount===1;\n\n// Extended Number prototype tests\ntests["Number prototype hex"] = (56).hex() === \'38\';\ntests["Number prototype isEven"] = (56).isEven() === true;\ntests["Number prototype ordinalize"] = (56).ordinalize() === \'56th\';\ntests["Number prototype format"] = (56789.10).format() === \'56,789.1\';\n\n// Extended String prototype tests\ntests["String prototype endsWith"] = \'jumpy\'.endsWith(\'py\');\ntests["String prototype negated endsWith"] = !(\'jumpy\'.endsWith(\'MPY\'));\ntests["String prototype camelize"] = \'a-beta\'.camelize() === \'ABeta\';\ntests["String prototype repeat"] = \'a\'.repeat(5) === \'aaaaa\';\ntests["String prototype shift"] = \'abc\'.shift(5) === \'fgh\';\ntests["String prototype spacify"] = \'a-b_cD\'.spacify() === \'a b c d\';'
+                                        exec: '// Extended Array prototype tests\ntests["Array prototype none"] = [\'a\', \'b\', \'c\'].none(\'d\');\ntests["Array prototype any"] = [ [1,2], [2,3] ].any([2,3]);\ntests["Array prototype average"] = [ 1, 2, 3, 4, 5 ].average() === 3;\n\n// Extended Date prototype tests\nconsole.log(Object.keys(new Date()));\ntests["Date prototype getTime"] = Date.now()==(new Date()).getTime();\ntests["Date prototype isFuture"] = Date.create(\'next week\').isFuture();\ntests["Date prototype isLeapYear"] = Date.create(\'2000\').isLeapYear();\ntests["Date prototype isPast"] = Date.create(\'last week\').isPast();\ntests["Date prototype isValid"] = new Date().isValid();\ntests["Date prototype negated isValid"] = !(new Date(\'random string\').isValid());\n\n// Extended Function prototype tests\nvar fCount = 0;\nvar fn = (function() {\n  fCount++;\n}).once(); fn(); fn(); fn();\ntests["Function prototype once"] = fCount===1;\n\n// Extended Number prototype tests\ntests["Number prototype hex"] = (56).hex() === \'38\';\ntests["Number prototype isEven"] = (56).isEven() === true;\ntests["Number prototype ordinalize"] = (56).ordinalize() === \'56th\';\ntests["Number prototype format"] = (56789.10).format() === \'56,789.1\';\n\n// Extended String prototype tests\ntests["String prototype endsWith"] = \'jumpy\'.endsWith(\'py\');\ntests["String prototype negated endsWith"] = !(\'jumpy\'.endsWith(\'MPY\'));\ntests["String prototype camelize"] = \'a-beta\'.camelize() === \'ABeta\';\ntests["String prototype repeat"] = \'a\'.repeat(5) === \'aaaaa\';\ntests["String prototype shift"] = \'abc\'.shift(5) === \'fgh\';\ntests["String prototype spacify"] = \'a-b_cD\'.spacify() === \'a b c d\';'
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'postman-echo.com/get',
-                                'method': 'GET',
-                                'header': [],
-                                'body': {
-                                    'mode': 'formdata',
-                                    'formdata': []
+                            request: {
+                                url: 'postman-echo.com/get',
+                                method: 'GET',
+                                header: [],
+                                body: {
+                                    mode: 'formdata',
+                                    formdata: []
                                 },
-                                'description': ''
+                                description: ''
                             },
-                            'response': []
+                            response: []
                         }
                     ]
                 },
@@ -938,24 +938,24 @@ describe('UVM', function () {
 
                 expect(err).to.be.null;
                 run.start({
-                    console: function (cursor, level) {
+                    console (cursor, level) {
                         expect(level).to.equal('log');
                         expect(cursor).to.deep.include({
                             iteration: runStore.iteration,
                             position: runStore.position
                         });
                     },
-                    exception: function (err) {
+                    exception (err) {
                         check(function () {
                             expect(err).to.not.be.ok;
                         });
                     },
-                    error: function (err) {
+                    error (err) {
                         check(function () {
                             expect(err).to.not.be.ok;
                         });
                     },
-                    start: function (err, cursor) {
+                    start (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -975,7 +975,7 @@ describe('UVM', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor) {
+                    beforeIteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -983,7 +983,7 @@ describe('UVM', function () {
                             runStore.iteration = cursor.iteration;
                         });
                     },
-                    iteration: function (err, cursor) {
+                    iteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.have.property('iteration', runStore.iteration);
@@ -991,7 +991,7 @@ describe('UVM', function () {
                             testables.iterationsComplete.push(cursor.iteration);
                         });
                     },
-                    beforeItem: function (err, cursor, item) {
+                    beforeItem (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -1001,7 +1001,7 @@ describe('UVM', function () {
                             runStore.ref = cursor.ref;
                         });
                     },
-                    item: function (err, cursor, item) {
+                    item (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -1013,7 +1013,7 @@ describe('UVM', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor) {
+                    beforePrerequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -1025,7 +1025,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    prerequest: function (err, cursor) {
+                    prerequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -1037,7 +1037,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    beforeTest: function (err, cursor, events) {
+                    beforeTest (err, cursor, events) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -1052,7 +1052,7 @@ describe('UVM', function () {
                             expect(events).to.have.lengthOf(1);
                         });
                     },
-                    test: function (err, cursor, results) {
+                    test (err, cursor, results) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -1080,7 +1080,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    beforeRequest: function (err, cursor) {
+                    beforeRequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -1092,7 +1092,7 @@ describe('UVM', function () {
                             });
                         });
                     },
-                    request: function (err, cursor, response, request) {
+                    request (err, cursor, response, request) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -1109,7 +1109,7 @@ describe('UVM', function () {
                             expect(request).to.be.ok;
                         });
                     },
-                    done: function (err) {
+                    done (err) {
                         check(function () {
                             err && console.error(err.stack);
                             expect(err).to.be.null;

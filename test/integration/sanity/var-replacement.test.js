@@ -18,12 +18,12 @@ describe('variable replacement', function () {
                         }
                     }, {
                         listen: 'prerequest',
-                        script: {exec: 'postman.setEnvironmentVariable(\'var\', \'replaced\');'}
+                        script: { exec: 'postman.setEnvironmentVariable(\'var\', \'replaced\');' }
                     }],
                     request: {
                         url: 'https://postman-echo.com/get?novar={{novar}}&var={{var}}',
                         method: 'GET',
-                        body: {mode: 'formdata', formdata: []}
+                        body: { mode: 'formdata', formdata: [] }
                     }
                 }]
             }

@@ -15,7 +15,7 @@ var expect = require('chai').expect;
     describe('with useWhatWGUrlParser: undefined', function () {
         before(function (done) {
             this.run({
-                collection: collection
+                collection
             }, function (err, results) {
                 testrun = results;
                 done(err);

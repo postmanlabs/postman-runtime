@@ -7,8 +7,8 @@ describe('escaped formdata', function () {
         this.run({
             environment: {
                 values: [
-                    {key: 'msg', value: 'hello\\kworld', type: 'text', name: 'msg', enabled: true},
-                    {key: 'msg1', value: 'hello', type: 'text', name: 'msg', enabled: true}
+                    { key: 'msg', value: 'hello\\kworld', type: 'text', name: 'msg', enabled: true },
+                    { key: 'msg1', value: 'hello', type: 'text', name: 'msg', enabled: true }
                 ]
             },
             collection: {
@@ -18,8 +18,8 @@ describe('escaped formdata', function () {
                         method: 'POST',
                         body: {
                             mode: 'urlencoded',
-                            urlencoded: [{key: '{{msg1}}', value: '{{msg}}', type: 'text', enabled: true},
-                                {key: 'incollection', value: 'hello\\world', type: 'text', enabled: true}]
+                            urlencoded: [{ key: '{{msg1}}', value: '{{msg}}', type: 'text', enabled: true },
+                                { key: 'incollection', value: 'hello\\world', type: 'text', enabled: true }]
                         }
                     }
                 }]

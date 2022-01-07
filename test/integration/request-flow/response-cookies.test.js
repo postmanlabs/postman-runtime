@@ -37,14 +37,14 @@ var sinon = require('sinon'),
     });
 
     it('should have null expiry for session cookie', function () {
-        var cookie = testrun.response.getCall(0).args[5].find({name: 'cookie_1'});
+        var cookie = testrun.response.getCall(0).args[5].find({ name: 'cookie_1' });
 
         expect(cookie.expires).to.be.null;
     });
 
 
     it('should have expiry for cookie with Max-Age>0', function () {
-        var cookie = testrun.response.getCall(0).args[5].find({name: 'cookie_2'});
+        var cookie = testrun.response.getCall(0).args[5].find({ name: 'cookie_2' });
 
         expect(cookie.expires).to.be.ok;
         expect(cookie.expires).to.be.instanceOf(Date);

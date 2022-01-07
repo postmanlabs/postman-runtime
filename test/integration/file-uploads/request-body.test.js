@@ -56,7 +56,7 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'file',
-                                file: {src: 'test/fixtures/upload-file.json'}
+                                file: { src: 'test/fixtures/upload-file.json' }
                             }
                         }
                     }]
@@ -118,7 +118,7 @@ describe('file upload in request body', function () {
 
             var resp = JSON.parse(testrun.response.getCall(3).args[2].stream.toString());
 
-            expect(resp.data).to.be.eql({key1: 'value1', key2: 2});
+            expect(resp.data).to.be.eql({ key1: 'value1', key2: 2 });
             expect(resp).to.nested.include({
                 'headers.content-length': '33'
             });
@@ -137,7 +137,7 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
-                                formdata: [{key: 'userData', type: 'file'}]
+                                formdata: [{ key: 'userData', type: 'file' }]
                             }
                         }
                     }, {
@@ -146,14 +146,14 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
-                                formdata: [{key: 'userData', type: 'file', src: []}]
+                                formdata: [{ key: 'userData', type: 'file', src: [] }]
                             }
                         }
                     }, {
                         request: {
                             url: 'https://postman-echo.com/post',
                             method: 'POST',
-                            body: {mode: 'file', file: {}}
+                            body: { mode: 'file', file: {} }
                         }
                     }]
                 }
@@ -294,7 +294,7 @@ describe('file upload in request body', function () {
                 });
                 expect(req.body.file).to.have.property('content');
                 expect(resp.headers['content-type']).to.equal('application/json');
-                expect(resp.data).to.be.eql({key1: 'value1', key2: 2});
+                expect(resp.data).to.be.eql({ key1: 'value1', key2: 2 });
             });
         });
     });
@@ -383,7 +383,7 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'file',
-                                file: {src: 'randomFile'}
+                                file: { src: 'randomFile' }
                             }
                         }
                     }]
@@ -444,7 +444,7 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'file',
-                                file: {src: 'test/fixtures/'}
+                                file: { src: 'test/fixtures/' }
                             }
                         }
                     }]
@@ -478,7 +478,7 @@ describe('file upload in request body', function () {
             this.run({
                 fileResolver: {
                     stat: function (src, cb) {
-                        cb(null, {mode: 32896}); // mode: --w-------
+                        cb(null, { mode: 32896 }); // mode: --w-------
                     },
                     createReadStream: fs.createReadStream
                 },
@@ -489,7 +489,7 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'file',
-                                file: {src: 'randomFile'}
+                                file: { src: 'randomFile' }
                             }
                         }
                     }]
@@ -581,7 +581,7 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'file',
-                                file: {src: 'randomFile'}
+                                file: { src: 'randomFile' }
                             }
                         }
                     }]
@@ -611,7 +611,7 @@ describe('file upload in request body', function () {
     describe('with fileResolver having interface mismatch', function () {
         before(function (done) {
             this.run({
-                fileResolver: {createReadStream: fs.createReadStream},
+                fileResolver: { createReadStream: fs.createReadStream },
                 collection: {
                     item: [{
                         request: {
@@ -619,7 +619,7 @@ describe('file upload in request body', function () {
                             method: 'POST',
                             body: {
                                 mode: 'file',
-                                file: {src: 'randomFile'}
+                                file: { src: 'randomFile' }
                             }
                         }
                     }]

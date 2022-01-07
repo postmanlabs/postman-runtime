@@ -6,7 +6,7 @@ describe('variable changes', function () {
 
     before(function (done) {
         this.run({
-            requester: {followRedirects: false},
+            requester: { followRedirects: false },
             collection: {
                 item: {
                     // ensure that we run something for test and pre-req scripts

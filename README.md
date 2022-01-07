@@ -6,13 +6,6 @@
 
 > If you are looking to execute collections, you should be using Newman, this is very low level.
 
-## Development Notes
-
-- `npm run test`: Runs lint, system, unit and integration tests of runtime
-- `npm run test-integration-newman`: This command runs tests of newman with the under-development variant of runtime
-- `npm run test-coverage`: This command runs `postman-runtime` tests and generate overall coverage
-- `npm/memory-check.sh`: This bash scripts performs first-level memory usage analysis, and plots a graph out of the results
-
 ## Options
 
 Postman Runtime supports a lot of options to customize its behavior for different environments and use-cases.

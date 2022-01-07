@@ -19,7 +19,7 @@ var sinon = require('sinon'),
 
         this.run({
             requester: {
-                cookieJar: cookieJar
+                cookieJar
             },
             fileResolver: fs,
             collection: {
@@ -143,8 +143,8 @@ var sinon = require('sinon'),
             requestHeaders = JSON.parse(response.stream);
 
         expect(requestHeaders).to.deep.include.members([
-            {key: 'Header-Name', value: 'value1'},
-            {key: 'Header-Name', value: 'value2'}
+            { key: 'Header-Name', value: 'value1' },
+            { key: 'Header-Name', value: 'value2' }
         ]);
     });
 
@@ -173,9 +173,9 @@ var sinon = require('sinon'),
             requestHeaders = JSON.parse(response.stream);
 
         expect(requestHeaders).to.deep.include.members([
-            {key: 'Header-Name-0', value: 'value0'},
-            {key: 'header-name-1', value: 'value2'},
-            {key: 'HEADER-NAME-2', value: 'value3'}
+            { key: 'Header-Name-0', value: 'value0' },
+            { key: 'header-name-1', value: 'value2' },
+            { key: 'HEADER-NAME-2', value: 'value3' }
         ]);
 
         // @todo: handle multiple headers with different capitalization
@@ -196,15 +196,15 @@ var sinon = require('sinon'),
 
         // @note this will fail on updating system headers to track those changes
         expect(requestHeaders).to.have.deep.members([
-            {key: 'Header-Name-0', value: 'value0'},
-            {key: 'User-Agent', value: 'PostmanRuntime/test'},
-            {key: 'Postman-Token', value: 'someCustomToken'},
-            {key: 'referer', value: HEADERS_URL},
-            {key: 'Accept', value: '*/*'},
-            {key: 'Cache-Control', value: 'no-cache'},
-            {key: 'Host', value: HEADERS_URL.split('/')[2]},
-            {key: 'Accept-Encoding', value: 'gzip, deflate, br'},
-            {key: 'Connection', value: 'keep-alive'}
+            { key: 'Header-Name-0', value: 'value0' },
+            { key: 'User-Agent', value: 'PostmanRuntime/test' },
+            { key: 'Postman-Token', value: 'someCustomToken' },
+            { key: 'referer', value: HEADERS_URL },
+            { key: 'Accept', value: '*/*' },
+            { key: 'Cache-Control', value: 'no-cache' },
+            { key: 'Host', value: HEADERS_URL.split('/')[2] },
+            { key: 'Accept-Encoding', value: 'gzip, deflate, br' },
+            { key: 'Connection', value: 'keep-alive' }
         ]);
 
         // system headers should be added correctly
@@ -213,20 +213,20 @@ var sinon = require('sinon'),
         // header will be added by NodeJS.
         expect(request.headers.members).to.have.deep.members([
             // user-defined headers
-            new Header({key: 'Header-Name-0', value: 'value0'}),
+            new Header({ key: 'Header-Name-0', value: 'value0' }),
             // user-defined, not overwritten by system
-            new Header({key: 'User-Agent', value: 'PostmanRuntime/test'}),
-            new Header({key: 'Postman-Token', value: 'someCustomToken'}),
+            new Header({ key: 'User-Agent', value: 'PostmanRuntime/test' }),
+            new Header({ key: 'Postman-Token', value: 'someCustomToken' }),
             // requester header(overwritten) not added as system if value is unchanged
-            new Header({key: 'referer', value: HEADERS_URL}),
+            new Header({ key: 'referer', value: HEADERS_URL }),
             // user-defined, disabled header same as one-of system header
-            new Header({key: 'accept-encoding', value: 'disabled-system-header', disabled: true}),
+            new Header({ key: 'accept-encoding', value: 'disabled-system-header', disabled: true }),
             // system headers
-            new Header({key: 'Accept', value: '*/*', system: true}),
-            new Header({key: 'Cache-Control', value: 'no-cache', system: true}),
-            new Header({key: 'Host', value: HEADERS_URL.split('/')[2], system: true}),
-            new Header({key: 'Accept-Encoding', value: 'gzip, deflate, br', system: true}),
-            new Header({key: 'Connection', value: 'keep-alive', system: true})
+            new Header({ key: 'Accept', value: '*/*', system: true }),
+            new Header({ key: 'Cache-Control', value: 'no-cache', system: true }),
+            new Header({ key: 'Host', value: HEADERS_URL.split('/')[2], system: true }),
+            new Header({ key: 'Accept-Encoding', value: 'gzip, deflate, br', system: true }),
+            new Header({ key: 'Connection', value: 'keep-alive', system: true })
         ]);
     });
 
@@ -242,13 +242,12 @@ var sinon = require('sinon'),
         expect(requestHeaders.filter(function (h) { return h.key.toLowerCase() === 'cookie'; }))
             .to.have.lengthOf(1);
         expect(requestHeaders).to.deep.include.members([
-            {key: 'Cookie', value: 'c1=v1; c2=v2; c3=v3; c4=v4'}
+            { key: 'Cookie', value: 'c1=v1; c2=v2; c3=v3; c4=v4' }
         ]);
 
         // make sure duplicates (multiple cookie headers) are removed
-        expect(request.headers.reference.cookie).to.deep.eql(
-            new Header({key: 'Cookie', value: 'c1=v1; c2=v2; c3=v3; c4=v4', system: true})
-        );
+        expect(request.headers.reference.cookie)
+            .to.deep.eql(new Header({ key: 'Cookie', value: 'c1=v1; c2=v2; c3=v3; c4=v4', system: true }));
     });
 
     it('should handle content-length header correctly', function () {
@@ -261,8 +260,7 @@ var sinon = require('sinon'),
 
         expect(requestHeaders).to.have.property('content-length', '253');
 
-        expect(request.headers.members[request.headers.count() - 1]).to.deep.equal(
-            new Header({key: 'Content-Length', 'system': true, value: '253'})
-        );
+        expect(request.headers.members[request.headers.count() - 1])
+            .to.deep.equal(new Header({ key: 'Content-Length', system: true, value: '253' }));
     });
 });

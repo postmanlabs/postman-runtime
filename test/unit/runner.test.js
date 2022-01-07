@@ -39,7 +39,7 @@ describe('runner', function () {
                     var runner = new Runner();
 
                     runner.run(collection, {
-                        entrypoint: {execute: 'random'},
+                        entrypoint: { execute: 'random' },
                         abortOnError: true
                     }, function (err, run) {
                         expect(err.message).to.equal('Unable to find a folder or request: random');
@@ -53,7 +53,7 @@ describe('runner', function () {
                     var runner = new Runner();
 
                     runner.run(collection, {
-                        entrypoint: {execute: 'random'},
+                        entrypoint: { execute: 'random' },
                         abortOnError: true
                     }, function (err, run) {
                         expect(err.message).to.equal('Unable to find a folder or request: random');
@@ -109,11 +109,11 @@ describe('runner', function () {
 
                 it('should override prototype globals with those passed from the run options', function (done) {
                     var runner = new Runner({
-                        globals: new sdk.VariableScope({}, [{key: 'alpha', value: 'foo'}])
+                        globals: new sdk.VariableScope({}, [{ key: 'alpha', value: 'foo' }])
                     });
 
                     runner.run(collection, {
-                        globals: new sdk.VariableScope({}, [{key: 'beta', value: 'bar'}])
+                        globals: new sdk.VariableScope({}, [{ key: 'beta', value: 'bar' }])
                     }, function (err, run) {
                         expect(err).to.be.null;
 
@@ -244,7 +244,7 @@ describe('runner', function () {
                 it('should normalize 0 timeouts to infinity', function (done) {
                     var runner = new Runner({
                         run: {
-                            timeout: {global: 0}
+                            timeout: { global: 0 }
                         }
                     });
 
@@ -262,7 +262,7 @@ describe('runner', function () {
                 it('should normalize negative values to Infinity', function (done) {
                     var runner = new Runner({
                         run: {
-                            timeout: {global: -1}
+                            timeout: { global: -1 }
                         }
                     });
 
@@ -280,7 +280,7 @@ describe('runner', function () {
                 it('should normalize Infinty values to default', function (done) {
                     var runner = new Runner({
                         run: {
-                            timeout: {global: Infinity}
+                            timeout: { global: Infinity }
                         }
                     });
 
@@ -298,7 +298,7 @@ describe('runner', function () {
                 it('should preserve finite timeouts', function (done) {
                     var runner = new Runner({
                         run: {
-                            timeout: {global: 100, script: 120, request: 180000}
+                            timeout: { global: 100, script: 120, request: 180000 }
                         }
                     });
 
@@ -321,7 +321,7 @@ describe('runner', function () {
                     it('should be present in options', function (done) {
                         var runner = new Runner();
 
-                        runner.run(collection, {iterationCount: 10}, function (err, run) {
+                        runner.run(collection, { iterationCount: 10 }, function (err, run) {
                             expect(err).to.be.null;
                             expect(run).to.nested.include({
                                 'options.iterationCount': 10
@@ -333,7 +333,7 @@ describe('runner', function () {
                     it('should not fail to create run for large iterationCount', function (done) {
                         var runner = new Runner();
 
-                        runner.run(collection, {iterationCount: 99999999}, function (err, run) {
+                        runner.run(collection, { iterationCount: 99999999 }, function (err, run) {
                             expect(err).to.be.null;
                             expect(run).to.nested.include({
                                 'options.iterationCount': 99999999
@@ -347,12 +347,12 @@ describe('runner', function () {
                     it('should be inferred from data', function (done) {
                         var runner = new Runner(),
                             data = [
-                                {a: 'b'},
-                                {c: 'd'},
-                                {e: 'f'}
+                                { a: 'b' },
+                                { c: 'd' },
+                                { e: 'f' }
                             ];
 
-                        runner.run(collection, {data}, function (err, run) {
+                        runner.run(collection, { data }, function (err, run) {
                             expect(err).to.be.null;
                             expect(run).to.nested.include({
                                 'options.iterationCount': 3

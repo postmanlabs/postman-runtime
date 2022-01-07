@@ -29,17 +29,17 @@ describe('intermediate requests from auth', function () {
         var testrun,
             fin = false,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     fin = true;
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, fin, 'https://postman-echo.com/get');
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
@@ -121,17 +121,17 @@ describe('intermediate requests from auth', function () {
         var testrun,
             fin = false,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     fin = true;
                     done(null);
                 },
-                pre: function (auth, done) {
-                    done(null, fin, {url: 'https://postman-echo.com/get'});
+                pre (auth, done) {
+                    done(null, fin, { url: 'https://postman-echo.com/get' });
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
@@ -206,17 +206,17 @@ describe('intermediate requests from auth', function () {
         var testrun,
             fin = false,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     fin = true;
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, fin, 'https://bla/blabla');
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
@@ -297,16 +297,16 @@ describe('intermediate requests from auth', function () {
     describe('with false result in pre and an intermediate request', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, false, 'https://postman-echo.com/get');
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             };

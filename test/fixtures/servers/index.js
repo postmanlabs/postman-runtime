@@ -21,7 +21,7 @@ fs.readdirSync(__dirname).forEach(function (file) {
 });
 
 module.exports = {
-    start: function (callback) {
+    start (callback) {
         async.each(SERVERS, function (s, next) {
             s.server.listen(function (err) {
                 if (err) { return next(err); }
@@ -38,7 +38,7 @@ module.exports = {
         });
     },
 
-    close: function (callback) {
+    close (callback) {
         async.each(SERVERS, function (server, next) {
             server.server.destroy(next);
         }, callback);

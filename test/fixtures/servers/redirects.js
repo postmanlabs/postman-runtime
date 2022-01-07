@@ -10,7 +10,7 @@ redirectServer.on('finally', function (req, res) {
     });
 
     req.once('end', function () {
-        res.writeHead(200, {connection: 'close'});
+        res.writeHead(200, { connection: 'close' });
         res.end(data);
     });
 

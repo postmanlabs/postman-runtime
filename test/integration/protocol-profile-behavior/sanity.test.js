@@ -124,7 +124,7 @@ var fs = require('fs'),
                         request: {
                             url: global.servers.followRedirects + '/1/302',
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }],
                     // will override requester options
@@ -177,7 +177,7 @@ var fs = require('fs'),
                         request: {
                             url: global.servers.followRedirects + '/1/302',
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }],
                     // will override requester options
@@ -230,7 +230,7 @@ var fs = require('fs'),
                         request: {
                             url: URL,
                             method: 'POST',
-                            header: [{key: 'authorization', value: 'supersecret'}]
+                            header: [{ key: 'authorization', value: 'supersecret' }]
                         }
                     }],
                     protocolProfileBehavior: {
@@ -260,7 +260,7 @@ var fs = require('fs'),
             var response = testrun.response.getCall(0).args[2],
                 request = testrun.response.getCall(0).args[3];
 
-            expect(request.headers.toJSON()).to.deep.include({key: 'authorization', value: 'supersecret'});
+            expect(request.headers.toJSON()).to.deep.include({ key: 'authorization', value: 'supersecret' });
 
             expect(response).to.have.property('code', 200);
             expect(response.json().headers).to.not.have.property('authorization');
@@ -278,7 +278,7 @@ var fs = require('fs'),
                         request: {
                             url: URL,
                             method: 'POST',
-                            header: [{key: 'authorization', value: 'supersecret'}]
+                            header: [{ key: 'authorization', value: 'supersecret' }]
                         }
                     }],
                     protocolProfileBehavior: {
@@ -308,7 +308,7 @@ var fs = require('fs'),
             var response = testrun.response.getCall(0).args[2],
                 request = testrun.response.getCall(0).args[3];
 
-            expect(request.headers.toJSON()).to.deep.include({key: 'authorization', value: 'supersecret'});
+            expect(request.headers.toJSON()).to.deep.include({ key: 'authorization', value: 'supersecret' });
 
             expect(response).to.have.property('code', 200);
             expect(response.json().headers).to.have.property('authorization');
@@ -587,7 +587,7 @@ var fs = require('fs'),
                         request: {
                             url: URL,
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }],
                     // will override requester options
@@ -645,7 +645,7 @@ var fs = require('fs'),
                         request: {
                             url: URL,
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }],
                     // will override requester options
@@ -785,7 +785,7 @@ var fs = require('fs'),
                         request: {
                             url: URL,
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }],
                     // will override requester options
@@ -839,8 +839,8 @@ var fs = require('fs'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: [URL + '/*'],
-                    key: {src: clientKeyPath},
-                    cert: {src: clientCertPath}
+                    key: { src: clientKeyPath },
+                    cert: { src: clientCertPath }
                 }]);
 
             this.run({
@@ -886,7 +886,7 @@ var fs = require('fs'),
         it('should have certificate attached to request', function () {
             var request = testrun.request.getCall(0).args[3].toJSON();
 
-            expect(request).to.nested.include({'certificate.id': certificateId});
+            expect(request).to.nested.include({ 'certificate.id': certificateId });
         });
     });
 });

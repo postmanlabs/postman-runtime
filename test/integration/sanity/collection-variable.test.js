@@ -7,21 +7,21 @@ describe('Collection Variables', function () {
         this.run({
             globals: {
                 values: [
-                    {key: 'global-var', value: 'global var value', name: 'global-var', enabled: true},
-                    {key: 'user', value: 'incorrect username', name: 'user', enabled: true}
+                    { key: 'global-var', value: 'global var value', name: 'global-var', enabled: true },
+                    { key: 'user', value: 'incorrect username', name: 'user', enabled: true }
                 ]
             },
             environment: {
                 values: [
-                    {key: 'env-var', value: 'env var value', name: 'env-var', enabled: true},
-                    {key: 'pass', value: 'password', name: 'pass', enabled: true}
+                    { key: 'env-var', value: 'env var value', name: 'env-var', enabled: true },
+                    { key: 'pass', value: 'password', name: 'pass', enabled: true }
                 ]
             },
             collection: {
                 variable: [
-                    {key: 'user', value: 'postman', enabled: true},
-                    {key: 'pass', value: 'incorrect password', enabled: true},
-                    {key: 'echo-url', value: 'https://postman-echo.com', enabled: true}
+                    { key: 'user', value: 'postman', enabled: true },
+                    { key: 'pass', value: 'incorrect password', enabled: true },
+                    { key: 'echo-url', value: 'https://postman-echo.com', enabled: true }
                 ],
                 item: {
                     name: 'Collection Variables Test Request',
@@ -42,8 +42,8 @@ describe('Collection Variables', function () {
                         auth: {
                             type: 'basic',
                             basic: [
-                                {key: 'username', value: '{{user}}'},
-                                {key: 'password', value: '{{pass}}'}
+                                { key: 'username', value: '{{user}}' },
+                                { key: 'password', value: '{{pass}}' }
                             ]
                         }
                     }
@@ -97,8 +97,8 @@ describe('Collection Variables', function () {
                 'global-var': 'global var value',
                 'env-var': 'env var value',
                 'echo-url': 'https://postman-echo.com',
-                'user': 'postman',
-                'pass': 'password'
+                user: 'postman',
+                pass: 'password'
             };
 
         expect(prConsoleArgs).to.deep.include.members(['test', variables]);

@@ -1,46 +1,34 @@
 #!/usr/bin/env node
-require('shelljs/global');
-require('colors');
+// ---------------------------------------------------------------------------------------------------------------------
+// This script is intended to contain all actions pertaining to code style checking, linting and normalization.
+// ---------------------------------------------------------------------------------------------------------------------
 
-var async = require('async'),
-    ESLintCLIEngine = require('eslint').CLIEngine,
+const chalk = require('chalk'),
+    { ESLint } = require('eslint'),
 
     LINT_SOURCE_DIRS = [
-        './lib',
-        './lib/runner',
-        './lib/authorizer',
-        './lib/backpack',
-        './test',
-        './test/system',
-        './test/unit',
-        './test/integration',
-        './npm/*.js',
-        './index.js'
+        './test/**/*.js',
+        './index.js',
+        './lib/**/*.js',
+        './npm/**/*.js'
     ];
 
-module.exports = function (exit) {
+module.exports = async function (exit) {
     // banner line
-    console.info('\nLinting files using eslint...'.yellow.bold);
+    console.info(chalk.yellow.bold('\nLinting files using eslint...'));
 
-    async.waterfall([
-        // execute the CLI engine
-        function (next) {
-            next(null, (new ESLintCLIEngine()).executeOnFiles(LINT_SOURCE_DIRS));
-        },
+    const eslint = new ESLint(),
+        results = await eslint.lintFiles(LINT_SOURCE_DIRS),
+        errorReport = ESLint.getErrorResults(results),
+        formatter = await eslint.loadFormatter();
 
-        // output results
-        function (report, next) {
-            var errorReport = ESLintCLIEngine.getErrorResults(report.results);
+    // log the result to CLI
+    console.info(formatter.format(results));
 
-            // log the result to CLI
-            console.info(ESLintCLIEngine.getFormatter()(report.results));
-            // log the success of the parser if it has no errors
-            (errorReport && !errorReport.length) && console.info('eslint ok!'.green);
-            // ensure that the exit code is non zero in case there was an error
-            next(Number(errorReport && errorReport.length) || 0);
-        }
-    ], exit);
+    (errorReport && !errorReport.length) && console.info(chalk.green('eslint ok!'));
+
+    exit(Number(errorReport && errorReport.length) || 0);
 };
 
 // ensure we run this script exports if this is a direct stdin.tty run
-!module.parent && module.exports(exit);
+!module.parent && module.exports(process.exit);

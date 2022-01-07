@@ -40,8 +40,7 @@ describe('Inherited Auth', function () {
                             value: 'password'
                         }]
                     }
-                }
-            );
+                });
 
             // perform the collection run
             this.run(clonedRunOptions, function (err, results) {
@@ -115,8 +114,7 @@ describe('Inherited Auth', function () {
                             value: 'password'
                         }]
                     }
-                }
-            );
+                });
 
             // perform the collection run
             this.run(clonedRunOptions, function (err, results) {
@@ -198,8 +196,7 @@ describe('Inherited Auth', function () {
                             value: 'password'
                         }]
                     }
-                }
-            );
+                });
 
             // perform the collection run
             this.run(clonedRunOptions, function (err, results) {
@@ -277,8 +274,7 @@ describe('Inherited Auth', function () {
                             value: 'password'
                         }]
                     }
-                }
-            );
+                });
 
             // perform the collection run
             this.run(clonedRunOptions, function (err, results) {

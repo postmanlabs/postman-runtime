@@ -16,7 +16,7 @@ describe('Dynamic Variables', function () {
                             body: {
                                 mode: 'urlencoded',
                                 urlencoded: [
-                                    {key: 'FriendlyName', value: '{{$guid}}', type: 'text', enabled: true}
+                                    { key: 'FriendlyName', value: '{{$guid}}', type: 'text', enabled: true }
                                 ]
                             }
                         }
@@ -69,7 +69,7 @@ describe('Dynamic Variables', function () {
                             method: 'POST',
                             body: {
                                 mode: 'urlencoded',
-                                urlencoded: [{key: 'RandomId', value: '{{$randomInt}}', type: 'text', enabled: true}]
+                                urlencoded: [{ key: 'RandomId', value: '{{$randomInt}}', type: 'text', enabled: true }]
                             }
                         }
                     }]
@@ -121,7 +121,12 @@ describe('Dynamic Variables', function () {
                             method: 'POST',
                             body: {
                                 mode: 'urlencoded',
-                                urlencoded: [{key: 'TimeCreated', value: '{{$timestamp}}', type: 'text', enabled: true}]
+                                urlencoded: [{
+                                    key: 'TimeCreated',
+                                    value: '{{$timestamp}}',
+                                    type: 'text',
+                                    enabled: true
+                                }]
                             }
                         }
                     }]

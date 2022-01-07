@@ -5,20 +5,20 @@ os:
   - linux
   - windows
 node_js:
-  - 8
   - 10
+  - 12
 
 jobs:
   include:
     # run browser tests
     - name: 'Browser Tests'
-      node_js: stable
+      node_js: lts/*
       os: linux
       script: npm run test-browser
 
     # run tests in Node.js stable and publish code coverage
     - name: 'Coverage'
-      node_js: stable
+      node_js: lts/*
       os: linux
       script:
         - npm run test-unit

@@ -7,16 +7,16 @@ describe('script result format', function () {
 
         before(function (done) {
             this.run({
-                requester: {followRedirects: false},
+                requester: { followRedirects: false },
                 collection: {
                     item: {
                         // ensure that we run something for test and pre-req scripts
                         event: [{
                             listen: 'prerequest',
-                            script: {exec: ';'}
+                            script: { exec: ';' }
                         }, {
                             listen: 'test',
-                            script: {exec: 'tests.worked = true;'}
+                            script: { exec: 'tests.worked = true;' }
                         }],
                         request: 'https://postman-echo.com/get'
                     }
@@ -105,8 +105,8 @@ describe('script result format', function () {
             var prerequest = testrun.script.firstCall.args[2],
                 test = testrun.script.secondCall.args[2];
 
-            expect(prerequest).to.have.deep.property('return', {async: false});
-            expect(test).to.have.deep.property('return', {async: false});
+            expect(prerequest).to.have.deep.property('return', { async: false });
+            expect(test).to.have.deep.property('return', { async: false });
         });
 
         it('should have a response in the test script result', function () {
@@ -132,13 +132,13 @@ describe('script result format', function () {
 
         before(function (done) {
             this.run({
-                requester: {followRedirects: false},
+                requester: { followRedirects: false },
                 collection: {
                     item: {
                         // ensure that we run something for test and pre-req scripts
                         event: [{
                             listen: 'prerequest',
-                            script: {exec: 'postman.setNextRequest("some-req-name");'}
+                            script: { exec: 'postman.setNextRequest("some-req-name");' }
                         }],
                         request: 'https://postman-echo.com/get'
                     }

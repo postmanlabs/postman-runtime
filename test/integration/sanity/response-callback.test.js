@@ -84,20 +84,20 @@ describe('response callback', function () {
                     }
                 },
                 fakeHandler = {
-                    init: function (auth, response, done) {
+                    init (auth, response, done) {
                         done(null);
                     },
 
-                    pre: function (auth, done) {
+                    pre (auth, done) {
                         done(null, true);
                     },
 
-                    post: function (auth, response, done) {
+                    post (auth, response, done) {
                         replayCount++;
                         done(null, replayCount === 2);
                     },
 
-                    sign: function (auth, request, done) {
+                    sign (auth, request, done) {
                         done();
                     }
                 };

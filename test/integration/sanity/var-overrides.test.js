@@ -5,26 +5,26 @@ describe('Variable overrides', function () {
 
     before(function (done) {
         this.run({
-            data: [{dataVar: 'dataValue', data: 'DATA'}],
+            data: [{ dataVar: 'dataValue', data: 'DATA' }],
             globals: {
                 values: [
-                    {key: 'global_url', value: 'https://postman-echo.com/get', name: 'global_url', enabled: true},
-                    {key: 'global_resource_get', 'value': '/get', 'name': 'global_resource_get', 'enabled': true},
-                    {key: 'Global Foo', 'value': 'Global Bar', 'name': 'Global Foo', 'enabled': true},
-                    {key: 'Global Phew', 'value': 'Global Works', 'name': 'Global Phew', 'enabled': true},
-                    {key: 'global', 'value': 'global1', 'name': 'global', 'enabled': true},
-                    {key: 'env', 'value': 'global1', 'name': 'env', 'enabled': true},
-                    {key: 'data', 'value': 'global1', 'name': 'data', 'enabled': true}
+                    { key: 'global_url', value: 'https://postman-echo.com/get', name: 'global_url', enabled: true },
+                    { key: 'global_resource_get', value: '/get', name: 'global_resource_get', enabled: true },
+                    { key: 'Global Foo', value: 'Global Bar', name: 'Global Foo', enabled: true },
+                    { key: 'Global Phew', value: 'Global Works', name: 'Global Phew', enabled: true },
+                    { key: 'global', value: 'global1', name: 'global', enabled: true },
+                    { key: 'env', value: 'global1', name: 'env', enabled: true },
+                    { key: 'data', value: 'global1', name: 'data', enabled: true }
                 ]
             },
             environment: {
                 values: [
-                    {key: 'hKey', value: 'abhijit3', type: 'text', name: 'hKey', enabled: true},
-                    {key: 'hburl', value: 'posts', type: 'text', name: 'hburl', enabled: true},
-                    {key: 'tempKey', value: 'abhijit', type: 'text', name: 'tempKey', enabled: true},
-                    {key: 'url', value: 'https://postman-echo.com', type: 'text', name: 'url', enabled: true},
-                    {key: 'env', value: 'env2', type: 'text', name: 'env', enabled: true},
-                    {key: 'data', value: 'env2', type: 'text', name: 'data', enabled: true}
+                    { key: 'hKey', value: 'abhijit3', type: 'text', name: 'hKey', enabled: true },
+                    { key: 'hburl', value: 'posts', type: 'text', name: 'hburl', enabled: true },
+                    { key: 'tempKey', value: 'abhijit', type: 'text', name: 'tempKey', enabled: true },
+                    { key: 'url', value: 'https://postman-echo.com', type: 'text', name: 'url', enabled: true },
+                    { key: 'env', value: 'env2', type: 'text', name: 'env', enabled: true },
+                    { key: 'data', value: 'env2', type: 'text', name: 'data', enabled: true }
                 ]
             },
             collection: {

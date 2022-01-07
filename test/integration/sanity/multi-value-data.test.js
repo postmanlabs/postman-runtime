@@ -19,7 +19,7 @@ describe('Multi value data', function () {
                         method: 'POST',
                         body: {
                             mode: 'formdata',
-                            formdata: [{key: 'name', value: 'abhijit'}, {key: 'name', value: 'kane'}]
+                            formdata: [{ key: 'name', value: 'abhijit' }, { key: 'name', value: 'kane' }]
                         }
                     }
                 }]

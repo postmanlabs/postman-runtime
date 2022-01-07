@@ -2,10 +2,12 @@
  * @fileOverview Ensures that editorconfig settings are appropriate
  */
 
-var editorconfig = require('editorconfig'),
+const expect = require('chai').expect,
+    editorconfig = require('editorconfig'),
 
     /**
      * The width (in spaces) of tabs used for indentation throughout the project
+     *
      * @type {Number}
      */
     TAB_WIDTH = 4;

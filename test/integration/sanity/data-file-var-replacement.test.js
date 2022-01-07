@@ -5,7 +5,7 @@ describe('data variable replacement', function () {
 
     before(function (done) {
         this.run({
-            data: [{dataVar: 'value1'}, {dataVar: 'value2'}],
+            data: [{ dataVar: 'value1' }, { dataVar: 'value2' }],
             collection: {
                 item: [{
                     event: [{
@@ -31,8 +31,8 @@ describe('data variable replacement', function () {
                         body: {
                             mode: 'formdata',
                             formdata: [
-                                {key: 'a', value: '{{dataVar}}', type: 'text'},
-                                {key: 'b', value: '{{dataVar2}}', type: 'text'}
+                                { key: 'a', value: '{{dataVar}}', type: 'text' },
+                                { key: 'b', value: '{{dataVar2}}', type: 'text' }
                             ]
                         }
                     }
@@ -64,11 +64,11 @@ describe('data variable replacement', function () {
         });
         expect(testrun.prerequest.getCall(0)).to.deep.nested.include({
             'args[0]': null,
-            'args[2][0].result.data': {dataVar: 'value1'}
+            'args[2][0].result.data': { dataVar: 'value1' }
         });
         expect(testrun.prerequest.getCall(1)).to.deep.nested.include({
             'args[0]': null,
-            'args[2][0].result.data': {dataVar: 'value2'}
+            'args[2][0].result.data': { dataVar: 'value2' }
         });
 
         // test script checks
@@ -77,11 +77,11 @@ describe('data variable replacement', function () {
         });
         expect(testrun.test.getCall(0)).to.deep.nested.include({
             'args[0]': null,
-            'args[2][0].result.data': {dataVar: 'value1'}
+            'args[2][0].result.data': { dataVar: 'value1' }
         });
         expect(testrun.test.getCall(1)).to.deep.nested.include({
             'args[0]': null,
-            'args[2][0].result.data': {dataVar: 'value2'}
+            'args[2][0].result.data': { dataVar: 'value2' }
         });
     });
 

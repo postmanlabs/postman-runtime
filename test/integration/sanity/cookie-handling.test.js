@@ -61,15 +61,15 @@ var expect = require('chai').expect;
             t3 = testrun.test.getCall(2).args;
 
         expect(t1[0]).to.be.null;
-        expect(_.find(t1[2][0].result.cookies, {name: 'foo'})).to.have.property('value', 'bar');
+        expect(_.find(t1[2][0].result.cookies, { name: 'foo' })).to.have.property('value', 'bar');
 
         expect(t2[0]).to.be.null;
-        expect(_.find(t2[2][0].result.cookies, {name: 'foo'})).to.have.property('value', 'bar');
+        expect(_.find(t2[2][0].result.cookies, { name: 'foo' })).to.have.property('value', 'bar');
         expect(_.get(t2[2], '0.result.request.headers.reference.cookie.value')).to.match(/foo=bar;/);
 
         // redirect request
         expect(t3[0]).to.be.null;
-        expect(_.find(t3[2][0].result.cookies, {name: 'foo'})).to.have.property('value', 'bar');
+        expect(_.find(t3[2][0].result.cookies, { name: 'foo' })).to.have.property('value', 'bar');
         expect(_.get(t3[2], '0.result.request.headers.reference.cookie')).to.be.undefined;
     });
 

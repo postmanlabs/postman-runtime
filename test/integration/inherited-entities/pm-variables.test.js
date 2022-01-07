@@ -9,20 +9,20 @@ describe('pm.variables', function () {
             }],
             globals: {
                 values: [
-                    {key: 'key-1', value: 'global-value-1', name: 'key-1', enabled: true},
-                    {key: 'key-2', value: 'global-value-2', name: 'key-2', enabled: true}
+                    { key: 'key-1', value: 'global-value-1', name: 'key-1', enabled: true },
+                    { key: 'key-2', value: 'global-value-2', name: 'key-2', enabled: true }
                 ]
             },
             environment: {
                 values: [
-                    {key: 'key-3', value: 'env-value-3', name: 'key-3', enabled: true},
-                    {key: 'key-4', value: 'env-value-4', name: 'key-4', enabled: true}
+                    { key: 'key-3', value: 'env-value-3', name: 'key-3', enabled: true },
+                    { key: 'key-4', value: 'env-value-4', name: 'key-4', enabled: true }
                 ]
             },
             collection: {
                 variable: [
-                    {key: 'key-2', value: 'coll-value-2', name: 'key-2', enabled: true},
-                    {key: 'key-3', value: 'coll-value-3', name: 'key-3', enabled: true}
+                    { key: 'key-2', value: 'coll-value-2', name: 'key-2', enabled: true },
+                    { key: 'key-3', value: 'coll-value-3', name: 'key-3', enabled: true }
                 ],
                 event: [
                     {
@@ -121,7 +121,7 @@ describe('pm.variables', function () {
                                 pm.variables.set('key-1', 'modified-1');
                                 pm.variables.set('key-2', 'modified-1');
                                 console.log('collection pre', pm.variables.toObject())
-                            `}
+                            ` }
                         },
                         {
                             listen: 'test',
@@ -130,7 +130,7 @@ describe('pm.variables', function () {
                                 pm.variables.set('key-3', 'modified-3');
                                 pm.variables.set('key-4', 'modified-3');
                                 console.log('collection test', pm.variables.toObject())
-                            `}
+                            ` }
                         }
                     ],
                     item: [{
@@ -143,7 +143,7 @@ describe('pm.variables', function () {
                                     pm.variables.set('key-2', 'modified-2');
                                     pm.variables.set('key-3', 'modified-2');
                                     console.log('item 1 pre', pm.variables.toObject())
-                                `}
+                                ` }
                             },
                             {
                                 listen: 'test',
@@ -151,7 +151,7 @@ describe('pm.variables', function () {
                                     exec: `
                                     pm.variables.set('key-4', 'modified-4');
                                     console.log('item 1 test', pm.variables.toObject())
-                                `}
+                                ` }
                             }
                         ],
                         request: {
@@ -171,7 +171,7 @@ describe('pm.variables', function () {
                                 script: {
                                     exec: `
                                     console.log('item 2 pre', pm.variables.toObject())
-                                `}
+                                ` }
                             },
                             {
                                 listen: 'test',
@@ -183,7 +183,7 @@ describe('pm.variables', function () {
                                     pm.variables.unset('key-3')
                                     pm.variables.unset('key-4')
                                     console.log('item 2 test after unsetting', pm.variables.toObject())
-                                `}
+                                ` }
                             }
                         ],
                         request: {

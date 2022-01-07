@@ -15,8 +15,8 @@ var fs = require('fs'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: [global.servers.httpsRequestCert + '/*'],
-                    key: {src: clientKeyPath},
-                    cert: {src: clientCertPath}
+                    key: { src: clientKeyPath },
+                    cert: { src: clientCertPath }
                 }]);
 
             this.run({
@@ -67,8 +67,8 @@ var fs = require('fs'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: [global.servers.https + '/*'],
-                    key: {src: clientKeyPath},
-                    cert: {src: clientCertPath}
+                    key: { src: clientKeyPath },
+                    cert: { src: clientCertPath }
                 }]);
 
             this.run({
@@ -139,7 +139,7 @@ var fs = require('fs'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: [global.servers.httpsRequestCert + '/*'],
-                    pfx: {src: clientPfxPath}
+                    pfx: { src: clientPfxPath }
                 }]);
 
             this.run({
@@ -190,7 +190,7 @@ var fs = require('fs'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: [global.servers.httpsRequestCert + '/*'],
-                    pfx: {src: clientPfxPath},
+                    pfx: { src: clientPfxPath },
                     passphrase: 'random'
                 }]);
 
@@ -241,7 +241,7 @@ var fs = require('fs'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: [global.servers.https + '/*'],
-                    pfx: {src: clientPfxPath}
+                    pfx: { src: clientPfxPath }
                 }]);
 
             this.run({
@@ -307,7 +307,7 @@ var fs = require('fs'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: [global.servers.httpsRequestCert + '/*'],
-                    pfx: {src: clientPfxPath},
+                    pfx: { src: clientPfxPath },
                     passphrase: 'password'
                 }]);
 
@@ -358,7 +358,7 @@ var fs = require('fs'),
                 certificateList = new CertificateList({}, [{
                     id: certificateId,
                     matches: [global.servers.httpsRequestCert + '/*'],
-                    pfx: {src: clientPfxPath},
+                    pfx: { src: clientPfxPath },
                     passphrase: 'random'
                 }]);
 

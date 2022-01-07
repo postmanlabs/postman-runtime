@@ -9,73 +9,73 @@ describe('Option', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    'variables': [],
-                    'info': {
-                        'name': 'test',
-                        '_postman_id': 'cd9e83b1-03dd-18ae-ff02-574414594a87',
-                        'description': '',
-                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
+                    variables: [],
+                    info: {
+                        name: 'test',
+                        _postman_id: 'cd9e83b1-03dd-18ae-ff02-574414594a87',
+                        description: '',
+                        schema: 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    'item': [
+                    item: [
                         {
-                            'name': 'Request Methods',
+                            name: 'Request Methods',
                             // eslint-disable-next-line max-len
-                            'description': 'HTTP has multiple request "verbs", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n',
-                            'item': [
+                            description: 'HTTP has multiple request "verbs", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n',
+                            item: [
                                 {
-                                    'name': 'First Request',
-                                    'event': [
+                                    name: 'First Request',
+                                    event: [
                                         {
-                                            'listen': 'test',
-                                            'script': {
-                                                'type': 'text/javascript',
+                                            listen: 'test',
+                                            script: {
+                                                type: 'text/javascript',
                                                 // eslint-disable-next-line max-len
-                                                'exec': 'tests["Body contains headers"] = responseBody.has("headers");\ntests["Body contains args"] = responseBody.has("args");\ntests["Body contains url"] = responseBody.has("url");\n\nvar data = JSON.parse(responseBody)\n\ntests["Args key contains argument passed as url parameter"] = \'test\' in data.args'
+                                                exec: 'tests["Body contains headers"] = responseBody.has("headers");\ntests["Body contains args"] = responseBody.has("args");\ntests["Body contains url"] = responseBody.has("url");\n\nvar data = JSON.parse(responseBody)\n\ntests["Args key contains argument passed as url parameter"] = \'test\' in data.args'
                                             }
                                         }
                                     ],
-                                    'request': {
-                                        'url': 'https://postman-echo.com/get?test=123',
-                                        'method': 'GET'
+                                    request: {
+                                        url: 'https://postman-echo.com/get?test=123',
+                                        method: 'GET'
                                     }
                                 },
                                 {
-                                    'name': 'Second Request',
-                                    'event': [
+                                    name: 'Second Request',
+                                    event: [
                                         {
-                                            'listen': 'prerequest',
-                                            'script': {
-                                                'type': 'text/javascript',
-                                                'exec': 'if (iteration === 1) { throw new Error(\'omg!\'); }'
+                                            listen: 'prerequest',
+                                            script: {
+                                                type: 'text/javascript',
+                                                exec: 'if (iteration === 1) { throw new Error(\'omg!\'); }'
                                             }
                                         },
                                         {
-                                            'listen': 'test',
-                                            'script': {
-                                                'type': 'text/javascript',
-                                                'exec': ';'
+                                            listen: 'test',
+                                            script: {
+                                                type: 'text/javascript',
+                                                exec: ';'
                                             }
                                         }
                                     ],
-                                    'request': {
-                                        'url': 'https://postman-echo.com/get?test=123',
-                                        'method': 'GET'
+                                    request: {
+                                        url: 'https://postman-echo.com/get?test=123',
+                                        method: 'GET'
                                     }
                                 },
                                 {
-                                    'name': 'Third Request',
-                                    'event': [
+                                    name: 'Third Request',
+                                    event: [
                                         {
-                                            'listen': 'test',
-                                            'script': {
-                                                'type': 'text/javascript',
-                                                'exec': ';'
+                                            listen: 'test',
+                                            script: {
+                                                type: 'text/javascript',
+                                                exec: ';'
                                             }
                                         }
                                     ],
-                                    'request': {
-                                        'url': 'https://postman-echo.com/get?test=123',
-                                        'method': 'GET'
+                                    request: {
+                                        url: 'https://postman-echo.com/get?test=123',
+                                        method: 'GET'
                                     }
                                 }
                             ]
@@ -109,7 +109,7 @@ describe('Option', function () {
 
                 expect(err).to.be.null;
                 run.start({
-                    start: function (err, cursor) {
+                    start (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -129,7 +129,7 @@ describe('Option', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor) {
+                    beforeIteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -137,7 +137,7 @@ describe('Option', function () {
                             runStore.iteration = cursor.iteration;
                         });
                     },
-                    iteration: function (err, cursor) {
+                    iteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.have.property('iteration', runStore.iteration);
@@ -145,7 +145,7 @@ describe('Option', function () {
                             testables.iterationsComplete.push(cursor.iteration);
                         });
                     },
-                    beforeItem: function (err, cursor, item) {
+                    beforeItem (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -155,7 +155,7 @@ describe('Option', function () {
                             runStore.ref = cursor.ref;
                         });
                     },
-                    item: function (err, cursor, item) {
+                    item (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -167,7 +167,7 @@ describe('Option', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events, item) {
+                    beforePrerequest (err, cursor, events, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -186,7 +186,7 @@ describe('Option', function () {
                             }
                         });
                     },
-                    prerequest: function (err, cursor, results, item) {
+                    prerequest (err, cursor, results, item) {
                         check(function () {
                             // Sanity
                             expect(cursor).to.deep.include({
@@ -207,7 +207,7 @@ describe('Option', function () {
                             expect(err).to.be.null;
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest (err, cursor, events, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -229,7 +229,7 @@ describe('Option', function () {
                             }
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test (err, cursor, results, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -257,7 +257,7 @@ describe('Option', function () {
                             }
                         });
                     },
-                    beforeRequest: function (err, cursor, request, item) {
+                    beforeRequest (err, cursor, request, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -276,7 +276,7 @@ describe('Option', function () {
                             }
                         });
                     },
-                    request: function (err, cursor, response, request, item) {
+                    request (err, cursor, response, request, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -300,7 +300,7 @@ describe('Option', function () {
                             }
                         });
                     },
-                    done: function (err) {
+                    done (err) {
                         expect(err).to.be.null;
 
                         expect(testables).to.have.property('started', true);

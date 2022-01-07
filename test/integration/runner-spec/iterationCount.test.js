@@ -25,7 +25,7 @@ describe('Run option iterationCount', function () {
             before(function (done) {
                 this.run({
                     iterationCount: 3,
-                    collection
+                    collection: collection
                 }, function (err, results) {
                     testrun = results;
                     done(err);
@@ -53,11 +53,11 @@ describe('Run option iterationCount', function () {
                 this.run({
                     iterationCount: 4,
                     data: [
-                        {foo: 'bar'},
+                        { foo: 'bar' },
                         undefined,
-                        {foo: 'bar'}
+                        { foo: 'bar' }
                     ],
-                    collection
+                    collection: collection
                 }, function (err, results) {
                     testrun = results;
                     done(err);
@@ -111,11 +111,11 @@ describe('Run option iterationCount', function () {
                 this.run({
                     iterationCount: 2,
                     data: [
-                        {foo: 'bar'},
-                        {foo: 'not bar'},
-                        {foo: 'bar'}
+                        { foo: 'bar' },
+                        { foo: 'not bar' },
+                        { foo: 'bar' }
                     ],
-                    collection
+                    collection: collection
                 }, function (err, results) {
                     testrun = results;
                     done(err);
@@ -160,11 +160,11 @@ describe('Run option iterationCount', function () {
             before(function (done) {
                 this.run({
                     data: [
-                        {foo: 'bar'},
-                        {foo: 'not bar'},
-                        {foo: 'bar'}
+                        { foo: 'bar' },
+                        { foo: 'not bar' },
+                        { foo: 'bar' }
                     ],
-                    collection
+                    collection: collection
                 }, function (err, results) {
                     testrun = results;
                     done(err);

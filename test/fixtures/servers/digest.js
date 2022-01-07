@@ -8,7 +8,7 @@ const server = require('./_servers'),
 let _digestServer;
 
 module.exports = {
-    listen: function (cb) {
+    listen (cb) {
         _digestServer = createDigestServer({
             username: USERNAME,
             password: PASSWORD
@@ -23,7 +23,7 @@ module.exports = {
         });
     },
 
-    destroy: function (cb) {
+    destroy (cb) {
         _digestServer.destroy(cb);
     }
 };

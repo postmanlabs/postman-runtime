@@ -52,7 +52,7 @@ httpServer.on('/', function (req, res) {
     }).on('end', function () {
         res.writeHead(200, {
             'Content-Type': 'application/json',
-            'Connection': 'close'
+            Connection: 'close'
         });
         res.end(JSON.stringify(parseRaw(rawBody)));
     });

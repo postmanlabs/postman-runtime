@@ -28,16 +28,16 @@ describe('auth control flow', function () {
     describe('with working init, pre, and post', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, true);
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
@@ -99,16 +99,16 @@ describe('auth control flow', function () {
     describe('with false result in pre', function () {
         var testrun,
             fakeHandler = {
-                init: function (auth, response, done) {
+                init (auth, response, done) {
                     done(null);
                 },
-                pre: function (auth, done) {
+                pre (auth, done) {
                     done(null, false);
                 },
-                post: function (auth, response, done) {
+                post (auth, response, done) {
                     done(null, true);
                 },
-                sign: function (auth, request, done) {
+                sign (auth, request, done) {
                     done();
                 }
             },
