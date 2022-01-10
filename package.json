@@ -40,7 +40,7 @@
     "test-unit": "nyc --nycrc-path=.nycrc.js node npm/test-unit.js"
   },
   "dependencies": {
-    "async": "3.2.2",
+    "async": "3.2.3",
     "aws4": "1.11.0",
     "handlebars": "4.7.7",
     "httpntlm": "1.7.7",
@@ -73,7 +73,7 @@
     "express": "^4.17.2",
     "graphql": "^15.7.2",
     "js-yaml": "^4.1.0",
-    "karma": "^6.3.9",
+    "karma": "^6.3.10",
     "karma-browserify": "^8.1.0",
     "karma-chrome-launcher": "3.1.0",
     "karma-mocha": "^2.0.1",
@@ -85,7 +85,7 @@
     "passport-http": "^0.3.0",
     "recursive-readdir": "^2.2.2",
     "server-destroy": "^1.0.1",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "sinon": "^12.0.1",
     "teleport-javascript": "^1.0.0",
     "terser": "^5.10.0",
