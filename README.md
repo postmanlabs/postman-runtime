@@ -103,6 +103,9 @@ runner.run(collection, {
         // Enable or disable certificate verification (only supported on Node, ignored in the browser)
         strictSSL: false,
 
+        // Use an insecure HTTP parser that accepts invalid HTTP headers (only supported on Node, ignored in the browser)
+        insecureHTTPParser: false,
+
         // Enable or disable detailed request-response timings (only supported on Node, ignored in the browser)
         timings: true,
 
