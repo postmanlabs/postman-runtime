@@ -1,4 +1,5 @@
-var expect = require('chai').expect;
+var expect = require('chai').expect,
+    IS_BROWSER = typeof window !== 'undefined';
 
 describe('requests from sandbox', function () {
     describe('single .sendRequest', function () {
@@ -591,7 +592,7 @@ describe('requests from sandbox', function () {
         });
     });
 
-    describe('with GET body', function () {
+    (IS_BROWSER ? describe.skip : describe)('with GET body', function () {
         var testrun;
 
         before(function (done) {
