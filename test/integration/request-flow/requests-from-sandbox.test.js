@@ -590,4 +590,86 @@ describe('requests from sandbox', function () {
             });
         });
     });
+
+    describe('with GET body', function () {
+        var testrun;
+
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: {
+                        event: [{
+                            listen: 'prerequest',
+                            script: {
+                                exec: `
+                                pm.sendRequest({
+                                    url: 'https://postman-echo.com/get',
+                                    body: {
+                                        mode: 'raw',
+                                        raw: 'foo'
+                                    }
+                                }, function(err, _response) {
+                                    pm.test('request was sent from sandbox', function () {
+                                        pm.expect(_response).to.have.property('code', 200);
+                                        pm.expect(_response).to.have.property('status', 'OK');
+                                        pm.expect(_response.json().headers).to.have.property('content-length', '3');
+                                    });
+                                });
+                                `
+                            }
+                        }],
+                        request: 'https://postman-echo.com/get'
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledTwice': true
+            });
+        });
+
+        it('should have sent the first request from inside the sandbox', function () {
+            var error = testrun.io.firstCall.args[0],
+                request = testrun.io.firstCall.args[4],
+                response = testrun.io.firstCall.args[3],
+                trace = testrun.io.firstCall.args[2];
+
+            expect(error).to.be.null;
+            expect(request.body.toString()).to.equal('foo');
+            expect(response).to.have.property('code', 200);
+            expect(response.json().args).to.eql({ 0: 'f', 1: 'o', 2: 'o' });
+            expect(trace).to.deep.include({ type: 'http', source: 'script' });
+        });
+
+        it('should have sent the second request as a part of the collection run', function () {
+            var error = testrun.io.secondCall.args[0],
+                response = testrun.io.secondCall.args[3],
+                trace = testrun.io.secondCall.args[2];
+
+            expect(error).to.be.null;
+            expect(response).to.have.property('code', 200);
+            expect(trace).to.deep.include({ type: 'http', source: 'collection' });
+        });
+
+        it('should have provided the response to the sandbox sendrequest function', function () {
+            var assertion = testrun.assertion.firstCall.args[1][0];
+
+            expect(assertion).to.deep.include({
+                name: 'request was sent from sandbox',
+                skipped: false,
+                passed: true,
+                error: null,
+                index: 0
+            });
+        });
+    });
 });
