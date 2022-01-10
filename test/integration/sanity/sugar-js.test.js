@@ -54,33 +54,33 @@ describe('Sugar.js', function () {
 
         expect(testrun.test.getCall(0).args[0]).to.be.null;
         expect(testrun.assertion.getCall(0).args[1]).to.eql([
-            {error: null, index: 0, passed: true, skipped: false, name: 'Array prototype none'},
-            {error: null, index: 1, passed: true, skipped: false, name: 'Array prototype any'},
-            {error: null, index: 2, passed: true, skipped: false, name: 'Array prototype average'},
-            {error: null, index: 3, passed: true, skipped: false, name: 'Date prototype getTime'},
-            {error: null, index: 4, passed: true, skipped: false, name: 'Function prototype once'},
-            {error: null, index: 5, passed: true, skipped: false, name: 'Number prototype hex'},
-            {error: null, index: 6, passed: true, skipped: false, name: 'Number prototype isEven'},
+            { error: null, index: 0, passed: true, skipped: false, name: 'Array prototype none' },
+            { error: null, index: 1, passed: true, skipped: false, name: 'Array prototype any' },
+            { error: null, index: 2, passed: true, skipped: false, name: 'Array prototype average' },
+            { error: null, index: 3, passed: true, skipped: false, name: 'Date prototype getTime' },
+            { error: null, index: 4, passed: true, skipped: false, name: 'Function prototype once' },
+            { error: null, index: 5, passed: true, skipped: false, name: 'Number prototype hex' },
+            { error: null, index: 6, passed: true, skipped: false, name: 'Number prototype isEven' },
             {
-                error: {message: 'expected false to be truthy', name: 'AssertionError', type: 'Error'},
+                error: { message: 'expected false to be truthy', name: 'AssertionError', type: 'Error' },
                 index: 7,
                 passed: false,
                 skipped: false,
                 name: 'Number prototype ordinalize'
             },
             {
-                error: {message: 'expected false to be truthy', name: 'AssertionError', type: 'Error'},
+                error: { message: 'expected false to be truthy', name: 'AssertionError', type: 'Error' },
                 index: 8,
                 passed: false,
                 skipped: false,
                 name: 'Number prototype format'
             },
-            {error: null, index: 9, passed: true, skipped: false, name: 'String prototype endsWith'},
-            {error: null, index: 10, passed: true, skipped: false, name: 'String prototype negated endsWith'},
-            {error: null, index: 11, passed: true, skipped: false, name: 'String prototype camelize'},
-            {error: null, index: 12, passed: true, skipped: false, name: 'String prototype repeat'},
-            {error: null, index: 13, passed: true, skipped: false, name: 'String prototype shift'},
-            {error: null, index: 14, passed: true, skipped: false, name: 'String prototype spacify'}
+            { error: null, index: 9, passed: true, skipped: false, name: 'String prototype endsWith' },
+            { error: null, index: 10, passed: true, skipped: false, name: 'String prototype negated endsWith' },
+            { error: null, index: 11, passed: true, skipped: false, name: 'String prototype camelize' },
+            { error: null, index: 12, passed: true, skipped: false, name: 'String prototype repeat' },
+            { error: null, index: 13, passed: true, skipped: false, name: 'String prototype shift' },
+            { error: null, index: 14, passed: true, skipped: false, name: 'String prototype spacify' }
         ]);
     });
 

@@ -3,14 +3,14 @@ const server = require('./_servers'),
 
 httpServer.on('/redirect', function (req, res) {
     res.writeHead(301, {
-        'Location': httpServer.url + '/query?q={("*")}'
+        Location: httpServer.url + '/query?q={("*")}'
     });
     res.end();
 });
 
 httpServer.on('/relative_redirect', function (req, res) {
     res.writeHead(301, {
-        'Location': '/query?q={("*")}'
+        Location: '/query?q={("*")}'
     });
     res.end();
 });

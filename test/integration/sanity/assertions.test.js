@@ -24,7 +24,7 @@ describe('assertions', function () {
                     }
                 },
                 environment: {
-                    values: [{key: 'testVar', value: 'test-var-value'}]
+                    values: [{ key: 'testVar', value: 'test-var-value' }]
                 }
             }, function (err, results) {
                 testrun = results;

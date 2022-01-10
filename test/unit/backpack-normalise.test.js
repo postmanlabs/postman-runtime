@@ -113,9 +113,9 @@ describe('backpack.normalise', function () {
                 cb = normalise(cb);
                 cb(null, 'arg1');
             }({
-                success: success,
-                error: error,
-                done: done
+                success,
+                error,
+                done
             }));
         }).to.not.throw();
 
@@ -134,9 +134,9 @@ describe('backpack.normalise', function () {
                 cb = normalise(cb);
                 cb('err', 'arg1');
             }({
-                success: success,
-                error: error,
-                done: done
+                success,
+                error,
+                done
             }));
         }).to.not.throw();
 
@@ -155,9 +155,9 @@ describe('backpack.normalise', function () {
                 cb = normalise(cb, ['custom']);
                 cb.custom('arg1');
             }({
-                success: success,
-                error: error,
-                done: done
+                success,
+                error,
+                done
             }));
         }).to.not.throw();
 
@@ -177,10 +177,10 @@ describe('backpack.normalise', function () {
                 cb = normalise(cb, ['custom']);
                 cb.custom('arg1');
             }({
-                custom: custom,
-                success: success,
-                error: error,
-                done: done
+                custom,
+                success,
+                error,
+                done
             }));
         }).to.not.throw();
 

@@ -10,16 +10,16 @@ const USER = 'batman',
     XYZ = 'xyz',
     ABC = 'abc',
     CREDENTIALS = [
-        {key: 'nonce', value: NONCE},
-        {key: 'user', value: USER, system: true},
-        {key: 'pass', value: PASS, system: true}
+        { key: 'nonce', value: NONCE },
+        { key: 'user', value: USER, system: true },
+        { key: 'pass', value: PASS, system: true }
     ],
-    fakeAuthObj = {type: 'fake', 'fake': CREDENTIALS};
+    fakeAuthObj = { type: 'fake', fake: CREDENTIALS };
 
 describe('AuthInterface', function () {
     it('should throw an error on invalid input', function () {
         expect(function () {
-            createAuthInterface({type: 'basic', basic: {}});
+            createAuthInterface({ type: 'basic', basic: {} });
         }).to.throw(/runtime~createAuthInterface: invalid auth/);
     });
 
@@ -36,9 +36,8 @@ describe('AuthInterface', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth);
 
-        expect(authInterface.get(['user', 'pass', 'nonce', 'joker'])).to.eql(
-            new sdk.VariableList(null, CREDENTIALS).toObject()
-        );
+        expect(authInterface.get(['user', 'pass', 'nonce', 'joker']))
+            .to.eql(new sdk.VariableList(null, CREDENTIALS).toObject());
     });
 
     it('should set with key and value and update the auth', function () {
@@ -61,8 +60,8 @@ describe('AuthInterface', function () {
         authInterface.set('pass', 123);
         expect(authInterface.get('pass')).to.equal(123);
         // test for Object
-        authInterface.set('pass', {foo: 123});
-        expect(authInterface.get('pass')).to.eql({foo: 123});
+        authInterface.set('pass', { foo: 123 });
+        expect(authInterface.get('pass')).to.eql({ foo: 123 });
         // test for Array
         authInterface.set('pass', [1, 2, 3]);
         expect(authInterface.get('pass')).to.eql([1, 2, 3]);
@@ -75,7 +74,7 @@ describe('AuthInterface', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth),
             newUsername = 'bane',
-            newCreds = {user: newUsername}; // only partial update, password & nonce shoudn't change
+            newCreds = { user: newUsername }; // only partial update, password & nonce shoudn't change
 
         authInterface.set(newCreds);
         expect(authInterface.get('user')).to.equal(newUsername);
@@ -90,12 +89,12 @@ describe('AuthInterface', function () {
             valuesToTestWith = ['foo', false, 0];
 
         _.forEach(valuesToTestWith, function (value) {
-            fakeAuthObj = {type: 'fake', 'fake': [{key: 'something', value: value}]};
+            fakeAuthObj = { type: 'fake', fake: [{ key: 'something', value: value }] };
             fakeAuth = new sdk.RequestAuth(fakeAuthObj);
             authInterface = createAuthInterface(fakeAuth);
             authInterface.set('something', XYZ);
             expect(authInterface.get('something')).to.equal(value);
-            authInterface.set({'something': XYZ});
+            authInterface.set({ something: XYZ });
             expect(authInterface.get('something')).to.equal(value);
         });
     });
@@ -107,12 +106,12 @@ describe('AuthInterface', function () {
             valuesToTestWith = [EMPTY, null, undefined, NaN];
 
         _.forEach(valuesToTestWith, function (value) {
-            fakeAuthObj = {type: 'fake', 'fake': [{key: 'something', value: value}]};
+            fakeAuthObj = { type: 'fake', fake: [{ key: 'something', value: value }] };
             fakeAuth = new sdk.RequestAuth(fakeAuthObj);
             authInterface = createAuthInterface(fakeAuth);
             authInterface.set('something', XYZ);
             expect(authInterface.get('something')).to.equal(XYZ);
-            authInterface.set({'something': ABC});
+            authInterface.set({ something: ABC });
             expect(authInterface.get('something')).to.equal(ABC);
         });
     });
@@ -124,7 +123,7 @@ describe('AuthInterface', function () {
             gordon = 'gary oldman';
 
         authInterface.set('joker', joker);
-        authInterface.set({'gordon': gordon});
+        authInterface.set({ gordon });
         expect(authInterface.get('joker')).to.equal(joker);
         expect(authInterface.get('gordon')).to.equal(gordon);
         expect(fakeAuth.parameters().one('joker')).to.have.property('system', true);

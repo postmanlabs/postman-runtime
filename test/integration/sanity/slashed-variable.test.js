@@ -6,8 +6,8 @@ describe('Slashed variables', function () {
     before(function (done) {
         this.run({
             environment: {
-                values: [{key: 'fo/o', type: 'text', value: 'alpha', enabled: true},
-                    {key: 'b\\ar', type: 'text', value: 'beta', enabled: true}]
+                values: [{ key: 'fo/o', type: 'text', value: 'alpha', enabled: true },
+                    { key: 'b\\ar', type: 'text', value: 'beta', enabled: true }]
             },
             collection: {
                 item: [{

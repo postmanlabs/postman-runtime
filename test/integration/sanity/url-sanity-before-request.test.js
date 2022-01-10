@@ -22,7 +22,7 @@ describe('url', function () {
                     }
                 },
                 globals: {
-                    values: [{key: 'url', value: 'https://postman-echo.com'}]
+                    values: [{ key: 'url', value: 'https://postman-echo.com' }]
                 }
             }, function (err, results) {
                 testrun = results;
@@ -75,8 +75,8 @@ describe('url', function () {
                 },
                 globals: {
                     values: [
-                        {key: 'id', value: '1'},
-                        {key: 'domain#1', value: 'https://postman-echo.com'}
+                        { key: 'id', value: '1' },
+                        { key: 'domain#1', value: 'https://postman-echo.com' }
                     ]
                 }
             }, function (err, results) {
@@ -130,9 +130,9 @@ describe('url', function () {
                 },
                 globals: {
                     values: [
-                        {key: 'proto://col', value: 'https'},
-                        {key: '#host:name#', value: 'postman-echo.com'},
-                        {key: 'p/a/t/h', value: 'get'}
+                        { key: 'proto://col', value: 'https' },
+                        { key: '#host:name#', value: 'postman-echo.com' },
+                        { key: 'p/a/t/h', value: 'get' }
                     ]
                 }
             }, function (err, results) {

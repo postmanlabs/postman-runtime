@@ -36,6 +36,8 @@ Disable system headers which get added implicitly.
 }
 ```
 
+- `insecureHTTPParser: Boolean`<br/>
+Use an insecure HTTP parser that accepts invalid HTTP headers.
 
 - `followOriginalHttpMethod: Boolean`<br/>
 Redirect with the original HTTP method, by default redirects with HTTP method GET.

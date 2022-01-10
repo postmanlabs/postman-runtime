@@ -546,7 +546,7 @@ describe('digest auth', function () {
                     cookieJar: {
                         // this will delay the `responseStart` trigger as well
                         // and `response` callback will wait for it
-                        getCookies: function (url, cb) {
+                        getCookies (url, cb) {
                             setTimeout(function () {
                                 cb(null, []);
                             }, 2000);

@@ -5,7 +5,7 @@ describe('cursor resolution', function () {
 
     it('should resolve to the item specified', function () {
         var run = new Run({
-            items: [{id: 'one'}, {id: 'two'}, {id: 'three'}]
+            items: [{ id: 'one' }, { id: 'two' }, { id: 'three' }]
         });
 
         expect(run.resolveCursor({
@@ -17,7 +17,7 @@ describe('cursor resolution', function () {
 
     it('should return undefined for an item not found', function () {
         var run = new Run({
-            items: [{id: 'one'}, {id: 'two'}, {id: 'three'}]
+            items: [{ id: 'one' }, { id: 'two' }, { id: 'three' }]
         });
 
         expect(run.resolveCursor({
@@ -27,7 +27,7 @@ describe('cursor resolution', function () {
 
     it('should return undefined for a missing cursor', function () {
         var run = new Run({
-            items: [{id: 'one'}, {id: 'two'}, {id: 'three'}]
+            items: [{ id: 'one' }, { id: 'two' }, { id: 'three' }]
         });
 
         expect(run.resolveCursor()).to.be.undefined;

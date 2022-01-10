@@ -6,13 +6,6 @@
 
 > If you are looking to execute collections, you should be using Newman, this is very low level.
 
-## Development Notes
-
-- `npm run test`: Runs lint, system, unit and integration tests of runtime
-- `npm run test-integration-newman`: This command runs tests of newman with the under-development variant of runtime
-- `npm run test-coverage`: This command runs `postman-runtime` tests and generate overall coverage
-- `npm/memory-check.sh`: This bash scripts performs first-level memory usage analysis, and plots a graph out of the results
-
 ## Options
 
 Postman Runtime supports a lot of options to customize its behavior for different environments and use-cases.
@@ -109,6 +102,9 @@ runner.run(collection, {
 
         // Enable or disable certificate verification (only supported on Node, ignored in the browser)
         strictSSL: false,
+
+        // Use an insecure HTTP parser that accepts invalid HTTP headers (only supported on Node, ignored in the browser)
+        insecureHTTPParser: false,
 
         // Enable or disable detailed request-response timings (only supported on Node, ignored in the browser)
         timings: true,

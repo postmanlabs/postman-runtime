@@ -17,7 +17,7 @@ describe('Collection variables', function () {
                                 pm.variables.set('key-3', 'value-1');
                                 pm.variables.set('key-4', 'value-1');
                                 console.log('collection pre', pm.variables.toObject())
-                            `}
+                            ` }
                         },
                         {
                             listen: 'test',
@@ -26,7 +26,7 @@ describe('Collection variables', function () {
                                 pm.variables.set('key-3', 'value-3');
                                 pm.variables.set('key-4', 'value-3');
                                 console.log('collection test', pm.variables.toObject())
-                            `}
+                            ` }
                         }
                     ],
                     item: {
@@ -39,7 +39,7 @@ describe('Collection variables', function () {
                                     pm.variables.set('key-3', 'value-2');
                                     pm.variables.set('key-4', 'value-2');
                                     console.log('item pre', pm.variables.toObject())
-                                `}
+                                ` }
                             },
                             {
                                 listen: 'test',
@@ -47,7 +47,7 @@ describe('Collection variables', function () {
                                     exec: `
                                     pm.variables.set('key-4', 'value-4');
                                     console.log('item test', pm.variables.toObject())
-                                `}
+                                ` }
                             }
                         ],
                         request: 'https://postman-echo.com/get'

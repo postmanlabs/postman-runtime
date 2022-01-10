@@ -25,7 +25,7 @@ describe('Auth Handler:', function () {
             handler.sign(authInterface, request, _.noop);
 
             expect(request).to.eql(request);
-            authInterface.set({foo: 'bar'});
+            authInterface.set({ foo: 'bar' });
 
             handler.sign(authInterface, request, _.noop);
             expect(request.auth.parameters().toObject()).to.eql({
@@ -112,7 +112,7 @@ describe('Auth Handler:', function () {
                 authInterface,
                 handler;
 
-            rawBasicReq.auth.basic = {username: '中文', password: '文中'};
+            rawBasicReq.auth.basic = { username: '中文', password: '文中' };
             request = new Request(rawBasicReq);
             authInterface = createAuthInterface(request.auth);
             handler = AuthLoader.getHandler(request.auth.type);
@@ -133,7 +133,7 @@ describe('Auth Handler:', function () {
                 authInterface,
                 handler;
 
-            rawBasicReq.auth.basic = {username: 'foo'}; // no password present
+            rawBasicReq.auth.basic = { username: 'foo' }; // no password present
             request = new Request(rawBasicReq);
             authInterface = createAuthInterface(request.auth);
             handler = AuthLoader.getHandler(request.auth.type);
@@ -147,7 +147,7 @@ describe('Auth Handler:', function () {
                 }
             ]);
 
-            rawBasicReq.auth.basic = {password: 'foo'}; // no username present
+            rawBasicReq.auth.basic = { password: 'foo' }; // no username present
             request = new Request(rawBasicReq);
             authInterface = createAuthInterface(request.auth);
             handler = AuthLoader.getHandler(request.auth.type);
@@ -733,9 +733,9 @@ describe('Auth Handler:', function () {
                     body: {
                         mode: 'urlencoded',
                         urlencoded: [
-                            {key: 'foo', value: 'bar'},
-                            {key: 'postman', value: '邮差'},
-                            {key: 'alpha', value: 'beta', disabled: true}
+                            { key: 'foo', value: 'bar' },
+                            { key: 'postman', value: '邮差' },
+                            { key: 'alpha', value: 'beta', disabled: true }
                         ]
                     }
                 }),
@@ -869,44 +869,44 @@ describe('Auth Handler:', function () {
                 auth: {
                     type: 'digest',
                     digest: [{
-                        'key': 'realm',
-                        'type': 'any',
-                        'value': 'Users'
+                        key: 'realm',
+                        type: 'any',
+                        value: 'Users'
                     },
                     {
-                        'key': 'password',
-                        'type': 'any',
-                        'value': 'password'
+                        key: 'password',
+                        type: 'any',
+                        value: 'password'
                     },
                     {
-                        'key': 'nonce',
-                        'type': 'any',
-                        'value': 'bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp'
+                        key: 'nonce',
+                        type: 'any',
+                        value: 'bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp'
                     },
                     {
-                        'key': 'nonceCount',
-                        'type': 'any',
-                        'value': '00000001'
+                        key: 'nonceCount',
+                        type: 'any',
+                        value: '00000001'
                     },
                     {
-                        'key': 'algorithm',
-                        'type': 'any',
-                        'value': 'MD5'
+                        key: 'algorithm',
+                        type: 'any',
+                        value: 'MD5'
                     },
                     {
-                        'key': 'qop',
-                        'type': 'any',
-                        'value': ''
+                        key: 'qop',
+                        type: 'any',
+                        value: ''
                     },
                     {
-                        'key': 'clientNonce',
-                        'type': 'any',
-                        'value': '0a4f113b'
+                        key: 'clientNonce',
+                        type: 'any',
+                        value: '0a4f113b'
                     },
                     {
-                        'key': 'opaque',
-                        'type': 'any',
-                        'value': '5ccc069c403ebaf9f0171e9517f40e'
+                        key: 'opaque',
+                        type: 'any',
+                        value: '5ccc069c403ebaf9f0171e9517f40e'
                     }]
                 }
             });
@@ -1409,8 +1409,8 @@ describe('Auth Handler:', function () {
                         path: ['auth', 'oauth1'],
                         protocol: 'https',
                         query: [
-                            {key: 'param_1', value: 'value_1'},
-                            {key: 'param_2', value: 'value_2', disabled: true}
+                            { key: 'param_1', value: 'value_1' },
+                            { key: 'param_2', value: 'value_2', disabled: true }
                         ]
                     },
                     auth: {
@@ -2015,7 +2015,7 @@ describe('Auth Handler:', function () {
                 handler;
 
             requestWithAuthHeader = _.defaults({
-                header: [{key: 'Authorization', value: 'This should be removed'}],
+                header: [{ key: 'Authorization', value: 'This should be removed' }],
                 url: 'https://postman-echo.com/get?access_token=not-anymore'
             }, requestObj);
 
@@ -2057,7 +2057,7 @@ describe('Auth Handler:', function () {
                         tokenType: 'bearer'
                     }
                 },
-                header: [{key: 'Authorization', value: 'This should be removed'}],
+                header: [{ key: 'Authorization', value: 'This should be removed' }],
                 url: 'https://postman-echo.com/get?access_token=not-anymore'
             }, requestObj);
 
@@ -2074,7 +2074,7 @@ describe('Auth Handler:', function () {
                 protocol: 'https',
                 path: ['get'],
                 host: ['postman-echo', 'com'],
-                query: [{key: 'access_token', value: '123456789abcdefghi', system: true}],
+                query: [{ key: 'access_token', value: '123456789abcdefghi', system: true }],
                 variable: []
             });
         });
@@ -2095,7 +2095,7 @@ describe('Auth Handler:', function () {
                         tokenType: 'bearer'
                     }
                 },
-                header: [{key: 'Authorization', value: 'Old-Header'}],
+                header: [{ key: 'Authorization', value: 'Old-Header' }],
                 url: 'https://postman-echo.com/get?access_token=old-token'
             }, requestObj);
 
@@ -2106,13 +2106,13 @@ describe('Auth Handler:', function () {
 
             handler.sign(authInterface, request, _.noop);
 
-            expect(request.headers.toJSON()).to.eql([{key: 'Authorization', value: 'Old-Header'}]);
+            expect(request.headers.toJSON()).to.eql([{ key: 'Authorization', value: 'Old-Header' }]);
 
             expect(request.url.toJSON()).to.eql({
                 protocol: 'https',
                 path: ['get'],
                 host: ['postman-echo', 'com'],
-                query: [{key: 'access_token', value: 'old-token'}],
+                query: [{ key: 'access_token', value: 'old-token' }],
                 variable: []
             });
         });

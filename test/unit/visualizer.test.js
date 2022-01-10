@@ -27,7 +27,7 @@ describe('Visualizer', function () {
 
         it('should hydrate template with given data', function (done) {
             var template = '<h1>{{name}}</h1>',
-                data = {name: 'Postman'},
+                data = { name: 'Postman' },
                 hydratedTemplate = '<h1>Postman</h1>';
 
             Visualizer.processTemplate(template, data, null, function (err, processedTemplate) {
@@ -39,7 +39,7 @@ describe('Visualizer', function () {
 
         it('should bubble up handlebars errors', function (done) {
             var template = '<h1>{{name</h1>',
-                data = {name: 'Postman'};
+                data = { name: 'Postman' };
 
             Visualizer.processTemplate(template, data, null, function (err) {
                 // handlebars will throw error because given template contains invalid syntax
@@ -51,7 +51,7 @@ describe('Visualizer', function () {
 
         it('should use given options to compile handlebars template', function (done) {
             var template = '<h1>{{full_name}}</h1>',
-                data = {name: 'Postman'},
+                data = { name: 'Postman' },
                 options = {
                     // this will cause handlebars to throw error for missing variables
                     // in given data instead of ignoring it

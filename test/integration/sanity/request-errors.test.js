@@ -30,10 +30,10 @@ describe('unhandled errors in request send', function () {
         });
 
         AuthLoader.addHandler({
-            init: function (auth, response, done) {
+            init (auth, response, done) {
                 done(null);
             },
-            pre: function () {
+            pre () {
                 // two things
                 // 1. Auth pre hooks do not catch errors because of our control over all Auth implementations. We might
                 // have to handle errors when we allow custom Auth handlers.
@@ -41,10 +41,10 @@ describe('unhandled errors in request send', function () {
                 // core runtime. Think about a way to replace this test when unhandled errors are caught in Auth.
                 throw new Error('deal with it');
             },
-            post: function (auth, response, done) {
+            post (auth, response, done) {
                 done(null, true);
             },
-            sign: function (auth, request, done) {
+            sign (auth, request, done) {
                 done();
             }
         }, 'fake');

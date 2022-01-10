@@ -42,12 +42,12 @@ var expect = require('chai').expect;
     });
 
     it('should be decoded correctly containing characters in range of latin1 encoding', function () {
-        expect(testrun.request.getCall(0)).to.nested.include({'args[0]': null, 'args[2].code': 200});
+        expect(testrun.request.getCall(0)).to.nested.include({ 'args[0]': null, 'args[2].code': 200 });
         expect(testrun.request.getCall(0).args[2]).to.have.property('status', 'Working fine');
     });
 
     it('should be decoded correctly containing characters in range of utf8 encoding', function () {
-        expect(testrun.request.getCall(1)).to.nested.include({'args[0]': null, 'args[2].code': 200});
+        expect(testrun.request.getCall(1)).to.nested.include({ 'args[0]': null, 'args[2].code': 200 });
         expect(testrun.request.getCall(1).args[2]).to.have.property('status', 'Работает нормально');
     });
 });

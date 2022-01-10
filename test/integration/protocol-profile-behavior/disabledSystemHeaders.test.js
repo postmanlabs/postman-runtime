@@ -66,12 +66,12 @@ var sinon = require('sinon'),
                                 'content-type': true,
                                 'content-length': true,
                                 'user-agent': true,
-                                'accept': true,
+                                accept: true,
                                 'cache-control': true,
                                 'postman-token': true,
-                                'host': true,
+                                host: true,
                                 'accept-encoding': true,
-                                'connection': true
+                                connection: true
                             }
                         }
                     }]
@@ -136,12 +136,12 @@ var sinon = require('sinon'),
                                 'content-type': true,
                                 'content-length': true,
                                 'user-agent': true,
-                                'accept': true,
+                                accept: true,
                                 'cache-control': true,
                                 'postman-token': true,
-                                'host': true,
+                                host: true,
                                 'accept-encoding': true,
-                                'connection': true
+                                connection: true
                             }
                         }
                     }]

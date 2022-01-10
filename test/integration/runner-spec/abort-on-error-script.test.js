@@ -11,11 +11,11 @@ describe('Abort on error', function () {
                     item: [{
                         event: [{
                             listen: 'prerequest',
-                            script: {exec: [
+                            script: { exec: [
                                 'setTimeout(function () {',
                                 '    console.log(foo);', // deliberate reference error
                                 '}, 100);'
-                            ]}
+                            ] }
                         }],
                         request: {
                             url: 'https://postman-echo.com/get',
@@ -61,14 +61,14 @@ describe('Abort on error', function () {
                     item: [{
                         event: [{
                             listen: 'prerequest',
-                            script: {exec: [
+                            script: { exec: [
                                 'setTimeout(function () {',
                                 '    throw "First async error"',
                                 '}, 100);',
                                 'setTimeout(function () {',
                                 '    console.log(foo);',
                                 '}, 200);'
-                            ]}
+                            ] }
                         }],
                         request: {
                             url: 'https://postman-echo.com/get',
@@ -114,11 +114,11 @@ describe('Abort on error', function () {
                     item: [{
                         event: [{
                             listen: 'prerequest',
-                            script: {exec: [
+                            script: { exec: [
                                 'setTimeout(function () {',
                                 '    console.log(foo);', // deliberate reference error
                                 '}, 100);'
-                            ]}
+                            ] }
                         }],
                         request: {
                             url: 'https://postman-echo.com/get',

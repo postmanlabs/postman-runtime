@@ -5,9 +5,9 @@ describe('waitStateChange event for item', function () {
 
     before(function (done) {
         this.run({
-            delay: {item: 200},
+            delay: { item: 200 },
             collection: {
-                item: {request: 'https://postman-echo.com/get?1'}
+                item: { request: 'https://postman-echo.com/get?1' }
             }
         }, function (err, results) {
             testrun = results;

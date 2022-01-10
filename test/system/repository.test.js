@@ -2,10 +2,11 @@
  * @fileOverview This test specs runs tests on the package.json file of repository. It has a set of strict tests on the
  * content of the file as well. Any change to package.json must be accompanied by valid test case in this spec-sheet.
  */
-var _ = require('lodash'),
+const fs = require('fs'),
+    _ = require('lodash'),
     yml = require('js-yaml'),
-    parseIgnore = require('parse-gitignore'),
-    fs = require('fs');
+    expect = require('chai').expect,
+    parseIgnore = require('parse-gitignore');
 
 describe('project repository', function () {
     describe('package.json', function () {
@@ -28,15 +29,15 @@ describe('project repository', function () {
             it('should have valid name, description and author', function () {
                 expect(json).to.deep.include({
                     name: 'postman-runtime',
-                    description: 'Underlying library of executing Postman Collections (used by Newman)',
-                    author: 'Postman Labs <help@getpostman.com>',
+                    description: 'Underlying library of executing Postman Collections',
+                    author: 'Postman Inc.',
                     license: 'Apache-2.0'
                 });
             });
 
             it('should have a valid version string in form of <major>.<minor>.<revision>', function () {
                 expect(json.version)
-                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line max-len, security/detect-unsafe-regex
                     .to.match(/^((\d+)\.(\d+)\.(\d+))(?:-([\dA-Za-z-]+(?:\.[\dA-Za-z-]+)*))?(?:\+([\dA-Za-z-]+(?:\.[\dA-Za-z-]+)*))?$/);
             });
         });
@@ -46,15 +47,16 @@ describe('project repository', function () {
                 expect(json.dependencies).to.be.an('object');
             });
 
-            it('should point to a valid semver', function () {
-                var packages = _.without(Object.keys(json.dependencies),
-                    // These are trusted packages
-                    'postman-request', 'postman-collection', 'serialised-error');
-
-                packages.forEach(function (dependencyName) {
-                    expect(json.dependencies[dependencyName]).to.match(new RegExp('^((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
-                        '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));
+            it('should point to specific package version; (*, ^, ~) not expected', function () {
+                _.forEach(json.dependencies, function (dep) {
+                    expect((/^\d/).test(dep)).to.be.ok;
                 });
+            });
+
+            // @note tough-cookie must be bumped across the ecosystem along with
+            // same-site cookie support
+            it('should have dependency tough-cookie v3.0.1', function () {
+                expect(json.dependencies).to.have.property('tough-cookie', '3.0.1');
             });
         });
 
@@ -65,6 +67,7 @@ describe('project repository', function () {
 
             it('should point to a valid semver', function () {
                 Object.keys(json.devDependencies).forEach(function (dependencyName) {
+                    // eslint-disable-next-line security/detect-non-literal-regexp
                     expect(json.devDependencies[dependencyName]).to.match(new RegExp('((\\d+)\\.(\\d+)\\.(\\d+))(?:-' +
                         '([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?(?:\\+([\\dA-Za-z\\-]+(?:\\.[\\dA-Za-z\\-]+)*))?$'));
                 });
@@ -122,8 +125,8 @@ describe('project repository', function () {
     describe('.ignore files', function () {
         var gitignorePath = '.gitignore',
             npmignorePath = '.npmignore',
-            npmignore = parseIgnore(npmignorePath),
-            gitignore = parseIgnore(gitignorePath);
+            npmignore = parseIgnore(fs.readFileSync(npmignorePath)),
+            gitignore = parseIgnore(fs.readFileSync(gitignorePath));
 
         describe(gitignorePath, function () {
             it('should exist', function (done) {
@@ -135,7 +138,7 @@ describe('project repository', function () {
             });
 
             it('should ignore the dist directory', function () {
-                expect(gitignore).to.include('dist/**');
+                expect(gitignore).to.include('/dist/');
             });
         });
 
@@ -155,7 +158,7 @@ describe('project repository', function () {
 
         // eslint-disable-next-line mocha/valid-test-description
         it('.gitignore coverage must be a subset of .npmignore coverage (except dist directory)', function () {
-            expect(_.intersection(gitignore, _.union(npmignore, ['dist/**']))).to.eql(gitignore);
+            expect(_.intersection(gitignore, _.union(npmignore, ['/dist/']))).to.eql(gitignore);
         });
     });
 

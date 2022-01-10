@@ -19,10 +19,10 @@ var dns = require('dns'),
                         request: 'http://邮差.com/get?foo=bar',
                         event: [{
                             listen: 'prerequest',
-                            script: {exec: 'console.log(pm.request.url.toString())'}
+                            script: { exec: 'console.log(pm.request.url.toString())' }
                         }, {
                             listen: 'test',
-                            script: {exec: 'console.log(pm.request.url.toString())'}
+                            script: { exec: 'console.log(pm.request.url.toString())' }
                         }]
                     }
                 },
@@ -73,7 +73,7 @@ var dns = require('dns'),
 
         expect(response).to.have.property('code', 200);
         expect(response.json()).to.deep.include({
-            args: {foo: 'bar'}
+            args: { foo: 'bar' }
         });
     });
 });

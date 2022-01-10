@@ -8,10 +8,10 @@ module.exports = server.createGraphQLServer({
         }
     `,
     root: {
-        hello: function () {
+        hello () {
             return 'Hello world!';
         },
-        square: function (args) {
+        square (args) {
             return args.n * args.n;
         }
     }

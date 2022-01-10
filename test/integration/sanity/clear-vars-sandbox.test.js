@@ -6,8 +6,8 @@ describe('Clear vars sandbox', function () {
 
     before(function (done) {
         this.run({
-            environment: {values: [{key: 'e', value: '2'}]},
-            globals: {values: [{key: 'g', value: '3'}]},
+            environment: { values: [{ key: 'e', value: '2' }] },
+            globals: { values: [{ key: 'g', value: '3' }] },
             collection: {
                 item: [{
                     event: [{

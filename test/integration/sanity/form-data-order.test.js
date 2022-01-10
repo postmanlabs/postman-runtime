@@ -60,15 +60,15 @@ var fs = require('fs'),
         var response = testrun.request.getCall(0).args[2].stream.toString();
 
         expect(JSON.parse(response)).to.have.deep.ordered.members([{
-            'name': 'a',
-            'contentType': 'application/octet-stream'
+            name: 'a',
+            contentType: 'application/octet-stream'
         }, {
-            'name': '1'
+            name: '1'
         }, {
-            'name': 'A'
+            name: 'A'
         }, {
-            'name': '0',
-            'contentType': 'text/csv'
+            name: '0',
+            contentType: 'text/csv'
         }]);
     });
 });

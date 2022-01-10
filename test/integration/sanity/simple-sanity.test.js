@@ -6,10 +6,10 @@ describe('sanity test', function () {
     before(function (done) {
         this.run({
             collection: {
-                item: {request: 'https://postman-echo.com/get?testvar={{testVar}}'}
+                item: { request: 'https://postman-echo.com/get?testvar={{testVar}}' }
             },
             environment: {
-                values: [{key: 'testVar', value: 'test-var-value'}]
+                values: [{ key: 'testVar', value: 'test-var-value' }]
             }
         }, function (err, results) {
             testrun = results;

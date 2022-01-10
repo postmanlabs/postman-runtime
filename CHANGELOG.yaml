@@ -1,3 +1,19 @@
+7.29.0:
+  date: 2022-01-10
+  new features:
+    - >-
+      Added `insecureHTTPParser` requester and protocolProfileBehavior option to
+      use an insecure HTTP parser that accepts invalid HTTP headers
+  fixed bugs:
+    - >-
+      Fixed a bug in `pm.sendRequest` where request body for the following
+      methods: GET, COPY, HEAD, PURGE, and UNLOCK was dropped incorrectly
+  chores:
+    - GH-1188 Dropped Node.js v8 step from travis build
+    - GH-1188 Updated nyc configuration
+    - GH-1188 Updated ESLint rules
+    - GH-1188 Updated dependencies
+
 7.28.4:
   date: 2021-08-16
   fixed bugs:

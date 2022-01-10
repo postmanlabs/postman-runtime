@@ -12,29 +12,29 @@ const _ = require('lodash'),
  */
 function parseRawHeaders (rawHeaders) {
     return _(rawHeaders).chunk(2).map(([key, value]) => {
-        return {key, value};
+        return { key, value };
     }).value();
 }
 
 httpServer.on('/', function (req, res) {
-    res.writeHead(200, {'content-type': 'text/plain'});
+    res.writeHead(200, { 'content-type': 'text/plain' });
     res.end('Okay!');
 });
 
 httpServer.on('/headers', function (req, res) {
-    res.writeHead(200, {'content-type': 'application/json'});
+    res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(parseRawHeaders(req.rawHeaders)));
 });
 
 httpServer.on('/cookies', function (req, res) {
-    res.writeHead(200, {'content-type': 'application/json'});
+    res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(parseRawHeaders(req.rawHeaders)));
 });
 
 httpServer.on('/proxy', function (req, res) {
     var proxyHeader = Boolean(req.headers['x-postman-proxy']);
 
-    res.writeHead(200, {'content-type': 'text/plain'});
+    res.writeHead(200, { 'content-type': 'text/plain' });
     res.end(`Hello Postman!!\nproxy-header:${proxyHeader}`);
 });
 

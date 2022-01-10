@@ -16,7 +16,7 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', value: 'bar'}
+                                    { key: 'foo', value: 'bar' }
                                 ]
                             }
                         }
@@ -44,7 +44,7 @@ describe('Request Body Mode: formdata', function () {
                 responseBody = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.deep.property('form', {foo: 'bar'});
+            expect(responseBody).to.have.deep.property('form', { foo: 'bar' });
         });
     });
 
@@ -59,7 +59,7 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', value: {bar: 'baz'}}
+                                    { key: 'foo', value: { bar: 'baz' } }
                                 ]
                             }
                         }
@@ -87,7 +87,7 @@ describe('Request Body Mode: formdata', function () {
                 responseBody = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.deep.property('form', {foo: '{"bar":"baz"}'});
+            expect(responseBody).to.have.deep.property('form', { foo: '{"bar":"baz"}' });
         });
     });
 
@@ -102,7 +102,7 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', value: 123}
+                                    { key: 'foo', value: 123 }
                                 ]
                             }
                         }
@@ -130,7 +130,7 @@ describe('Request Body Mode: formdata', function () {
                 responseBody = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.deep.property('form', {foo: '123'});
+            expect(responseBody).to.have.deep.property('form', { foo: '123' });
         });
     });
 
@@ -145,7 +145,7 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', value: null}
+                                    { key: 'foo', value: null }
                                 ]
                             }
                         }
@@ -173,7 +173,7 @@ describe('Request Body Mode: formdata', function () {
                 responseBody = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.deep.property('form', {foo: ''});
+            expect(responseBody).to.have.deep.property('form', { foo: '' });
         });
     });
 
@@ -188,7 +188,7 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', value: undefined}
+                                    { key: 'foo', value: undefined }
                                 ]
                             }
                         }
@@ -216,7 +216,7 @@ describe('Request Body Mode: formdata', function () {
                 responseBody = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.deep.property('form', {foo: ''});
+            expect(responseBody).to.have.deep.property('form', { foo: '' });
         });
     });
 
@@ -231,7 +231,7 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', type: 'file'}
+                                    { key: 'foo', type: 'file' }
                                 ]
                             }
                         }
@@ -259,7 +259,7 @@ describe('Request Body Mode: formdata', function () {
                 responseBody = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.deep.property('files', {'': 'data:application/octet-stream;base64,'});
+            expect(responseBody).to.have.deep.property('files', { '': 'data:application/octet-stream;base64,' });
         });
     });
 
@@ -274,8 +274,8 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', value: 'bar', disabled: true},
-                                    {key: 'bar', value: 'foo', disabled: true}
+                                    { key: 'foo', value: 'bar', disabled: true },
+                                    { key: 'bar', value: 'foo', disabled: true }
                                 ]
                             }
                         }
@@ -324,7 +324,7 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', value: 'bar'}
+                                    { key: 'foo', value: 'bar' }
                                 ]
                             }
                         }
@@ -357,7 +357,7 @@ describe('Request Body Mode: formdata', function () {
             expect(responseBody.headers).to.have.property('content-type');
             expect(responseBody.headers).to.have.property('content-type')
                 .that.match(/multipart\/form-data; boundary=--------------------------\d+/);
-            expect(responseBody).to.have.deep.property('form', {foo: 'bar'});
+            expect(responseBody).to.have.deep.property('form', { foo: 'bar' });
         });
     });
 
@@ -377,7 +377,7 @@ describe('Request Body Mode: formdata', function () {
                             body: {
                                 mode: 'formdata',
                                 formdata: [
-                                    {key: 'foo', value: 'bar'}
+                                    { key: 'foo', value: 'bar' }
                                 ]
                             }
                         },

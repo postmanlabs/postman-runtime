@@ -5,10 +5,10 @@ describe('waitStateChange event for iteration', function () {
 
     before(function (done) {
         this.run({
-            delay: {iteration: 200},
+            delay: { iteration: 200 },
             iterationCount: 2,
             collection: {
-                item: {request: 'https://postman-echo.com/get'}
+                item: { request: 'https://postman-echo.com/get' }
             }
         }, function (err, results) {
             testrun = results;

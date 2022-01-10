@@ -3,7 +3,7 @@ const server = require('./_servers'),
 
 
 sslServer.on('/', function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Okay!');
 });
 

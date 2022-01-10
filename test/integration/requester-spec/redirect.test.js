@@ -15,7 +15,7 @@ var sinon = require('sinon'),
                         request: {
                             url: global.servers.followRedirects + '/1/302',
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }]
                 }
@@ -64,7 +64,7 @@ var sinon = require('sinon'),
                         request: {
                             url: global.servers.followRedirects + '/1/302',
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }]
                 }
@@ -118,8 +118,8 @@ var sinon = require('sinon'),
                             url: URL,
                             method: 'POST',
                             header: [
-                                {key: 'Connection', value: 'close'},
-                                {key: 'referer', value: 'POSTMAN'}
+                                { key: 'Connection', value: 'close' },
+                                { key: 'referer', value: 'POSTMAN' }
                             ]
                         }
                     }]
@@ -153,7 +153,7 @@ var sinon = require('sinon'),
 
             expect(history).to.be.an('array').that.have.lengthOf(2);
             expect(history[1].request).to.be.an('object').that.has.property('headers');
-            expect(history[1].request.headers).to.deep.include({key: 'referer', value: URL});
+            expect(history[1].request.headers).to.deep.include({ key: 'referer', value: URL });
 
             hits = response.json();
 
@@ -184,7 +184,7 @@ var sinon = require('sinon'),
                             request: {
                                 url: global.servers.followRedirects + '/1/302',
                                 method: 'POST',
-                                header: [{key: 'Connection', value: 'close'}]
+                                header: [{ key: 'Connection', value: 'close' }]
                             }
                         }]
                     }
@@ -236,8 +236,8 @@ var sinon = require('sinon'),
                                 url: global.servers.followRedirects + '/1/302',
                                 method: 'POST',
                                 header: [
-                                    {key: 'Connection', value: 'close'},
-                                    {key: 'Referer', value: 'http://foo.bar'}
+                                    { key: 'Connection', value: 'close' },
+                                    { key: 'Referer', value: 'http://foo.bar' }
                                 ]
                             }
                         }]
@@ -290,7 +290,7 @@ var sinon = require('sinon'),
                         request: {
                             url: HOST + '/11/302',
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }]
                 }
@@ -329,7 +329,7 @@ var sinon = require('sinon'),
                         request: {
                             url: global.servers.followRedirects + '/11/302',
                             method: 'POST',
-                            header: [{key: 'Connection', value: 'close'}]
+                            header: [{ key: 'Connection', value: 'close' }]
                         }
                     }]
                 }

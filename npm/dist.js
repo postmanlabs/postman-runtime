@@ -1,7 +1,7 @@
 const fs = require('fs'),
     path = require('path'),
     chalk = require('chalk'),
-    {rm, mkdir} = require('shelljs'),
+    { rm, mkdir } = require('shelljs'),
     browserify = require('browserify'),
 
     INPUT = path.join(__dirname, '../index.js'),
@@ -20,32 +20,23 @@ fs.writeFileSync(require.resolve('faker/lib/locales'),
     // refer: https://github.com/postmanlabs/postman-collection/blob/v3.6.7/lib/superstring/dynamic-variables.js#L1
     "exports['en'] = require('./locales/en');"); // eslint-disable-line quotes
 
-browserify(INPUT, {standalone: 'PostmanRuntime'}).bundle((err, bundle) => {
+browserify(INPUT, { standalone: 'PostmanRuntime' }).bundle((err, bundle) => {
     if (err) {
         console.error(err);
         process.exit(1);
     }
 
-    // terser requires Node.js >= 8
-    try {
-        require('terser').minify(bundle.toString(), {
-            compress: true, // enable compression
-            mangle: true, // Mangle names
-            safari10: true, // Work around the Safari 10/11 await bug (bugs.webkit.org/show_bug.cgi?id=176685)
-            format: {
-                comments: false // Omit comments in the output
-            }
-        }).then(({code}) => {
-            fs.writeFileSync(OUTPUT, code);
-        }).catch((err) => {
-            console.error(err);
-            process.exit(1);
-        });
-    }
-    catch (error) {
-        console.error(chalk.red.bold('Compression failed!', error));
-
-        // write uncompressed file and don't end with exit code 1
-        fs.writeFileSync(OUTPUT, bundle);
-    }
+    require('terser').minify(bundle.toString(), {
+        compress: true, // enable compression
+        mangle: true, // Mangle names
+        safari10: true, // Work around the Safari 10/11 await bug (bugs.webkit.org/show_bug.cgi?id=176685)
+        format: {
+            comments: false // Omit comments in the output
+        }
+    }).then(({ code }) => {
+        fs.writeFileSync(OUTPUT, code);
+    }).catch((err) => {
+        console.error(err);
+        process.exit(1);
+    });
 });

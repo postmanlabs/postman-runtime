@@ -51,7 +51,7 @@ describe('apikey auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(request.headers.members).to.include.deep.members([
-                new Header({key: 'my-api-header', value: 'ABC123', system: true})
+                new Header({ key: 'my-api-header', value: 'ABC123', system: true })
             ]);
 
             expect(response.json()).to.nested.include({
@@ -100,7 +100,7 @@ describe('apikey auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(request.url.query.members).to.include.deep.members([
-                new QueryParam({key: 'my-api-param', value: 'ABC123'})
+                new QueryParam({ key: 'my-api-param', value: 'ABC123' })
             ]);
 
             expect(response.json()).to.nested.include({
@@ -149,7 +149,7 @@ describe('apikey auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(request.headers.members).to.include.deep.members([
-                new Header({key: 'Authorization', value: 'ABC123', system: true})
+                new Header({ key: 'Authorization', value: 'ABC123', system: true })
             ]);
 
             expect(response.json()).to.nested.include({
@@ -197,7 +197,7 @@ describe('apikey auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(request.headers.members).to.include.deep.members([
-                new Header({key: 'x-api-key', value: 'ABC123', system: true})
+                new Header({ key: 'x-api-key', value: 'ABC123', system: true })
             ]);
 
             expect(response.json()).to.nested.include({
@@ -245,7 +245,7 @@ describe('apikey auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(request.headers.members).to.include.deep.members([
-                new Header({key: 'Authorization', value: '', system: true})
+                new Header({ key: 'Authorization', value: '', system: true })
             ]);
 
             expect(response.json()).to.nested.include({
@@ -295,7 +295,7 @@ describe('apikey auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(request.headers.members).to.include.deep.members([
-                new Header({key: '', value: TOKEN, system: true})
+                new Header({ key: '', value: TOKEN, system: true })
             ]);
 
             // @note header's without key are not supported

@@ -7,11 +7,11 @@ describe('query parameters', function () {
         this.run({
             collection: {
                 item: [
-                    {request: 'https://postman-echo.com/get?a=обязательный&c=d'}
+                    { request: 'https://postman-echo.com/get?a=обязательный&c=d' }
                 ]
             },
             environment: {
-                values: [{key: 'testVar', value: 'test-var-value'}]
+                values: [{ key: 'testVar', value: 'test-var-value' }]
             }
         }, function (err, results) {
             testrun = results;

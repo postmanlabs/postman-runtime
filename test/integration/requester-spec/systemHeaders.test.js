@@ -7,7 +7,7 @@ describe('Requester Spec: systemHeaders', function () {
         before(function (done) {
             this.run({
                 requester: {
-                    systemHeaders: {'foo': 'Bar'}
+                    systemHeaders: { foo: 'Bar' }
                 },
                 collection: {
                     item: [{
@@ -53,7 +53,7 @@ describe('Requester Spec: systemHeaders', function () {
         before(function (done) {
             this.run({
                 requester: {
-                    systemHeaders: {'foo': 'Bar'}
+                    systemHeaders: { foo: 'Bar' }
                 },
                 collection: {
                     item: [{
@@ -103,7 +103,7 @@ describe('Requester Spec: systemHeaders', function () {
         before(function (done) {
             this.run({
                 requester: {
-                    systemHeaders: {'foo': 'Bar'}
+                    systemHeaders: { foo: 'Bar' }
                 },
                 collection: {
                     item: [{
@@ -113,7 +113,7 @@ describe('Requester Spec: systemHeaders', function () {
                         },
                         protocolProfileBehavior: {
                             disabledSystemHeaders: {
-                                'foo': true
+                                foo: true
                             }
                         }
                     }]
@@ -154,7 +154,7 @@ describe('Requester Spec: systemHeaders', function () {
         before(function (done) {
             this.run({
                 requester: {
-                    systemHeaders: {'foo': 'Bar'}
+                    systemHeaders: { foo: 'Bar' }
                 },
                 collection: {
                     item: [{

@@ -9,41 +9,41 @@ describe('Option', function () {
             var errored = false,
                 runner = new runtime.Runner(),
                 rawCollection = {
-                    'variables': [],
-                    'info': {
-                        'name': 'Collection',
-                        '_postman_id': '3a61d579-d55d-da37-1ffe-c24950fca3ec',
-                        'description': '',
-                        'schema': 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
+                    variables: [],
+                    info: {
+                        name: 'Collection',
+                        _postman_id: '3a61d579-d55d-da37-1ffe-c24950fca3ec',
+                        description: '',
+                        schema: 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json'
                     },
-                    'item': [
+                    item: [
                         {
-                            'name': 'First Request',
-                            'event': [
+                            name: 'First Request',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': 'if (iteration === 1) { throw new Error(\'fail\') };'
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: 'if (iteration === 1) { throw new Error(\'fail\') };'
                                     }
                                 }
                             ],
-                            'request': 'https://postman-echo.com/get'
+                            request: 'https://postman-echo.com/get'
                         },
                         {
-                            'name': 'Second Request',
-                            'event': [
+                            name: 'Second Request',
+                            event: [
                                 {
-                                    'listen': 'test',
-                                    'script': {
-                                        'type': 'text/javascript',
-                                        'exec': 'tests["Status code is 200"] = responseCode.code === 200;'
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: 'tests["Status code is 200"] = responseCode.code === 200;'
                                     }
                                 }
                             ],
-                            'request': {
-                                'url': 'https://postman-echo.com/get',
-                                'method': 'GET'
+                            request: {
+                                url: 'https://postman-echo.com/get',
+                                method: 'GET'
                             }
                         }
                     ]
@@ -75,7 +75,7 @@ describe('Option', function () {
 
                 expect(err).to.be.null;
                 run.start({
-                    start: function (err, cursor) {
+                    start (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -95,7 +95,7 @@ describe('Option', function () {
                             testables.started = true;
                         });
                     },
-                    beforeIteration: function (err, cursor) {
+                    beforeIteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -103,7 +103,7 @@ describe('Option', function () {
                             runStore.iteration = cursor.iteration;
                         });
                     },
-                    iteration: function (err, cursor) {
+                    iteration (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.have.property('iteration', runStore.iteration);
@@ -111,7 +111,7 @@ describe('Option', function () {
                             testables.iterationsComplete.push(cursor.iteration);
                         });
                     },
-                    beforeItem: function (err, cursor, item) {
+                    beforeItem (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -121,7 +121,7 @@ describe('Option', function () {
                             runStore.ref = cursor.ref;
                         });
                     },
-                    item: function (err, cursor, item) {
+                    item (err, cursor, item) {
                         check(function () {
                             expect(err).to.be.null;
                             expect(cursor).to.deep.include({
@@ -133,7 +133,7 @@ describe('Option', function () {
                             testables.itemsComplete[cursor.iteration].push(item);
                         });
                     },
-                    beforePrerequest: function (err, cursor, events) {
+                    beforePrerequest (err, cursor, events) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -147,7 +147,7 @@ describe('Option', function () {
                             expect(events).to.be.empty;
                         });
                     },
-                    prerequest: function (err, cursor) {
+                    prerequest (err, cursor) {
                         check(function () {
                             // Sanity
                             expect(cursor).to.deep.include({
@@ -159,7 +159,7 @@ describe('Option', function () {
                             expect(err).to.be.null;
                         });
                     },
-                    beforeTest: function (err, cursor, events, item) {
+                    beforeTest (err, cursor, events, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -180,7 +180,7 @@ describe('Option', function () {
                             }
                         });
                     },
-                    test: function (err, cursor, results, item) {
+                    test (err, cursor, results, item) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -207,7 +207,7 @@ describe('Option', function () {
                             expect(scriptResult.error).to.be.undefined;
                         });
                     },
-                    beforeRequest: function (err, cursor) {
+                    beforeRequest (err, cursor) {
                         check(function () {
                             expect(err).to.be.null;
 
@@ -219,7 +219,7 @@ describe('Option', function () {
                             });
                         });
                     },
-                    request: function (err, cursor, response, request) {
+                    request (err, cursor, response, request) {
                         check(function () {
                             // Sanity
                             expect(cursor).to.deep.include({
@@ -235,7 +235,7 @@ describe('Option', function () {
                             expect(response).to.have.property('code', 200);
                         });
                     },
-                    done: function (err) {
+                    done (err) {
                         expect(err).to.be.null;
                         expect(testables).to.have.property('started', true);
 

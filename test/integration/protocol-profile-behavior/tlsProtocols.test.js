@@ -52,7 +52,7 @@ var fs = require('fs'),
         },
         CACertPath = path.resolve(__dirname, '../../fixtures/certificates/ca.pem'),
         requestHandler = function (req, res) {
-            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end('okay');
         };
 
@@ -60,7 +60,7 @@ var fs = require('fs'),
 
     before(function (done) {
         forInAsync(servers, function (protocol, next) {
-            servers[protocol] = server.createSSLServer(
+            servers[protocol] = server.createSSLServer( // eslint-disable-line function-paren-newline
                 // use `maxVersion` and `minVersion` options if supported, fallback to secureProtocol
                 tls.DEFAULT_MAX_VERSION ? {
                     maxVersion: protocol.replace('_', '.'),
@@ -1052,7 +1052,7 @@ var fs = require('fs'),
                         item: [{
                             request: {
                                 url: sslServer.url,
-                                header: [{key: 'Connection', value: 'close'}]
+                                header: [{ key: 'Connection', value: 'close' }]
                             }
                         }],
                         protocolProfileBehavior: {}

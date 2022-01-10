@@ -88,7 +88,7 @@ describe('raw mode language', function () {
                 responseBody = JSON.parse(response.stream.toString());
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.property('data').that.eql({foo: 'bar'});
+            expect(responseBody).to.have.property('data').that.eql({ foo: 'bar' });
             expect(responseBody.headers).to.have.property('content-type', 'application/json');
         });
     });

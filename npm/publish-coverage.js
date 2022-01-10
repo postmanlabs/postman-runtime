@@ -103,11 +103,11 @@ module.exports = async function () {
 // ensure we run this script exports if this is a direct stdin.tty run
 if (!module.parent) {
     module.exports()
-        .then(({stdout, stderr}) => {
+        .then(({ stdout, stderr }) => {
             console.info(stdout);
             console.info(stderr);
         })
-        .catch(({message, stack, stdout, stderr}) => {
+        .catch(({ message, stack, stdout, stderr }) => {
             console.error(stack || message);
             stdout && console.info(stdout);
             stderr && console.info(stderr);

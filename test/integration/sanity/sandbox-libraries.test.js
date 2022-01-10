@@ -39,7 +39,7 @@ describe('Sandbox libraries', function () {
                         }
                     }, {
                         listen: 'prerequest',
-                        script: {exec: ['postman.setGlobalVariable(\'g1\', \'0\');']}
+                        script: { exec: ['postman.setGlobalVariable(\'g1\', \'0\');'] }
                     }],
                     request: {
                         url: 'https://postman-echo.com/type/xml',
@@ -67,33 +67,33 @@ describe('Sandbox libraries', function () {
                         method: 'POST',
                         body: {
                             mode: 'formdata',
-                            formdata: [{key: 'k1', value: 'v1', type: 'text', enabled: true},
-                                {key: 'k2', value: 'v2', type: 'text', enabled: true},
-                                {key: 'guid', value: '{{$guid}}', type: 'text', enabled: true},
-                                {key: 'timestamp', value: '{{$timestamp}}', type: 'text', enabled: true},
-                                {key: 'randomInt', value: '{{$randomInt}}', type: 'text', enabled: true},
-                                {key: 'global', value: '{{g1}}', type: 'text', enabled: true},
-                                {key: 'envValue', value: '{{e1}}', type: 'text', enabled: true}]
+                            formdata: [{ key: 'k1', value: 'v1', type: 'text', enabled: true },
+                                { key: 'k2', value: 'v2', type: 'text', enabled: true },
+                                { key: 'guid', value: '{{$guid}}', type: 'text', enabled: true },
+                                { key: 'timestamp', value: '{{$timestamp}}', type: 'text', enabled: true },
+                                { key: 'randomInt', value: '{{$randomInt}}', type: 'text', enabled: true },
+                                { key: 'global', value: '{{g1}}', type: 'text', enabled: true },
+                                { key: 'envValue', value: '{{e1}}', type: 'text', enabled: true }]
                         }
                     }
                 }, {
                     event: [{
                         listen: 'test',
-                        script: {exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;']}
+                        script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
-                    request: {url: 'https://postman-echo.com/put', method: 'PUT'}
+                    request: { url: 'https://postman-echo.com/put', method: 'PUT' }
                 }, {
                     event: [{
                         listen: 'test',
-                        script: {exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;']}
+                        script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
-                    request: {url: 'https://postman-echo.com/patch', method: 'PATCH'}
+                    request: { url: 'https://postman-echo.com/patch', method: 'PATCH' }
                 }, {
                     event: [{
                         listen: 'test',
-                        script: {exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;']}
+                        script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
-                    request: {url: 'https://postman-echo.com/delete', method: 'DELETE'}
+                    request: { url: 'https://postman-echo.com/delete', method: 'DELETE' }
                 }, {
                     event: [{
                         listen: 'test',
@@ -104,7 +104,7 @@ describe('Sandbox libraries', function () {
                             ]
                         }
                     }],
-                    request: {url: 'https://postman-echo.com/get', method: 'HEAD'}
+                    request: { url: 'https://postman-echo.com/get', method: 'HEAD' }
                 }, {
                     event: [{
                         listen: 'test',
@@ -116,16 +116,16 @@ describe('Sandbox libraries', function () {
                             ]
                         }
                     }],
-                    request: {url: 'https://postman-echo.com/get', method: 'OPTIONS'}
+                    request: { url: 'https://postman-echo.com/get', method: 'OPTIONS' }
                 }, {
                     event: [{
                         listen: 'test',
-                        script: {exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;']}
+                        script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
                     request: {
                         url: 'https://postman-echo.com/post',
                         method: 'POST',
-                        body: {mode: 'raw', raw: 'RAWDATA'}
+                        body: { mode: 'raw', raw: 'RAWDATA' }
                     }
                 }, {
                     event: [{
@@ -142,7 +142,7 @@ describe('Sandbox libraries', function () {
                         auth: {
                             type: 'basic',
                             // eslint-disable-next-line max-len
-                            basic: {username: 'postman', password: 'password', saveHelperData: true, showPassword: false}
+                            basic: { username: 'postman', password: 'password', saveHelperData: true, showPassword: false }
                         },
                         url: 'https://postman-echo.com/post',
                         method: 'POST'
@@ -193,7 +193,7 @@ describe('Sandbox libraries', function () {
                             ]
                         }
                     }],
-                    request: {url: 'https://postman-echo.com/get?a={{name{{i}}}}', method: 'GET'}
+                    request: { url: 'https://postman-echo.com/get?a={{name{{i}}}}', method: 'GET' }
                 }]
             }
         }, function (err, results) {
@@ -211,61 +211,61 @@ describe('Sandbox libraries', function () {
 
         expect(testrun.test.getCall(0).args[0]).to.be.null;
         expect(testrun.assertion.getCall(0).args[1]).to.eql([
-            {error: null, index: 0, passed: true, skipped: false, name: 'xml2Json'},
-            {error: null, index: 1, passed: true, skipped: false, name: 'GetResponseHeader'},
-            {error: null, index: 2, passed: true, skipped: false, name: 'GetResponseCookie'},
-            {error: null, index: 3, passed: true, skipped: false, name: 'Correct global'},
-            {error: null, index: 4, passed: true, skipped: false, name: 'Lodash working'},
-            {error: null, index: 5, passed: true, skipped: false, name: 'SugarJS working'},
-            {error: null, index: 6, passed: true, skipped: false, name: 'tv4 present'},
-            {error: null, index: 7, passed: true, skipped: false, name: 'CryptoJS md5'}
+            { error: null, index: 0, passed: true, skipped: false, name: 'xml2Json' },
+            { error: null, index: 1, passed: true, skipped: false, name: 'GetResponseHeader' },
+            { error: null, index: 2, passed: true, skipped: false, name: 'GetResponseCookie' },
+            { error: null, index: 3, passed: true, skipped: false, name: 'Correct global' },
+            { error: null, index: 4, passed: true, skipped: false, name: 'Lodash working' },
+            { error: null, index: 5, passed: true, skipped: false, name: 'SugarJS working' },
+            { error: null, index: 6, passed: true, skipped: false, name: 'tv4 present' },
+            { error: null, index: 7, passed: true, skipped: false, name: 'CryptoJS md5' }
         ]);
 
 
         expect(testrun.test.getCall(1).args[0]).to.be.null;
         expect(testrun.assertion.getCall(1).args[1]).to.eql([
-            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
-            {error: null, index: 1, passed: true, skipped: false, name: 'Correct GUID'},
-            {error: null, index: 2, passed: true, skipped: false, name: 'Correct Random'},
-            {error: null, index: 3, passed: true, skipped: false, name: 'Correct Timestamp'},
-            {error: null, index: 4, passed: true, skipped: false, name: 'Correct global'},
-            {error: null, index: 5, passed: true, skipped: false, name: 'Correct global2'},
-            {error: null, index: 6, passed: true, skipped: false, name: 'Correct envVar'},
-            {error: null, index: 7, passed: true, skipped: false, name: 'Correct envVar2'}
+            { error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200' },
+            { error: null, index: 1, passed: true, skipped: false, name: 'Correct GUID' },
+            { error: null, index: 2, passed: true, skipped: false, name: 'Correct Random' },
+            { error: null, index: 3, passed: true, skipped: false, name: 'Correct Timestamp' },
+            { error: null, index: 4, passed: true, skipped: false, name: 'Correct global' },
+            { error: null, index: 5, passed: true, skipped: false, name: 'Correct global2' },
+            { error: null, index: 6, passed: true, skipped: false, name: 'Correct envVar' },
+            { error: null, index: 7, passed: true, skipped: false, name: 'Correct envVar2' }
         ]);
 
         [2, 3, 4].forEach(function (index) { // generates a range [2, 4], and checks the tests on those indices
             expect(testrun.test.getCall(index).args[0]).to.be.null;
             expect(testrun.assertion.getCall(index).args[1]).to.eql([
-                {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
+                { error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200' }
             ]);
         });
 
         expect(testrun.test.getCall(5).args[0]).to.be.null;
         expect(testrun.assertion.getCall(5).args[1]).to.eql([
-            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
-            {error: null, index: 1, passed: true, skipped: false, name: 'Body is correct'}
+            { error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200' },
+            { error: null, index: 1, passed: true, skipped: false, name: 'Body is correct' }
         ]);
 
         expect(testrun.test.getCall(6).args[0]).to.be.null;
         expect(testrun.assertion.getCall(6).args[1]).to.eql([
-            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'},
-            {error: null, index: 1, passed: true, skipped: false, name: 'Body is correct'}
+            { error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200' },
+            { error: null, index: 1, passed: true, skipped: false, name: 'Body is correct' }
         ]);
 
         expect(testrun.test.getCall(7).args[0]).to.be.null;
         expect(testrun.assertion.getCall(7).args[1]).to.eql([
-            {error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200'}
+            { error: null, index: 0, passed: true, skipped: false, name: 'Status code is 200' }
         ]);
 
         expect(testrun.test.getCall(8).args[0]).to.be.null;
         expect(testrun.assertion.getCall(8).args[1]).to.eql([
-            {error: null, index: 0, passed: true, skipped: false, name: 'Correct auth header'}
+            { error: null, index: 0, passed: true, skipped: false, name: 'Correct auth header' }
         ]);
 
         expect(testrun.test.getCall(9).args[0]).to.be.null;
         expect(testrun.assertion.getCall(9).args[1]).to.eql([
-            {error: null, index: 0, passed: true, skipped: false, name: 'Authenticated'}
+            { error: null, index: 0, passed: true, skipped: false, name: 'Authenticated' }
         ]);
     });
 
