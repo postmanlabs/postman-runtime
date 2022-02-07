@@ -73,7 +73,7 @@
     "express": "^4.17.2",
     "graphql": "^15.7.2",
     "js-yaml": "^4.1.0",
-    "karma": "^6.3.10",
+    "karma": "^6.3.14",
     "karma-browserify": "^8.1.0",
     "karma-chrome-launcher": "3.1.0",
     "karma-mocha": "^2.0.1",
