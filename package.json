@@ -40,7 +40,7 @@
     "test-unit": "nyc --nycrc-path=.nycrc.js node npm/test-unit.js"
   },
   "dependencies": {
-    "async": "3.2.3",
+    "async": "3.2.4",
     "aws4": "1.11.0",
     "handlebars": "4.7.7",
     "httpntlm": "1.7.7",
