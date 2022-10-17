@@ -175,13 +175,13 @@ describe('request mutations', function () {
         });
     });
 
-    describe('auth(immutable)', function () {
+    describe('auth', function () {
         before(function (done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/basic-auth',
+                            url: 'https://postman-echo.com/digest-auth',
                             auth: {
                                 type: 'basic',
                                 basic: {
@@ -194,7 +194,7 @@ describe('request mutations', function () {
                             listen: 'prerequest',
                             script: {
                                 exec: [
-                                    'pm.request.authorizeUsing("digest", {username: "foo", password: "bar"});'
+                                    'pm.request.authorizeUsing("digest", {username: "postman", password: "password"});'
                                 ],
                                 type: 'text/javascript'
                             }
@@ -219,13 +219,15 @@ describe('request mutations', function () {
             });
         });
 
-        it('should not update the request auth', function () {
+        it('should update the request auth', function () {
             var request = testrun.response.getCall(0).args[3],
                 response = testrun.response.getCall(0).args[2],
-                responseBody = JSON.parse(response.stream.toString());
+                responseBody = JSON.parse(response.stream.toString()),
+                requestAuth = request.auth.parameters().toObject();
 
-            expect(request.auth).to.have.property('type', 'basic');
-            expect(request.auth.parameters().toObject()).to.eql({ username: 'postman', password: 'password' });
+            expect(request.auth).to.have.property('type', 'digest');
+            expect(requestAuth).to.have.property('username').eql('postman');
+            expect(requestAuth).to.have.property('password').eql('password');
 
             expect(response).to.have.property('code', 200);
             expect(responseBody).to.have.property('authenticated', true);
