@@ -83,7 +83,7 @@
     "parse-gitignore": "^1.0.1",
     "passport": "^0.6.0",
     "passport-http": "^0.3.0",
-    "recursive-readdir": "^2.2.2",
+    "recursive-readdir": "^2.2.3",
     "server-destroy": "^1.0.1",
     "shelljs": "^0.8.5",
     "sinon": "^12.0.1",
