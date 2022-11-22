@@ -80,7 +80,7 @@ var fs = require('fs'),
         });
     });
 
-    describe('without extendedRootCA', function () {
+    describe('without extendedRootCA with default strictSSL(false)', function () {
         before(function (done) {
             this.run({
                 fileResolver: fs,
@@ -88,6 +88,42 @@ var fs = require('fs'),
                     item: [{
                         request: global.servers.https
                     }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should not throw self signed certificate error', function () {
+            var error = testrun.response.getCall(0).args[0],
+                response = testrun.response.getCall(0).args[2];
+
+            expect(error).to.be.null;
+            expect(response.code).to.be.equal(200);
+        });
+    });
+
+    describe('without extendedRootCA with strictSSL enabled', function () {
+        before(function (done) {
+            this.run({
+                fileResolver: fs,
+                collection: {
+                    item: [{
+                        request: global.servers.https
+                    }]
+                },
+                requester: {
+                    strictSSL: true
                 }
             }, function (err, results) {
                 testrun = results;
@@ -116,11 +152,47 @@ var fs = require('fs'),
         });
     });
 
-    describe('without fileResolver', function () {
+    describe('without fileResolver with default strictSSL(false)', function () {
         before(function (done) {
             this.run({
                 requester: {
                     extendedRootCA: CACertPath
+                },
+                collection: {
+                    item: [{
+                        request: global.servers.https
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should not throw self signed certificate error', function () {
+            var error = testrun.response.getCall(0).args[0],
+                response = testrun.response.getCall(0).args[2];
+
+            expect(error).to.be.null;
+            expect(response.code).to.be.equal(200);
+        });
+    });
+
+    describe('without fileResolver with strictSSL enabled', function () {
+        before(function (done) {
+            this.run({
+                requester: {
+                    extendedRootCA: CACertPath,
+                    strictSSL: true
                 },
                 collection: {
                     item: [{
