@@ -42,7 +42,7 @@ describe('redirects', function () {
         });
     });
 
-    describe('301 redirect', function () {
+    describe('301 redirect with default followOriginalHttpMethod: true', function () {
         before(function (done) {
             this.run({
                 collection: {
@@ -60,6 +60,55 @@ describe('redirects', function () {
                             }
                         }
                     }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should not drop body on 301 redirect', function () {
+            var response = testrun.request.getCall(0).args[2];
+
+            expect(response).to.have.property('code', 200);
+            expect(response.stream.toString()).not.to.be.empty;
+        });
+    });
+
+    describe('301 redirect with followOriginalHttpMethod: false', function () {
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: global.servers.redirects + '/1/301',
+                            method: 'POST',
+                            body: {
+                                mode: 'formdata',
+                                formdata: [{
+                                    type: 'text',
+                                    key: 'key1',
+                                    value: 'POSTMAN'
+                                }]
+                            }
+                        }
+                    }]
+                },
+                requester: {
+                    followOriginalHttpMethod: false
                 }
             }, function (err, results) {
                 testrun = results;

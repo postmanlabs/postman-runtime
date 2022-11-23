@@ -159,7 +159,7 @@ var sinon = require('sinon'),
 
             expect(hits).to.have.lengthOf(2);
             expect(hits[1]).to.have.property('url', '/?');
-            expect(hits[1]).to.have.property('method', 'GET');
+            expect(hits[1]).to.have.property('method', 'POST');
             expect(hits[1]).to.have.property('headers');
             expect(hits[1].headers).to.have.property('referer', URL);
         });
@@ -218,7 +218,7 @@ var sinon = require('sinon'),
 
                 expect(hits).to.have.lengthOf(2);
                 expect(hits[1]).to.have.property('url', '/?');
-                expect(hits[1]).to.have.property('method', 'GET');
+                expect(hits[1]).to.have.property('method', 'POST');
                 expect(hits[1]).to.have.property('headers');
                 expect(hits[1].headers).to.not.have.property('referer');
             });
@@ -272,7 +272,7 @@ var sinon = require('sinon'),
 
                 expect(hits).to.have.lengthOf(2);
                 expect(hits[1]).to.have.property('url', '/?');
-                expect(hits[1]).to.have.property('method', 'GET');
+                expect(hits[1]).to.have.property('method', 'POST');
                 expect(hits[1]).to.have.property('headers');
                 expect(hits[1].headers).to.have.property('referer', 'http://foo.bar');
             });
@@ -363,7 +363,7 @@ var sinon = require('sinon'),
 
             expect(hits).to.have.lengthOf(12);
             expect(hits[11]).to.have.property('url', '/?');
-            expect(hits[11]).to.have.property('method', 'GET');
+            expect(hits[11]).to.have.property('method', 'POST');
         });
     });
 });

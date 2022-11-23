@@ -573,6 +573,56 @@ var fs = require('fs'),
         });
     });
 
+    describe('should redirect with original http method', function () {
+        var URL;
+
+        before(function (done) {
+            URL = global.servers.followRedirects + '/1/302';
+            this.run({
+                requester: {
+                    // followOriginalHttpMethod default true
+                },
+                collection: {
+                    item: [{
+                        request: {
+                            url: URL,
+                            method: 'POST',
+                            header: [{ key: 'Connection', value: 'close' }]
+                        }
+                    }],
+                    // will override requester options
+                    protocolProfileBehavior: {
+                        removeRefererHeaderOnRedirect: false
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should have the http method as POST', function () {
+            const response = testrun.response.getCall(0).args[2],
+                [, httpMethod] = response.json();
+
+            expect(response).to.have.property('code', 200);
+            expect(httpMethod).to.have.property('method', 'POST');
+        });
+    });
+
     describe('with removeRefererHeaderOnRedirect: false', function () {
         var URL;
 
@@ -625,7 +675,7 @@ var fs = require('fs'),
 
             expect(hits).to.have.lengthOf(2);
             expect(hits[1]).to.have.property('url').that.include('/?');
-            expect(hits[1]).to.have.property('method', 'GET');
+            expect(hits[1]).to.have.property('method', 'POST');
             expect(hits[1]).to.have.property('headers');
             expect(hits[1].headers).to.have.property('referer', URL);
         });
@@ -683,7 +733,7 @@ var fs = require('fs'),
 
             expect(hits).to.have.lengthOf(2);
             expect(hits[1]).to.have.property('url').that.include('/?');
-            expect(hits[1]).to.have.property('method', 'GET');
+            expect(hits[1]).to.have.property('method', 'POST');
             expect(hits[1]).to.have.property('headers');
             expect(hits[1].headers).to.not.have.property('referer');
         });
@@ -771,7 +821,7 @@ var fs = require('fs'),
         });
     });
 
-    describe('with maxRedirects', function () {
+    describe('with maxRedirects with default followOriginalHttpMethod: true', function () {
         var URL;
 
         before(function (done) {
@@ -779,6 +829,63 @@ var fs = require('fs'),
             this.run({
                 requester: {
                     maxRedirects: 2
+                },
+                collection: {
+                    item: [{
+                        request: {
+                            url: URL,
+                            method: 'POST',
+                            header: [{ key: 'Connection', value: 'close' }]
+                        }
+                    }],
+                    // will override requester options
+                    protocolProfileBehavior: {
+                        maxRedirects: 11
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.start);
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.request);
+            sinon.assert.calledWith(testrun.request.getCall(0), null);
+
+            sinon.assert.calledOnce(testrun.response);
+            sinon.assert.calledWith(testrun.response.getCall(0), null);
+        });
+
+        it('should follow all the redirects with maxRedirects set', function () {
+            var response = testrun.response.getCall(0).args[2],
+                hits;
+
+            expect(response).to.have.property('code', 200);
+            expect(response).to.have.property('stream');
+
+            hits = response.json();
+
+            expect(hits).to.have.lengthOf(12);
+            expect(hits[11]).to.have.property('url').that.include('/?');
+            expect(hits[11]).to.have.property('method', 'POST');
+        });
+    });
+
+    describe('with maxRedirects with followOriginalHttpMethod: false', function () {
+        var URL;
+
+        before(function (done) {
+            URL = global.servers.followRedirects + '/11/302';
+            this.run({
+                requester: {
+                    maxRedirects: 2,
+                    followOriginalHttpMethod: false
                 },
                 collection: {
                     item: [{
