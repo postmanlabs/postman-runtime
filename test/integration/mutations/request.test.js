@@ -181,9 +181,9 @@ describe('request mutations', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/digest-auth',
+                            url: 'https://postman-echo.com/basic-auth',
                             auth: {
-                                type: 'basic',
+                                type: 'digest',
                                 basic: {
                                     username: 'postman',
                                     password: 'password'
@@ -194,7 +194,7 @@ describe('request mutations', function () {
                             listen: 'prerequest',
                             script: {
                                 exec: [
-                                    'pm.request.authorizeUsing("digest", {username: "postman", password: "password"});'
+                                    'pm.request.authorizeUsing("basic", {username: "postman", password: "password"});'
                                 ],
                                 type: 'text/javascript'
                             }
@@ -225,7 +225,7 @@ describe('request mutations', function () {
                 responseBody = JSON.parse(response.stream.toString()),
                 requestAuth = request.auth.parameters().toObject();
 
-            expect(request.auth).to.have.property('type', 'digest');
+            expect(request.auth).to.have.property('type', 'basic');
             expect(requestAuth).to.have.property('username').eql('postman');
             expect(requestAuth).to.have.property('password').eql('password');
 
