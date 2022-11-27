@@ -1,7 +1,8 @@
 unreleased:
   new features:
-    - >-
-      Added support for mutating the auth in the scripts
+    - Added support for mutating the auth in the scripts
+  chores:
+    - Updated httpntlm dependencies for NTLMv2 support
 
 7.29.2:
   date: 2022-06-06
