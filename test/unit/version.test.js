@@ -29,7 +29,7 @@ var expect = require('chai').expect,
                             version: sandboxPackage.devDependencies['chai-postman']
                         },
                         'postman-collection': {
-                            version: sandboxPackage.devDependencies['postman-collection']
+                            version: sandboxPackage.dependencies['postman-collection']
                         },
                         uniscope: {
                             version: sandboxPackage.devDependencies.uniscope
