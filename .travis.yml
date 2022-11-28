@@ -12,13 +12,13 @@ jobs:
   include:
     # run browser tests
     - name: 'Browser Tests'
-      node_js: lts/*
+      node_js: 16.15.1
       os: linux
       script: npm run test-browser
 
     # run tests in Node.js stable and publish code coverage
     - name: 'Coverage'
-      node_js: lts/*
+      node_js: 16.15.1
       os: linux
       script:
         - npm run test-unit
