@@ -1,8 +1,9 @@
 unreleased:
   new features:
-    - Added support for mutating the auth in the scripts
+    - GH-1237 Added support for request auth mutation via prerequest scripts
   chores:
-    - Updated httpntlm dependencies for NTLMv2 support
+    - GH-1244 Updated httpntlm dependencies for NTLMv2 support
+    - Updated dependencies
 
 7.29.2:
   date: 2022-06-06
