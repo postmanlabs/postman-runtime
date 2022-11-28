@@ -1,4 +1,6 @@
 unreleased:
+  new features:
+    - Added support for mutating the auth in the scripts
   chores:
     - Updated httpntlm dependencies for NTLMv2 support
 
