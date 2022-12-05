@@ -45,6 +45,7 @@
     "handlebars": "4.7.7",
     "httpntlm": "1.8.1",
     "js-sha512": "0.8.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "4.17.21",
     "mime-types": "2.1.35",
     "node-oauth1": "1.3.0",
