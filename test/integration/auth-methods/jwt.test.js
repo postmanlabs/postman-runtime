@@ -152,7 +152,229 @@ describe('jwt auth', function () {
         });
     });
 
-    // TODO: jwt header test for different algorithms
+    // jwt header test case
+    describe('with valid header object', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/headers',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS256',
+                                    header: {
+                                        alg: 'HS256',
+                                        typ: 'JWS',
+                                        cty: 'JWT',
+                                        crit: ['JWS'],
+                                        kid: '12345',
+                                        jku: 'test'
+                                    },
+                                    payload: { test: 123 },
+                                    secretOrPrivateKey: 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x',
+                                    tokenAddTo: AUTHORIZATION_HEADER
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+                headers.push(header.key);
+            });
+
+            expect(request.headers.members).to.include.deep.members([
+                new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
+            ]);
+
+            expect(response.json()).to.nested.include({
+                'headers.authorization': `Bearer ${jwtToken}`
+            });
+
+            expect(jwt.verify(jwtToken, 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x'))
+                .to.be.deep.equal({ test: 123 });
+            expect(jwt.decode(jwtToken, { complete: true }).header)
+                .to.be.deep.equal({
+                    alg: 'HS256',
+                    typ: 'JWS',
+                    kid: '12345',
+                    cty: 'JWT',
+                    crit: ['JWS'],
+                    jku: 'test'
+                });
+        });
+    });
+
+    describe('with valid header JSON string', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/headers',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS256',
+                                    header: '{\n "typ": "JWS",\n "jku": "{{jku}}",\n "test12": "demo"}',
+                                    payload: '{\n "test": "{{jku}}" }',
+                                    secretOrPrivateKey: '{{secretOrPrivateKey}}',
+                                    tokenAddTo: AUTHORIZATION_HEADER
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [
+                        {
+                            key: 'secretOrPrivateKey',
+                            value: 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x'
+                        },
+                        {
+                            key: 'jku',
+                            value: 'njsdnfjdnjdngjdnj'
+                        }
+                    ]
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+                headers.push(header.key);
+            });
+
+            expect(request.headers.members).to.include.deep.members([
+                new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
+            ]);
+
+            expect(response.json()).to.nested.include({
+                'headers.authorization': `Bearer ${jwtToken}`
+            });
+
+            expect(jwt.verify(jwtToken, 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x'))
+                .to.be.deep.equal({ test: 'njsdnfjdnjdngjdnj' });
+            expect(jwt.decode(jwtToken, { complete: true }).header)
+                .to.be.deep.equal({
+                    alg: 'HS256',
+                    typ: 'JWS',
+                    test12: 'demo',
+                    jku: 'njsdnfjdnjdngjdnj'
+                });
+        });
+    });
+
+    describe('with invalid header & payload JSON string', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/headers',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS256',
+                                    header: '{\n "typ": "JWS",\n "jku": {{jku}},\n "test12": "demo"}',
+                                    payload: '{\n "test": {{jku}} }',
+                                    secretOrPrivateKey: '{{secretOrPrivateKey}}',
+                                    tokenAddTo: AUTHORIZATION_HEADER
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [
+                        {
+                            key: 'secretOrPrivateKey',
+                            value: 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x'
+                        },
+                        {
+                            key: 'jku',
+                            value: 'njsdnfjdnjdngjdnj'
+                        }
+                    ]
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should not add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+            expect(headers).that.does.not.include('Authorization');
+        });
+    });
 
     // jwt payload test case
     describe('with payload as null', function () {
@@ -1036,6 +1258,158 @@ describe('jwt auth', function () {
             }
             catch (e) {
                 expect(e.message).to.be.equal('jwt not active');
+            }
+        });
+    });
+
+    describe('with expiry time crossed for token', function () {
+        const secretKey = 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x1212121232323434242352352345252245245245245241212s',
+            issuedAt = Math.floor(Date.now() / 1000),
+            expiresIn = Math.floor(Date.now() / 1000) - (60 * 60);
+
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/get',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS256',
+                                    header: { typ: 'JWT' },
+                                    payload: {
+                                        iat: issuedAt,
+                                        exp: expiresIn
+                                    },
+                                    secretOrPrivateKey: secretKey,
+                                    tokenAddTo: AUTHORIZATION_HEADER
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should throw expired token error', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+                headers.push(header.key);
+            });
+
+            expect(request.headers.members).to.include.deep.members([
+                new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
+            ]);
+
+            expect(response.json()).to.nested.include({
+                'headers.authorization': `Bearer ${jwtToken}`
+            });
+
+            try {
+                jwt.verify(jwtToken, secretKey)
+                    .to.be.deep.equal({ });
+            }
+            catch (e) {
+                expect(e.message).to.be.equal('jwt expired');
+            }
+        });
+    });
+
+    describe('with invalid signature', function () {
+        const secretKey = 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x1212121232323434242352352345252245245245245241212s',
+            issuedAt = Math.floor(Date.now() / 1000),
+            expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
+
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/get',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS256',
+                                    header: { typ: 'JWT' },
+                                    payload: {
+                                        iat: issuedAt,
+                                        exp: expiresIn
+                                    },
+                                    secretOrPrivateKey: secretKey,
+                                    tokenAddTo: AUTHORIZATION_HEADER
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should throw invalid signature error', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+                headers.push(header.key);
+            });
+
+            expect(request.headers.members).to.include.deep.members([
+                new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
+            ]);
+
+            expect(response.json()).to.nested.include({
+                'headers.authorization': `Bearer ${jwtToken}`
+            });
+
+            try {
+                jwt.verify(jwtToken, '123')
+                    .to.be.deep.equal({});
+            }
+            catch (e) {
+                expect(e.message).to.be.equal('invalid signature');
             }
         });
     });
