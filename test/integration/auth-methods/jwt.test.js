@@ -154,7 +154,8 @@ describe('jwt auth', function () {
 
     // TODO: jwt header test for different algorithms
 
-    describe('Should not add token to Authorization header when payload is null', function () {
+    // jwt payload test case
+    describe('with payload as null', function () {
         before(function (done) {
             const runOptions = {
                 collection: {
@@ -199,7 +200,7 @@ describe('jwt auth', function () {
             });
         });
 
-        it('should not add Authorization header', function () {
+        it('should not add Authorization header when payload is null', function () {
             const headers = [],
                 request = testrun.request.firstCall.args[3];
 
@@ -210,7 +211,7 @@ describe('jwt auth', function () {
         });
     });
 
-    describe('Should not add token to Authorization header when payload is undefined', function () {
+    describe('with payload as undefined', function () {
         before(function (done) {
             const runOptions = {
                 collection: {
@@ -255,7 +256,7 @@ describe('jwt auth', function () {
             });
         });
 
-        it('should not add Authorization header', function () {
+        it('should not add Authorization header when payload is undefined', function () {
             const headers = [],
                 request = testrun.request.firstCall.args[3];
 
@@ -266,7 +267,7 @@ describe('jwt auth', function () {
         });
     });
 
-    describe('with valid payload for HS256 algorithm and token add to Authorization header', function () {
+    describe('with valid payload for HS256 algorithm', function () {
         before(function (done) {
             const runOptions = {
                 collection: {
@@ -340,7 +341,159 @@ describe('jwt auth', function () {
         });
     });
 
-    describe('with valid payload for HS384 algorithm and token add to url query param', function () {
+    describe('with payload as JSON String for HS256 algorithm', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/headers',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS256',
+                                    header: { typ: 'JWT' },
+                                    payload: '{\n "uno": 1,\n "dos": 2\n}',
+                                    secretOrPrivateKey: '{{secretOrPrivateKey}}',
+                                    tokenAddTo: AUTHORIZATION_HEADER
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [
+                        {
+                            key: 'secretOrPrivateKey',
+                            value: 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x'
+                        }
+                    ]
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header with bearer as jwt token', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+                headers.push(header.key);
+            });
+
+            expect(request.headers.members).to.include.deep.members([
+                new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
+            ]);
+
+            expect(response.json()).to.nested.include({
+                'headers.authorization': `Bearer ${jwtToken}`
+            });
+
+            expect(jwt.verify(jwtToken, 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x'))
+                .to.be.deep.equal({ uno: 1, dos: 2 });
+            expect(jwt.decode(jwtToken, { complete: true }).header)
+                .to.be.deep.equal({ alg: 'HS256', typ: 'JWT' });
+        });
+    });
+
+    describe('with payload as JSON String and env variable for HS256 algorithm', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/headers',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS256',
+                                    header: { typ: 'JWT' },
+                                    payload: '{\n "uno": 1,\n "dos": 2\n,\n "number": {{number}}}',
+                                    secretOrPrivateKey: '{{secretOrPrivateKey}}',
+                                    tokenAddTo: AUTHORIZATION_HEADER
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [
+                        {
+                            key: 'secretOrPrivateKey',
+                            value: 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x'
+                        },
+                        {
+                            key: 'number',
+                            value: 12345
+                        }
+                    ]
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header with bearer as jwt token', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+                headers.push(header.key);
+            });
+
+            expect(request.headers.members).to.include.deep.members([
+                new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
+            ]);
+
+            expect(response.json()).to.nested.include({
+                'headers.authorization': `Bearer ${jwtToken}`
+            });
+
+            expect(jwt.verify(jwtToken, 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x'))
+                .to.be.deep.equal({ uno: 1, dos: 2, number: 12345 });
+            expect(jwt.decode(jwtToken, { complete: true }).header)
+                .to.be.deep.equal({ alg: 'HS256', typ: 'JWT' });
+        });
+    });
+
+    describe('with valid payload for HS384 algorithm', function () {
         before(function (done) {
             const runOptions = {
                 collection: {
@@ -419,7 +572,7 @@ describe('jwt auth', function () {
         });
     });
 
-    describe('with valid payload for HS512 algorithm and token add to Authorization header', function () {
+    describe('with valid payload for HS512 algorithm', function () {
         const secretKey = 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x1212121232323434242352352345252245245245245241212s';
 
         before(function (done) {
@@ -495,7 +648,7 @@ describe('jwt auth', function () {
         });
     });
 
-    describe('should generate valid jwt token for registered claim payload', function () {
+    describe('generate valid jwt token for registered claim payload', function () {
         const secretKey = 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x1212121232323434242352352345252245245245245241212s',
             issuedAt = Math.floor(Date.now() / 1000),
             notBefore = Math.floor(Date.now() / 1000) - (60 * 60),
@@ -600,7 +753,7 @@ describe('jwt auth', function () {
                 .to.be.deep.equal({
                     aud: 'lasEkslasjnn2324nxskskosdk',
                     exp: expiresIn,
-                    iat: `${issuedAt}`, // TODO: check the resolved variable should be string
+                    iat: `${issuedAt}`,
                     iss: 'https://dev-0yc9dnt0.us.auth0.com/',
                     jti: 'sjh3h46bsdh37ybasjha237612723',
                     nbf: notBefore,
@@ -609,7 +762,94 @@ describe('jwt auth', function () {
         });
     });
 
-    describe('should generate token for private and public claim payload', function () {
+    describe('generate valid jwt token for iat claim payload as env variable', function () {
+        const secretKey = 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x1212121232323434242352352345252245245245245241212s',
+            issuedAt = Math.floor(Date.now() / 1000);
+
+
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/get',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS512',
+                                    header: { typ: 'JWT' },
+                                    // eslint-disable-next-line
+                                    payload: '{\n    \"iat\":{{issuedAt}}\n}',
+                                    secretOrPrivateKey: '{{secretOrPrivateKey}}',
+                                    tokenAddTo: QUERY_PARAM,
+                                    queryParamKey: 'jwt'
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [
+                        {
+                            key: 'secretOrPrivateKey',
+                            value: secretKey
+                        },
+                        {
+                            key: 'issuedAt',
+                            value: issuedAt
+                        }
+                    ]
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should generate a valid jwt token & add to query param correctly', function () {
+            const queries = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            let jwtToken;
+
+            request.url.query.members.forEach(function (query) {
+                if (query.key === 'jwt') {
+                    jwtToken = query.value;
+                }
+                queries.push(query.value);
+            });
+
+            expect(request.url.query.members).to.include.deep.members([
+                new QueryParam({ key: 'jwt', value: jwtToken })
+            ]);
+
+            expect(jwt.decode(jwtToken, { complete: true }).header)
+                .to.be.deep.equal({ alg: 'HS512', typ: 'JWT' });
+
+            expect(response.json()).to.nested.include({
+                'args.jwt': jwtToken
+            });
+
+            expect(jwt.verify(jwtToken, secretKey))
+                .to.be.deep.equal({
+                    iat: issuedAt
+                });
+        });
+    });
+
+    describe('generate token for private and public claim payload', function () {
         const secretKey = 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x1212121232323434242352352345252245245245245241212s';
 
         before(function (done) {
@@ -697,7 +937,7 @@ describe('jwt auth', function () {
         });
     });
 
-    describe('should not verify jwt token when nbf is greater than iat', function () {
+    describe('with nbf is greater than iat', function () {
         const secretKey = 'cdVGscbTozmMseA6c7YfhimIF8seD02mN0g4x1212121232323434242352352345252245245245245241212s',
             issuedAt = Math.floor(Date.now() / 1000),
             notBefore = Math.floor(Date.now() / 1000) + (60 * 60 * 60),
@@ -768,7 +1008,7 @@ describe('jwt auth', function () {
             });
         });
 
-        it('should not add verify token since nbf is greater than iat', function () {
+        it('should not add verify token when nbf is greater than iat', function () {
             const headers = [],
                 request = testrun.request.firstCall.args[3],
                 response = testrun.request.firstCall.args[2];
