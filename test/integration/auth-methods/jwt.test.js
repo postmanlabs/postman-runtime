@@ -115,7 +115,12 @@ const expect = require('chai').expect,
             publicKey: publicKeyECDSA
         }
     },
-
+    HSBase64SecretEncodedToken = {
+        HS256: 'eyJhbGciOiJIUzI1NiJ9.eyJhIjoiMSJ9.t5tKMAD6QRlODKmo-JM3UHWUcZ9M_zqZJtHTDfKU7Uo',
+        HS384: 'eyJhbGciOiJIUzM4NCJ9.eyJhIjoiMSJ9.dAqLlk9X1BkAgVbj62CxXpXU3zKPJQzhbh3AOi8-E8J7KL-I-ibzqD1j3FBrr9sQ',
+        // eslint-disable-next-line
+        HS512: 'eyJhbGciOiJIUzUxMiJ9.eyJhIjoiMSJ9.Yx0W2Wo6T0RdRXgqwvh7Ko6uHT6MnaYsU_N_4Nl1wRfRPdY_OB5awsDwddraC-JkyB9DZthViuuUpGzvO5bedg'
+    },
     // RS Algorithms with passphrase
     RSAlgorithmsWithPassPhrase = {
         RS256: {
@@ -172,6 +177,7 @@ const expect = require('chai').expect,
     algorithmsWithPassphrase = {
         ...RSAlgorithmsWithPassPhrase,
         ...ESAlgorithmsWithPassPhrase
+        // verify whether RSASSA-PSS (PS) algorithm is applicable
     },
 
     algorithms = Object.entries(algorithmsSupported);
@@ -1657,5 +1663,83 @@ describe('jwt auth', function () {
         });
     });
 
-    // TODO: secret base64 encoded for HS algorithms
+    // secret base64 encoded for HS algorithms
+    Object.entries(HSAlgorithms).forEach(([key]) => {
+        const { alg } = HSAlgorithms[key];
+
+        describe(`with secret as base64 for - ${alg} algorithm`, function () {
+            // secret used without base64 encoding - abc
+            const originalToken = HSBase64SecretEncodedToken[alg],
+                base64EncodedSecret = Buffer.from('1111111111111111111111111111111a').toString('base64'),
+                decodedSecret = Buffer.from(base64EncodedSecret, 'base64').toString('ascii');
+
+            before(function (done) {
+                const runOptions = {
+                    collection: {
+                        item: {
+                            request: {
+                                url: 'https://postman-echo.com/headers',
+                                auth: {
+                                    type: 'jwt',
+                                    jwt: {
+                                        algorithm: alg,
+                                        header: { alg },
+                                        payload: { a: '1' },
+                                        secretOrPrivateKey: base64EncodedSecret,
+                                        tokenAddTo: AUTHORIZATION_HEADER,
+                                        secretBase64Encoded: true // denotes that secret must be decoded before signing
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                this.run(runOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should completed the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should add Authorization header with bearer as jwt token', function () {
+                const headers = [],
+                    request = testrun.request.firstCall.args[3],
+                    response = testrun.request.firstCall.args[2];
+
+                let jwtToken;
+
+                request.headers.members.forEach(function (header) {
+                    if (header.key === 'Authorization') {
+                        jwtToken = header.value.split('Bearer ')[1];
+                    }
+                    headers.push(header.key);
+                });
+
+                expect(request.headers.members).to.include.deep.members([
+                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
+                ]);
+
+                expect(response.json()).to.nested.include({
+                    'headers.authorization': `Bearer ${jwtToken}`
+                });
+
+                expect(jwt.verify(jwtToken, decodedSecret))
+                    .to.be.deep.equal({ a: '1' });
+
+                expect(jwt.decode(jwtToken, { complete: true }).header)
+                    .to.be.deep.equal({ alg });
+
+                expect(originalToken).to.be.equal(jwtToken);
+            });
+        });
+    });
 });
