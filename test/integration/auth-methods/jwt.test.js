@@ -15,13 +15,17 @@ const expect = require('chai').expect,
     },
 
     // private & public key for RS, PS, ES Algorithms
+    // RS & PS
     privatekeyRSA = getKey('jwt-keys/rsa.private.pem'),
     publicKeyRSA = getKey('jwt-keys/rsa.public.pem'),
     invalidPublicKeyRSA = getKey('jwt-keys/rsa-invalid.public.pem'),
     privatekeyRSAWithPassphrase = getKey('jwt-keys/rsa-passphrase.private.pem'),
     publicKeyRSAWithPassphrase = getKey('jwt-keys/rsa-passphrase.public.pem'),
+    // ES - ECDSA
     privateKeyECDSA = getKey('jwt-keys/ecdsa.private.pem'),
     publicKeyECDSA = getKey('jwt-keys/ecdsa.public.pem'),
+    privateKeyECDSAWithPassphrase = getKey('jwt-keys/ecdsa-passphrase.private.pem'),
+    publicKeyECDSAWithPassphrase = getKey('jwt-keys/ecdsa-passphrase.public.pem'),
 
     // algorithms
     // HS algorithms
@@ -134,12 +138,40 @@ const expect = require('chai').expect,
         }
     },
 
+    // ES Algorithms with passphrase
+    ESAlgorithmsWithPassPhrase = {
+        ES256: {
+            alg: 'ES256',
+            secretOrPrivateKey: privateKeyECDSAWithPassphrase,
+            publicKey: publicKeyECDSAWithPassphrase,
+            passphrase: '12345678'
+        },
+        ES384: {
+            alg: 'ES384',
+            secretOrPrivateKey: privateKeyECDSAWithPassphrase,
+            publicKey: publicKeyECDSAWithPassphrase,
+            passphrase: '12345678'
+        },
+        ES512: {
+            alg: 'ES512',
+            secretOrPrivateKey: privateKeyECDSAWithPassphrase,
+            publicKey: publicKeyECDSAWithPassphrase,
+            passphrase: '12345678'
+        }
+    },
+
     // all Algorithms
     algorithmsSupported = {
         ...HSAlgorithms,
         ...RSAlgorithms,
         ...PSAlgorithms,
         ...ESAlgorithms
+    },
+
+    // algorithms with passphrase
+    algorithmsWithPassphrase = {
+        ...RSAlgorithmsWithPassPhrase,
+        ...ESAlgorithmsWithPassPhrase
     },
 
     algorithms = Object.entries(algorithmsSupported);
@@ -1544,9 +1576,9 @@ describe('jwt auth', function () {
         });
     });
 
-    // passphrase check for RS algorithms
-    Object.entries(RSAlgorithmsWithPassPhrase).forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey, passphrase } = RSAlgorithmsWithPassPhrase[key];
+    // passphrase check for RS, ES algorithms
+    Object.entries(algorithmsWithPassphrase).forEach(([key]) => {
+        const { alg, secretOrPrivateKey, publicKey, passphrase } = algorithmsWithPassphrase[key];
 
         describe(`with passphrase for private key - ${alg} algorithm`, function () {
             before(function (done) {
