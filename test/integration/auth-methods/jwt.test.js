@@ -1665,12 +1665,13 @@ describe('jwt auth', function () {
 
     // secret base64 encoded for HS algorithms
     Object.entries(HSAlgorithms).forEach(([key]) => {
-        const { alg } = HSAlgorithms[key];
+        const secretKey = '1111111111111111111111111111111a',
+            { alg } = HSAlgorithms[key];
 
         describe(`with secret as base64 for - ${alg} algorithm`, function () {
             // secret used without base64 encoding - abc
             const originalToken = HSBase64SecretEncodedToken[alg],
-                base64EncodedSecret = Buffer.from('1111111111111111111111111111111a').toString('base64'),
+                base64EncodedSecret = Buffer.from(secretKey).toString('base64'),
                 decodedSecret = Buffer.from(base64EncodedSecret, 'base64').toString('ascii');
 
             before(function (done) {
@@ -1745,7 +1746,8 @@ describe('jwt auth', function () {
 
     // secret base64 not enabled for HS algorithms
     Object.entries(HSAlgorithms).forEach(([key]) => {
-        const { alg } = HSAlgorithms[key];
+        const secretKey = '1111111111111111111111111111111a',
+            { alg } = HSAlgorithms[key];
 
         describe(`with secret not base64 for - ${alg} algorithm`, function () {
             // secret used without base64 encoding - abc
@@ -1763,7 +1765,7 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { alg },
                                         payload: { a: '1' },
-                                        secretOrPrivateKey: '1111111111111111111111111111111a',
+                                        secretOrPrivateKey: secretKey,
                                         tokenAddTo: AUTHORIZATION_HEADER,
                                         secretBase64Encoded: false
                                     }
@@ -1810,7 +1812,7 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, '1111111111111111111111111111111a'))
+                expect(jwt.verify(jwtToken, secretKey))
                     .to.be.deep.equal({ a: '1' });
 
                 expect(jwt.decode(jwtToken, { complete: true }).header)
