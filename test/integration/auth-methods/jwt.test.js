@@ -1742,4 +1742,82 @@ describe('jwt auth', function () {
             });
         });
     });
+
+    // secret base64 not enabled for HS algorithms
+    Object.entries(HSAlgorithms).forEach(([key]) => {
+        const { alg } = HSAlgorithms[key];
+
+        describe(`with secret not base64 for - ${alg} algorithm`, function () {
+            // secret used without base64 encoding - abc
+            const originalToken = HSBase64SecretEncodedToken[alg];
+
+            before(function (done) {
+                const runOptions = {
+                    collection: {
+                        item: {
+                            request: {
+                                url: 'https://postman-echo.com/headers',
+                                auth: {
+                                    type: 'jwt',
+                                    jwt: {
+                                        algorithm: alg,
+                                        header: { alg },
+                                        payload: { a: '1' },
+                                        secretOrPrivateKey: '1111111111111111111111111111111a',
+                                        tokenAddTo: AUTHORIZATION_HEADER,
+                                        secretBase64Encoded: false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                this.run(runOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should completed the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should add Authorization header with bearer as jwt token', function () {
+                const headers = [],
+                    request = testrun.request.firstCall.args[3],
+                    response = testrun.request.firstCall.args[2];
+
+                let jwtToken;
+
+                request.headers.members.forEach(function (header) {
+                    if (header.key === 'Authorization') {
+                        jwtToken = header.value.split('Bearer ')[1];
+                    }
+                    headers.push(header.key);
+                });
+
+                expect(request.headers.members).to.include.deep.members([
+                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
+                ]);
+
+                expect(response.json()).to.nested.include({
+                    'headers.authorization': `Bearer ${jwtToken}`
+                });
+
+                expect(jwt.verify(jwtToken, '1111111111111111111111111111111a'))
+                    .to.be.deep.equal({ a: '1' });
+
+                expect(jwt.decode(jwtToken, { complete: true }).header)
+                    .to.be.deep.equal({ alg });
+
+                expect(originalToken).to.be.equal(jwtToken);
+            });
+        });
+    });
 });
