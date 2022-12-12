@@ -934,6 +934,87 @@ describe('jwt auth', function () {
         });
     });
 
+    // with valid payload and add to Authorization as user prefixs
+    algorithms.forEach(([key]) => {
+        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+
+        describe(`with valid payload for ${alg} algorithm and custom token prefixs`, function () {
+            before(function (done) {
+                const runOptions = {
+                    collection: {
+                        item: {
+                            request: {
+                                url: 'https://postman-echo.com/headers',
+                                auth: {
+                                    type: 'jwt',
+                                    jwt: {
+                                        algorithm: alg,
+                                        header: { typ: 'JWT' },
+                                        payload: { test: 123, name: 'demo-name' },
+                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
+                                        tokenAddTo: AUTHORIZATION_HEADER,
+                                        tokenPrefix: 'jwt-prefix'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    environment: {
+                        values: [
+                            {
+                                key: 'secretOrPrivateKey',
+                                value: secretOrPrivateKey
+                            }
+                        ]
+                    }
+                };
+
+                this.run(runOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should completed the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should add Authorization header with bearer as jwt token', function () {
+                const headers = [],
+                    request = testrun.request.firstCall.args[3],
+                    response = testrun.request.firstCall.args[2];
+
+                let jwtToken;
+
+                request.headers.members.forEach(function (header) {
+                    if (header.key === 'Authorization') {
+                        jwtToken = header.value.split('jwt-prefix ')[1];
+                    }
+                    headers.push(header.key);
+                });
+
+                expect(request.headers.members).to.include.deep.members([
+                    new Header({ key: 'Authorization', value: `jwt-prefix ${jwtToken}`, system: true })
+                ]);
+
+                expect(response.json()).to.nested.include({
+                    'headers.authorization': `jwt-prefix ${jwtToken}`
+                });
+
+                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                    .to.be.deep.equal({ test: 123, name: 'demo-name' });
+
+                expect(jwt.decode(jwtToken, { complete: true }).header)
+                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
+            });
+        });
+    });
+
     // with payload as JSON String
     algorithms.forEach(([key]) => {
         const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
