@@ -430,66 +430,6 @@ describe('jwt auth', function () {
         });
     });
 
-    // with invalid private key
-    algorithms.forEach(([key]) => {
-        const { alg } = algorithmsSupported[key];
-
-        describe(`with invalid privateKey for ${alg} algorithm`, function () {
-            const issuedAt = Math.floor(Date.now() / 1000),
-                expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
-
-            before(function (done) {
-                const runOptions = {
-                    collection: {
-                        item: {
-                            request: {
-                                url: 'https://postman-echo.com/get',
-                                auth: {
-                                    type: 'jwt',
-                                    jwt: {
-                                        algorithm: alg,
-                                        header: { typ: 'JWT' },
-                                        payload: {
-                                            iat: issuedAt,
-                                            exp: expiresIn
-                                        },
-                                        secret: '',
-                                        privateKey: '123',
-                                        addTokenTo: HEADER
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-
-                this.run(runOptions, function (err, results) {
-                    testrun = results;
-                    done(err);
-                });
-            });
-
-            it('should completed the run', function () {
-                expect(testrun).to.be.ok;
-                expect(testrun).to.nested.include({
-                    'done.calledOnce': true,
-                    'start.calledOnce': true,
-                    'request.calledOnce': true
-                });
-            });
-
-            it('should not add Authorization header', function () {
-                const headers = [],
-                    request = testrun.request.firstCall.args[3];
-
-                request.headers.members.forEach(function (header) {
-                    headers.push(header.key);
-                });
-                expect(headers).that.does.not.include('Authorization');
-            });
-        });
-    });
-
     // with valid header object & custom fields
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
