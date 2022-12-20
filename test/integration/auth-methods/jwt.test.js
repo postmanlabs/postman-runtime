@@ -6,7 +6,7 @@ const expect = require('chai').expect,
     QueryParam = require('postman-collection').QueryParam,
 
     // jwt key constants
-    AUTHORIZATION_HEADER = 'authorizationHeader',
+    HEADER = 'header',
     QUERY_PARAM = 'queryParam',
 
     // load private key
@@ -32,14 +32,14 @@ const expect = require('chai').expect,
     HSAlgorithms = {
         HS256: {
             alg: 'HS256',
-            secretOrPrivateKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
+            signKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' // 240 chars (can be upto 256 chars)
         },
         HS384: {
             alg: 'HS384',
-            secretOrPrivateKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
+            signKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
@@ -48,7 +48,7 @@ const expect = require('chai').expect,
         },
         HS512: {
             alg: 'HS512',
-            secretOrPrivateKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
+            signKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
             'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
@@ -59,22 +59,51 @@ const expect = require('chai').expect,
         }
     },
 
+    HSBase64SecretEncodedToken = {
+        HS256: 'eyJhbGciOiJIUzI1NiJ9.eyJhIjoiMSJ9.t5tKMAD6QRlODKmo-JM3UHWUcZ9M_zqZJtHTDfKU7Uo',
+        HS384: 'eyJhbGciOiJIUzM4NCJ9.eyJhIjoiMSJ9.dAqLlk9X1BkAgVbj62CxXpXU3zKPJQzhbh3AOi8-E8J7KL-I-ibzqD1j3FBrr9sQ',
+        // eslint-disable-next-line
+        HS512: 'eyJhbGciOiJIUzUxMiJ9.eyJhIjoiMSJ9.Yx0W2Wo6T0RdRXgqwvh7Ko6uHT6MnaYsU_N_4Nl1wRfRPdY_OB5awsDwddraC-JkyB9DZthViuuUpGzvO5bedg'
+    },
+
     // RS algorithms
     RSAlgorithms = {
         RS256: {
             alg: 'RS256',
-            secretOrPrivateKey: privatekeyRSA,
+            signKey: privatekeyRSA,
             publicKey: publicKeyRSA
         },
         RS384: {
             alg: 'RS384',
-            secretOrPrivateKey: privatekeyRSA,
+            signKey: privatekeyRSA,
             publicKey: publicKeyRSA
         },
         RS512: {
             alg: 'RS512',
-            secretOrPrivateKey: privatekeyRSA,
+            signKey: privatekeyRSA,
             publicKey: publicKeyRSA
+        }
+    },
+
+    // RS Algorithms with passphrase
+    RSAlgorithmsWithPassPhrase = {
+        RS256: {
+            alg: 'RS256',
+            signKey: privatekeyRSAWithPassphrase,
+            publicKey: publicKeyRSAWithPassphrase,
+            passphrase: 'test1234key'
+        },
+        RS384: {
+            alg: 'RS384',
+            signKey: privatekeyRSAWithPassphrase,
+            publicKey: publicKeyRSAWithPassphrase,
+            passphrase: 'test1234key'
+        },
+        RS512: {
+            alg: 'RS512',
+            signKey: privatekeyRSAWithPassphrase,
+            publicKey: publicKeyRSAWithPassphrase,
+            passphrase: 'test1234key'
         }
     },
 
@@ -82,17 +111,17 @@ const expect = require('chai').expect,
     PSAlgorithms = {
         PS256: {
             alg: 'PS256',
-            secretOrPrivateKey: privatekeyRSA,
+            signKey: privatekeyRSA,
             publicKey: publicKeyRSA
         },
         PS384: {
             alg: 'PS384',
-            secretOrPrivateKey: privatekeyRSA,
+            signKey: privatekeyRSA,
             publicKey: publicKeyRSA
         },
         PS512: {
             alg: 'PS512',
-            secretOrPrivateKey: privatekeyRSA,
+            signKey: privatekeyRSA,
             publicKey: publicKeyRSA
         }
     },
@@ -101,45 +130,18 @@ const expect = require('chai').expect,
     ESAlgorithms = {
         ES256: {
             alg: 'ES256',
-            secretOrPrivateKey: privateKeyECDSA,
+            signKey: privateKeyECDSA,
             publicKey: publicKeyECDSA
         },
         ES384: {
             alg: 'ES384',
-            secretOrPrivateKey: privateKeyECDSA,
+            signKey: privateKeyECDSA,
             publicKey: publicKeyECDSA
         },
         ES512: {
             alg: 'ES512',
-            secretOrPrivateKey: privateKeyECDSA,
+            signKey: privateKeyECDSA,
             publicKey: publicKeyECDSA
-        }
-    },
-    HSBase64SecretEncodedToken = {
-        HS256: 'eyJhbGciOiJIUzI1NiJ9.eyJhIjoiMSJ9.t5tKMAD6QRlODKmo-JM3UHWUcZ9M_zqZJtHTDfKU7Uo',
-        HS384: 'eyJhbGciOiJIUzM4NCJ9.eyJhIjoiMSJ9.dAqLlk9X1BkAgVbj62CxXpXU3zKPJQzhbh3AOi8-E8J7KL-I-ibzqD1j3FBrr9sQ',
-        // eslint-disable-next-line
-        HS512: 'eyJhbGciOiJIUzUxMiJ9.eyJhIjoiMSJ9.Yx0W2Wo6T0RdRXgqwvh7Ko6uHT6MnaYsU_N_4Nl1wRfRPdY_OB5awsDwddraC-JkyB9DZthViuuUpGzvO5bedg'
-    },
-    // RS Algorithms with passphrase
-    RSAlgorithmsWithPassPhrase = {
-        RS256: {
-            alg: 'RS256',
-            secretOrPrivateKey: privatekeyRSAWithPassphrase,
-            publicKey: publicKeyRSAWithPassphrase,
-            passphrase: 'test1234key'
-        },
-        RS384: {
-            alg: 'RS384',
-            secretOrPrivateKey: privatekeyRSAWithPassphrase,
-            publicKey: publicKeyRSAWithPassphrase,
-            passphrase: 'test1234key'
-        },
-        RS512: {
-            alg: 'RS512',
-            secretOrPrivateKey: privatekeyRSAWithPassphrase,
-            publicKey: publicKeyRSAWithPassphrase,
-            passphrase: 'test1234key'
         }
     },
 
@@ -147,19 +149,19 @@ const expect = require('chai').expect,
     ESAlgorithmsWithPassPhrase = {
         ES256: {
             alg: 'ES256',
-            secretOrPrivateKey: privateKeyECDSAWithPassphrase,
+            signKey: privateKeyECDSAWithPassphrase,
             publicKey: publicKeyECDSAWithPassphrase,
             passphrase: '12345678'
         },
         ES384: {
             alg: 'ES384',
-            secretOrPrivateKey: privateKeyECDSAWithPassphrase,
+            signKey: privateKeyECDSAWithPassphrase,
             publicKey: publicKeyECDSAWithPassphrase,
             passphrase: '12345678'
         },
         ES512: {
             alg: 'ES512',
-            secretOrPrivateKey: privateKeyECDSAWithPassphrase,
+            signKey: privateKeyECDSAWithPassphrase,
             publicKey: publicKeyECDSAWithPassphrase,
             passphrase: '12345678'
         }
@@ -187,7 +189,7 @@ describe('jwt auth', function () {
 
     // with invalid algorithm - root level
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey } = algorithmsSupported[key];
+        const { alg, signKey } = algorithmsSupported[key];
 
         describe(`with invalid algorithm for ${alg} algorithm`, function () {
             before(function (done) {
@@ -202,8 +204,8 @@ describe('jwt auth', function () {
                                         algorithm: '', // invalid root level algo
                                         header: { alg },
                                         payload: { test: 123 },
-                                        secretOrPrivateKey: secretOrPrivateKey,
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: signKey,
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -241,7 +243,7 @@ describe('jwt auth', function () {
 
     // with invalid header
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey } = algorithmsSupported[key];
+        const { alg, signKey } = algorithmsSupported[key];
 
         describe(`with invalid header for ${alg} algorithm`, function () {
             before(function (done) {
@@ -256,8 +258,9 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: null,
                                         payload: { test: 123 },
-                                        secretOrPrivateKey: secretOrPrivateKey,
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: signKey,
+                                        privateKey: signKey,
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -309,8 +312,9 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { alg },
                                         payload: { test: 123 },
-                                        secretOrPrivateKey: null,
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: null,
+                                        privateKey: null,
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -347,7 +351,7 @@ describe('jwt auth', function () {
 
     // with invalid signature
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with invalid signature for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
@@ -368,8 +372,9 @@ describe('jwt auth', function () {
                                             iat: issuedAt,
                                             exp: expiresIn
                                         },
-                                        secretOrPrivateKey: secretOrPrivateKey,
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: signKey,
+                                        privateKey: signKey,
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -429,7 +434,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg } = algorithmsSupported[key];
 
-        describe(`with invalid signature for ${alg} algorithm`, function () {
+        describe(`with invalid privateKey for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
 
@@ -448,8 +453,9 @@ describe('jwt auth', function () {
                                             iat: issuedAt,
                                             exp: expiresIn
                                         },
-                                        secretOrPrivateKey: alg.includes('HS') ? '' : '123',
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: '',
+                                        privateKey: '123',
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -486,7 +492,7 @@ describe('jwt auth', function () {
 
     // with valid header object & custom fields
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with valid header object for ${alg} algorithm`, function () {
             before(function (done) {
@@ -508,8 +514,9 @@ describe('jwt auth', function () {
                                             jku: '{{jku}}'
                                         },
                                         payload: { test: 123 },
-                                        secretOrPrivateKey: secretOrPrivateKey,
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: signKey,
+                                        privateKey: signKey,
+                                        tokenAddTo: HEADER
                                     }
                                 }
                             }
@@ -562,7 +569,7 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({ test: 123 });
 
                 expect(jwt.decode(jwtToken, { complete: true }).header)
@@ -580,7 +587,7 @@ describe('jwt auth', function () {
 
     // with valid JSON header string
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with valid header JSON string for ${alg} algorithm`, function () {
             before(function (done) {
@@ -595,8 +602,9 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: '{\n "typ": "JWS",\n "jku": "{{jku}}",\n "test12": "demo"}',
                                         payload: '{\n "test": "{{jku}}" }',
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -605,8 +613,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             },
                             {
                                 key: 'jku',
@@ -653,7 +661,7 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({ test: 'abc-123' });
                 expect(jwt.decode(jwtToken, { complete: true }).header)
                     .to.be.deep.equal({
@@ -668,7 +676,7 @@ describe('jwt auth', function () {
 
     // with invalid header & payload for JSON string
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey } = algorithmsSupported[key];
+        const { alg, signKey } = algorithmsSupported[key];
 
         describe(`with invalid header & payload JSON string for ${alg} algorithm`, function () {
             before(function (done) {
@@ -683,8 +691,9 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: '{\n "typ": "JWS",\n "jku": {{jku}},\n "test12": "demo"}',
                                         payload: '{\n "test": {{jku}} }', // invalid using string without quotes {{jku}}
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -693,8 +702,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             },
                             {
                                 key: 'jku',
@@ -731,132 +740,9 @@ describe('jwt auth', function () {
         });
     });
 
-    // jwt payload test case
-    // with payload as null
-    algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey } = algorithmsSupported[key];
-
-        describe(`with payload as null for ${alg} algorithm`, function () {
-            before(function (done) {
-                const runOptions = {
-                    collection: {
-                        item: {
-                            request: {
-                                url: 'https://postman-echo.com/headers',
-                                auth: {
-                                    type: 'jwt',
-                                    jwt: {
-                                        algorithm: alg,
-                                        header: { typ: 'JWT' },
-                                        payload: null,
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    environment: {
-                        values: [
-                            {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
-                            }
-                        ]
-                    }
-                };
-
-                this.run(runOptions, function (err, results) {
-                    testrun = results;
-                    done(err);
-                });
-            });
-
-            it('should completed the run', function () {
-                expect(testrun).to.be.ok;
-                expect(testrun).to.nested.include({
-                    'done.calledOnce': true,
-                    'start.calledOnce': true,
-                    'request.calledOnce': true
-                });
-            });
-
-            it('should not add Authorization header', function () {
-                const headers = [],
-                    request = testrun.request.firstCall.args[3];
-
-                request.headers.members.forEach(function (header) {
-                    headers.push(header.key);
-                });
-                expect(headers).that.does.not.include('Authorization');
-            });
-        });
-    });
-
-    // with payload as undefined
-    algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey } = algorithmsSupported[key];
-
-        describe(`with payload as undefined for ${alg} algorithm`, function () {
-            before(function (done) {
-                const runOptions = {
-                    collection: {
-                        item: {
-                            request: {
-                                url: 'https://postman-echo.com/headers',
-                                auth: {
-                                    type: 'jwt',
-                                    jwt: {
-                                        algorithm: alg,
-                                        header: { typ: 'JWT' },
-                                        payload: undefined,
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    environment: {
-                        values: [
-                            {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
-                            }
-                        ]
-                    }
-                };
-
-                this.run(runOptions, function (err, results) {
-                    testrun = results;
-                    done(err);
-                });
-            });
-
-            it('should completed the run', function () {
-                expect(testrun).to.be.ok;
-                expect(testrun).to.nested.include({
-                    'done.calledOnce': true,
-                    'start.calledOnce': true,
-                    'request.calledOnce': true
-                });
-            });
-
-            it('should not add Authorization header', function () {
-                const headers = [],
-                    request = testrun.request.firstCall.args[3];
-
-                request.headers.members.forEach(function (header) {
-                    headers.push(header.key);
-                });
-                expect(headers).that.does.not.include('Authorization');
-            });
-        });
-    });
-
     // with valid payload and add to Authorization as Bearer
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with valid payload for ${alg} algorithm`, function () {
             before(function (done) {
@@ -871,8 +757,9 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { typ: 'JWT' },
                                         payload: { test: 123, name: 'demo-name' },
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -881,8 +768,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             }
                         ]
                     }
@@ -925,7 +812,7 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({ test: 123, name: 'demo-name' });
 
                 expect(jwt.decode(jwtToken, { complete: true }).header)
@@ -934,9 +821,9 @@ describe('jwt auth', function () {
         });
     });
 
-    // with valid payload and add to Authorization as user prefixs
+    // with valid payload and add to Authorization as user prefix
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with valid payload for ${alg} algorithm and custom token prefixs`, function () {
             before(function (done) {
@@ -951,9 +838,10 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { typ: 'JWT' },
                                         payload: { test: 123, name: 'demo-name' },
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER,
-                                        tokenPrefix: 'jwt-prefix'
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: HEADER,
+                                        headerPrefix: 'jwt-prefix'
                                     }
                                 }
                             }
@@ -962,8 +850,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             }
                         ]
                     }
@@ -1006,7 +894,7 @@ describe('jwt auth', function () {
                     'headers.authorization': `jwt-prefix ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({ test: 123, name: 'demo-name' });
 
                 expect(jwt.decode(jwtToken, { complete: true }).header)
@@ -1017,7 +905,7 @@ describe('jwt auth', function () {
 
     // with payload as JSON String
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with payload as JSON String for ${alg} algorithm`, function () {
             before(function (done) {
@@ -1032,8 +920,10 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { typ: 'JWT' },
                                         payload: '{\n "uno": 1,\n "dos": 2\n}',
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: HEADER,
+                                        headerPrefix: 'Bearer'
                                     }
                                 }
                             }
@@ -1042,8 +932,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             }
                         ]
                     }
@@ -1086,7 +976,7 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({ uno: 1, dos: 2 });
                 expect(jwt.decode(jwtToken, { complete: true }).header)
                     .to.be.deep.equal({ alg: alg, typ: 'JWT' });
@@ -1096,7 +986,7 @@ describe('jwt auth', function () {
 
     // with payload as JSON String with variables
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with payload as JSON String and env variable for ${alg} algorithm`, function () {
             before(function (done) {
@@ -1111,8 +1001,9 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { typ: 'JWT' },
                                         payload: '{\n "uno": 1,\n "dos": 2\n,\n "number": {{number}}}',
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -1121,8 +1012,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             },
                             {
                                 key: 'number',
@@ -1169,7 +1060,7 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({ uno: 1, dos: 2, number: 12345 });
                 expect(jwt.decode(jwtToken, { complete: true }).header)
                     .to.be.deep.equal({ alg: alg, typ: 'JWT' });
@@ -1179,7 +1070,7 @@ describe('jwt auth', function () {
 
     // with valid payload for registered claim and add to query param
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with registered claim payload for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
@@ -1211,8 +1102,9 @@ describe('jwt auth', function () {
                                             jti: jwtId,
                                             nbf: notBefore
                                         },
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: QUERY_PARAM,
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: QUERY_PARAM,
                                         queryParamKey: 'jwt'
                                     }
                                 }
@@ -1222,8 +1114,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             },
                             {
                                 key: 'issuer',
@@ -1281,7 +1173,7 @@ describe('jwt auth', function () {
                     'args.jwt': jwtToken
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({
                         aud: 'lasEkslasjnn2324nxskskosdk',
                         exp: expiresIn,
@@ -1297,7 +1189,7 @@ describe('jwt auth', function () {
 
     // with private and public claim payload
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with private and public claim payload for ${alg} algorithm`, function () {
             before(function (done) {
@@ -1317,8 +1209,9 @@ describe('jwt auth', function () {
                                             email: 'test@gmail.com', // public claim openId
                                             sid: 12345 // public claim IESG
                                         },
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: QUERY_PARAM,
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: QUERY_PARAM,
                                         queryParamKey: 'jwtToken'
                                     }
                                 }
@@ -1328,8 +1221,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             }
                         ]
                     }
@@ -1375,7 +1268,7 @@ describe('jwt auth', function () {
                     'args.jwtToken': jwtToken
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({
                         customField: 'test', // private claim
                         isAdmin: true, // private claim
@@ -1388,7 +1281,7 @@ describe('jwt auth', function () {
 
     // with iat claim as env variable
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with iat claim payload as env variable for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000);
@@ -1406,8 +1299,9 @@ describe('jwt auth', function () {
                                         header: { typ: 'JWT' },
                                         // eslint-disable-next-line
                                         payload: '{\n    \"iat\":{{issuedAt}}\n}',
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: QUERY_PARAM,
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: QUERY_PARAM,
                                         queryParamKey: 'jwt'
                                     }
                                 }
@@ -1417,8 +1311,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             },
                             {
                                 key: 'issuedAt',
@@ -1468,7 +1362,7 @@ describe('jwt auth', function () {
                     'args.jwt': jwtToken
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey), { algorithms: [alg] })
+                expect(jwt.verify(jwtToken, publicKey || signKey), { algorithms: [alg] })
                     .to.be.deep.equal({
                         iat: issuedAt
                     });
@@ -1478,7 +1372,7 @@ describe('jwt auth', function () {
 
     // with nbf greater than iat should not verify token
     algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
+        const { alg, signKey, publicKey } = algorithmsSupported[key];
 
         describe(`with nbf is greater than iat for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
@@ -1510,8 +1404,9 @@ describe('jwt auth', function () {
                                             jwtId: jwtId,
                                             nbf: notBefore
                                         },
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: HEADER
                                     }
                                 }
                             }
@@ -1520,8 +1415,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             },
                             {
                                 key: 'issuer',
@@ -1573,7 +1468,7 @@ describe('jwt auth', function () {
                 });
 
                 try {
-                    jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] })
+                    jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] })
                         .to.be.deep.equal({ test: '123', name: 'demo-name' });
                 }
                 catch (e) {
@@ -1583,89 +1478,9 @@ describe('jwt auth', function () {
         });
     });
 
-    // with expiry time crossed for token
-    algorithms.forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey } = algorithmsSupported[key];
-
-        describe(`with expiry time crossed for token for ${alg} algorithm`, function () {
-            const issuedAt = Math.floor(Date.now() / 1000),
-                expiresIn = Math.floor(Date.now() / 1000) - (60 * 60);
-
-            before(function (done) {
-                const runOptions = {
-                    collection: {
-                        item: {
-                            request: {
-                                url: 'https://postman-echo.com/get',
-                                auth: {
-                                    type: 'jwt',
-                                    jwt: {
-                                        algorithm: alg,
-                                        header: { typ: 'JWT' },
-                                        payload: {
-                                            iat: issuedAt,
-                                            exp: expiresIn
-                                        },
-                                        secretOrPrivateKey: secretOrPrivateKey,
-                                        tokenAddTo: AUTHORIZATION_HEADER
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-
-                this.run(runOptions, function (err, results) {
-                    testrun = results;
-                    done(err);
-                });
-            });
-
-            it('should completed the run', function () {
-                expect(testrun).to.be.ok;
-                expect(testrun).to.nested.include({
-                    'done.calledOnce': true,
-                    'start.calledOnce': true,
-                    'request.calledOnce': true
-                });
-            });
-
-            it('should throw expired token error', function () {
-                const headers = [],
-                    request = testrun.request.firstCall.args[3],
-                    response = testrun.request.firstCall.args[2];
-
-                let jwtToken;
-
-                request.headers.members.forEach(function (header) {
-                    if (header.key === 'Authorization') {
-                        jwtToken = header.value.split('Bearer ')[1];
-                    }
-                    headers.push(header.key);
-                });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
-
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
-                });
-
-                try {
-                    jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] })
-                        .to.be.deep.equal({ });
-                }
-                catch (e) {
-                    expect(e.message).to.be.equal('jwt expired');
-                }
-            });
-        });
-    });
-
     // passphrase check for RS, ES algorithms
     Object.entries(algorithmsWithPassphrase).forEach(([key]) => {
-        const { alg, secretOrPrivateKey, publicKey, passphrase } = algorithmsWithPassphrase[key];
+        const { alg, signKey, publicKey, passphrase } = algorithmsWithPassphrase[key];
 
         describe(`with passphrase for private key - ${alg} algorithm`, function () {
             before(function (done) {
@@ -1680,8 +1495,9 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { typ: 'JWT' },
                                         payload: { test: 123, name: 'demo-name' },
-                                        secretOrPrivateKey: '{{secretOrPrivateKey}}',
-                                        tokenAddTo: AUTHORIZATION_HEADER,
+                                        secret: '{{signKey}}',
+                                        privateKey: '{{signKey}}',
+                                        addTokenTo: HEADER,
                                         passphrase: passphrase
                                     }
                                 }
@@ -1691,8 +1507,8 @@ describe('jwt auth', function () {
                     environment: {
                         values: [
                             {
-                                key: 'secretOrPrivateKey',
-                                value: secretOrPrivateKey
+                                key: 'signKey',
+                                value: signKey
                             }
                         ]
                     }
@@ -1735,7 +1551,7 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || secretOrPrivateKey, { algorithms: [alg] }))
+                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({ test: 123, name: 'demo-name' });
 
                 expect(jwt.decode(jwtToken, { complete: true }).header)
@@ -1767,9 +1583,10 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { alg },
                                         payload: { a: '1' },
-                                        secretOrPrivateKey: base64EncodedSecret,
-                                        tokenAddTo: AUTHORIZATION_HEADER,
-                                        secretBase64Encoded: true // denotes that secret must be decoded before signing
+                                        secret: base64EncodedSecret,
+                                        addTokenTo: HEADER,
+                                        // denotes that secret must be decoded before signing
+                                        isSecretBase64Encoded: true
                                     }
                                 }
                             }
@@ -1825,7 +1642,7 @@ describe('jwt auth', function () {
         });
     });
 
-    // secret base64 not enabled for HS algorithms
+    // // secret base64 not enabled for HS algorithms
     Object.entries(HSAlgorithms).forEach(([key]) => {
         const secretKey = '1111111111111111111111111111111a',
             { alg } = HSAlgorithms[key];
@@ -1846,9 +1663,10 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { alg },
                                         payload: { a: '1' },
-                                        secretOrPrivateKey: secretKey,
-                                        tokenAddTo: AUTHORIZATION_HEADER,
-                                        secretBase64Encoded: false
+                                        secret: secretKey,
+                                        privateKey: secretKey,
+                                        addTokenTo: HEADER,
+                                        isSecretBase64Encoded: false
                                     }
                                 }
                             }
