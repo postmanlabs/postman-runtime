@@ -16,16 +16,16 @@ const expect = require('chai').expect,
 
     // private & public key for RS, PS, ES Algorithms
     // RS & PS
-    privatekeyRSA = getKey('jwt-keys/rsa.private.pem'),
-    publicKeyRSA = getKey('jwt-keys/rsa.public.pem'),
-    invalidPublicKeyRSA = getKey('jwt-keys/rsa-invalid.public.pem'),
-    privatekeyRSAWithPassphrase = getKey('jwt-keys/rsa-passphrase.private.pem'),
-    publicKeyRSAWithPassphrase = getKey('jwt-keys/rsa-passphrase.public.pem'),
+    privatekeyRSA = getKey('../../fixtures/jwt-keys/rsa.private.pem'),
+    publicKeyRSA = getKey('../../fixtures/jwt-keys/rsa.public.pem'),
+    invalidPublicKeyRSA = getKey('../../fixtures/jwt-keys/rsa-invalid.public.pem'),
+    privatekeyRSAWithPassphrase = getKey('../../fixtures/jwt-keys/rsa-passphrase.private.pem'),
+    publicKeyRSAWithPassphrase = getKey('../../fixtures/jwt-keys/rsa-passphrase.public.pem'),
     // ES - ECDSA
-    privateKeyECDSA = getKey('jwt-keys/ecdsa.private.pem'),
-    publicKeyECDSA = getKey('jwt-keys/ecdsa.public.pem'),
-    privateKeyECDSAWithPassphrase = getKey('jwt-keys/ecdsa-passphrase.private.pem'),
-    publicKeyECDSAWithPassphrase = getKey('jwt-keys/ecdsa-passphrase.public.pem'),
+    privateKeyECDSA = getKey('../../fixtures/jwt-keys/ecdsa.private.pem'),
+    publicKeyECDSA = getKey('../../fixtures/jwt-keys/ecdsa.public.pem'),
+    privateKeyECDSAWithPassphrase = getKey('../../fixtures/jwt-keys/ecdsa-passphrase.private.pem'),
+    publicKeyECDSAWithPassphrase = getKey('../../fixtures/jwt-keys/ecdsa-passphrase.public.pem'),
 
     // algorithms
     // HS algorithms
