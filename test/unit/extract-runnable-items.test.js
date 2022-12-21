@@ -1,5 +1,6 @@
 var expect = require('chai').expect,
     extractRunnableItems = require('../../lib/runner/extract-runnable-items').extractRunnableItems,
+    { errors, createError } = require('../../lib/runner/errors'),
     sdk = require('postman-collection'),
     _ = require('lodash');
 
@@ -147,15 +148,19 @@ describe('extractRunnableItems', function () {
     });
 
     describe('lookupStrategy: idOrName', function () {
-        it('should handle invalid entry points', function (done) {
+        it('should throw on invalid entry points', function (done) {
             extractRunnableItems(collection, {
                 execute: 'random',
                 lookupStrategy: 'idOrName'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
+                const error = createError({
+                    error: errors.invalidFolderOrRequest,
+                    variables: { folderOrRequestName: entrypoint }
+                });
+
+                expect(err).to.be.deep.eq(error);
                 expect(runnableItems).to.eql([]);
-                expect(entrypoint).to.be.undefined;
                 done();
             });
         });
@@ -252,7 +257,9 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'multipleIdOrName'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
+                const error = createError({ error: errors.invalidEntryPoints });
+
+                expect(err).to.be.deep.eq(error);
                 expect(runnableItems).to.eql([]);
                 expect(entrypoint).to.be.undefined;
                 done();
@@ -482,7 +489,9 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'followOrder'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
+                const error = createError({ error: errors.invalidEntryPoints });
+
+                expect(err).to.be.deep.eq(error);
                 expect(runnableItems).to.eql([]);
                 expect(entrypoint).to.be.undefined;
                 done();
