@@ -665,6 +665,82 @@ describe('jwt auth', function () {
         });
     });
 
+    // with header algorithm is different from root level alg
+    describe('with header algorithm & root level algorithm', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/headers',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: 'HS256',
+                                    header: { alg: 'HS512', typ: 'JWT' }, // alg is different from root algorithm
+                                    payload: '{\n "test": "{{jku}}" }',
+                                    secret: '{{signKey}}',
+                                    addTokenTo: HEADER
+                                }
+                            }
+                        }
+                    }
+                },
+                environment: {
+                    values: [
+                        {
+                            key: 'signKey',
+                            value: '123'
+                        },
+                        {
+                            key: 'jku',
+                            value: 'test-123'
+                        }
+                    ]
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header with jwt token for HS256 algorithm', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+                headers.push(header.key);
+            });
+
+            expect(response.json()).to.nested.include({
+                'headers.authorization': `Bearer ${jwtToken}`
+            });
+
+            expect(jwt.verify(jwtToken, '123'))
+                .to.be.deep.equal({ test: 'test-123' });
+
+            expect(jwt.decode(jwtToken, { complete: true }).header)
+                .to.be.deep.equal({ alg: 'HS256', typ: 'JWT' });
+        });
+    });
+
     // with valid payload and add to Authorization as Bearer
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
