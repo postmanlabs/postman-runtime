@@ -2,9 +2,6 @@ const expect = require('chai').expect,
     fs = require('fs'),
     path = require('path'),
     jwt = require('jsonwebtoken'),
-    Header = require('postman-collection').Header,
-    QueryParam = require('postman-collection').QueryParam,
-
     // jwt key constants
     HEADER = 'header',
     QUERY_PARAM = 'queryParam',
@@ -188,56 +185,52 @@ describe('jwt auth', function () {
     let testrun;
 
     // with invalid algorithm - root level
-    algorithms.forEach(([key]) => {
-        const { alg, signKey } = algorithmsSupported[key];
-
-        describe(`with invalid algorithm for ${alg} algorithm`, function () {
-            before(function (done) {
-                const runOptions = {
-                    collection: {
-                        item: {
-                            request: {
-                                url: 'https://postman-echo.com/headers',
-                                auth: {
-                                    type: 'jwt',
-                                    jwt: {
-                                        algorithm: '', // invalid root level algo
-                                        header: { alg },
-                                        payload: { test: 123 },
-                                        secret: signKey,
-                                        addTokenTo: HEADER
-                                    }
+    describe('with invalid root level algorithm', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/headers',
+                            auth: {
+                                type: 'jwt',
+                                jwt: {
+                                    algorithm: '', // invalid root level algo
+                                    header: { alg: 'HS256' },
+                                    payload: { test: 123 },
+                                    secret: '112345',
+                                    addTokenTo: HEADER
                                 }
                             }
                         }
                     }
-                };
+                }
+            };
 
-                this.run(runOptions, function (err, results) {
-                    testrun = results;
-                    done(err);
-                });
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should not add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
             });
 
-            it('should completed the run', function () {
-                expect(testrun).to.be.ok;
-                expect(testrun).to.nested.include({
-                    'done.calledOnce': true,
-                    'start.calledOnce': true,
-                    'request.calledOnce': true
-                });
-            });
-
-            it('should not add Authorization header', function () {
-                const headers = [],
-                    request = testrun.request.firstCall.args[3];
-
-                request.headers.members.forEach(function (header) {
-                    headers.push(header.key);
-                });
-
-                expect(headers).that.does.not.include('Authorization');
-            });
+            expect(headers).that.does.not.include('Authorization');
         });
     });
 
@@ -274,7 +267,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -290,6 +283,7 @@ describe('jwt auth', function () {
                 request.headers.members.forEach(function (header) {
                     headers.push(header.key);
                 });
+
                 expect(headers).that.does.not.include('Authorization');
             });
         });
@@ -328,7 +322,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -344,6 +338,7 @@ describe('jwt auth', function () {
                 request.headers.members.forEach(function (header) {
                     headers.push(header.key);
                 });
+
                 expect(headers).that.does.not.include('Authorization');
             });
         });
@@ -388,7 +383,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -410,10 +405,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
@@ -478,7 +469,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -500,10 +491,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
@@ -570,7 +557,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -593,16 +580,13 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
-
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
                 expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
                     .to.be.deep.equal({ test: 'abc-123' });
+
                 expect(jwt.decode(jwtToken, { complete: true }).header)
                     .to.be.deep.equal({
                         alg: alg,
@@ -659,7 +643,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -675,6 +659,7 @@ describe('jwt auth', function () {
                 request.headers.members.forEach(function (header) {
                     headers.push(header.key);
                 });
+
                 expect(headers).that.does.not.include('Authorization');
             });
         });
@@ -721,7 +706,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -743,10 +728,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
@@ -803,7 +784,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -825,10 +806,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `jwt-prefix ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `jwt-prefix ${jwtToken}`
@@ -885,7 +862,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -907,10 +884,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
@@ -969,7 +942,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -991,10 +964,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
@@ -1079,7 +1048,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -1101,10 +1070,6 @@ describe('jwt auth', function () {
                     }
                     queries.push(query.value);
                 });
-
-                expect(request.url.query.members).to.include.deep.members([
-                    new QueryParam({ key: 'jwt', value: jwtToken })
-                ]);
 
                 expect(jwt.decode(jwtToken, { complete: true }).header)
                     .to.be.deep.equal({ alg: alg, typ: 'JWT' });
@@ -1174,7 +1139,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -1196,10 +1161,6 @@ describe('jwt auth', function () {
                     }
                     queries.push(query.value);
                 });
-
-                expect(request.url.query.members).to.include.deep.members([
-                    new QueryParam({ key: 'jwtToken', value: jwtToken })
-                ]);
 
                 expect(jwt.decode(jwtToken, { complete: true }).header)
                     .to.be.deep.equal({ alg: alg, typ: 'JWT' });
@@ -1268,7 +1229,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -1290,10 +1251,6 @@ describe('jwt auth', function () {
                     }
                     queries.push(query.value);
                 });
-
-                expect(request.url.query.members).to.include.deep.members([
-                    new QueryParam({ key: 'jwt', value: jwtToken })
-                ]);
 
                 expect(jwt.decode(jwtToken, { complete: true }).header)
                     .to.be.deep.equal({ alg: alg, typ: 'JWT' });
@@ -1376,7 +1333,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -1398,10 +1355,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
@@ -1460,7 +1413,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -1482,10 +1435,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
@@ -1540,7 +1489,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -1562,10 +1511,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
@@ -1620,7 +1565,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should completed the run', function () {
+            it('should complete the run', function () {
                 expect(testrun).to.be.ok;
                 expect(testrun).to.nested.include({
                     'done.calledOnce': true,
@@ -1642,10 +1587,6 @@ describe('jwt auth', function () {
                     }
                     headers.push(header.key);
                 });
-
-                expect(request.headers.members).to.include.deep.members([
-                    new Header({ key: 'Authorization', value: `Bearer ${jwtToken}`, system: true })
-                ]);
 
                 expect(response.json()).to.nested.include({
                     'headers.authorization': `Bearer ${jwtToken}`
