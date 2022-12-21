@@ -94,7 +94,8 @@ describe('extractRunnableItems', function () {
                 path: ['random_path']
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.code).to.be.eq('ERR_INVALID_ENTRY_POINTS');
                 expect(runnableItems).to.eql([]);
                 expect(entrypoint).to.be.undefined;
                 done();
@@ -147,15 +148,15 @@ describe('extractRunnableItems', function () {
     });
 
     describe('lookupStrategy: idOrName', function () {
-        it('should handle invalid entry points', function (done) {
+        it('should throw on invalid entry points', function (done) {
             extractRunnableItems(collection, {
                 execute: 'random',
                 lookupStrategy: 'idOrName'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
+                expect(err.message).to.be.eq(`Unable to find a folder or request: ${entrypoint}`);
+                expect(err.code).to.be.eq('ERR_INVALID_FOLDER_OR_REQUEST');
                 expect(runnableItems).to.eql([]);
-                expect(entrypoint).to.be.undefined;
                 done();
             });
         });
@@ -252,7 +253,8 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'multipleIdOrName'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.code).to.be.eq('ERR_INVALID_ENTRY_POINTS');
                 expect(runnableItems).to.eql([]);
                 expect(entrypoint).to.be.undefined;
                 done();
@@ -482,7 +484,8 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'followOrder'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.code).to.be.eq('ERR_INVALID_ENTRY_POINTS');
                 expect(runnableItems).to.eql([]);
                 expect(entrypoint).to.be.undefined;
                 done();
