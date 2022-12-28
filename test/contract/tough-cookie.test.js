@@ -103,7 +103,6 @@ class TestCookieStore extends Store {
 
 describe('tough-cookie', function () {
     describe('CookieJar', function () {
-        /* postman-sandbox, app */
         it('should throw an error for synchronous methods', function () {
             const store = new TestCookieStore(),
                 jar = new CookieJar(store);
@@ -133,7 +132,6 @@ describe('tough-cookie', function () {
                 .with.property('message', 'CookieJar store is not synchronous; use async API instead.');
         });
 
-        /* app */
         describe('option: rejectPublicSuffixes', function () {
             it('should not set cookie if rejectPublicSuffixes is true and domain is a public suffix', function (done) {
                 const cookie = new Cookie({
@@ -183,7 +181,6 @@ describe('tough-cookie', function () {
             });
         });
 
-        /* app */
         describe('option: looseMode', function () {
             it('should create cookies with leading "=" if looseMode is true', function (done) {
                 const jar = new CookieJar(new TestCookieStore(), { looseMode: true });
@@ -208,7 +205,6 @@ describe('tough-cookie', function () {
             });
         });
 
-        /* postman-request */
         describe('~setCookie', function () {
             it('should set the cookie', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
@@ -273,7 +269,6 @@ describe('tough-cookie', function () {
             });
         });
 
-        /* postman-runtime, postman-sandbox */
         describe('~getCookies', function () {
             it('should get the cookies', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
@@ -589,7 +584,6 @@ describe('tough-cookie', function () {
             });
         });
 
-        /* postman-request */
         describe('~getCookieString', function () {
             it('should get the cookie string', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
@@ -642,7 +636,6 @@ describe('tough-cookie', function () {
     });
 
     describe('~Cookie', function () {
-        /* postman-sandbox */
         it('should have all properties', function () {
             const now = Date.now(),
                 cookie = new Cookie({
@@ -673,7 +666,6 @@ describe('tough-cookie', function () {
             expect(cookie.extensions[0]).to.equal('foo=bar');
         });
 
-        /* postman-runtime */
         describe('~expiryTime', function () {
             it('should return the expiry time', function () {
                 const now = new Date(),
@@ -687,7 +679,6 @@ describe('tough-cookie', function () {
             });
         });
 
-        /* postman-runtime */
         describe('~toJSON', function () {
             it('should return the JSON representation', function () {
                 const now = new Date(),
@@ -722,7 +713,6 @@ describe('tough-cookie', function () {
             });
         });
 
-        /* postman-runtime */
         describe('~fromJSON', function () {
             it('should return the cookie from JSON', function () {
                 const now = new Date(),
@@ -758,7 +748,6 @@ describe('tough-cookie', function () {
             });
         });
 
-        /* postman-request */
         describe('~parse', function () {
             it('should parse the cookie string', function () {
                 const cookie = Cookie.parse([
@@ -788,7 +777,6 @@ describe('tough-cookie', function () {
         });
     });
 
-    /* postman-sandbox */
     describe('~Store', function () {
         it('should have findCookie method', function () {
             const store = new Store();
@@ -839,7 +827,6 @@ describe('tough-cookie', function () {
         });
     });
 
-    /* app */
     describe('~pathMatch', function () {
         it('should return true if the path are the same', function () {
             expect(pathMatch('/foo', '/foo')).to.be.true;
@@ -863,7 +850,6 @@ describe('tough-cookie', function () {
         });
     });
 
-    /* app */
     describe('~permuteDomain', function () {
         it('should return an array of domains', function () {
             expect(permuteDomain('example.com')).to.eql([
