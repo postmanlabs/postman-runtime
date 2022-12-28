@@ -37,7 +37,8 @@
     "test-integration-newman": "node npm/test-integration-newman.js",
     "test-lint": "node npm/test-lint.js",
     "test-system": "node npm/test-system.js",
-    "test-unit": "nyc --nycrc-path=.nycrc.js node npm/test-unit.js"
+    "test-unit": "nyc --nycrc-path=.nycrc.js node npm/test-unit.js",
+    "test-contract": "node npm/test-contract.js"
   },
   "dependencies": {
     "async": "3.2.4",
