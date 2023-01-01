@@ -219,6 +219,19 @@ describe('tough-cookie', function () {
                 });
             });
 
+            it('should set the cookie with URL as an object', function (done) {
+                const jar = new CookieJar(new TestCookieStore());
+
+                jar.setCookie('foo=bar', new URL('https://postman-echo.com'), function (err, cookie) {
+                    expect(err).to.be.null;
+                    expect(cookie).to.be.ok;
+                    expect(cookie.key).to.equal('foo');
+                    expect(cookie.value).to.equal('bar');
+
+                    done();
+                });
+            });
+
             it('should set the cookie with options', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
@@ -622,6 +635,26 @@ describe('tough-cookie', function () {
                             expect(cookies).to.equal('foo=bar');
 
                             next();
+                        });
+                    }
+                ], done);
+            });
+
+            it('should get the cookie string for URL as an object', function (done) {
+                const jar = new CookieJar(new TestCookieStore());
+
+                async.series([
+                    (next) => {
+                        return jar.setCookie('foo=bar', 'https://postman-echo.com', next);
+                    },
+
+                    (next) => {
+                        return jar.getCookieString(new URL('https://postman-echo.com'), function (err, cookies) {
+                            expect(err).to.be.null;
+                            expect(cookies).to.be.ok;
+                            expect(cookies).to.equal('foo=bar');
+
+                            next(err, cookies);
                         });
                     }
                 ], done);
