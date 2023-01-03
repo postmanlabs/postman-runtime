@@ -249,7 +249,7 @@ describe('jwt auth', function () {
                                     type: 'jwt',
                                     jwt: {
                                         algorithm: alg,
-                                        header: null,
+                                        header: 'non-json',
                                         payload: { test: 123 },
                                         secret: signKey,
                                         privateKey: signKey,
@@ -285,6 +285,116 @@ describe('jwt auth', function () {
                 });
 
                 expect(headers).that.does.not.include('Authorization');
+            });
+        });
+    });
+
+    // with empty header
+    algorithms.forEach(([key]) => {
+        const { alg, signKey } = algorithmsSupported[key];
+
+        describe(`with empty header for ${alg} algorithm`, function () {
+            before(function (done) {
+                const runOptions = {
+                    collection: {
+                        item: {
+                            request: {
+                                url: 'https://postman-echo.com/headers',
+                                auth: {
+                                    type: 'jwt',
+                                    jwt: {
+                                        algorithm: alg,
+                                        header: '',
+                                        payload: { test: 123 },
+                                        secret: signKey,
+                                        privateKey: signKey,
+                                        addTokenTo: HEADER
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                this.run(runOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should add Authorization header', function () {
+                const headers = [],
+                    request = testrun.request.firstCall.args[3];
+
+                request.headers.members.forEach(function (header) {
+                    headers.push(header.key);
+                });
+
+                expect(headers).to.include('Authorization');
+            });
+        });
+    });
+
+    // with `null` header
+    algorithms.forEach(([key]) => {
+        const { alg, signKey } = algorithmsSupported[key];
+
+        describe(`with "null" header for ${alg} algorithm`, function () {
+            before(function (done) {
+                const runOptions = {
+                    collection: {
+                        item: {
+                            request: {
+                                url: 'https://postman-echo.com/headers',
+                                auth: {
+                                    type: 'jwt',
+                                    jwt: {
+                                        algorithm: alg,
+                                        header: null,
+                                        payload: { test: 123 },
+                                        secret: signKey,
+                                        privateKey: signKey,
+                                        addTokenTo: HEADER
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                this.run(runOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should add Authorization header', function () {
+                const headers = [],
+                    request = testrun.request.firstCall.args[3];
+
+                request.headers.members.forEach(function (header) {
+                    headers.push(header.key);
+                });
+
+                expect(headers).to.include('Authorization');
             });
         });
     });
