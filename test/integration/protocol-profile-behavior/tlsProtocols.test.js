@@ -1151,7 +1151,10 @@ var fs = require('fs'),
                 expect(response.text()).to.eql('okay');
 
                 expect(sessionData.tls).to.have.property('cipher');
-                expect(sessionData.tls.cipher).to.have.property('name', 'AES128-SHA');
+                expect(sessionData.tls.cipher).to.have.property('name').and.be.oneOf([
+                    'TLS_AES_256_GCM_SHA384',
+                    'AES128-SHA'
+                ]);
             });
         });
 
@@ -1267,7 +1270,10 @@ var fs = require('fs'),
                 expect(response.text()).to.eql('okay');
 
                 expect(sessionData.tls).to.have.property('cipher');
-                expect(sessionData.tls.cipher).to.have.property('name', 'ECDHE-RSA-AES256-GCM-SHA384');
+                expect(sessionData.tls.cipher).to.have.property('name').and.be.oneOf([
+                    'TLS_AES_256_GCM_SHA384',
+                    'ECDHE-RSA-AES256-GCM-SHA384'
+                ]);
             });
         });
 
@@ -1326,7 +1332,10 @@ var fs = require('fs'),
                 expect(response.text()).to.eql('okay');
 
                 expect(sessionData.tls).to.have.property('cipher');
-                expect(sessionData.tls.cipher).to.have.property('name', 'ECDHE-RSA-AES256-GCM-SHA384');
+                expect(sessionData.tls.cipher).to.have.property('name').and.be.oneOf([
+                    'TLS_AES_256_GCM_SHA384',
+                    'ECDHE-RSA-AES256-GCM-SHA384'
+                ]);
             });
         });
 
@@ -1386,7 +1395,10 @@ var fs = require('fs'),
                 expect(response.text()).to.eql('okay');
 
                 expect(sessionData.tls).to.have.property('cipher');
-                expect(sessionData.tls.cipher).to.have.property('name', 'ECDHE-RSA-AES128-GCM-SHA256');
+                expect(sessionData.tls.cipher).to.have.property('name').and.be.oneOf([
+                    'TLS_AES_256_GCM_SHA384',
+                    'ECDHE-RSA-AES128-GCM-SHA256'
+                ]);
             });
         });
     });

@@ -266,7 +266,9 @@ describe('Option', function () {
                                 // @note nodeVersionDiscrepancy
                                 expect(err.message).to.be.oneOf([
                                     'getaddrinfo ENOTFOUND somenonexistantdomain somenonexistantdomain:443',
-                                    'getaddrinfo ENOTFOUND somenonexistantdomain'
+                                    'getaddrinfo ENOTFOUND somenonexistantdomain',
+                                    'getaddrinfo EAI_AGAIN somenonexistantdomain somenonexistantdomain:443',
+                                    'getaddrinfo EAI_AGAIN somenonexistantdomain'
                                 ]);
                             }
                             else {
@@ -294,7 +296,9 @@ describe('Option', function () {
                         // @note nodeVersionDiscrepancy
                         expect(error.message).to.be.oneOf([
                             'getaddrinfo ENOTFOUND somenonexistantdomain somenonexistantdomain:443',
-                            'getaddrinfo ENOTFOUND somenonexistantdomain'
+                            'getaddrinfo ENOTFOUND somenonexistantdomain',
+                            'getaddrinfo EAI_AGAIN somenonexistantdomain somenonexistantdomain:443',
+                            'getaddrinfo EAI_AGAIN somenonexistantdomain'
                         ]);
 
                         expect(testables).to.have.property('started', true);

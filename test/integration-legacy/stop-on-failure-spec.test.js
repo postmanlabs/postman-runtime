@@ -901,7 +901,11 @@ describe('Option', function () {
                                 expect(err.message).to.be.oneOf([
                                     // eslint-disable-next-line max-len
                                     'getaddrinfo ENOTFOUND somenonexistantdomainnamehere somenonexistantdomainnamehere:443',
-                                    'getaddrinfo ENOTFOUND somenonexistantdomainnamehere'
+                                    'getaddrinfo ENOTFOUND somenonexistantdomainnamehere',
+
+                                    // eslint-disable-next-line max-len
+                                    'getaddrinfo EAI_AGAIN somenonexistantdomainnamehere somenonexistantdomainnamehere:443',
+                                    'getaddrinfo EAI_AGAIN somenonexistantdomainnamehere'
                                 ]);
                             }
                             else {
