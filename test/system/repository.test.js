@@ -55,8 +55,8 @@ describe('project repository', function () {
 
             // @note tough-cookie must be bumped across the ecosystem along with
             // same-site cookie support
-            it('should have dependency tough-cookie v3.0.1', function () {
-                expect(json.dependencies).to.have.property('tough-cookie', '3.0.1');
+            it('should have dependency tough-cookie v4.1.2', function () {
+                expect(json.dependencies).to.have.property('tough-cookie', '4.1.2');
             });
         });
 
