@@ -955,6 +955,10 @@ describe('tough-cookie', function () {
         });
 
         it('should return null if the domain is invalid', function () {
+            expect(permuteDomain('abcd')).to.be.null;
+        });
+
+        it('should return null if the domain is special use domain', function () {
             expect(permuteDomain('example')).to.be.null;
         });
 
