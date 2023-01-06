@@ -82,7 +82,8 @@ class TestCookieStore extends Store {
         cb(null);
     }
 
-    removeAllCookies () { // throws "not implemented" in postman-app
+    // eslint-disable-next-line class-methods-use-this
+    removeAllCookies () {
         throw new Error('not implemented');
     }
 
