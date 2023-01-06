@@ -213,6 +213,14 @@ describe('tough-cookie', function () {
             });
         });
 
+        describe('option: allowSpecialUseDomain', function () {
+            it('should be set falsy by default', function () {
+                const jar = new CookieJar(new TestCookieStore());
+
+                expect(jar.allowSpecialUseDomain).to.be.not.ok;
+            });
+        });
+
         describe('~setCookie', function () {
             it('should set the cookie', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
