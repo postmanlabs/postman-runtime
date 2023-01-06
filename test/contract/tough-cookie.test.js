@@ -134,6 +134,12 @@ describe('tough-cookie', function () {
         });
 
         describe('option: rejectPublicSuffixes', function () {
+            it('should be truthy by default', function () {
+                const jar = new CookieJar(new TestCookieStore());
+
+                expect(jar.rejectPublicSuffixes).to.be.true;
+            });
+
             it('should not set cookie if rejectPublicSuffixes is true and domain is a public suffix', function (done) {
                 const cookie = new Cookie({
                         key: 'foo',
