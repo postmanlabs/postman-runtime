@@ -275,11 +275,21 @@ describe('intermediate requests from auth', function () {
 
             // @note nodeVersionDiscrepancy
             expect(err).to.have.property('message');
-            expect(err.message).to.be.oneOf(['getaddrinfo ENOTFOUND bla bla:443', 'getaddrinfo ENOTFOUND bla']);
+            expect(err.message).to.be.oneOf([
+                'getaddrinfo ENOTFOUND bla bla:443',
+                'getaddrinfo ENOTFOUND bla',
+                'getaddrinfo EAI_AGAIN bla bla:443',
+                'getaddrinfo EAI_AGAIN bla'
+            ]);
 
             // @note nodeVersionDiscrepancy
             expect(ioErr).to.have.property('message');
-            expect(ioErr.message).to.be.oneOf(['getaddrinfo ENOTFOUND bla bla:443', 'getaddrinfo ENOTFOUND bla']);
+            expect(ioErr.message).to.be.oneOf([
+                'getaddrinfo ENOTFOUND bla bla:443',
+                'getaddrinfo ENOTFOUND bla',
+                'getaddrinfo EAI_AGAIN bla bla:443',
+                'getaddrinfo EAI_AGAIN bla'
+            ]);
 
             expect(request.url.toString()).to.eql('https://bla/blabla');
         });
