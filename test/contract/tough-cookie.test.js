@@ -281,6 +281,28 @@ describe('tough-cookie', function () {
                         done();
                     });
             });
+
+            it('should throw error when setting cookie with .local domain', function (done) {
+                const jar = new CookieJar(new TestCookieStore());
+
+                jar.setCookie('foo=bar; Path=/; Domain=example.local', 'https://example.local', function (err) {
+                    expect(err).to.be.ok;
+                    expect(err.message).to.equal('Cookie has domain set to a public suffix');
+
+                    done();
+                });
+            });
+
+            it('should throw error when setting cookie with public suffix domain', function (done) {
+                const jar = new CookieJar(new TestCookieStore());
+
+                jar.setCookie('foo=bar; Path=/; Domain=com', 'https://postman-echo.com', function (err) {
+                    expect(err).to.be.ok;
+                    expect(err.message).to.equal('Cookie has domain set to a public suffix');
+
+                    done();
+                });
+            });
         });
 
         describe('~getCookies', function () {
