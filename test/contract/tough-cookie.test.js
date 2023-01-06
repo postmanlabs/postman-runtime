@@ -1,4 +1,5 @@
 const expect = require('chai').expect,
+    Url = require('url'),
     async = require('async'),
     {
         Cookie,
@@ -217,6 +218,19 @@ describe('tough-cookie', function () {
                 const jar = new CookieJar(new TestCookieStore());
 
                 jar.setCookie('foo=bar', 'https://postman-echo.com', function (err, cookie) {
+                    expect(err).to.be.null;
+                    expect(cookie).to.be.ok;
+                    expect(cookie.key).to.equal('foo');
+                    expect(cookie.value).to.equal('bar');
+
+                    done();
+                });
+            });
+
+            it('should set the cookie with URL as an legacy URL object', function (done) {
+                const jar = new CookieJar(new TestCookieStore());
+
+                jar.setCookie('foo=bar', Url.parse('https://postman-echo.com'), function (err, cookie) {
                     expect(err).to.be.null;
                     expect(cookie).to.be.ok;
                     expect(cookie.key).to.equal('foo');
