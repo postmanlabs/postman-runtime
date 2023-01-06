@@ -310,12 +310,16 @@ describe('tough-cookie', function () {
                     });
             });
 
-            it('should throw error when setting cookie with .local domain', function (done) {
+            it('should set the cookie when setting cookie with .local domain', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie('foo=bar; Path=/; Domain=example.local', 'https://example.local', function (err) {
-                    expect(err).to.be.ok;
-                    expect(err.message).to.equal('Cookie has domain set to a public suffix');
+                jar.setCookie('foo=bar; Path=/; Domain=example.local', 'https://example.local', function (err, cookie) {
+                    expect(err).to.be.null;
+                    expect(cookie).to.be.ok;
+                    expect(cookie.key).to.equal('foo');
+                    expect(cookie.value).to.equal('bar');
+                    expect(cookie.path).to.equal('/');
+                    expect(cookie.domain).to.equal('example.local');
 
                     done();
                 });
