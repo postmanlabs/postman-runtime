@@ -454,9 +454,9 @@ describe('jwt auth', function () {
         });
     });
 
-    // with invalid signature
-    algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+    // with invalid signature - HS algorithms
+    Object.entries(HSAlgorithms).forEach(([key]) => {
+        const { alg, signKey } = algorithmsSupported[key];
 
         describe(`with invalid signature for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
@@ -521,7 +521,84 @@ describe('jwt auth', function () {
                 });
 
                 try {
-                    jwt.verify(jwtToken, publicKey ? invalidPublicKeyRSA : '123', { algorithms: [alg] })
+                    jwt.verify(jwtToken, '123', { algorithms: [alg] })
+                        .to.be.deep.equal({});
+                }
+                catch (e) {
+                    expect(e.message).to.be.equal('invalid signature');
+                }
+            });
+        });
+    });
+
+    // with invalid signature - RS,PS algorithms
+    Object.entries({ ...RSAlgorithms, ...PSAlgorithms }).forEach(([key]) => {
+        const { alg, signKey } = algorithmsSupported[key];
+
+        describe(`with invalid signature for ${alg} algorithm`, function () {
+            const issuedAt = Math.floor(Date.now() / 1000),
+                expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
+
+            before(function (done) {
+                const runOptions = {
+                    collection: {
+                        item: {
+                            request: {
+                                url: 'https://postman-echo.com/get',
+                                auth: {
+                                    type: 'jwt',
+                                    jwt: {
+                                        algorithm: alg,
+                                        header: { typ: 'JWT' },
+                                        payload: {
+                                            iat: issuedAt,
+                                            exp: expiresIn
+                                        },
+                                        secret: signKey,
+                                        privateKey: signKey,
+                                        addTokenTo: HEADER
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                this.run(runOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should throw invalid signature error', function () {
+                const headers = [],
+                    request = testrun.request.firstCall.args[3],
+                    response = testrun.request.firstCall.args[2];
+
+                let jwtToken;
+
+                request.headers.members.forEach(function (header) {
+                    if (header.key === 'Authorization') {
+                        jwtToken = header.value.split('Bearer ')[1];
+                    }
+                    headers.push(header.key);
+                });
+
+                expect(response.json()).to.nested.include({
+                    'headers.authorization': `Bearer ${jwtToken}`
+                });
+
+                try {
+                    jwt.verify(jwtToken, invalidPublicKeyRSA, { algorithms: [alg] })
                         .to.be.deep.equal({});
                 }
                 catch (e) {
