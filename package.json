@@ -1,6 +1,6 @@
 {
-  "name": "postman-runtime",
-  "version": "7.30.0",
+  "name": "@postman/postman-runtime",
+  "version": "7.31.0-alpha",
   "description": "Underlying library of executing Postman Collections",
   "author": "Postman Inc.",
   "license": "Apache-2.0",
@@ -51,7 +51,7 @@
     "performance-now": "2.1.0",
     "postman-collection": "4.1.6",
     "postman-request": "2.88.1-postman.31",
-    "postman-sandbox": "4.2.0",
+    "@postman/postman-sandbox": "4.3.0-alpha",
     "postman-url-encoder": "3.0.5",
     "serialised-error": "1.1.3",
     "tough-cookie": "3.0.1",
