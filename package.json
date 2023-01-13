@@ -43,7 +43,7 @@
     "async": "3.2.4",
     "aws4": "1.11.0",
     "handlebars": "4.7.7",
-    "httpntlm": "1.8.1",
+    "httpntlm": "1.8.2",
     "js-sha512": "0.8.0",
     "lodash": "4.17.21",
     "mime-types": "2.1.35",
