@@ -331,6 +331,22 @@ describe('tough-cookie', function () {
                     done();
                 });
             });
+
+            it('should set the cookie for punycode hosts', function (done) {
+                const jar = new CookieJar(new TestCookieStore());
+
+                jar.setCookie('foo=bar; Path=/; Domain=пример.рф', 'https://xn--e1afmkfd.xn--p1ai',
+                    function (err, cookie) {
+                        expect(err).to.be.null;
+                        expect(cookie).to.be.ok;
+                        expect(cookie.key).to.equal('foo');
+                        expect(cookie.value).to.equal('bar');
+                        expect(cookie.path).to.equal('/');
+                        expect(cookie.domain).to.equal('пример.рф');
+
+                        done();
+                    });
+            });
         });
 
         describe('~getCookies', function () {
@@ -597,6 +613,52 @@ describe('tough-cookie', function () {
 
                             expect(cookies.length).to.equal(1);
                             expect(cookies[0].key).to.equal('foo');
+
+                            next();
+                        });
+                    }
+                ], done);
+            });
+
+            it('should get the cookies with punycode domain', function (done) {
+                const jar = new CookieJar(new TestCookieStore());
+
+                async.series([
+                    (next) => {
+                        return jar.setCookie('foo=bar', 'https://пример.рф', next);
+                    },
+
+                    (next) => {
+                        return jar.setCookie('bar=baz', 'https://xn--e1afmkfd.xn--p1ai', next);
+                    },
+
+                    (next) => {
+                        // should get the cookies with encoded punycode domain
+                        return jar.getCookies('https://xn--e1afmkfd.xn--p1ai', function (err, cookies) {
+                            expect(err).to.be.null;
+                            expect(cookies).to.be.ok;
+
+                            expect(cookies.length).to.equal(2);
+                            expect(cookies[0].key).to.equal('foo');
+                            expect(cookies[0].value).to.equal('bar');
+                            expect(cookies[1].key).to.equal('bar');
+                            expect(cookies[1].value).to.equal('baz');
+
+                            next();
+                        });
+                    },
+
+                    (next) => {
+                        // should get the cookies with decoded punycode domain
+                        return jar.getCookies('https://пример.рф', function (err, cookies) {
+                            expect(err).to.be.null;
+                            expect(cookies).to.be.ok;
+
+                            expect(cookies.length).to.equal(2);
+                            expect(cookies[0].key).to.equal('foo');
+                            expect(cookies[0].value).to.equal('bar');
+                            expect(cookies[1].key).to.equal('bar');
+                            expect(cookies[1].value).to.equal('baz');
 
                             next();
                         });
