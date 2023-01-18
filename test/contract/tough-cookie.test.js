@@ -730,6 +730,29 @@ describe('tough-cookie', function () {
                     }
                 ], done);
             });
+
+            // @todo: This should not be the case. For localhost, insecure protocol should be allowed.
+            // See: https://github.com/postmanlabs/postman-app-support/issues/11467
+            it('does not get the "Secure" cookies for localhost with insecure protocol', function (done) {
+                const jar = new CookieJar(new TestCookieStore());
+
+                async.series([
+                    (next) => {
+                        return jar.setCookie('foo=bar; Secure', 'http://localhost', next);
+                    },
+
+                    (next) => {
+                        return jar.getCookies('http://localhost', function (err, cookies) {
+                            expect(err).to.be.null;
+                            expect(cookies).to.be.ok;
+
+                            expect(cookies.length).to.equal(0); // should be 1 when fixed
+
+                            next();
+                        });
+                    }
+                ], done);
+            });
         });
 
         describe('~getCookieString', function () {
