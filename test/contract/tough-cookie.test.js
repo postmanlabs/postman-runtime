@@ -7,7 +7,7 @@ const expect = require('chai').expect,
         Store,
         pathMatch,
         permuteDomain
-    } = require('tough-cookie');
+    } = require('@postman/tough-cookie');
 
 class TestCookieStore extends Store {
     constructor () {
