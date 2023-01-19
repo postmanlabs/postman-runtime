@@ -1284,7 +1284,7 @@ describe('jwt auth', function () {
                 // eslint-disable-next-line one-var
                 const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
 
-                expect(payload).to.be.deep.equal({ uno: 1, dos: 2 , number : 12345});
+                expect(payload).to.be.deep.equal({ uno: 1, dos: 2, number: 12345 });
 
                 expect(protectedHeader).to.be.deep.equal({
                     alg: alg,
