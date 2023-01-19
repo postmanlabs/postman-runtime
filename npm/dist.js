@@ -13,7 +13,7 @@ console.info(chalk.yellow.bold('Generating bundle in "dist" directory...'));
 rm('-rf', OUT_DIR);
 mkdir('-p', OUT_DIR);
 
-browserify(INPUT, { standalone: 'PostmanRuntime' }).bundle((err, bundle) => {
+browserify(INPUT, { standalone: 'PostmanRuntime', plugin: [[require('esmify'), {}]] }).bundle((err, bundle) => {
     if (err) {
         console.error(err);
         process.exit(1);

@@ -6,40 +6,50 @@ set -ex
 ### RSA Key without passphrase ###
 
 # Create a RSA private key
-ssh-keygen -t rsa -b 4096 -m PEM -f rsa.private.pem -N ""
+openssl genpkey -out rsa.private.pem -algorithm RSA -pkeyopt rsa_keygen_bits:4096
 
 # Create a RSA public key from private key generated above
-openssl rsa -in rsa.private.pem -pubout -outform PEM -out rsa.public.pem
-
-# Delete the rsa.private.pem.pub file
-rm rsa.private.pem.pub
+openssl pkey -pubout -inform pem -outform pem -in rsa.private.pem -out rsa.public.pem
 
 
-### RSA Key with passphrase ###
+### ECDSA Key without passphrase - EC256###
 
-# Create a RSA private key with passphrase
-ssh-keygen -t rsa -b 4096 -m PEM -f rsa-passphrase.private.pem -N "test1234key"
+# Create a EC256 private key
+openssl ecparam -name P-256 -genkey -out ecdsa256.private.temp.pem
 
-# Create a RSA public key from private key generated above
-openssl rsa -in rsa-passphrase.private.pem -pubout -outform PEM -out rsa-passphrase.public.pem -passin pass:test1234key
+# Convert EC256 private key into pkcs8 fromat
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in ecdsa256.private.temp.pem -out ecdsa256.private.pem
 
-# Delete the rsa-passphrase.private.pem.pub file
-rm rsa-passphrase.private.pem.pub
+# Create a EC256 public key
+openssl ec -in ecdsa256.private.temp.pem -pubout > ecdsa256.public.pem
 
+# Delete the EC256 private key other than pkcs8
+rm ecdsa256.private.temp.pem
 
-### ECDSA Key without passphrase ###
+### ECDSA Key without passphrase - EC384###
 
-# Create a EC private key
-openssl ecparam -name secp256k1 -genkey -out ecdsa.private.pem
+# Create a EC384 private key
+openssl ecparam -name P-384 -genkey -out ecdsa384.private.temp.pem
 
-# Create a EC public key
-openssl ec -in ecdsa.private.pem -pubout > ecdsa.public.pem
+# Convert EC384 private key into pkcs8 fromat
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in ecdsa384.private.temp.pem -out ecdsa384.private.pem
 
+# Create a EC384 public key
+openssl ec -in ecdsa384.private.temp.pem -pubout > ecdsa384.public.pem
 
-### ECDSA Key with passphrase ###
+# Delete the EC384 private key other than pkcs8
+rm ecdsa384.private.temp.pem
 
-# Create a EC private key
-openssl ec -in ecdsa.private.pem -out ecdsa-passphrase.private.pem -aes256 -passout pass:12345678
+### ECDSA Key without passphrase - EC512###
 
-# Create a EC public key
-openssl ec -in ecdsa-passphrase.private.pem -pubout > ecdsa-passphrase.public.pem -passin pass:12345678
+# Create a EC512 private key
+openssl ecparam -name P-521 -genkey -out ecdsa512.private.temp.pem
+
+# Convert EC512 private key into pkcs8 fromat
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in ecdsa512.private.temp.pem -out ecdsa512.private.pem
+
+# Create a EC512 public key
+openssl ec -in ecdsa512.private.temp.pem -pubout > ecdsa512.public.pem
+
+# Delete the EC512 private key other than pkcs8
+rm ecdsa512.private.temp.pem

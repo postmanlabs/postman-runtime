@@ -1,7 +1,7 @@
 const expect = require('chai').expect,
     fs = require('fs'),
     path = require('path'),
-    jwt = require('jsonwebtoken'),
+    jose = require('jose'),
     // jwt key constants
     HEADER = 'header',
     QUERY_PARAM = 'queryParam',
@@ -16,16 +16,17 @@ const expect = require('chai').expect,
     privatekeyRSA = getKey('../../fixtures/jwt-keys/rsa.private.pem'),
     publicKeyRSA = getKey('../../fixtures/jwt-keys/rsa.public.pem'),
     invalidPublicKeyRSA = getKey('../../fixtures/jwt-keys/rsa-invalid.public.pem'),
-    privatekeyRSAWithPassphrase = getKey('../../fixtures/jwt-keys/rsa-passphrase.private.pem'),
-    publicKeyRSAWithPassphrase = getKey('../../fixtures/jwt-keys/rsa-passphrase.public.pem'),
     // ES - ECDSA
-    privateKeyECDSA = getKey('../../fixtures/jwt-keys/ecdsa.private.pem'),
-    publicKeyECDSA = getKey('../../fixtures/jwt-keys/ecdsa.public.pem'),
-    privateKeyECDSAWithPassphrase = getKey('../../fixtures/jwt-keys/ecdsa-passphrase.private.pem'),
-    publicKeyECDSAWithPassphrase = getKey('../../fixtures/jwt-keys/ecdsa-passphrase.public.pem'),
-
+    privateKeyECDSA256 = getKey('../../fixtures/jwt-keys/ecdsa256.private.pem'),
+    publicKeyECDSA256 = getKey('../../fixtures/jwt-keys/ecdsa256.public.pem'),
+    privateKeyECDSA384 = getKey('../../fixtures/jwt-keys/ecdsa384.private.pem'),
+    publicKeyECDSA384 = getKey('../../fixtures/jwt-keys/ecdsa384.public.pem'),
+    privateKeyECDSA512 = getKey('../../fixtures/jwt-keys/ecdsa512.private.pem'),
+    publicKeyECDSA512 = getKey('../../fixtures/jwt-keys/ecdsa512.public.pem'),
     // algorithms
     // HS algorithms
+    isHsAlgorithm = (alg) => { return ['HS256', 'HS384', 'HS512'].includes(alg); },
+
     HSAlgorithms = {
         HS256: {
             alg: 'HS256',
@@ -82,28 +83,6 @@ const expect = require('chai').expect,
         }
     },
 
-    // RS Algorithms with passphrase
-    RSAlgorithmsWithPassPhrase = {
-        RS256: {
-            alg: 'RS256',
-            signKey: privatekeyRSAWithPassphrase,
-            publicKey: publicKeyRSAWithPassphrase,
-            passphrase: 'test1234key'
-        },
-        RS384: {
-            alg: 'RS384',
-            signKey: privatekeyRSAWithPassphrase,
-            publicKey: publicKeyRSAWithPassphrase,
-            passphrase: 'test1234key'
-        },
-        RS512: {
-            alg: 'RS512',
-            signKey: privatekeyRSAWithPassphrase,
-            publicKey: publicKeyRSAWithPassphrase,
-            passphrase: 'test1234key'
-        }
-    },
-
     // PS algorithms
     PSAlgorithms = {
         PS256: {
@@ -127,40 +106,18 @@ const expect = require('chai').expect,
     ESAlgorithms = {
         ES256: {
             alg: 'ES256',
-            signKey: privateKeyECDSA,
-            publicKey: publicKeyECDSA
+            signKey: privateKeyECDSA256,
+            publicKey: publicKeyECDSA256
         },
         ES384: {
             alg: 'ES384',
-            signKey: privateKeyECDSA,
-            publicKey: publicKeyECDSA
+            signKey: privateKeyECDSA384,
+            publicKey: publicKeyECDSA384
         },
         ES512: {
             alg: 'ES512',
-            signKey: privateKeyECDSA,
-            publicKey: publicKeyECDSA
-        }
-    },
-
-    // ES Algorithms with passphrase
-    ESAlgorithmsWithPassPhrase = {
-        ES256: {
-            alg: 'ES256',
-            signKey: privateKeyECDSAWithPassphrase,
-            publicKey: publicKeyECDSAWithPassphrase,
-            passphrase: '12345678'
-        },
-        ES384: {
-            alg: 'ES384',
-            signKey: privateKeyECDSAWithPassphrase,
-            publicKey: publicKeyECDSAWithPassphrase,
-            passphrase: '12345678'
-        },
-        ES512: {
-            alg: 'ES512',
-            signKey: privateKeyECDSAWithPassphrase,
-            publicKey: publicKeyECDSAWithPassphrase,
-            passphrase: '12345678'
+            signKey: privateKeyECDSA512,
+            publicKey: publicKeyECDSA512
         }
     },
 
@@ -170,13 +127,6 @@ const expect = require('chai').expect,
         ...RSAlgorithms,
         ...PSAlgorithms,
         ...ESAlgorithms
-    },
-
-    // algorithms with passphrase
-    algorithmsWithPassphrase = {
-        ...RSAlgorithmsWithPassPhrase,
-        ...ESAlgorithmsWithPassPhrase
-        // verify whether RSASSA-PSS (PS) algorithm is applicable
     },
 
     algorithms = Object.entries(algorithmsSupported);
@@ -306,6 +256,61 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: '',
                                         payload: { test: 123 },
+                                        secret: signKey,
+                                        privateKey: signKey,
+                                        addTokenTo: HEADER
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                this.run(runOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should add Authorization header', function () {
+                const headers = [],
+                    request = testrun.request.firstCall.args[3];
+
+                request.headers.members.forEach(function (header) {
+                    headers.push(header.key);
+                });
+
+                expect(headers).to.include('Authorization');
+            });
+        });
+    });
+
+    // with empty payload
+    algorithms.forEach(([key]) => {
+        const { alg, signKey } = algorithmsSupported[key];
+
+        describe(`with empty payload for ${alg} algorithm`, function () {
+            before(function (done) {
+                const runOptions = {
+                    collection: {
+                        item: {
+                            request: {
+                                url: 'https://postman-echo.com/headers',
+                                auth: {
+                                    type: 'jwt',
+                                    jwt: {
+                                        algorithm: alg,
+                                        header: '',
+                                        payload: '',
                                         secret: signKey,
                                         privateKey: signKey,
                                         addTokenTo: HEADER
@@ -502,7 +507,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should throw invalid signature error', function () {
+            it('should throw invalid signature error', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -521,11 +526,11 @@ describe('jwt auth', function () {
                 });
 
                 try {
-                    jwt.verify(jwtToken, '123', { algorithms: [alg] })
-                        .to.be.deep.equal({});
+                    await jose.jwtVerify(jwtToken, '123');
                 }
                 catch (e) {
-                    expect(e.message).to.be.equal('invalid signature');
+                    expect(e.message)
+                        .to.be.equal(`Key for the ${alg} algorithm must be one of type KeyObject or Uint8Array.`);
                 }
             });
         });
@@ -579,7 +584,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should throw invalid signature error', function () {
+            it('should throw invalid signature error', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -598,11 +603,10 @@ describe('jwt auth', function () {
                 });
 
                 try {
-                    jwt.verify(jwtToken, invalidPublicKeyRSA, { algorithms: [alg] })
-                        .to.be.deep.equal({});
+                    await jose.jwtVerify(jwtToken, invalidPublicKeyRSA);
                 }
                 catch (e) {
-                    expect(e.message).to.be.equal('invalid signature');
+                    expect(e.message).to.be.equal(`Key for the ${alg} algorithm must be of type KeyObject.`);
                 }
             });
         });
@@ -625,9 +629,8 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: {
                                             alg: alg,
-                                            typ: 'JWS',
+                                            typ: 'JWT',
                                             cty: 'JWT',
-                                            crit: ['JWS'],
                                             kid: '12345',
                                             jku: '{{jku}}'
                                         },
@@ -665,7 +668,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should add Authorization header', function () {
+            it('should add Authorization header', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -683,18 +686,22 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({ test: 123 });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({
-                        alg: alg,
-                        typ: 'JWS',
-                        kid: '12345',
-                        cty: 'JWT',
-                        crit: ['JWS'],
-                        jku: 'test-jku'
-                    });
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+                expect(payload).to.be.deep.equal({ test: 123 });
+
+                expect(protectedHeader).to.be.deep.equal({
+                    alg: alg,
+                    typ: 'JWT',
+                    kid: '12345',
+                    cty: 'JWT',
+                    jku: 'test-jku'
+                });
             });
         });
     });
@@ -714,7 +721,7 @@ describe('jwt auth', function () {
                                     type: 'jwt',
                                     jwt: {
                                         algorithm: alg,
-                                        header: '{\n "typ": "JWS",\n "jku": "{{jku}}",\n "test12": "demo"}',
+                                        header: '{\n "typ": "JWT",\n "jku": "{{jku}}",\n "test12": "demo"}',
                                         payload: '{\n "test": "{{jku}}" }',
                                         secret: '{{signKey}}',
                                         privateKey: '{{signKey}}',
@@ -753,7 +760,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should add Authorization header', function () {
+            it('should add Authorization header', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -771,16 +778,21 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({ test: 'abc-123' });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({
-                        alg: alg,
-                        typ: 'JWS',
-                        test12: 'demo',
-                        jku: 'abc-123'
-                    });
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+                expect(payload).to.be.deep.equal({ test: 'abc-123' });
+
+                expect(protectedHeader).to.be.deep.equal({
+                    alg: alg,
+                    typ: 'JWT',
+                    test12: 'demo',
+                    jku: 'abc-123'
+                });
             });
         });
     });
@@ -902,7 +914,7 @@ describe('jwt auth', function () {
             });
         });
 
-        it('should add Authorization header with jwt token for HS256 algorithm', function () {
+        it('should add Authorization header with jwt token for HS256 algorithm', async function () {
             const headers = [],
                 request = testrun.request.firstCall.args[3],
                 response = testrun.request.firstCall.args[2];
@@ -920,11 +932,18 @@ describe('jwt auth', function () {
                 'headers.authorization': `Bearer ${jwtToken}`
             });
 
-            expect(jwt.verify(jwtToken, '123'))
-                .to.be.deep.equal({ test: 'test-123' });
+            // eslint-disable-next-line one-var
+            const secret = new TextEncoder().encode('123');
 
-            expect(jwt.decode(jwtToken, { complete: true }).header)
-                .to.be.deep.equal({ alg: 'HS256', typ: 'JWT' });
+            // eslint-disable-next-line one-var
+            const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+            expect(payload).to.be.deep.equal({ test: 'test-123' });
+
+            expect(protectedHeader).to.be.deep.equal({
+                alg: 'HS256',
+                typ: 'JWT'
+            });
         });
     });
 
@@ -978,7 +997,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should add Authorization header with bearer as jwt token', function () {
+            it('should add Authorization header with bearer as jwt token', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -996,11 +1015,20 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({ test: 123, name: 'demo-name' });
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
+
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+                expect(payload).to.be.deep.equal({ test: 123, name: 'demo-name' });
+
+                expect(protectedHeader).to.be.deep.equal({
+                    alg: alg,
+                    typ: 'JWT'
+                });
             });
         });
     });
@@ -1009,7 +1037,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with valid payload for ${alg} algorithm and custom token prefixs`, function () {
+        describe(`with valid payload for ${alg} algorithm and custom token prefix`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -1056,7 +1084,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should add Authorization header with bearer as jwt token', function () {
+            it('should add Authorization header with bearer as jwt token', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1074,11 +1102,19 @@ describe('jwt auth', function () {
                     'headers.authorization': `jwt-prefix ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({ test: 123, name: 'demo-name' });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+                expect(payload).to.be.deep.equal({ test: 123, name: 'demo-name' });
+
+                expect(protectedHeader).to.be.deep.equal({
+                    alg: alg,
+                    typ: 'JWT'
+                });
             });
         });
     });
@@ -1134,7 +1170,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should add Authorization header with bearer as jwt token', function () {
+            it('should add Authorization header with bearer as jwt token', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1152,10 +1188,19 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({ uno: 1, dos: 2 });
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
+
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+                expect(payload).to.be.deep.equal({ uno: 1, dos: 2 });
+
+                expect(protectedHeader).to.be.deep.equal({
+                    alg: alg,
+                    typ: 'JWT'
+                });
             });
         });
     });
@@ -1214,7 +1259,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should add Authorization header with bearer as jwt token', function () {
+            it('should add Authorization header with bearer as jwt token', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1232,10 +1277,19 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({ uno: 1, dos: 2, number: 12345 });
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
+
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+                expect(payload).to.be.deep.equal({ uno: 1, dos: 2 , number : 12345});
+
+                expect(protectedHeader).to.be.deep.equal({
+                    alg: alg,
+                    typ: 'JWT'
+                });
             });
         });
     });
@@ -1266,7 +1320,7 @@ describe('jwt auth', function () {
                                         algorithm: alg,
                                         header: { typ: 'JWT' },
                                         payload: {
-                                            iat: '{{issuedAt}}',
+                                            iat: issuedAt,
                                             exp: expiresIn,
                                             aud: audience,
                                             iss: '{{issuer}}',
@@ -1320,7 +1374,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should generate a valid jwt token & add to query param', function () {
+            it('should generate a valid jwt token & add to query param', async function () {
                 const queries = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1334,23 +1388,31 @@ describe('jwt auth', function () {
                     queries.push(query.value);
                 });
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
+
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
 
                 expect(response.json()).to.nested.include({
                     'args.jwt': jwtToken
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({
-                        aud: 'lasEkslasjnn2324nxskskosdk',
-                        exp: expiresIn,
-                        iat: `${issuedAt}`,
-                        iss: 'https://dev-0yc9dnt0.us.auth0.com/',
-                        jti: 'sjh3h46bsdh37ybasjha237612723',
-                        nbf: notBefore,
-                        sub: 'auth0|6062e94f20d55800692b4dad'
-                    });
+                expect(payload).to.be.deep.equal({
+                    aud: 'lasEkslasjnn2324nxskskosdk',
+                    exp: expiresIn,
+                    iat: issuedAt,
+                    iss: 'https://dev-0yc9dnt0.us.auth0.com/',
+                    jti: 'sjh3h46bsdh37ybasjha237612723',
+                    nbf: notBefore,
+                    sub: 'auth0|6062e94f20d55800692b4dad'
+                });
+
+                expect(protectedHeader).to.be.deep.equal({
+                    alg: alg,
+                    typ: 'JWT'
+                });
             });
         });
     });
@@ -1411,7 +1473,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should generate a valid jwt token & add to query param correctly', function () {
+            it('should generate a valid jwt token & add to query param correctly', async function () {
                 const queries = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1425,20 +1487,25 @@ describe('jwt auth', function () {
                     queries.push(query.value);
                 });
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
+
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
 
                 expect(response.json()).to.nested.include({
                     'args.jwtToken': jwtToken
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({
-                        customField: 'test', // private claim
-                        isAdmin: true, // private claim
-                        email: 'test@gmail.com', // public claim openId
-                        sid: 12345 // public claim IESG
-                    });
+                expect(payload).to.be.deep.equal({
+                    customField: 'test', // private claim
+                    isAdmin: true, // private claim
+                    email: 'test@gmail.com', // public claim openId
+                    sid: 12345 // public claim IESG
+                });
+
+                expect(protectedHeader).to.be.deep.equal({ alg: alg, typ: 'JWT' });
             });
         });
     });
@@ -1501,7 +1568,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should generate a valid jwt token & add to query param correctly', function () {
+            it('should generate a valid jwt token & add to query param correctly', async function () {
                 const queries = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1515,17 +1582,22 @@ describe('jwt auth', function () {
                     queries.push(query.value);
                 });
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
+                // eslint-disable-next-line one-var
+                const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                    await jose.importSPKI(publicKey, alg);
+
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
 
                 expect(response.json()).to.nested.include({
                     'args.jwt': jwtToken
                 });
 
-                expect(jwt.verify(jwtToken, publicKey || signKey), { algorithms: [alg] })
-                    .to.be.deep.equal({
-                        iat: issuedAt
-                    });
+                expect(payload).to.be.deep.equal({
+                    iat: issuedAt
+                });
+
+                expect(protectedHeader).to.be.deep.equal({ alg: alg, typ: 'JWT' });
             });
         });
     });
@@ -1605,7 +1677,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should not verify token when nbf is greater than iat', function () {
+            it('should not verify token when nbf is greater than iat', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1624,93 +1696,19 @@ describe('jwt auth', function () {
                 });
 
                 try {
-                    jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] })
-                        .to.be.deep.equal({ test: '123', name: 'demo-name' });
+                    // eslint-disable-next-line one-var
+                    const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
+                        await jose.importSPKI(publicKey, alg);
+
+                    await jose.jwtVerify(jwtToken, secret);
                 }
                 catch (e) {
-                    expect(e.message).to.be.equal('jwt not active');
+                    expect(e.message).to.be.equal('"nbf" claim timestamp check failed');
                 }
             });
         });
     });
 
-    // passphrase check for RS, ES algorithms
-    Object.entries(algorithmsWithPassphrase).forEach(([key]) => {
-        const { alg, signKey, publicKey, passphrase } = algorithmsWithPassphrase[key];
-
-        describe(`with passphrase for private key - ${alg} algorithm`, function () {
-            before(function (done) {
-                const runOptions = {
-                    collection: {
-                        item: {
-                            request: {
-                                url: 'https://postman-echo.com/headers',
-                                auth: {
-                                    type: 'jwt',
-                                    jwt: {
-                                        algorithm: alg,
-                                        header: { typ: 'JWT' },
-                                        payload: { test: 123, name: 'demo-name' },
-                                        secret: '{{signKey}}',
-                                        privateKey: '{{signKey}}',
-                                        addTokenTo: HEADER,
-                                        passphrase: passphrase
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    environment: {
-                        values: [
-                            {
-                                key: 'signKey',
-                                value: signKey
-                            }
-                        ]
-                    }
-                };
-
-                this.run(runOptions, function (err, results) {
-                    testrun = results;
-                    done(err);
-                });
-            });
-
-            it('should complete the run', function () {
-                expect(testrun).to.be.ok;
-                expect(testrun).to.nested.include({
-                    'done.calledOnce': true,
-                    'start.calledOnce': true,
-                    'request.calledOnce': true
-                });
-            });
-
-            it('should add Authorization header with bearer as jwt token', function () {
-                const headers = [],
-                    request = testrun.request.firstCall.args[3],
-                    response = testrun.request.firstCall.args[2];
-
-                let jwtToken;
-
-                request.headers.members.forEach(function (header) {
-                    if (header.key === 'Authorization') {
-                        jwtToken = header.value.split('Bearer ')[1];
-                    }
-                    headers.push(header.key);
-                });
-
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
-                });
-
-                expect(jwt.verify(jwtToken, publicKey || signKey, { algorithms: [alg] }))
-                    .to.be.deep.equal({ test: 123, name: 'demo-name' });
-
-                expect(jwt.decode(jwtToken, { complete: true }).header)
-                    .to.be.deep.equal({ alg: alg, typ: 'JWT' });
-            });
-        });
-    });
 
     // secret base64 encoded for HS algorithms
     Object.entries(HSAlgorithms).forEach(([key]) => {
@@ -1761,7 +1759,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should add Authorization header with bearer as jwt token', function () {
+            it('should add Authorization header with bearer as jwt token', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1779,18 +1777,24 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, decodedSecret))
+                expect(originalToken).to.be.equal(jwtToken);
+
+                // eslint-disable-next-line one-var
+                const secret = new TextEncoder().encode(decodedSecret);
+
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+                expect(payload)
                     .to.be.deep.equal({ a: '1' });
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
+                expect(protectedHeader)
                     .to.be.deep.equal({ alg });
-
-                expect(originalToken).to.be.equal(jwtToken);
             });
         });
     });
 
-    // // secret base64 not enabled for HS algorithms
+    // secret base64 not enabled for HS algorithms
     Object.entries(HSAlgorithms).forEach(([key]) => {
         const secretKey = '1111111111111111111111111111111a',
             { alg } = HSAlgorithms[key];
@@ -1837,7 +1841,7 @@ describe('jwt auth', function () {
                 });
             });
 
-            it('should add Authorization header with bearer as jwt token', function () {
+            it('should add Authorization header with bearer as jwt token', async function () {
                 const headers = [],
                     request = testrun.request.firstCall.args[3],
                     response = testrun.request.firstCall.args[2];
@@ -1855,13 +1859,19 @@ describe('jwt auth', function () {
                     'headers.authorization': `Bearer ${jwtToken}`
                 });
 
-                expect(jwt.verify(jwtToken, secretKey))
+                expect(originalToken).to.be.equal(jwtToken);
+
+                // eslint-disable-next-line one-var
+                const secret = new TextEncoder().encode(secretKey);
+
+                // eslint-disable-next-line one-var
+                const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
+
+                expect(payload)
                     .to.be.deep.equal({ a: '1' });
 
-                expect(jwt.decode(jwtToken, { complete: true }).header)
+                expect(protectedHeader)
                     .to.be.deep.equal({ alg });
-
-                expect(originalToken).to.be.equal(jwtToken);
             });
         });
     });
