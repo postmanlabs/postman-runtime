@@ -299,7 +299,9 @@ describe('Option', function () {
                                 // @note nodeVersionDiscrepancy
                                 expect(err.message).to.be.oneOf([
                                     'getaddrinfo ENOTFOUND somenonexistantdomain somenonexistantdomain:443',
-                                    'getaddrinfo ENOTFOUND somenonexistantdomain'
+                                    'getaddrinfo ENOTFOUND somenonexistantdomain',
+                                    'getaddrinfo EAI_AGAIN somenonexistantdomain somenonexistantdomain:443',
+                                    'getaddrinfo EAI_AGAIN somenonexistantdomain'
                                 ]);
 
                                 return;
