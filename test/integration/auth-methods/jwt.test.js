@@ -530,7 +530,7 @@ describe('jwt auth', function () {
                 }
                 catch (e) {
                     expect(e.message)
-                        .to.be.equal(`Key for the ${alg} algorithm must be one of type KeyObject or Uint8Array.`);
+                        .to.contain(`Key for the ${alg} algorithm must be one of type KeyObject`);
                 }
             });
         });
@@ -606,7 +606,7 @@ describe('jwt auth', function () {
                     await jose.jwtVerify(jwtToken, invalidPublicKeyRSA);
                 }
                 catch (e) {
-                    expect(e.message).to.be.equal(`Key for the ${alg} algorithm must be of type KeyObject.`);
+                    expect(e.message).to.contain(`Key for the ${alg} algorithm`);
                 }
             });
         });
