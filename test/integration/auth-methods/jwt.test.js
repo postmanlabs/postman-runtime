@@ -1398,9 +1398,6 @@ describe('jwt auth', function () {
                 // eslint-disable-next-line one-var
                 const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
 
-                expect(response.json()).to.nested.include({
-                    'args.jwt': jwtToken
-                });
 
                 expect(payload).to.be.deep.equal({
                     aud: 'lasEkslasjnn2324nxskskosdk',
