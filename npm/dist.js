@@ -4,8 +4,20 @@ const fs = require('fs'),
     { rm, mkdir } = require('shelljs'),
     browserify = require('browserify'),
     webpack = require('webpack'),
-    webpackConfig = require(path.join(__dirname, '../webpack.config.js')),
-    compiler = webpack(webpackConfig),
+    compiler = webpack({
+        entry: {
+            '../node_modules/jose/dist/browser/bundle.js':
+            path.join(__dirname, '../node_modules/jose/dist/browser/index.js')
+        },
+        output: {
+            path: path.resolve(__dirname),
+            filename: '[name]',
+            library: {
+                type: 'commonjs2'
+            }
+        },
+        mode: 'production'
+    }),
 
     INPUT = path.join(__dirname, '../index.js'),
     OUT_DIR = path.join(__dirname, '../dist'),
