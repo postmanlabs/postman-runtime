@@ -1,3 +1,4 @@
+/* eslint-disable */
 const expect = require('chai').expect,
     fs = require('fs'),
     path = require('path'),
@@ -7,8 +8,9 @@ const expect = require('chai').expect,
     QUERY_PARAM = 'queryParam',
 
     // load private key
+    IS_NODE = typeof window === 'undefined',
     getKey = (filepath) => {
-        return fs.readFileSync(path.join(__dirname, filepath), 'utf8');
+        return IS_NODE ? fs.readFileSync(path.join(__dirname, filepath), 'utf8'): null;
     },
 
     // private & public key for RS, PS, ES Algorithms
@@ -132,6 +134,7 @@ const expect = require('chai').expect,
     algorithms = Object.entries(algorithmsSupported);
 
 describe('jwt auth', function () {
+    const test = IS_NODE ? describe : describe.skip;
     let testrun;
 
     // with invalid algorithm - root level
@@ -188,7 +191,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey } = algorithmsSupported[key];
 
-        describe(`with invalid header for ${alg} algorithm`, function () {
+        test(`with invalid header for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -243,7 +246,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey } = algorithmsSupported[key];
 
-        describe(`with empty header for ${alg} algorithm`, function () {
+        test(`with empty header for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -298,7 +301,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey } = algorithmsSupported[key];
 
-        describe(`with empty payload for ${alg} algorithm`, function () {
+        test(`with empty payload for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -353,7 +356,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey } = algorithmsSupported[key];
 
-        describe(`with "null" header for ${alg} algorithm`, function () {
+        test(`with "null" header for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -408,7 +411,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg } = algorithmsSupported[key];
 
-        describe(`with invalid secret for ${alg} algorithm`, function () {
+        test(`with invalid secret for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -463,7 +466,7 @@ describe('jwt auth', function () {
     Object.entries(HSAlgorithms).forEach(([key]) => {
         const { alg, signKey } = algorithmsSupported[key];
 
-        describe(`with invalid signature for ${alg} algorithm`, function () {
+        test(`with invalid signature for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
 
@@ -540,7 +543,7 @@ describe('jwt auth', function () {
     Object.entries({ ...RSAlgorithms, ...PSAlgorithms }).forEach(([key]) => {
         const { alg, signKey } = algorithmsSupported[key];
 
-        describe(`with invalid signature for ${alg} algorithm`, function () {
+        test(`with invalid signature for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
 
@@ -616,7 +619,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with valid header object for ${alg} algorithm`, function () {
+        test(`with valid header object for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -710,7 +713,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with valid header JSON string for ${alg} algorithm`, function () {
+        test(`with valid header JSON string for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -801,7 +804,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey } = algorithmsSupported[key];
 
-        describe(`with invalid header & payload JSON string for ${alg} algorithm`, function () {
+        test(`with invalid header & payload JSON string for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -951,7 +954,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with valid payload for ${alg} algorithm`, function () {
+        test(`with valid payload for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -1037,7 +1040,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with valid payload for ${alg} algorithm and custom token prefix`, function () {
+        test(`with valid payload for ${alg} algorithm and custom token prefix`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -1123,7 +1126,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with payload as JSON String for ${alg} algorithm`, function () {
+        test(`with payload as JSON String for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -1209,7 +1212,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with payload as JSON String and env variable for ${alg} algorithm`, function () {
+        test(`with payload as JSON String and env variable for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -1298,7 +1301,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with registered claim payload for ${alg} algorithm`, function () {
+        test(`with registered claim payload for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 notBefore = Math.floor(Date.now() / 1000) - (60 * 60),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60), // 1hr expiry
@@ -1421,7 +1424,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with private and public claim payload for ${alg} algorithm`, function () {
+        test(`with private and public claim payload for ${alg} algorithm`, function () {
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -1514,7 +1517,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with iat claim payload as env variable for ${alg} algorithm`, function () {
+        test(`with iat claim payload as env variable for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000);
 
             before(function (done) {
@@ -1606,7 +1609,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         const { alg, signKey, publicKey } = algorithmsSupported[key];
 
-        describe(`with nbf is greater than iat for ${alg} algorithm`, function () {
+        test(`with nbf is greater than iat for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 notBefore = Math.floor(Date.now() / 1000) + (60 * 60 * 60),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60 * 60),
