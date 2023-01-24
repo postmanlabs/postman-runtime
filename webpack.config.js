@@ -4,14 +4,16 @@
 */
 
 const path = require('path'),
-    entryFilePath = path.join(__dirname, './node_modules/jose/dist/browser/index.js'),
-    outputFilePath = path.join(__dirname, './node_modules/jose/dist/browser');
+    jwtEntry = './node_modules/jose/dist/browser/index.js',
+    jwtOutput = './node_modules/jose/dist/browser/bundle.js';
 
 module.exports = {
-    entry: entryFilePath,
+    entry: {
+        [jwtOutput]: jwtEntry
+    },
     output: {
-        path: outputFilePath,
-        filename: 'bundle.js',
+        path: path.resolve(__dirname),
+        filename: '[name]',
         library: {
             type: 'commonjs2'
         }
