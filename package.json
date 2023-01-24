@@ -8,7 +8,7 @@
   "browser": {
     "./lib/requester/request-wrapper.js": "./lib/requester/browser/request.js",
     "postman-request": "./lib/requester/browser/request.js",
-    "jose": "./node_modules/jose/dist/browser/index.js"
+    "jose": "./node_modules/jose/dist/browser/bundle.js"
   },
   "homepage": "https://github.com/postmanlabs/postman-runtime#readme",
   "bugs": {
@@ -44,8 +44,8 @@
     "async": "3.2.4",
     "aws4": "1.12.0",
     "handlebars": "4.7.7",
-    "jose": "4.11.2",
     "httpntlm": "1.8.2",
+    "jose": "4.11.2",
     "js-sha512": "0.8.0",
     "lodash": "4.17.21",
     "mime-types": "2.1.35",
@@ -92,6 +92,7 @@
     "teleport-javascript": "^1.0.0",
     "terser": "^5.16.1",
     "tmp": "^0.2.1",
+    "webpack": "^5.75.0",
     "yankee": "^1.0.8"
   },
   "engines": {
