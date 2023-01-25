@@ -7,7 +7,7 @@ const expect = require('chai').expect,
         Store,
         pathMatch,
         permuteDomain
-    } = require('tough-cookie');
+    } = require('@postman/tough-cookie');
 
 class TestCookieStore extends Store {
     constructor () {
@@ -29,20 +29,29 @@ class TestCookieStore extends Store {
         cb(null, cookies ? cookies[0] : null);
     }
 
-    findCookies (domain, path, cb) {
+    findCookies (domain, path, allowSpecialUseDomain, cb) {
         if (!domain) {
             return cb(null, []);
         }
 
-        const results = [],
-            paths = this.idx[domain] || {};
+        if (typeof allowSpecialUseDomain === 'function') {
+            cb = allowSpecialUseDomain;
+            allowSpecialUseDomain = true;
+        }
 
-        Object.keys(paths).forEach((curPath) => {
-            if (!path || pathMatch(curPath, path)) {
-                Object.keys(paths[curPath]).forEach((key) => {
-                    results.push(paths[curPath][key][0]);
-                });
-            }
+        const domains = permuteDomain(domain, allowSpecialUseDomain) || [domain],
+            results = [];
+
+        domains.forEach((domain) => {
+            const paths = this.idx[domain] || {};
+
+            Object.keys(paths).forEach((curPath) => {
+                if (!path || pathMatch(curPath, path)) {
+                    Object.keys(paths[curPath]).forEach((key) => {
+                        results.push(paths[curPath][key][0]);
+                    });
+                }
+            });
         });
 
         cb(null, results);
@@ -214,10 +223,10 @@ describe('tough-cookie', function () {
         });
 
         describe('option: allowSpecialUseDomain', function () {
-            it('should be set falsy by default', function () {
+            it('should be set true by default', function () {
                 const jar = new CookieJar(new TestCookieStore());
 
-                expect(jar.allowSpecialUseDomain).to.be.not.ok;
+                expect(jar.allowSpecialUseDomain).to.be.true;
             });
         });
 
@@ -310,12 +319,16 @@ describe('tough-cookie', function () {
                     });
             });
 
-            it('should throw error when setting cookie with .local domain', function (done) {
+            it('should set the cookie when setting cookie with .local domain', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie('foo=bar; Path=/; Domain=example.local', 'https://example.local', function (err) {
-                    expect(err).to.be.ok;
-                    expect(err.message).to.equal('Cookie has domain set to a public suffix');
+                jar.setCookie('foo=bar; Path=/; Domain=example.local', 'https://example.local', function (err, cookie) {
+                    expect(err).to.be.null;
+                    expect(cookie).to.be.ok;
+                    expect(cookie.key).to.equal('foo');
+                    expect(cookie.value).to.equal('bar');
+                    expect(cookie.path).to.equal('/');
+                    expect(cookie.domain).to.equal('example.local');
 
                     done();
                 });
@@ -1071,12 +1084,26 @@ describe('tough-cookie', function () {
             expect(permuteDomain('abcd')).to.be.null;
         });
 
-        it('should return null if the domain is special use domain', function () {
-            expect(permuteDomain('example')).to.be.null;
+        it('should throw error if the domain is special use domain', function () {
+            expect(() => {
+                return permuteDomain('example');
+            })
+                .to.throw(Error)
+                .with.property('message',
+
+                    // eslint-disable-next-line max-len
+                    'Cookie has domain set to the public suffix "example" which is a special use domain. To allow this, configure your CookieJar with {allowSpecialUseDomain:true, rejectPublicSuffixes: false}.');
         });
 
         it('should return null for local domains', function () {
-            expect(permuteDomain('localhost')).to.be.null;
+            expect(() => {
+                return permuteDomain('localhost');
+            })
+                .to.throw(Error)
+                .with.property('message',
+
+                    // eslint-disable-next-line max-len
+                    'Cookie has domain set to the public suffix "localhost" which is a special use domain. To allow this, configure your CookieJar with {allowSpecialUseDomain:true, rejectPublicSuffixes: false}.');
         });
 
         it('should return null for local domains with port', function () {
@@ -1084,11 +1111,81 @@ describe('tough-cookie', function () {
         });
 
         it('should return null for .local domains', function () {
-            expect(permuteDomain('example.local')).to.be.null;
+            expect(permuteDomain('')).to.be.null;
+            expect(() => {
+                return permuteDomain('example.local');
+            })
+                .to.throw(Error)
+                .with.property('message',
+
+                    // eslint-disable-next-line max-len
+                    'Cookie has domain set to the public suffix "local" which is a special use domain. To allow this, configure your CookieJar with {allowSpecialUseDomain:true, rejectPublicSuffixes: false}.');
         });
 
         it('should return null for domains with leading dot', function () {
             expect(permuteDomain('.example.com')).to.be.null;
+        });
+
+        describe('with allowSpecialUseDomain = true', function () {
+            it('should return an array of domains', function () {
+                expect(permuteDomain('example.com', true)).to.eql([
+                    'example.com'
+                ]);
+            });
+
+            it('should return an array of domains with subdomains', function () {
+                expect(permuteDomain('www.example.com', true)).to.eql([
+                    'example.com',
+                    'www.example.com'
+                ]);
+            });
+
+            it('should return an array of domains with subdomains and public suffix', function () {
+                expect(permuteDomain('www.app.example.co.uk', true)).to.eql([
+                    'example.co.uk',
+                    'app.example.co.uk',
+                    'www.app.example.co.uk'
+                ]);
+            });
+
+            it('should return null if the domain includes path', function () {
+                expect(permuteDomain('www.example.com/foo', true)).to.be.null;
+            });
+
+            it('should return null if the domain is invalid', function () {
+                expect(permuteDomain('abcd', true)).to.be.null;
+            });
+
+            it('should throw error if the domain is special use domain', function () {
+                expect(() => {
+                    return permuteDomain('example', true);
+                })
+                    .to.throw(Error)
+                    .with.property('message',
+
+                        // eslint-disable-next-line max-len
+                        'Cookie has domain set to the public suffix "example" which is a special use domain. To allow this, configure your CookieJar with {allowSpecialUseDomain:true, rejectPublicSuffixes: false}.');
+            });
+
+            it('should return an array for local domains', function () {
+                expect(permuteDomain('localhost', true)).to.eql([
+                    'localhost'
+                ]);
+            });
+
+            it('should return null for local domains with port', function () {
+                expect(permuteDomain('localhost:8080', true)).to.be.null;
+            });
+
+            it('should return an array for .local domains', function () {
+                expect(permuteDomain('example.local', true)).to.eql([
+                    'example.local'
+                ]);
+            });
+
+            it('should return null for domains with leading dot', function () {
+                expect(permuteDomain('.example.com', true)).to.be.null;
+            });
         });
     });
 });
