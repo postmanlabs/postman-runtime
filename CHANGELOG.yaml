@@ -1,4 +1,5 @@
-unreleased:
+7.30.1:
+  date: 2023-01-25
   chores:
     - GH-1253 Added contract-tests for tough-cookie
     - GH-1256 Bumped tough-cookie dependency
