@@ -1,5 +1,6 @@
 unreleased:
   chores:
+    - GH-1254 Migrate to GitHub Actions
     - Updated dependencies
 
 7.30.0:
