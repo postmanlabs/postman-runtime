@@ -13,7 +13,8 @@ module.exports = function (config) {
         files: [
             '../index.js',
             '../test/unit/**/*.js',
-            '../test/integration/**/*.js'
+            '../test/integration/**/*.js',
+            '../test/contract/**/*.js'
         ],
 
         // preprocess matching files before serving them to the browser
@@ -21,7 +22,8 @@ module.exports = function (config) {
         preprocessors: {
             '../index.js': ['browserify'],
             '../test/unit/**/*.js': ['browserify'],
-            '../test/integration/**/*.js': ['browserify']
+            '../test/integration/**/*.js': ['browserify'],
+            '../test/contract/**/*.js': ['browserify']
         },
         // test results reporter to use
         // possible values: 'dots', 'progress'

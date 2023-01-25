@@ -100,3 +100,6 @@ jobs:
       - if: ${{ matrix.coverage }}
         name: Upload coverage
         run: npm run codecov -- -c -Z -f .coverage/coverage-final.json -F legacy
+
+      - name: Run contract tests
+        run: npm run test-contract
