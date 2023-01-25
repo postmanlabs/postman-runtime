@@ -12,13 +12,6 @@ const path = require('path'),
     KARMA_CONFIG_PATH = path.join(__dirname, '..', 'test', 'karma.conf');
 
 module.exports = function (exit) {
-    // eslint-disable-next-line no-process-env
-    const IS_WINDOWS = process.env.RUNNER_OS === 'Windows' || process.env.TRAVIS_OS_NAME === 'windows';
-
-    if (IS_WINDOWS) {
-        return console.info(chalk.yellow.bold('Skipping browser tests on windows...'));
-    }
-
     console.info(chalk.yellow.bold('Running unit tests within browser...'));
 
     servers.start(function (err) {

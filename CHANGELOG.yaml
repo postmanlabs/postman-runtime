@@ -1,5 +1,7 @@
 unreleased:
   chores:
+    - GH-1253 Added contract-tests for tough-cookie
+    - GH-1256 Bumped tough-cookie dependency
     - GH-1254 Migrate to GitHub Actions
     - Updated dependencies
 
