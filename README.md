@@ -352,6 +352,12 @@ runner.run(collection, { /* options */ }, function(err, run) {
             // request: sdk.request
         },
 
+        // Called ever time when a chunk of response body is received
+        responseData: function (cursor, data) {
+            // cursor - Same as arguments for "start"
+            // data - A chunk of response body.
+        },
+
         // Called once with response for each request in a collection
         response: function (err, cursor, response, request, item, cookies, history) {
             // err, cursor: Same as arguments for "start"
