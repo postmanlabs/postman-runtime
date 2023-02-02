@@ -49,6 +49,5 @@ docs/
 .eslintrc
 .nycrc.js
 codecov.yml
-.travis.yml
 .editorconfig
 .jsdoc-config.json
