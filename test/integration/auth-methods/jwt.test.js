@@ -1,30 +1,31 @@
 /* eslint-disable */
 const expect = require('chai').expect,
-    fs = require('fs'),
-    path = require('path'),
     jose = require('jose'),
+    postmanRequest = require('postman-request'),
     // jwt key constants
     HEADER = 'header',
     QUERY_PARAM = 'queryParam',
 
     // load private key
     IS_NODE = typeof window === 'undefined',
-    getKey = (filepath) => {
-        return IS_NODE ? fs.readFileSync(path.join(__dirname, filepath), 'utf8'): null;
-    },
 
     // private & public key for RS, PS, ES Algorithms
-    // RS & PS
-    privatekeyRSA = getKey('../../fixtures/jwt-keys/rsa.private.pem'),
-    publicKeyRSA = getKey('../../fixtures/jwt-keys/rsa.public.pem'),
-    invalidPublicKeyRSA = getKey('../../fixtures/jwt-keys/rsa-invalid.public.pem'),
-    // ES - ECDSA
-    privateKeyECDSA256 = getKey('../../fixtures/jwt-keys/ecdsa256.private.pem'),
-    publicKeyECDSA256 = getKey('../../fixtures/jwt-keys/ecdsa256.public.pem'),
-    privateKeyECDSA384 = getKey('../../fixtures/jwt-keys/ecdsa384.private.pem'),
-    publicKeyECDSA384 = getKey('../../fixtures/jwt-keys/ecdsa384.public.pem'),
-    privateKeyECDSA512 = getKey('../../fixtures/jwt-keys/ecdsa512.private.pem'),
-    publicKeyECDSA512 = getKey('../../fixtures/jwt-keys/ecdsa512.public.pem'),
+    // on test case before we read the key content with local jwt server and replace filepath with key content
+    privateKeyMap = {
+        // RS & PS
+        privatekeyRSA : '../jwt-keys/rsa.private.pem', // fileName inside - test/fixtures/jwt-keys/
+        publicKeyRSA : '../jwt-keys/rsa.public.pem',
+        invalidPublicKeyRSA : '../jwt-keys/rsa-invalid.public.pem',
+        // ES - ECDSA
+        privateKeyECDSA256 : '../jwt-keys/ecdsa256.private.pem',
+        publicKeyECDSA256 : '../jwt-keys/ecdsa256.public.pem',
+        privateKeyECDSA384 : '../jwt-keys/ecdsa384.private.pem',
+        publicKeyECDSA384 : '../jwt-keys/ecdsa384.public.pem',
+        privateKeyECDSA512 : '../jwt-keys/ecdsa512.private.pem',
+        publicKeyECDSA512 : '../jwt-keys/ecdsa512.public.pem',
+    },
+
+
     // algorithms
     // HS algorithms
     isHsAlgorithm = (alg) => { return ['HS256', 'HS384', 'HS512'].includes(alg); },
@@ -32,30 +33,39 @@ const expect = require('chai').expect,
     HSAlgorithms = {
         HS256: {
             alg: 'HS256',
-            signKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' // 240 chars (can be upto 256 chars)
+            signKey: () => {
+                return 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
+                    'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                    'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                    'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' // 240 chars (can be upto 256 chars)
+            },
+            publicKey: () => null
         },
         HS384: {
             alg: 'HS384',
-            signKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' // 360 chars (can be upto 384 chars)
+            signKey: () => {
+                return 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
+                    'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                    'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                    'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                    'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                    'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' // 360 chars (can be upto 384 chars)
+            },
+            publicKey: () => null
         },
         HS512: {
             alg: 'HS512',
-            signKey: 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
-            'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' // 480 chars (can be up 512 chars)
+            signKey:  () => {
+                return 'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' + // 60 chars
+                'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' +
+                'this-is-a-secret-for-hs-algorithms-with-random-text-aa-bb-cc' // 480 chars (can be up 512 chars)
+            },
+            publicKey: () => null
         }
     },
 
@@ -70,18 +80,18 @@ const expect = require('chai').expect,
     RSAlgorithms = {
         RS256: {
             alg: 'RS256',
-            signKey: privatekeyRSA,
-            publicKey: publicKeyRSA
+            signKey:  () => privateKeyMap.privatekeyRSA,
+            publicKey:  () => privateKeyMap.publicKeyRSA
         },
         RS384: {
             alg: 'RS384',
-            signKey: privatekeyRSA,
-            publicKey: publicKeyRSA
+            signKey:  () => privateKeyMap.privatekeyRSA,
+            publicKey: () => privateKeyMap.publicKeyRSA
         },
         RS512: {
             alg: 'RS512',
-            signKey: privatekeyRSA,
-            publicKey: publicKeyRSA
+            signKey:  () => privateKeyMap.privatekeyRSA,
+            publicKey: () => privateKeyMap.publicKeyRSA
         }
     },
 
@@ -89,18 +99,18 @@ const expect = require('chai').expect,
     PSAlgorithms = {
         PS256: {
             alg: 'PS256',
-            signKey: privatekeyRSA,
-            publicKey: publicKeyRSA
+            signKey: () => privateKeyMap.privatekeyRSA,
+            publicKey: () => privateKeyMap.publicKeyRSA
         },
         PS384: {
             alg: 'PS384',
-            signKey: privatekeyRSA,
-            publicKey: publicKeyRSA
+            signKey: () => privateKeyMap.privatekeyRSA,
+            publicKey: () => privateKeyMap.publicKeyRSA
         },
         PS512: {
             alg: 'PS512',
-            signKey: privatekeyRSA,
-            publicKey: publicKeyRSA
+            signKey: () => privateKeyMap.privatekeyRSA,
+            publicKey: () => privateKeyMap.publicKeyRSA
         }
     },
 
@@ -108,18 +118,18 @@ const expect = require('chai').expect,
     ESAlgorithms = {
         ES256: {
             alg: 'ES256',
-            signKey: privateKeyECDSA256,
-            publicKey: publicKeyECDSA256
+            signKey: () => privateKeyMap.privateKeyECDSA256,
+            publicKey: () => privateKeyMap.publicKeyECDSA256
         },
         ES384: {
             alg: 'ES384',
-            signKey: privateKeyECDSA384,
-            publicKey: publicKeyECDSA384
+            signKey:  () => privateKeyMap.privateKeyECDSA384,
+            publicKey: () => privateKeyMap.publicKeyECDSA384
         },
         ES512: {
             alg: 'ES512',
-            signKey: privateKeyECDSA512,
-            publicKey: publicKeyECDSA512
+            signKey: () => privateKeyMap.privateKeyECDSA512,
+            publicKey: () => privateKeyMap.publicKeyECDSA512
         }
     },
 
@@ -133,13 +143,31 @@ const expect = require('chai').expect,
 
     algorithms = Object.entries(algorithmsSupported);
 
-describe('jwt auth', function () {
+const postmanGetWrapper = function(url, options){
+    return new Promise((resolve, reject) => {
+        postmanRequest.get(url, options ,(err, res) => {
+            if(err){
+                return reject(err);
+            }
+
+            resolve(res.toJSON());
+        });
+    });
+};
+
+describe.only('jwt auth', function () {
     const test = IS_NODE ? describe : describe.skip;
     let testrun, URL_HEADER, URL_QUERY;
 
-    before(function () {
+    before(async function () {
         URL_HEADER = global.servers.http + '/headers';
         URL_QUERY = global.servers.http + '/query';
+
+        for await (const key of Object.keys(privateKeyMap)) {
+            const response = await postmanGetWrapper(`${global.servers.jwt}/cert`,{ qs:{ filepath: privateKeyMap[key]} });
+            privateKeyMap[key] = response.body;
+        }
+
     });
 
     // with invalid algorithm - root level
@@ -194,9 +222,13 @@ describe('jwt auth', function () {
 
     // with invalid header
     algorithms.forEach(([key]) => {
-        const { alg, signKey } = algorithmsSupported[key];
+        let alg, signKey, publicKey;
 
         test(`with invalid header for ${alg} algorithm`, function () {
+            alg = algorithmsSupported[key].alg;
+            signKey = algorithmsSupported[key].signKey();
+            publicKey = algorithmsSupported[key].publicKey();
+
             before(function (done) {
                 const runOptions = {
                     collection: {
@@ -249,10 +281,15 @@ describe('jwt auth', function () {
 
     // with empty header
     algorithms.forEach(([key]) => {
-        const { alg, signKey } = algorithmsSupported[key];
+        test(`with empty header for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with empty header for ${alg} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -304,10 +341,14 @@ describe('jwt auth', function () {
 
     // with empty payload
     algorithms.forEach(([key]) => {
-        const { alg, signKey } = algorithmsSupported[key];
+        test(`with empty payload for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with empty payload for ${alg} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -359,10 +400,14 @@ describe('jwt auth', function () {
 
     // with `null` header
     algorithms.forEach(([key]) => {
-        const { alg, signKey } = algorithmsSupported[key];
+        let alg, signKey, publicKey;
 
-        test(`with "null" header for ${alg} algorithm`, function () {
+        test(`with "null" header for ${key} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -414,10 +459,14 @@ describe('jwt auth', function () {
 
     // with invalid secret
     algorithms.forEach(([key]) => {
-        const { alg } = algorithmsSupported[key];
+        let alg, signKey, publicKey;
 
-        test(`with invalid secret for ${alg} algorithm`, function () {
+        test(`with invalid secret for ${key} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -469,13 +518,16 @@ describe('jwt auth', function () {
 
     // with invalid signature - HS algorithms
     Object.entries(HSAlgorithms).forEach(([key]) => {
-        const { alg, signKey } = algorithmsSupported[key];
-
-        test(`with invalid signature for ${alg} algorithm`, function () {
+        test(`with invalid signature for ${key} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
 
+            let alg, signKey;
+
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -547,13 +599,17 @@ describe('jwt auth', function () {
 
     // with invalid signature - RS,PS algorithms
     Object.entries({ ...RSAlgorithms, ...PSAlgorithms }).forEach(([key]) => {
-        const { alg, signKey } = algorithmsSupported[key];
-
-        test(`with invalid signature for ${alg} algorithm`, function () {
+        test(`with invalid signature for ${key} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
 
+            let alg, signKey, publicKey;
+
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -613,7 +669,7 @@ describe('jwt auth', function () {
                 })
 
                 try {
-                    await jose.jwtVerify(jwtToken, invalidPublicKeyRSA);
+                    await jose.jwtVerify(jwtToken, privateKeyMap.invalidPublicKeyRSA);
                 }
                 catch (e) {
                     expect(e.message).to.contain(`Key for the ${alg} algorithm`);
@@ -624,10 +680,14 @@ describe('jwt auth', function () {
 
     // with valid header object & custom fields
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        test(`with valid header object for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with valid header object for ${alg} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -719,10 +779,14 @@ describe('jwt auth', function () {
 
     // with valid JSON header string
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        test(`with valid header JSON string for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with valid header JSON string for ${alg} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -811,10 +875,14 @@ describe('jwt auth', function () {
 
     // with invalid header & payload for JSON string
     algorithms.forEach(([key]) => {
-        const { alg, signKey } = algorithmsSupported[key];
+        let alg, signKey, publicKey;
 
-        test(`with invalid header & payload JSON string for ${alg} algorithm`, function () {
+        test(`with invalid header & payload JSON string for ${key} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -962,10 +1030,14 @@ describe('jwt auth', function () {
 
     // with valid payload and add to Authorization as Bearer
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        let alg, signKey, publicKey;
 
-        test(`with valid payload for ${alg} algorithm`, function () {
+        test(`with valid payload for ${key} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -1049,10 +1121,14 @@ describe('jwt auth', function () {
 
     // with valid payload and add to Authorization as user prefix
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        test(`with valid payload for ${key} algorithm and custom token prefix`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with valid payload for ${alg} algorithm and custom token prefix`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -1136,10 +1212,14 @@ describe('jwt auth', function () {
 
     // with payload as JSON String
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        test(`with payload as JSON String for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with payload as JSON String for ${alg} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -1223,10 +1303,14 @@ describe('jwt auth', function () {
 
     // with payload as JSON String with variables
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        test(`with payload as JSON String and env variable for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with payload as JSON String and env variable for ${alg} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -1313,9 +1397,9 @@ describe('jwt auth', function () {
 
     // with valid payload for registered claim and add to query param
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        test(`with registered claim payload for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with registered claim payload for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 notBefore = Math.floor(Date.now() / 1000) - (60 * 60),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60), // 1hr expiry
@@ -1326,6 +1410,10 @@ describe('jwt auth', function () {
 
 
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -1432,10 +1520,14 @@ describe('jwt auth', function () {
 
     // with private and public claim payload
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        test(`with private and public claim payload for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with private and public claim payload for ${alg} algorithm`, function () {
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -1525,12 +1617,15 @@ describe('jwt auth', function () {
 
     // with iat claim as env variable
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
-
-        test(`with iat claim payload as env variable for ${alg} algorithm`, function () {
+        test(`with iat claim payload as env variable for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
             const issuedAt = Math.floor(Date.now() / 1000);
 
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
@@ -1617,9 +1712,9 @@ describe('jwt auth', function () {
 
     // with nbf greater than iat should not verify token
     algorithms.forEach(([key]) => {
-        const { alg, signKey, publicKey } = algorithmsSupported[key];
+        test(`with nbf is greater than iat for ${key} algorithm`, function () {
+            let alg, signKey, publicKey;
 
-        test(`with nbf is greater than iat for ${alg} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 notBefore = Math.floor(Date.now() / 1000) + (60 * 60 * 60),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60 * 60),
@@ -1630,6 +1725,10 @@ describe('jwt auth', function () {
 
 
             before(function (done) {
+                alg = algorithmsSupported[key].alg;
+                signKey = algorithmsSupported[key].signKey();
+                publicKey = algorithmsSupported[key].publicKey();
+
                 const runOptions = {
                     collection: {
                         item: {
