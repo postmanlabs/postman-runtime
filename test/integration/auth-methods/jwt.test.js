@@ -155,7 +155,7 @@ const postmanGetWrapper = function(url, options){
     });
 };
 
-describe.only('jwt auth', function () {
+describe('jwt auth', function () {
     const test = IS_NODE ? describe : describe.skip;
     let testrun, URL_HEADER, URL_QUERY;
 
