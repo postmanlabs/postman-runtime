@@ -135,7 +135,12 @@ const expect = require('chai').expect,
 
 describe('jwt auth', function () {
     const test = IS_NODE ? describe : describe.skip;
-    let testrun;
+    let testrun, URL_HEADER, URL_QUERY;
+
+    before(function () {
+        URL_HEADER = global.servers.http + '/headers';
+        URL_QUERY = global.servers.http + '/query';
+    });
 
     // with invalid algorithm - root level
     describe('with invalid root level algorithm', function () {
@@ -144,7 +149,7 @@ describe('jwt auth', function () {
                 collection: {
                     item: {
                         request: {
-                            url: 'https://postman-echo.com/headers',
+                            url: URL_HEADER,
                             auth: {
                                 type: 'jwt',
                                 jwt: {
@@ -197,7 +202,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -252,7 +257,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -307,7 +312,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -362,7 +367,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -417,7 +422,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -475,7 +480,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -524,9 +529,10 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
-                });
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
+                })
 
                 try {
                     await jose.jwtVerify(jwtToken, '123');
@@ -552,7 +558,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -601,9 +607,10 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
-                });
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
+                })
 
                 try {
                     await jose.jwtVerify(jwtToken, invalidPublicKeyRSA);
@@ -625,7 +632,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -685,9 +692,10 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
-                });
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
+                })
 
                 // eslint-disable-next-line one-var
                 const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
@@ -719,7 +727,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -777,9 +785,10 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
-                });
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
+                })
 
                 // eslint-disable-next-line one-var
                 const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
@@ -810,7 +819,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -874,7 +883,7 @@ describe('jwt auth', function () {
                 collection: {
                     item: {
                         request: {
-                            url: 'https://postman-echo.com/headers',
+                            url: URL_HEADER,
                             auth: {
                                 type: 'jwt',
                                 jwt: {
@@ -931,9 +940,10 @@ describe('jwt auth', function () {
                 headers.push(header.key);
             });
 
-            expect(response.json()).to.nested.include({
-                'headers.authorization': `Bearer ${jwtToken}`
-            });
+            expect(response.json()).to.deep.include({
+                key: 'Authorization',
+                value: `Bearer ${jwtToken}`
+            })
 
             // eslint-disable-next-line one-var
             const secret = new TextEncoder().encode('123');
@@ -960,7 +970,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1014,9 +1024,10 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
-                });
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
+                })
 
 
                 // eslint-disable-next-line one-var
@@ -1046,7 +1057,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1101,9 +1112,10 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `jwt-prefix ${jwtToken}`
-                });
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `jwt-prefix ${jwtToken}`
+                })
 
                 // eslint-disable-next-line one-var
                 const secret = isHsAlgorithm(alg) ? new TextEncoder().encode(signKey) :
@@ -1132,7 +1144,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1187,8 +1199,9 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
                 });
 
                 // eslint-disable-next-line one-var
@@ -1218,7 +1231,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1276,8 +1289,9 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
                 });
 
                 // eslint-disable-next-line one-var
@@ -1316,7 +1330,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1379,8 +1393,7 @@ describe('jwt auth', function () {
 
             it('should generate a valid jwt token & add to query param', async function () {
                 const queries = [],
-                    request = testrun.request.firstCall.args[3],
-                    response = testrun.request.firstCall.args[2];
+                    request = testrun.request.firstCall.args[3];
 
                 let jwtToken;
 
@@ -1427,7 +1440,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: URL_QUERY,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1494,8 +1507,8 @@ describe('jwt auth', function () {
                 // eslint-disable-next-line one-var
                 const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
 
-                expect(response.json()).to.nested.include({
-                    'args.jwtToken': jwtToken
+                expect(response.json()).to.deep.include({
+                    'jwtToken': jwtToken
                 });
 
                 expect(payload).to.be.deep.equal({
@@ -1522,7 +1535,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: URL_QUERY,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1589,8 +1602,8 @@ describe('jwt auth', function () {
                 // eslint-disable-next-line one-var
                 const { payload, protectedHeader } = await jose.jwtVerify(jwtToken, secret);
 
-                expect(response.json()).to.nested.include({
-                    'args.jwt': jwtToken
+                expect(response.json()).to.deep.include({
+                    jwt: jwtToken
                 });
 
                 expect(payload).to.be.deep.equal({
@@ -1621,7 +1634,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1691,8 +1704,9 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
                 });
 
                 try {
@@ -1726,7 +1740,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1773,8 +1787,9 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
                 });
 
                 expect(originalToken).to.be.equal(jwtToken);
@@ -1808,7 +1823,7 @@ describe('jwt auth', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/headers',
+                                url: URL_HEADER,
                                 auth: {
                                     type: 'jwt',
                                     jwt: {
@@ -1855,8 +1870,9 @@ describe('jwt auth', function () {
                     headers.push(header.key);
                 });
 
-                expect(response.json()).to.nested.include({
-                    'headers.authorization': `Bearer ${jwtToken}`
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
                 });
 
                 expect(originalToken).to.be.equal(jwtToken);
