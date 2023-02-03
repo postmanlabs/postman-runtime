@@ -6,7 +6,7 @@ const expect = require('chai').expect,
     HEADER = 'header',
     QUERY_PARAM = 'queryParam',
 
-    // load private key
+    // identify browser or node env
     IS_NODE = typeof window === 'undefined',
 
     // private & public key for RS, PS, ES Algorithms
@@ -143,20 +143,27 @@ const expect = require('chai').expect,
 
     algorithms = Object.entries(algorithmsSupported);
 
-const postmanGetWrapper = function(url, options){
+const fetchWrapper = function(url, options){
     return new Promise((resolve, reject) => {
-        postmanRequest.get(url, options ,(err, res) => {
-            if(err){
-                return reject(err);
-            }
+        if(IS_NODE){
+            return postmanRequest.get(url, options ,(err, res) => {
+                if(err){
+                    return reject(err);
+                }
 
-            resolve(res.toJSON());
-        });
+                resolve(res.toJSON());
+            });
+        }
+        else{
+            fetch(`${url}?${new URLSearchParams({...options.qs})}`, { method: 'GET'})
+                .then((resp) => resp.text())
+                .then((certKey) => resolve({ body: certKey }))
+                .catch(err =>  reject(err))
+        }
     });
 };
 
 describe('jwt auth', function () {
-    const test = IS_NODE ? describe : describe.skip;
     let testrun, URL_HEADER, URL_QUERY;
 
     before(async function () {
@@ -164,7 +171,7 @@ describe('jwt auth', function () {
         URL_QUERY = global.servers.http + '/query';
 
         for await (const key of Object.keys(privateKeyMap)) {
-            const response = await postmanGetWrapper(`${global.servers.jwt}/cert`,{ qs:{ filepath: privateKeyMap[key]} });
+            const response = await fetchWrapper(`${global.servers.jwt}/cert`,{ qs:{ filepath: privateKeyMap[key]} });
             privateKeyMap[key] = response.body;
         }
 
@@ -224,7 +231,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         let alg, signKey, publicKey;
 
-        test(`with invalid header for ${alg} algorithm`, function () {
+        describe(`with invalid header for ${alg} algorithm`, function () {
             alg = algorithmsSupported[key].alg;
             signKey = algorithmsSupported[key].signKey();
             publicKey = algorithmsSupported[key].publicKey();
@@ -281,7 +288,7 @@ describe('jwt auth', function () {
 
     // with empty header
     algorithms.forEach(([key]) => {
-        test(`with empty header for ${key} algorithm`, function () {
+        describe(`with empty header for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             before(function (done) {
@@ -341,7 +348,7 @@ describe('jwt auth', function () {
 
     // with empty payload
     algorithms.forEach(([key]) => {
-        test(`with empty payload for ${key} algorithm`, function () {
+        describe(`with empty payload for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             before(function (done) {
@@ -402,7 +409,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         let alg, signKey, publicKey;
 
-        test(`with "null" header for ${key} algorithm`, function () {
+        describe(`with "null" header for ${key} algorithm`, function () {
             before(function (done) {
                 alg = algorithmsSupported[key].alg;
                 signKey = algorithmsSupported[key].signKey();
@@ -461,7 +468,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         let alg, signKey, publicKey;
 
-        test(`with invalid secret for ${key} algorithm`, function () {
+        describe(`with invalid secret for ${key} algorithm`, function () {
             before(function (done) {
                 alg = algorithmsSupported[key].alg;
                 signKey = algorithmsSupported[key].signKey();
@@ -518,7 +525,7 @@ describe('jwt auth', function () {
 
     // with invalid signature - HS algorithms
     Object.entries(HSAlgorithms).forEach(([key]) => {
-        test(`with invalid signature for ${key} algorithm`, function () {
+        describe(`with invalid signature for ${key} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
 
@@ -591,7 +598,7 @@ describe('jwt auth', function () {
                 }
                 catch (e) {
                     expect(e.message)
-                        .to.contain(`Key for the ${alg} algorithm must be one of type KeyObject`);
+                        .to.contain(`Key for the ${alg} algorithm`);
                 }
             });
         });
@@ -599,7 +606,7 @@ describe('jwt auth', function () {
 
     // with invalid signature - RS,PS algorithms
     Object.entries({ ...RSAlgorithms, ...PSAlgorithms }).forEach(([key]) => {
-        test(`with invalid signature for ${key} algorithm`, function () {
+        describe(`with invalid signature for ${key} algorithm`, function () {
             const issuedAt = Math.floor(Date.now() / 1000),
                 expiresIn = Math.floor(Date.now() / 1000) + (60 * 60);
 
@@ -680,7 +687,7 @@ describe('jwt auth', function () {
 
     // with valid header object & custom fields
     algorithms.forEach(([key]) => {
-        test(`with valid header object for ${key} algorithm`, function () {
+        describe(`with valid header object for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             before(function (done) {
@@ -779,7 +786,7 @@ describe('jwt auth', function () {
 
     // with valid JSON header string
     algorithms.forEach(([key]) => {
-        test(`with valid header JSON string for ${key} algorithm`, function () {
+        describe(`with valid header JSON string for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             before(function (done) {
@@ -877,7 +884,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         let alg, signKey, publicKey;
 
-        test(`with invalid header & payload JSON string for ${key} algorithm`, function () {
+        describe(`with invalid header & payload JSON string for ${key} algorithm`, function () {
             before(function (done) {
                 alg = algorithmsSupported[key].alg;
                 signKey = algorithmsSupported[key].signKey();
@@ -1032,7 +1039,7 @@ describe('jwt auth', function () {
     algorithms.forEach(([key]) => {
         let alg, signKey, publicKey;
 
-        test(`with valid payload for ${key} algorithm`, function () {
+        describe(`with valid payload for ${key} algorithm`, function () {
             before(function (done) {
                 alg = algorithmsSupported[key].alg;
                 signKey = algorithmsSupported[key].signKey();
@@ -1121,7 +1128,7 @@ describe('jwt auth', function () {
 
     // with valid payload and add to Authorization as user prefix
     algorithms.forEach(([key]) => {
-        test(`with valid payload for ${key} algorithm and custom token prefix`, function () {
+        describe(`with valid payload for ${key} algorithm and custom token prefix`, function () {
             let alg, signKey, publicKey;
 
             before(function (done) {
@@ -1212,7 +1219,7 @@ describe('jwt auth', function () {
 
     // with payload as JSON String
     algorithms.forEach(([key]) => {
-        test(`with payload as JSON String for ${key} algorithm`, function () {
+        describe(`with payload as JSON String for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             before(function (done) {
@@ -1303,7 +1310,7 @@ describe('jwt auth', function () {
 
     // with payload as JSON String with variables
     algorithms.forEach(([key]) => {
-        test(`with payload as JSON String and env variable for ${key} algorithm`, function () {
+        describe(`with payload as JSON String and env variable for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             before(function (done) {
@@ -1397,7 +1404,7 @@ describe('jwt auth', function () {
 
     // with valid payload for registered claim and add to query param
     algorithms.forEach(([key]) => {
-        test(`with registered claim payload for ${key} algorithm`, function () {
+        describe(`with registered claim payload for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             const issuedAt = Math.floor(Date.now() / 1000),
@@ -1520,7 +1527,7 @@ describe('jwt auth', function () {
 
     // with private and public claim payload
     algorithms.forEach(([key]) => {
-        test(`with private and public claim payload for ${key} algorithm`, function () {
+        describe(`with private and public claim payload for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             before(function (done) {
@@ -1617,7 +1624,7 @@ describe('jwt auth', function () {
 
     // with iat claim as env variable
     algorithms.forEach(([key]) => {
-        test(`with iat claim payload as env variable for ${key} algorithm`, function () {
+        describe(`with iat claim payload as env variable for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
             const issuedAt = Math.floor(Date.now() / 1000);
 
@@ -1712,7 +1719,7 @@ describe('jwt auth', function () {
 
     // with nbf greater than iat should not verify token
     algorithms.forEach(([key]) => {
-        test(`with nbf is greater than iat for ${key} algorithm`, function () {
+        describe(`with nbf is greater than iat for ${key} algorithm`, function () {
             let alg, signKey, publicKey;
 
             const issuedAt = Math.floor(Date.now() / 1000),
