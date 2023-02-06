@@ -1,6 +1,5 @@
 var expect = require('chai').expect,
     extractRunnableItems = require('../../lib/runner/extract-runnable-items').extractRunnableItems,
-    { errors, createError } = require('../../lib/runner/errors'),
     sdk = require('postman-collection'),
     _ = require('lodash');
 
@@ -95,7 +94,8 @@ describe('extractRunnableItems', function () {
                 path: ['random_path']
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.code).to.be.eq(2);
                 expect(runnableItems).to.eql([]);
                 expect(entrypoint).to.be.undefined;
                 done();
@@ -154,12 +154,8 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'idOrName'
             },
             function (err, runnableItems, entrypoint) {
-                const error = createError({
-                    error: errors.invalidFolderOrRequest,
-                    variables: { folderOrRequestName: entrypoint }
-                });
-
-                expect(err).to.be.deep.eq(error);
+                expect(err.message).to.be.eq(`Unable to find a folder or request: ${entrypoint}`);
+                expect(err.code).to.be.eq(3);
                 expect(runnableItems).to.eql([]);
                 done();
             });
@@ -257,9 +253,8 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'multipleIdOrName'
             },
             function (err, runnableItems, entrypoint) {
-                const error = createError({ error: errors.invalidEntryPoints });
-
-                expect(err).to.be.deep.eq(error);
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.code).to.be.eq(2);
                 expect(runnableItems).to.eql([]);
                 expect(entrypoint).to.be.undefined;
                 done();
@@ -489,9 +484,8 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'followOrder'
             },
             function (err, runnableItems, entrypoint) {
-                const error = createError({ error: errors.invalidEntryPoints });
-
-                expect(err).to.be.deep.eq(error);
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.code).to.be.eq(2);
                 expect(runnableItems).to.eql([]);
                 expect(entrypoint).to.be.undefined;
                 done();
