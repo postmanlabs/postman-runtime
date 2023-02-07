@@ -352,10 +352,10 @@ runner.run(collection, { /* options */ }, function(err, run) {
             // request: sdk.request
         },
 
-        // Called ever time when a chunk of response body is received
+        // Called every time a complete server-sent event is received
         responseData: function (cursor, data) {
             // cursor - Same as arguments for "start"
-            // data - A chunk of response body.
+            // data - Event buffer.
         },
 
         // Called once with response for each request in a collection
