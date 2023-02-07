@@ -145,14 +145,17 @@ runner.run(collection, {
             https: new https.Agent({ keepAlive: true })
         },
 
-        // helper to refresh oauth2 tokens during execution
-        refreshTokenHelper: {
-            timeout: 30000, // timeout for the refresh token request in ms, defaults to 30000 ms
-            refreshToken: async function (authId) {
-                // resolves with the refreshed token, rejects if the refresh fails
-            },
-            cancelRefresh: async function (error) {
-                // a function to cancel the refresh token request when we hit timeout
+        // Any options/helpers for auth flows
+        authorizer: {
+            // helper to refresh oauth2 tokens during execution
+            refreshTokenHelper: {
+                timeout: 30000, // timeout for the refresh token request in ms, defaults to 30000 ms
+                refreshToken: async function (authId) {
+                    // resolves with the refreshed token, rejects if the refresh fails
+                },
+                cancelRefresh: async function (error) {
+                    // a function to cancel the refresh token request when we hit timeout
+                }
             }
         }
     },

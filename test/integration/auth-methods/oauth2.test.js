@@ -43,9 +43,11 @@ describe('oauth 2', function () {
                         }
                     },
                     requester: {
-                        refreshTokenHelper: {
-                            refreshToken: refreshTokenFunction,
-                            cancelRefresh: cancelRefreshTokenFunction
+                        authorizer: {
+                            refreshTokenHelper: {
+                                refreshToken: refreshTokenFunction,
+                                cancelRefresh: cancelRefreshTokenFunction
+                            }
                         }
                     }
                 }, function (err, results) {
@@ -124,9 +126,11 @@ describe('oauth 2', function () {
                         }
                     },
                     requester: {
-                        refreshTokenHelper: {
-                            refreshToken: refreshTokenFunction,
-                            cancelRefresh: cancelRefreshTokenFunction
+                        authorizer: {
+                            refreshTokenHelper: {
+                                refreshToken: refreshTokenFunction,
+                                cancelRefresh: cancelRefreshTokenFunction
+                            }
                         }
                     }
                 }, function (err, results) {
@@ -208,11 +212,13 @@ describe('oauth 2', function () {
                         }
                     },
                     requester: {
-                        refreshTokenHelper: {
-                            // Set timeout to 1500 ms to ensure that the refresh token call times out
-                            timeout: 1500,
-                            refreshToken: refreshTokenFunction,
-                            cancelRefresh: cancelRefreshTokenFunction
+                        authorizer: {
+                            refreshTokenHelper: {
+                                // Set timeout to 1500 ms to ensure that the refresh token call times out
+                                timeout: 1500,
+                                refreshToken: refreshTokenFunction,
+                                cancelRefresh: cancelRefreshTokenFunction
+                            }
                         }
                     }
                 }, function (err, results) {
