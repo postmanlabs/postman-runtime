@@ -145,7 +145,7 @@ runner.run(collection, {
             https: new https.Agent({ keepAlive: true })
         },
 
-        // Any options/helpers for auth flows
+        // authorizer related options
         authorizer: {
             // helper to refresh oauth2 tokens during execution
             refreshOAuth2Token: function (id, callback) {
