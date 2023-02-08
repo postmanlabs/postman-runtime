@@ -143,6 +143,15 @@ runner.run(collection, {
                 agentOptions: { keepAlive: true, timeout: 399 }
             },
             https: new https.Agent({ keepAlive: true })
+        },
+
+        // authorizer related options
+        authorizer: {
+            // helper to refresh oauth2 tokens during execution
+            refreshOAuth2Token: function (id, callback) {
+                // calls the callback with the refreshed token or an error
+                // callback(err, token)
+            },
         }
     },
 
