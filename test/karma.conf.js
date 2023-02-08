@@ -13,6 +13,7 @@ module.exports = function (config) {
         files: [
             '../index.js',
             '../test/unit/**/*.js',
+            '../test/contract/**/*.js',
             '../test/integration/**/*.js'
         ],
 
@@ -21,6 +22,7 @@ module.exports = function (config) {
         preprocessors: {
             '../index.js': ['browserify'],
             '../test/unit/**/*.js': ['browserify'],
+            '../test/contract/**/*.js': ['browserify'],
             '../test/integration/**/*.js': ['browserify']
         },
         // test results reporter to use

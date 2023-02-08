@@ -167,9 +167,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
     });
 
     // issue: https://github.com/postmanlabs/postman-app-support/issues/5626
-    // Skip in TRAVIS because IPv6 is disabled there
-    // eslint-disable-next-line no-process-env
-    (process.env.TRAVIS ? describe.skip : describe)('IPv6 request through IPv4 proxy', function () {
+    describe('IPv6 request through IPv4 proxy', function () {
         var proxyHost,
             proxyPort,
             requestPort,

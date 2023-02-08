@@ -42,7 +42,8 @@ describe('runner', function () {
                         entrypoint: { execute: 'random' },
                         abortOnError: true
                     }, function (err, run) {
-                        expect(err.message).to.equal('Unable to find a folder or request: random');
+                        expect(err.message).to
+                            .equal('runtime~extractRunnableItems: Unable to find a folder or request: "random"');
                         expect(run).to.be.undefined;
 
                         done();
@@ -56,7 +57,8 @@ describe('runner', function () {
                         entrypoint: { execute: 'random' },
                         abortOnError: true
                     }, function (err, run) {
-                        expect(err.message).to.equal('Unable to find a folder or request: random');
+                        expect(err.message).to
+                            .equal('runtime~extractRunnableItems: Unable to find a folder or request: "random"');
                         expect(run).to.be.undefined;
 
                         done();
