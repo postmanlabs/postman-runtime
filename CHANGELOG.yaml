@@ -1,6 +1,7 @@
 unreleased:
   new features:
     - GH-1260 Throw error when an invalid `entrypoint` is provided
+    - GH-1261 Added support for refreshing OAuth tokens
   chores:
     - Dropped support for Node.js < v12
 
