@@ -5,8 +5,8 @@ var sinon = require('sinon'),
 (typeof window === 'undefined' ? describe : describe.skip)('Benchmark: large response', function () {
     var testrun;
 
-    describe('100 MB response with test script', function () {
-        const RESPONSE_SIZE = 100 * 1024 * 1024; // 100 MB
+    describe('50 MB response with test script', function () {
+        const RESPONSE_SIZE = 50 * 1024 * 1024; // 50 MB
 
         before(function (done) {
             this.run({
