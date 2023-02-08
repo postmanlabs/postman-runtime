@@ -1,5 +1,6 @@
 unreleased:
   new features:
+    - GH-1252 Added support for JWT authentication
     - GH-1260 Throw error when an invalid `entrypoint` is provided
     - GH-1261 Added support for refreshing OAuth tokens
   chores:
