@@ -78,7 +78,7 @@ describe('extractRunnableItems', function () {
                 { execute: 'random', lookupStrategy: 'dealWithIt' },
                 function (err, runnableItems, entrypoint) {
                     expect(err).to.have.property('message',
-                        'runtime~extractRunnableItems: Invalid entrypoint lookupStrategy');
+                        'runtime~extractRunnableItems: Invalid lookup strategy: "dealWithIt"');
                     expect(runnableItems).to.be.undefined;
                     expect(entrypoint).to.be.undefined;
                     done();
@@ -94,9 +94,9 @@ describe('extractRunnableItems', function () {
                 path: ['random_path']
             },
             function (err, runnableItems, entrypoint) {
-                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoint');
                 expect(err.code).to.be.eq('ERR_INVALID_ENTRY_POINTS');
-                expect(runnableItems).to.eql([]);
+                expect(runnableItems).to.be.undefined;
                 expect(entrypoint).to.be.undefined;
                 done();
             });
@@ -153,10 +153,10 @@ describe('extractRunnableItems', function () {
                 execute: 'random',
                 lookupStrategy: 'idOrName'
             },
-            function (err, runnableItems, entrypoint) {
-                expect(err.message).to.be.eq(`Unable to find a folder or request: ${entrypoint}`);
+            function (err, runnableItems) {
+                expect(err.message).to.eq('runtime~extractRunnableItems: Unable to find a folder or request: "random"');
                 expect(err.code).to.be.eq('ERR_INVALID_FOLDER_OR_REQUEST');
-                expect(runnableItems).to.eql([]);
+                expect(runnableItems).to.be.undefined;
                 done();
             });
         });
@@ -240,8 +240,9 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'multipleIdOrName'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
-                expect(runnableItems).to.eql([]);
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoint');
+                expect(err.code).to.be.eq('ERR_INVALID_ENTRY_POINTS');
+                expect(runnableItems).to.be.undefined;
                 expect(entrypoint).to.be.undefined;
                 done();
             });
@@ -253,9 +254,9 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'multipleIdOrName'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoint');
                 expect(err.code).to.be.eq('ERR_INVALID_ENTRY_POINTS');
-                expect(runnableItems).to.eql([]);
+                expect(runnableItems).to.be.undefined;
                 expect(entrypoint).to.be.undefined;
                 done();
             });
@@ -471,8 +472,9 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'followOrder'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err).to.be.null;
-                expect(runnableItems).to.eql([]);
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoint');
+                expect(err.code).to.be.eq('ERR_INVALID_ENTRY_POINTS');
+                expect(runnableItems).to.be.undefined;
                 expect(entrypoint).to.be.undefined;
                 done();
             });
@@ -484,9 +486,9 @@ describe('extractRunnableItems', function () {
                 lookupStrategy: 'followOrder'
             },
             function (err, runnableItems, entrypoint) {
-                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoints');
+                expect(err.message).to.be.eq('runtime~extractRunnableItems: Invalid entrypoint');
                 expect(err.code).to.be.eq('ERR_INVALID_ENTRY_POINTS');
-                expect(runnableItems).to.eql([]);
+                expect(runnableItems).to.be.undefined;
                 expect(entrypoint).to.be.undefined;
                 done();
             });
