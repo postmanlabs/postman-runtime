@@ -1,4 +1,6 @@
 unreleased:
+  new features:
+    - GH-1260 Throw error when an invalid `entrypoint` is provided
   chores:
     - Dropped support for Node.js < v12
 
