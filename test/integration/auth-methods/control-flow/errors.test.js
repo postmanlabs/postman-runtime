@@ -375,9 +375,9 @@ describe('auth control flow', function () {
         });
 
         it('should have bubbled the error', function () {
-            var err = testrun.console.firstCall.args[3];
+            var err = testrun.console.firstCall.args[2];
 
-            expect(err).to.have.property('message', 'Sign Error!');
+            expect(err).to.include('Sign Error!');
         });
 
         it('should not repeat the auth flow', function () {

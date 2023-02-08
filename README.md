@@ -143,6 +143,15 @@ runner.run(collection, {
                 agentOptions: { keepAlive: true, timeout: 399 }
             },
             https: new https.Agent({ keepAlive: true })
+        },
+
+        // authorizer related options
+        authorizer: {
+            // helper to refresh oauth2 tokens during execution
+            refreshOAuth2Token: function (id, callback) {
+                // calls the callback with the refreshed token or an error
+                // callback(err, token)
+            },
         }
     },
 
@@ -350,6 +359,12 @@ runner.run(collection, { /* options */ }, function(err, run) {
 
             // response: sdk.Response
             // request: sdk.request
+        },
+
+        // Called every time a complete server-sent event is received
+        responseData: function (cursor, data) {
+            // cursor - Same as arguments for "start"
+            // data - Event buffer.
         },
 
         // Called once with response for each request in a collection

@@ -1,4 +1,5 @@
 const _ = require('lodash'),
+    url = require('url'),
     server = require('./_servers'),
     httpServer = server.createHTTPServer();
 
@@ -24,6 +25,11 @@ httpServer.on('/', function (req, res) {
 httpServer.on('/headers', function (req, res) {
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(parseRawHeaders(req.rawHeaders)));
+});
+
+httpServer.on('/query', function (req, res) {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify(url.parse(req.url, true).query));
 });
 
 httpServer.on('/cookies', function (req, res) {
