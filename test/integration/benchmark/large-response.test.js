@@ -5,9 +5,8 @@ var sinon = require('sinon'),
 (typeof window === 'undefined' ? describe : describe.skip)('Benchmark: large response', function () {
     var testrun;
 
-    // @todo increase to 100 MB once we drop support for Node v10
-    describe('50 MB response with test script', function () {
-        const RESPONSE_SIZE = 50 * 1024 * 1024; // 50 MB
+    describe('100 MB response with test script', function () {
+        const RESPONSE_SIZE = 100 * 1024 * 1024; // 100 MB
 
         before(function (done) {
             this.run({
