@@ -1,3 +1,7 @@
+unreleased:
+  chores:
+    - Updated dependencies
+
 7.31.0:
   date: 2023-02-08
   new features:
