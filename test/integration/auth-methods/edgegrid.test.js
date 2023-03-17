@@ -240,9 +240,15 @@ describe('EdgeGrid auth', function () {
 
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2],
-                header = request.headers.members[0],
+                header,
+                headers,
                 nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
                 timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
+
+            headers = request.headers.members.filter((member) => { return member.key === 'Authorization'; });
+
+            expect(headers.length).to.eql(1);
+            header = headers[0];
 
             expect(header).to.have.have.property('key', 'Authorization');
             expect(header).to.have.have.property('value')
@@ -379,9 +385,16 @@ describe('EdgeGrid auth', function () {
 
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2],
-                header = request.headers.members[0],
+                header,
+                headers,
                 nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
                 timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
+
+
+            headers = request.headers.members.filter((member) => { return member.key === 'Authorization'; });
+
+            expect(headers.length).to.eql(1);
+            header = headers[0];
 
             expect(header).to.have.have.property('key', 'Authorization');
             expect(header).to.have.have.property('value')
