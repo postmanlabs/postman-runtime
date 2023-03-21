@@ -5,33 +5,33 @@ const expect = require('chai').expect,
             scenario: 'it should remove comments',
             scenarios: [
                 {
-                    jsoncString: '{// some comment\n"a": "value"\n}',
-                    jsonString: '{\n"a": "value"\n}',
+                    rawContent: '{// some comment\n"a": "value"\n}',
+                    rawContentInRequestTrigger: '{\n"a": "value"\n}',
                     expectedObject: { a: 'value' }
                 },
                 {
-                    jsoncString: '{\n"a": "value"\n// "b": "value"\n}',
-                    jsonString: '{\n"a": "value"\n\n}',
+                    rawContent: '{\n"a": "value"\n// "b": "value"\n}',
+                    rawContentInRequestTrigger: '{\n"a": "value"\n\n}',
                     expectedObject: { a: 'value' }
                 },
                 {
-                    jsoncString: '{// some comment\r\n"a": "value"\n}',
-                    jsonString: '{\n"a": "value"\n}',
+                    rawContent: '{// some comment\r\n"a": "value"\n}',
+                    rawContentInRequestTrigger: '{\n"a": "value"\n}',
                     expectedObject: { a: 'value' }
                 },
                 {
-                    jsoncString: '{\n"a": "value"\n// "b": "value"\r\n}',
-                    jsonString: '{\n"a": "value"\n\n}',
+                    rawContent: '{\n"a": "value"\n// "b": "value"\r\n}',
+                    rawContentInRequestTrigger: '{\n"a": "value"\n\n}',
                     expectedObject: { a: 'value' }
                 },
                 {
-                    jsoncString: '{"a": "value",\n"b": "value" // some comment\n}',
-                    jsonString: '{"a": "value",\n"b": "value" \n}',
+                    rawContent: '{"a": "value",\n"b": "value" // some comment\n}',
+                    rawContentInRequestTrigger: '{"a": "value",\n"b": "value" \n}',
                     expectedObject: { a: 'value', b: 'value' }
                 },
                 {
-                    jsoncString: '{"a": "value",\n"b": "value" // some comment\r\n}',
-                    jsonString: '{"a": "value",\n"b": "value" \n}',
+                    rawContent: '{"a": "value",\n"b": "value" // some comment\r\n}',
+                    rawContentInRequestTrigger: '{"a": "value",\n"b": "value" \n}',
                     expectedObject: { a: 'value', b: 'value' }
                 }
             ]
@@ -41,28 +41,28 @@ const expect = require('chai').expect,
             scenario: 'it should remove comments',
             scenarios: [
                 {
-                    jsoncString: '{/* \nsome comment\n*/\n"a": "value"\n}',
-                    jsonString: '{\n"a": "value"\n}',
+                    rawContent: '{/* \nsome comment\n*/\n"a": "value"\n}',
+                    rawContentInRequestTrigger: '{\n"a": "value"\n}',
                     expectedObject: { a: 'value' }
                 },
                 {
-                    jsoncString: '{/*\n"b": "value"\n*/\n"a": "value"\n}',
-                    jsonString: '{\n"a": "value"\n}',
+                    rawContent: '{/*\n"b": "value"\n*/\n"a": "value"\n}',
+                    rawContentInRequestTrigger: '{\n"a": "value"\n}',
                     expectedObject: { a: 'value' }
                 },
                 {
-                    jsoncString: '{/* some */"a": "value"}',
-                    jsonString: '{"a": "value"}',
+                    rawContent: '{/* some */"a": "value"}',
+                    rawContentInRequestTrigger: '{"a": "value"}',
                     expectedObject: { a: 'value' }
                 },
                 {
-                    jsoncString: '{"a":/* some */ "value"}',
-                    jsonString: '{"a": "value"}',
+                    rawContent: '{"a":/* some */ "value"}',
+                    rawContentInRequestTrigger: '{"a": "value"}',
                     expectedObject: { a: 'value' }
                 },
                 {
-                    jsoncString: '{"a": "value"/* some */}',
-                    jsonString: '{"a": "value"}',
+                    rawContent: '{"a": "value"/* some */}',
+                    rawContentInRequestTrigger: '{"a": "value"}',
                     expectedObject: { a: 'value' }
                 }
             ]
@@ -73,13 +73,13 @@ const expect = require('chai').expect,
             /* eslint-disable no-useless-escape */
             scenarios: [
                 {
-                    jsoncString: '{//test\n"a": "val\\\"ue"}',
-                    jsonString: '{\n"a": "val\\"ue"}',
+                    rawContent: '{//test\n"a": "val\\\"ue"}',
+                    rawContentInRequestTrigger: '{\n"a": "val\\"ue"}',
                     expectedObject: { a: 'val"ue' }
                 },
                 {
-                    jsoncString: '{//test\n"a\\\"a": "val\\\"ue"}',
-                    jsonString: '{\n"a\\"a": "val\\"ue"}',
+                    rawContent: '{//test\n"a\\\"a": "val\\\"ue"}',
+                    rawContentInRequestTrigger: '{\n"a\\"a": "val\\"ue"}',
                     expectedObject: { 'a"a': 'val"ue' }
                 }
             ]
@@ -89,8 +89,8 @@ const expect = require('chai').expect,
             scenario: 'it should handle it properly',
             scenarios: [
                 {
-                    jsoncString: '{//test\n"a": "value",}',
-                    jsonString: '{\n"a": "value",}',
+                    rawContent: '{//test\n"a": "value",}',
+                    rawContentInRequestTrigger: '{\n"a": "value",}',
                     expectedObject: '{\n"a": "value",}'
                 }
             ]
@@ -101,8 +101,8 @@ const expect = require('chai').expect,
             scenarios: [
                 {
                     contentTypeHeader: 'application/json-merge-patch',
-                    jsoncString: '{//test\n"a": "value",}',
-                    jsonString: '{\n"a": "value",}',
+                    rawContent: '{//test\n"a": "value",}',
+                    rawContentInRequestTrigger: '{\n"a": "value",}',
                     expectedObject: '{\n"a": "value",}'
                 }
             ]
@@ -113,9 +113,20 @@ const expect = require('chai').expect,
             scenarios: [
                 {
                     contentTypeHeader: 'text/plain',
-                    jsoncString: '{//test\n"a": "value",}',
-                    jsonString: '{//test\n"a": "value",}',
+                    rawContent: '{//test\n"a": "value",}',
+                    rawContentInRequestTrigger: '{//test\n"a": "value",}',
                     expectedObject: '{//test\n"a": "value",}'
+                }
+            ]
+        },
+        {
+            suitName: 'When the raw body is of type other than string',
+            scenario: 'it should make successful request',
+            scenarios: [
+                {
+                    rawContent: { a: 'value' },
+                    rawContentInRequestTrigger: { a: 'value' },
+                    expectedObject: { a: 'value' }
                 }
             ]
         }
@@ -147,7 +158,7 @@ testSuit.forEach((test) => {
                                     ],
                                     body: {
                                         mode: 'raw',
-                                        raw: scenario.jsoncString
+                                        raw: scenario.rawContent
                                     }
                                 }
                             }
@@ -184,7 +195,7 @@ testSuit.forEach((test) => {
                     let request = testrun.request.getCall(0).args[3],
                         rawBody = request.body.raw;
 
-                    expect(rawBody).to.eql(scenario.jsonString);
+                    expect(rawBody).to.eql(scenario.rawContentInRequestTrigger);
                 });
             });
         });

@@ -7,8 +7,8 @@ const expect = require('chai').expect,
             scenario: 'it should remove comments',
             scenarios: [
                 {
-                    jsoncString: '{// some comment\n"a": "value"\n}',
-                    jsonString: '{\n"a": "value"\n}'
+                    rawContent: '{// some comment\n"a": "value"\n}',
+                    rawContentAfterDryRun: '{\n"a": "value"\n}'
                 }
             ]
         },
@@ -17,8 +17,8 @@ const expect = require('chai').expect,
             scenario: 'it should remove comments',
             scenarios: [
                 {
-                    jsoncString: '{/* \nsome comment\n*/\n"a": "value"\n}',
-                    jsonString: '{\n"a": "value"\n}'
+                    rawContent: '{/* \nsome comment\n*/\n"a": "value"\n}',
+                    rawContentAfterDryRun: '{\n"a": "value"\n}'
                 }
             ]
         },
@@ -28,8 +28,8 @@ const expect = require('chai').expect,
             /* eslint-disable no-useless-escape */
             scenarios: [
                 {
-                    jsoncString: '{//test\n"a": "val\\\"ue"}',
-                    jsonString: '{\n"a": "val\\"ue"}'
+                    rawContent: '{//test\n"a": "val\\\"ue"}',
+                    rawContentAfterDryRun: '{\n"a": "val\\"ue"}'
                 }
             ]
         },
@@ -38,8 +38,8 @@ const expect = require('chai').expect,
             scenario: 'it should handle it properly',
             scenarios: [
                 {
-                    jsoncString: '{//test\n"a": "value",}',
-                    jsonString: '{\n"a": "value",}'
+                    rawContent: '{//test\n"a": "value",}',
+                    rawContentAfterDryRun: '{\n"a": "value",}'
                 }
             ]
         },
@@ -49,8 +49,8 @@ const expect = require('chai').expect,
             scenarios: [
                 {
                     language: 'text',
-                    jsoncString: '{//test\n"a": "value",}',
-                    jsonString: '{//test\n"a": "value",}'
+                    rawContent: '{//test\n"a": "value",}',
+                    rawContentAfterDryRun: '{//test\n"a": "value",}'
                 }
             ]
         },
@@ -59,8 +59,8 @@ const expect = require('chai').expect,
             scenario: 'it should not remove the comments',
             scenarios: [
                 {
-                    jsoncString: '{//test\n"a": "value",}',
-                    jsonString: '{//test\n"a": "value",}',
+                    rawContent: '{//test\n"a": "value",}',
+                    rawContentAfterDryRun: '{//test\n"a": "value",}',
                     options: { protocolProfileBehavior: { disabledSystemHeaders: { 'Content-Type': true } } }
                 }
             ]
@@ -71,9 +71,19 @@ const expect = require('chai').expect,
             scenario: 'it should remove the comments',
             scenarios: [
                 {
-                    jsoncString: '{//test\n"a": "value",}',
-                    jsonString: '{\n"a": "value",}',
+                    rawContent: '{//test\n"a": "value",}',
+                    rawContentAfterDryRun: '{\n"a": "value",}',
                     options: { protocolProfileBehavior: { disabledSystemHeaders: { 'Content-Type': false } } }
+                }
+            ]
+        },
+        {
+            suitName: 'when the raw content is not of type string',
+            scenario: 'it should remove the comments',
+            scenarios: [
+                {
+                    rawContent: { a: 'value' },
+                    rawContentAfterDryRun: { a: 'value' }
                 }
             ]
         }
@@ -94,7 +104,7 @@ testSuit.forEach((test) => {
                             header: [],
                             body: {
                                 mode: 'raw',
-                                raw: scenario.jsoncString,
+                                raw: scenario.rawContent,
                                 options: {
                                     raw: {
                                         language: scenario.language || 'json'
@@ -111,10 +121,10 @@ testSuit.forEach((test) => {
                     });
                 });
 
-                it(`should return raw body with with comment removed in triggers for case: ${index}`, function () {
+                it(`should return raw body with with comment removed in returned request: ${index}`, function () {
                     let rawBody = result.body.raw;
 
-                    expect(rawBody).to.eql(scenario.jsonString);
+                    expect(rawBody).to.eql(scenario.rawContentAfterDryRun);
                 });
             });
         });
