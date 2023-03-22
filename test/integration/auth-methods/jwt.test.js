@@ -583,14 +583,14 @@ describe('jwt auth', function () {
 
                 request.headers.members.forEach(function (header) {
                     if (header.key === 'Authorization') {
-                        jwtToken = header.value.split('Bearer ')[1];
+                        jwtToken = header.value;
                     }
                     headers.push(header.key);
                 });
 
                 expect(response.json()).to.deep.include({
                     key: 'Authorization',
-                    value: `Bearer ${jwtToken}`
+                    value: jwtToken
                 })
 
                 try {
@@ -665,14 +665,14 @@ describe('jwt auth', function () {
 
                 request.headers.members.forEach(function (header) {
                     if (header.key === 'Authorization') {
-                        jwtToken = header.value.split('Bearer ')[1];
+                        jwtToken = header.value;
                     }
                     headers.push(header.key);
                 });
 
                 expect(response.json()).to.deep.include({
                     key: 'Authorization',
-                    value: `Bearer ${jwtToken}`
+                    value: jwtToken
                 })
 
                 try {
@@ -714,7 +714,8 @@ describe('jwt auth', function () {
                                         payload: { test: 123 },
                                         secret: signKey,
                                         privateKey: signKey,
-                                        tokenAddTo: HEADER
+                                        tokenAddTo: HEADER,
+                                        headerPrefix: 'Bearer'
                                     }
                                 }
                             }
@@ -851,14 +852,14 @@ describe('jwt auth', function () {
 
                 request.headers.members.forEach(function (header) {
                     if (header.key === 'Authorization') {
-                        jwtToken = header.value.split('Bearer ')[1];
+                        jwtToken = header.value;
                     }
                     headers.push(header.key);
                 });
 
                 expect(response.json()).to.deep.include({
                     key: 'Authorization',
-                    value: `Bearer ${jwtToken}`
+                    value: jwtToken
                 })
 
                 // eslint-disable-next-line one-var
@@ -1010,14 +1011,14 @@ describe('jwt auth', function () {
 
             request.headers.members.forEach(function (header) {
                 if (header.key === 'Authorization') {
-                    jwtToken = header.value.split('Bearer ')[1];
+                    jwtToken = header.value;
                 }
                 headers.push(header.key);
             });
 
             expect(response.json()).to.deep.include({
                 key: 'Authorization',
-                value: `Bearer ${jwtToken}`
+                value: jwtToken
             })
 
             // eslint-disable-next-line one-var
@@ -1058,7 +1059,8 @@ describe('jwt auth', function () {
                                         payload: { test: 123, name: 'demo-name' },
                                         secret: '{{signKey}}',
                                         privateKey: '{{signKey}}',
-                                        addTokenTo: HEADER
+                                        addTokenTo: HEADER,
+                                        headerPrefix: 'Bearer'
                                     }
                                 }
                             }
@@ -1331,7 +1333,8 @@ describe('jwt auth', function () {
                                         payload: '{\n "uno": 1,\n "dos": 2\n,\n "number": {{number}}}',
                                         secret: '{{signKey}}',
                                         privateKey: '{{signKey}}',
-                                        addTokenTo: HEADER
+                                        addTokenTo: HEADER,
+                                        headerPrefix: 'Bearer'
                                     }
                                 }
                             }
@@ -1805,14 +1808,14 @@ describe('jwt auth', function () {
 
                 request.headers.members.forEach(function (header) {
                     if (header.key === 'Authorization') {
-                        jwtToken = header.value.split('Bearer ')[1];
+                        jwtToken = header.value;
                     }
                     headers.push(header.key);
                 });
 
                 expect(response.json()).to.deep.include({
                     key: 'Authorization',
-                    value: `Bearer ${jwtToken}`
+                    value: jwtToken
                 });
 
                 try {
@@ -1855,6 +1858,7 @@ describe('jwt auth', function () {
                                         payload: { a: '1' },
                                         secret: base64EncodedSecret,
                                         addTokenTo: HEADER,
+                                        headerPrefix: 'Bearer',
                                         // denotes that secret must be decoded before signing
                                         isSecretBase64Encoded: true
                                     }
@@ -1939,7 +1943,8 @@ describe('jwt auth', function () {
                                         secret: secretKey,
                                         privateKey: secretKey,
                                         addTokenTo: HEADER,
-                                        isSecretBase64Encoded: false
+                                        isSecretBase64Encoded: false,
+                                        headerPrefix: 'Bearer'
                                     }
                                 }
                             }
