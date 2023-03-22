@@ -1,3 +1,28 @@
+7.31.3:
+  date: 2023-03-10
+  fixed bugs:
+    - GH-1272 Fixed `content-type` check for detecting SSE stream
+
+7.31.2:
+  date: 2023-03-10
+  chores:
+    - Updated dependencies
+
+7.31.1:
+  date: 2023-02-22
+  chores:
+    - Updated dependencies
+
+7.31.0:
+  date: 2023-02-08
+  new features:
+    - GH-1252 Added support for JWT authentication
+    - GH-1260 Throw error when an invalid `entrypoint` is provided
+    - GH-1261 Added support for refreshing OAuth tokens
+    - GH-1264 Added support for Server-Sent Events
+  chores:
+    - Dropped support for Node.js < v12
+
 7.30.1:
   date: 2023-01-25
   chores:

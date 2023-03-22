@@ -26,8 +26,6 @@ const fs = require('fs'),
 rm('-rf', OUT_DIR);
 mkdir('-p', OUT_DIR);
 
-console.info(chalk.yellow.bold('Generating bundle in "dist" directory...'));
-
 compiler.run((err) => {
     // webpack bundles the esm into commonjs module for browserify compile
 
