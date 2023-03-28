@@ -583,14 +583,14 @@ describe('jwt auth', function () {
 
                 request.headers.members.forEach(function (header) {
                     if (header.key === 'Authorization') {
-                        jwtToken = header.value;
+                        jwtToken = header.value.split('Bearer ')[1];
                     }
                     headers.push(header.key);
                 });
 
                 expect(response.json()).to.deep.include({
                     key: 'Authorization',
-                    value: jwtToken
+                    value: `Bearer ${jwtToken}`
                 })
 
                 try {
@@ -633,7 +633,8 @@ describe('jwt auth', function () {
                                         },
                                         secret: signKey,
                                         privateKey: signKey,
-                                        addTokenTo: HEADER
+                                        addTokenTo: HEADER,
+                                        headerPrefix: ''
                                     }
                                 }
                             }
@@ -808,7 +809,8 @@ describe('jwt auth', function () {
                                         payload: '{\n "test": "{{jku}}" }',
                                         secret: '{{signKey}}',
                                         privateKey: '{{signKey}}',
-                                        addTokenTo: HEADER
+                                        addTokenTo: HEADER,
+                                        headerPrefix: ''
                                     }
                                 }
                             }
@@ -859,7 +861,7 @@ describe('jwt auth', function () {
 
                 expect(response.json()).to.deep.include({
                     key: 'Authorization',
-                    value: jwtToken
+                    value: `${jwtToken}`
                 })
 
                 // eslint-disable-next-line one-var
@@ -967,7 +969,8 @@ describe('jwt auth', function () {
                                     header: { alg: 'HS512', typ: 'JWT' }, // alg is different from root algorithm
                                     payload: '{\n "test": "{{jku}}" }',
                                     secret: '{{signKey}}',
-                                    addTokenTo: HEADER
+                                    addTokenTo: HEADER,
+                                    headerPrefix:'test'
                                 }
                             }
                         }
@@ -1011,14 +1014,14 @@ describe('jwt auth', function () {
 
             request.headers.members.forEach(function (header) {
                 if (header.key === 'Authorization') {
-                    jwtToken = header.value;
+                    jwtToken = header.value.split('test ')[1];
                 }
                 headers.push(header.key);
             });
 
             expect(response.json()).to.deep.include({
                 key: 'Authorization',
-                value: jwtToken
+                value: `test ${jwtToken}`
             })
 
             // eslint-disable-next-line one-var
@@ -1760,7 +1763,8 @@ describe('jwt auth', function () {
                                         },
                                         secret: '{{signKey}}',
                                         privateKey: '{{signKey}}',
-                                        addTokenTo: HEADER
+                                        addTokenTo: HEADER,
+                                        headerPrefix: ''
                                     }
                                 }
                             }
