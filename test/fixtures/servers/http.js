@@ -61,8 +61,10 @@ httpServer.on('/redirect-to', function (req, res) {
     res.end();
 });
 
-httpServer.on('/echo/post', function (req, res) {
-    let body = [];
+httpServer.on('/echo', function (req, res) {
+    let body = [],
+        jsonBody = null;
+
     const { headers, url } = req;
 
     req.on('data', (chunk) => {
@@ -71,7 +73,7 @@ httpServer.on('/echo/post', function (req, res) {
         body = Buffer.concat(body).toString();
 
         try {
-            body = JSON.parse(body);
+            jsonBody = JSON.parse(body);
         }
         // We want to return the parsed body if the incoming request body
         // is valid json string. If not we want to return it as incoming string.
@@ -80,7 +82,7 @@ httpServer.on('/echo/post', function (req, res) {
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
 
-        const responseBody = { data: body, headers: headers, url: url };
+        const responseBody = { data: body, headers: headers, url: url, json: jsonBody };
 
         res.end(JSON.stringify(responseBody));
     });

@@ -3,8 +3,7 @@ const expect = require('chai').expect,
     Request = require('postman-collection').Request,
     testSuit = [
         {
-            suitName: 'when single line comment present',
-            scenario: 'it should remove comments',
+            suitName: 'with single line comment',
             scenarios: [
                 {
                     rawContent: '{// some comment\n"a": "value"\n}',
@@ -13,8 +12,7 @@ const expect = require('chai').expect,
             ]
         },
         {
-            suitName: 'when multi line comments present',
-            scenario: 'it should remove comments',
+            suitName: 'with multi line comments',
             scenarios: [
                 {
                     rawContent: '{/* \nsome comment\n*/\n"a": "value"\n}',
@@ -23,8 +21,7 @@ const expect = require('chai').expect,
             ]
         },
         {
-            suitName: 'when quotes with escape character present',
-            scenario: 'it should handle it properly',
+            suitName: 'with quotes with escape character present',
             /* eslint-disable no-useless-escape */
             scenarios: [
                 {
@@ -34,8 +31,7 @@ const expect = require('chai').expect,
             ]
         },
         {
-            suitName: 'when the json is invalid',
-            scenario: 'it should handle it properly',
+            suitName: 'with invalid json',
             scenarios: [
                 {
                     rawContent: '{//test\n"a": "value",}',
@@ -44,8 +40,7 @@ const expect = require('chai').expect,
             ]
         },
         {
-            suitName: 'when raw language is not json',
-            scenario: 'it should not remove the comments',
+            suitName: 'with non json raw language',
             scenarios: [
                 {
                     language: 'text',
@@ -55,20 +50,7 @@ const expect = require('chai').expect,
             ]
         },
         {
-            suitName: 'when content-type header is application/json, also present in protocolProfileBehavior,' +
-                      'but not disabled',
-            scenario: 'it should remove the comments',
-            scenarios: [
-                {
-                    rawContent: '{//test\n"a": "value",}',
-                    rawContentAfterDryRun: '{\n"a": "value",}',
-                    options: { protocolProfileBehavior: { disabledSystemHeaders: { 'Content-Type': false } } }
-                }
-            ]
-        },
-        {
-            suitName: 'when the raw content is not of type string',
-            scenario: 'it should remove the comments',
+            suitName: 'with the raw content is not of type string',
             scenarios: [
                 {
                     rawContent: { a: 'value' },
@@ -80,11 +62,11 @@ const expect = require('chai').expect,
 
 
 testSuit.forEach((test) => {
-    describe(test.suitName, function () {
+    describe('Dry Run Request Body Mode: raw', function () {
         let result;
 
-        test.scenarios.forEach((scenario, index) => {
-            describe(test.scenario, function () {
+        test.scenarios.forEach((scenario) => {
+            describe(test.suitName, function () {
                 before(function (done) {
                     const runOptions = {
                         request: {
@@ -110,7 +92,7 @@ testSuit.forEach((test) => {
                     });
                 });
 
-                it(`should return raw body with with comment removed in returned request: ${index}`, function () {
+                it('should return raw body with with comment removed in returned request', function () {
                     let rawBody = result.body.raw;
 
                     expect(rawBody).to.eql(scenario.rawContentAfterDryRun);
