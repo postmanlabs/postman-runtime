@@ -44,24 +44,13 @@ const expect = require('chai').expect,
             ]
         },
         {
-            suitName: 'when content-type header is not application/json',
+            suitName: 'when raw language is not json',
             scenario: 'it should not remove the comments',
             scenarios: [
                 {
                     language: 'text',
                     rawContent: '{//test\n"a": "value",}',
                     rawContentAfterDryRun: '{//test\n"a": "value",}'
-                }
-            ]
-        },
-        {
-            suitName: 'when content-type header is application/json, but disabled by protocolProfileBehavior',
-            scenario: 'it should not remove the comments',
-            scenarios: [
-                {
-                    rawContent: '{//test\n"a": "value",}',
-                    rawContentAfterDryRun: '{//test\n"a": "value",}',
-                    options: { protocolProfileBehavior: { disabledSystemHeaders: { 'Content-Type': true } } }
                 }
             ]
         },

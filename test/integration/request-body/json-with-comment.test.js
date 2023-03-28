@@ -96,23 +96,11 @@ const expect = require('chai').expect,
             ]
         },
         {
-            suitName: 'when content-type header is extension of application/json',
-            scenario: 'it should remove comments',
-            scenarios: [
-                {
-                    contentTypeHeader: 'application/json-merge-patch',
-                    rawContent: '{//test\n"a": "value",}',
-                    rawContentInRequestTrigger: '{\n"a": "value",}',
-                    expectedObject: '{\n"a": "value",}'
-                }
-            ]
-        },
-        {
-            suitName: 'when content-type header is not application/json',
+            suitName: 'when raw language is not json',
             scenario: 'it should not remove the comments',
             scenarios: [
                 {
-                    contentTypeHeader: 'text/plain',
+                    language: 'text',
                     rawContent: '{//test\n"a": "value",}',
                     rawContentInRequestTrigger: '{//test\n"a": "value",}',
                     expectedObject: '{//test\n"a": "value",}'
@@ -150,15 +138,15 @@ testSuit.forEach((test) => {
                                 request: {
                                     url: URL_HEADER,
                                     method: 'POST',
-                                    header: [
-                                        {
-                                            key: 'Content-Type',
-                                            value: scenario.contentTypeHeader || 'application/json'
-                                        }
-                                    ],
+                                    header: [],
                                     body: {
                                         mode: 'raw',
-                                        raw: scenario.rawContent
+                                        raw: scenario.rawContent,
+                                        options: {
+                                            raw: {
+                                                language: scenario.language || 'json'
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -183,12 +171,10 @@ testSuit.forEach((test) => {
 
                 it(`should send valid json string in request for case: ${index}`, function () {
                     let response = testrun.response.getCall(0).args[2],
-                        responseBody = JSON.parse(response.stream.toString()),
-                        contentTypeHeader = scenario.contentTypeHeader || 'application/json';
+                        responseBody = JSON.parse(response.stream.toString());
 
                     expect(response).to.have.property('code', 200);
                     expect(responseBody).to.have.property('data').that.eql(scenario.expectedObject);
-                    expect(responseBody.headers).to.have.property('content-type', contentTypeHeader);
                 });
 
                 it(`should return raw body with with comment removed in triggers for case: ${index}`, function () {
