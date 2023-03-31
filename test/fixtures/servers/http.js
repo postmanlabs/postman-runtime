@@ -81,10 +81,12 @@ httpServer.on('/echo', function (req, res) {
         catch (e) {}
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
-
-        const responseBody = { data: body, headers: headers, url: url, json: jsonBody };
-
-        res.end(JSON.stringify(responseBody));
+        res.end(JSON.stringify({
+            url: url,
+            data: body,
+            json: jsonBody,
+            headers: headers
+        }));
     });
 });
 module.exports = httpServer;

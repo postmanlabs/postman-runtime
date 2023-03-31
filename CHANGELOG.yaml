@@ -1,3 +1,7 @@
+unreleased:
+  new features:
+    - GH-1274 Added support for striping JSON comments in raw body
+
 7.31.1:
   date: 2023-02-22
   chores:
