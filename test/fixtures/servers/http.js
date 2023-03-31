@@ -61,4 +61,32 @@ httpServer.on('/redirect-to', function (req, res) {
     res.end();
 });
 
+httpServer.on('/echo', function (req, res) {
+    let body = [],
+        jsonBody = null;
+
+    const { headers, url } = req;
+
+    req.on('data', (chunk) => {
+        body.push(chunk);
+    }).on('end', () => {
+        body = Buffer.concat(body).toString();
+
+        try {
+            jsonBody = JSON.parse(body);
+        }
+        // We want to return the parsed body if the incoming request body
+        // is valid json string. If not we want to return it as incoming string.
+        // eslint-disable-next-line no-empty
+        catch (e) {}
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            url: url,
+            data: body,
+            json: jsonBody,
+            headers: headers
+        }));
+    });
+});
 module.exports = httpServer;
