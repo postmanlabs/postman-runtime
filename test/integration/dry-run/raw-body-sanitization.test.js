@@ -57,6 +57,59 @@ const expect = require('chai').expect,
                     rawContentAfterDryRun: { a: 'value' }
                 }
             ]
+        },
+        {
+            suitName: 'with raw language not present',
+            scenarios: [
+                {
+                    name: 'and content-type header is application/json',
+                    expectToRemoveComments: true,
+                    headers: [
+                        {
+                            key: 'Content-Type',
+                            value: 'application/json'
+                        }
+                    ],
+                    withoutBodyOptions: true,
+                    rawContent: '{//test\n"a": "value"}',
+                    rawContentAfterDryRun: '{\n"a": "value"}'
+                },
+                {
+                    name: 'and content-type header is application/vnd.api+json',
+                    expectToRemoveComments: true,
+                    headers: [
+                        {
+                            key: 'Content-Type',
+                            value: 'application/vnd.api+json'
+                        }
+                    ],
+                    withoutBodyOptions: true,
+                    rawContent: '{//test\n"a": "value"}',
+                    rawContentAfterDryRun: '{\n"a": "value"}'
+                },
+                {
+                    name: 'and content-type header is text/plain',
+                    expectToRemoveComments: false,
+                    headers: [
+                        {
+                            key: 'Content-Type',
+                            value: 'text/plain'
+                        }
+                    ],
+                    withoutBodyOptions: true,
+                    rawContent: '{//test\n"a": "value"}',
+                    rawContentAfterDryRun: '{//test\n"a": "value"}'
+
+                },
+                {
+                    name: 'and content-type header not present',
+                    expectToRemoveComments: false,
+                    withoutBodyOptions: true,
+                    rawContent: '{//test\n"a": "value"}',
+                    rawContentAfterDryRun: '{//test\n"a": "value"}'
+
+                }
+            ]
         }
     ];
 
@@ -66,21 +119,23 @@ testSuit.forEach((test) => {
         let result;
 
         test.scenarios.forEach((scenario) => {
-            describe(test.suitName, function () {
+            describe(`${test.suitName}${scenario.name ? `, ${scenario.name}` : ''}`, function () {
                 before(function (done) {
                     const runOptions = {
                         request: {
                             url: '{{url}}',
                             method: 'POST',
-                            header: [],
+                            header: scenario.headers || [],
                             body: {
                                 mode: 'raw',
                                 raw: scenario.rawContent,
-                                options: {
-                                    raw: {
-                                        language: scenario.language || 'json'
+                                ...(!scenario.withoutBodyOptions && {
+                                    options: {
+                                        raw: {
+                                            language: scenario.language || 'json'
+                                        }
                                     }
-                                }
+                                })
                             }
                         },
                         options: scenario.options || {}
@@ -92,7 +147,8 @@ testSuit.forEach((test) => {
                     });
                 });
 
-                it('should return raw body with with comment removed in returned request', function () {
+                it('should return raw body with comment' +
+                `${scenario.expectToRemoveComments ? ' removed' : ''}`, function () {
                     let rawBody = result.body.raw;
 
                     expect(rawBody).to.eql(scenario.rawContentAfterDryRun);
