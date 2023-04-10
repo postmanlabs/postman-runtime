@@ -1,3 +1,8 @@
+7.32.2:
+  date: 2023-04-10
+  chores:
+    - Updated dependencies
+
 7.32.1:
   date: 2023-04-05
   fixed bugs:
@@ -486,7 +491,7 @@
   date: 2019-04-26
   new features:
     - GH-818 Added support for multiple files in form-data body
-    - 'GH-819 Handle CookieStore events on `execution.cookies.${id}`'
+    - GH-819 Handle CookieStore events on `execution.cookies.${id}`
   chores:
     - GH-815 Allow empty string as variables in GraphQL body
     - Updated dependencies
@@ -823,7 +828,7 @@
 6.4.0:
   date: 2017-09-28
   new features:
-    - 'Improved flows for NTLM, Digest, and OAuth2'
+    - Improved flows for NTLM, Digest, and OAuth2
     - GH-382 Added script timeout option
     - GH-408 Prevented max replay errors from bubling up
     - GH-386 Added support for bearer-token auth
@@ -861,7 +866,7 @@
       `request` event
     - GH-337 Prevented headers with falsy keys from being sent with requests
   chores:
-    - 'GH-353,354 Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`'
+    - GH-353,354 Bumped Collection SDK to `v2.1.1` and Sandbox to `v2.3.1`
     - GH-342 Expanded documentation for the `assertion` event
     - GH-327 Ensured that the `tunnel` value is set from the request protocol
     - Updated dependencies
@@ -892,7 +897,7 @@
     - >-
       GH-298 Bumped Postman Sandbox to v2.3.0, which includes support for
       synchronous csv-parse
-    - 'GH-297 Bumped Postman Collection SDK to v1.2.9, with critical bugfixes'
+    - GH-297 Bumped Postman Collection SDK to v1.2.9, with critical bugfixes
     - Updated other dependencies
 
 6.2.1:
@@ -925,7 +930,7 @@
             // }
         }
   chores:
-    - 'Updated dependencies, pruned lodash3'
+    - Updated dependencies, pruned lodash3
     - GH-281 Used updated Sandbox with momentjs included
 
 6.1.6:
@@ -1332,7 +1337,7 @@
 2.4.0:
   date: 2016-08-12
   new features:
-    - 'Changes to the Node script sandbox, SugarJS now works correctly.'
+    - Changes to the Node script sandbox, SugarJS now works correctly.
     - Ensure that `getResponseCookie` is case-insensitive always
     - >-
       Check to ensure that Runtime does not crash if the path for file uploads
@@ -1398,8 +1403,8 @@
 2.2.1:
   date: 2016-07-21
   fixed bugs:
-    - 'Allow setting of duplicate headers (same name, but different value)'
-    - 'Do not send a request body if the body type is set, but it is empty'
+    - Allow setting of duplicate headers (same name, but different value)
+    - Do not send a request body if the body type is set, but it is empty
 
 2.2.0:
   date: 2016-07-19
