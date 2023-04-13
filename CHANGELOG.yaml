@@ -1,3 +1,24 @@
+7.32.2:
+  date: 2023-04-10
+  chores:
+    - Updated dependencies
+
+7.32.1:
+  date: 2023-04-05
+  fixed bugs:
+    - >-
+      GH-1284 Fixed a bug where JSON comments were not stripped from raw body
+      for JSON `Content-Type`
+
+7.32.0:
+  date: 2023-03-31
+  new features:
+    - GH-1274 Added support for stripping JSON comments in raw body
+  fixed bugs:
+    - GH-1279 Fixed a bug in JWT where empty header prefix was not handled
+  chores:
+    - Updated dependencies
+
 7.31.3:
   date: 2023-03-10
   fixed bugs:
