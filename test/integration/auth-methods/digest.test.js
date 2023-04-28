@@ -1,6 +1,7 @@
 var fs = require('fs'),
     path = require('path'),
-    expect = require('chai').expect;
+    expect = require('chai').expect,
+    _ = require('lodash');
 
 describe('digest auth', function () {
     var USERNAME = 'postman',
