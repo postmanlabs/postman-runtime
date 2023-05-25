@@ -1934,8 +1934,8 @@ describe('jwt auth', function () {
     Object.entries(HSAlgorithms).forEach(([key]) => {
         const { alg } = HSAlgorithms[key];
 
-        describe(`with secret as non ASCII base64 for - ${alg} algorithm`, function () {
-            // secret used without base64 encoding - abc
+        describe(`with base64 secret that has non ASCII  - ${alg} algorithm`, function () {
+            // secret used with base64 encoding
             const originalToken = HSBase64JwtToken[alg],
                 base64EncodedSecret = 'QBSGJPT9hDU/yZhVC3rJew==';
 
@@ -1962,7 +1962,6 @@ describe('jwt auth', function () {
                                         secret: base64EncodedSecret,
                                         addTokenTo: HEADER,
                                         headerPrefix: 'Bearer',
-                                        // denotes that secret must be decoded before signing
                                         isSecretBase64Encoded: true
                                     }
                                 }
