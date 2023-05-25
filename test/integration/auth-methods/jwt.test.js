@@ -76,6 +76,14 @@ const expect = require('chai').expect,
         HS512: 'eyJhbGciOiJIUzUxMiJ9.eyJhIjoiMSJ9.Yx0W2Wo6T0RdRXgqwvh7Ko6uHT6MnaYsU_N_4Nl1wRfRPdY_OB5awsDwddraC-JkyB9DZthViuuUpGzvO5bedg'
     },
 
+    // Non ASCII secret base64 encoded jwt token
+    HSBase64JwtToken = {
+        HS256: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEyLCJhcElkIjozLCJleHAiOjE2ODQ4NzA3NzAsImlhdCI6MTY4NDY3MDc3MH0.Lo7kJR7dJHZC3C0GP8VS2yJ0hscsO_GLP0jrcm3I51w',
+        HS384: 'eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEyLCJhcElkIjozLCJleHAiOjE2ODQ4NzA3NzAsImlhdCI6MTY4NDY3MDc3MH0.cSnlF9yFXhavEtbPLnVIAor2477Y5owShWCi5AenEX9YipT8SAwheAOTpOFUPxGk',
+        // eslint-disable-next-line
+        HS512: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEyLCJhcElkIjozLCJleHAiOjE2ODQ4NzA3NzAsImlhdCI6MTY4NDY3MDc3MH0.kgKBB09f6BLElIO50vx9ly1B21poYmu7xrjJ0uKSzdwBuarHywcjsfgo4E5HCGWqw9gt69lD3PkawJ1ygi1uiA'
+    },
+
     // RS algorithms
     RSAlgorithms = {
         RS256: {
@@ -1919,6 +1927,85 @@ describe('jwt auth', function () {
 
                 expect(protectedHeader)
                     .to.be.deep.equal({ alg });
+            });
+        });
+    });
+
+    Object.entries(HSAlgorithms).forEach(([key]) => {
+        const { alg } = HSAlgorithms[key];
+
+        describe(`with secret as non ASCII base64 for - ${alg} algorithm`, function () {
+            // secret used without base64 encoding - abc
+            const originalToken = HSBase64JwtToken[alg],
+                base64EncodedSecret = 'QBSGJPT9hDU/yZhVC3rJew==';
+
+            before(function (done) {
+                const runOptions = {
+                    collection: {
+                        item: {
+                            request: {
+                                url: URL_HEADER,
+                                auth: {
+                                    type: 'jwt',
+                                    jwt: {
+                                        algorithm: alg,
+                                        header: {
+                                            alg,
+                                            typ: "JWT"
+                                        },
+                                        payload: {
+                                            uid: 12,
+                                            apId: 3,
+                                            exp: 1684870770,
+                                            iat: 1684670770
+                                        },
+                                        secret: base64EncodedSecret,
+                                        addTokenTo: HEADER,
+                                        headerPrefix: 'Bearer',
+                                        // denotes that secret must be decoded before signing
+                                        isSecretBase64Encoded: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                this.run(runOptions, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should complete the run', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'done.calledOnce': true,
+                    'start.calledOnce': true,
+                    'request.calledOnce': true
+                });
+            });
+
+            it('should add Authorization header with bearer as jwt token', async function () {
+                const headers = [],
+                    request = testrun.request.firstCall.args[3],
+                    response = testrun.request.firstCall.args[2];
+
+                let jwtToken;
+
+                request.headers.members.forEach(function (header) {
+                    if (header.key === 'Authorization') {
+                        jwtToken = header.value.split('Bearer ')[1];
+                    }
+                    headers.push(header.key);
+                });
+
+                expect(response.json()).to.deep.include({
+                    key: 'Authorization',
+                    value: `Bearer ${jwtToken}`
+                });
+
+                expect(originalToken).to.be.equal(jwtToken);
             });
         });
     });
