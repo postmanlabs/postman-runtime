@@ -118,19 +118,19 @@ describe('tough-cookie', function () {
             const store = new TestCookieStore(),
                 jar = new CookieJar(store);
 
-            expect(() => { return jar.getCookiesSync('https://postman-echo.com', {}); })
+            expect(() => { return jar.getCookiesSync('https://postman.com', {}); })
                 .to.throw(Error)
                 .with.property('message', 'CookieJar store is not synchronous; use async API instead.');
 
-            expect(() => { return jar.setCookieSync('foo=bar', 'https://postman-echo.com', {}); })
+            expect(() => { return jar.setCookieSync('foo=bar', 'https://postman.com', {}); })
                 .to.throw(Error)
                 .with.property('message', 'CookieJar store is not synchronous; use async API instead.');
 
-            expect(() => { return jar.getCookieStringSync('https://postman-echo.com', {}); })
+            expect(() => { return jar.getCookieStringSync('https://postman.com', {}); })
                 .to.throw(Error)
                 .with.property('message', 'CookieJar store is not synchronous; use async API instead.');
 
-            expect(() => { return jar.getSetCookieStringsSync('https://postman-echo.com', {}); })
+            expect(() => { return jar.getSetCookieStringsSync('https://postman.com', {}); })
                 .to.throw(Error)
                 .with.property('message', 'CookieJar store is not synchronous; use async API instead.');
 
@@ -158,7 +158,7 @@ describe('tough-cookie', function () {
                     }, { loose: true }),
                     jar = new CookieJar(new TestCookieStore(), { rejectPublicSuffixes: true });
 
-                jar.setCookie(cookie, 'https://postman-echo.com', function (err) {
+                jar.setCookie(cookie, 'https://postman.com', function (err) {
                     expect(err).to.be.ok;
                     expect(err.message).to.equal('Cookie has domain set to a public suffix');
 
@@ -174,7 +174,7 @@ describe('tough-cookie', function () {
                     }, { loose: true }),
                     jar = new CookieJar(new TestCookieStore(), { rejectPublicSuffixes: false });
 
-                jar.setCookie(cookie, 'https://postman-echo.com', function (err) {
+                jar.setCookie(cookie, 'https://postman.com', function (err) {
                     expect(err).to.be.null;
 
                     done();
@@ -189,7 +189,7 @@ describe('tough-cookie', function () {
                     }, { loose: true }),
                     jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie(cookie, 'https://postman-echo.com', function (err) {
+                jar.setCookie(cookie, 'https://postman.com', function (err) {
                     expect(err).to.be.ok;
                     expect(err.message).to.equal('Cookie has domain set to a public suffix');
 
@@ -202,7 +202,7 @@ describe('tough-cookie', function () {
             it('should create cookies with leading "=" if looseMode is true', function (done) {
                 const jar = new CookieJar(new TestCookieStore(), { looseMode: true });
 
-                jar.setCookie('=foo=bar', 'https://postman-echo.com', function (err, cookie) {
+                jar.setCookie('=foo=bar', 'https://postman.com', function (err, cookie) {
                     expect(err).to.be.null;
                     expect(cookie).to.be.ok;
 
@@ -213,7 +213,7 @@ describe('tough-cookie', function () {
             it('should not create cookies with leading "=" if looseMode is false', function (done) {
                 const jar = new CookieJar(new TestCookieStore(), { looseMode: false });
 
-                jar.setCookie('=foo=bar', 'https://postman-echo.com', function (err) {
+                jar.setCookie('=foo=bar', 'https://postman.com', function (err) {
                     expect(err).to.be.ok;
                     expect(err.message).to.equal('Cookie failed to parse');
 
@@ -234,7 +234,7 @@ describe('tough-cookie', function () {
             it('should set the cookie', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie('foo=bar', 'https://postman-echo.com', function (err, cookie) {
+                jar.setCookie('foo=bar', 'https://postman.com', function (err, cookie) {
                     expect(err).to.be.null;
                     expect(cookie).to.be.ok;
                     expect(cookie.key).to.equal('foo');
@@ -247,7 +247,7 @@ describe('tough-cookie', function () {
             it('should set the cookie with URL as an legacy URL object', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie('foo=bar', Url.parse('https://postman-echo.com'), function (err, cookie) {
+                jar.setCookie('foo=bar', Url.parse('https://postman.com'), function (err, cookie) {
                     expect(err).to.be.null;
                     expect(cookie).to.be.ok;
                     expect(cookie.key).to.equal('foo');
@@ -260,7 +260,7 @@ describe('tough-cookie', function () {
             it('should set the cookie with URL as an object', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie('foo=bar', new URL('https://postman-echo.com'), function (err, cookie) {
+                jar.setCookie('foo=bar', new URL('https://postman.com'), function (err, cookie) {
                     expect(err).to.be.null;
                     expect(cookie).to.be.ok;
                     expect(cookie.key).to.equal('foo');
@@ -273,15 +273,15 @@ describe('tough-cookie', function () {
             it('should set the cookie with options', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie('foo=bar; Path=/; Domain=postman-echo.com',
-                    'https://postman-echo.com',
+                jar.setCookie('foo=bar; Path=/; Domain=postman.com',
+                    'https://postman.com',
                     function (err, cookie) {
                         expect(err).to.be.null;
                         expect(cookie).to.be.ok;
                         expect(cookie.key).to.equal('foo');
                         expect(cookie.value).to.equal('bar');
                         expect(cookie.path).to.equal('/');
-                        expect(cookie.domain).to.equal('postman-echo.com');
+                        expect(cookie.domain).to.equal('postman.com');
 
                         done();
                     });
@@ -290,10 +290,10 @@ describe('tough-cookie', function () {
             it('should not set the cookie if domain does not match', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie('foo=bar; Path=/; Domain=example.com', 'https://postman-echo.com', function (err) {
+                jar.setCookie('foo=bar; Path=/; Domain=example.com', 'https://postman.com', function (err) {
                     expect(err).to.be.ok;
                     expect(err.message)
-                        .to.equal('Cookie not in this host\'s domain. Cookie:example.com Request:postman-echo.com');
+                        .to.equal('Cookie not in this host\'s domain. Cookie:example.com Request:postman.com');
 
                     done();
                 });
@@ -304,8 +304,8 @@ describe('tough-cookie', function () {
                 // the cookie is set with loose=true when the callback is passed
                 const jar = new CookieJar(new TestCookieStore(), { looseMode: false });
 
-                jar.setCookie('=foo=bar; Path=/; Domain=postman-echo.com',
-                    'https://postman-echo.com',
+                jar.setCookie('=foo=bar; Path=/; Domain=postman.com',
+                    'https://postman.com',
                     { loose: true },
                     function (err, cookie) {
                         expect(err).to.be.null;
@@ -313,7 +313,7 @@ describe('tough-cookie', function () {
                         expect(cookie.key).to.equal('foo');
                         expect(cookie.value).to.equal('bar');
                         expect(cookie.path).to.equal('/');
-                        expect(cookie.domain).to.equal('postman-echo.com');
+                        expect(cookie.domain).to.equal('postman.com');
 
                         done();
                     });
@@ -337,7 +337,7 @@ describe('tough-cookie', function () {
             it('should throw error when setting cookie with public suffix domain', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
-                jar.setCookie('foo=bar; Path=/; Domain=com', 'https://postman-echo.com', function (err) {
+                jar.setCookie('foo=bar; Path=/; Domain=com', 'https://postman.com', function (err) {
                     expect(err).to.be.ok;
                     expect(err.message).to.equal('Cookie has domain set to a public suffix');
 
@@ -368,11 +368,11 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar', 'https://postman-echo.com', next);
+                        return jar.setCookie('foo=bar', 'https://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', function (err, cookies) {
+                        return jar.getCookies('https://postman.com', function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
                             expect(cookies.length).to.equal(1);
@@ -390,11 +390,11 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar', 'https://postman-echo.com', next);
+                        return jar.setCookie('foo=bar', 'https://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.getCookies(new URL('https://postman-echo.com'), function (err, cookies) {
+                        return jar.getCookies(new URL('https://postman.com'), function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
                             expect(cookies.length).to.equal(1);
@@ -412,15 +412,15 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar', 'https://postman-echo.com', next);
+                        return jar.setCookie('foo=bar', 'https://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.setCookie('bar=baz', 'https://postman-echo.com', next);
+                        return jar.setCookie('bar=baz', 'https://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', function (err, cookies) {
+                        return jar.getCookies('https://postman.com', function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
                             expect(cookies.length).to.equal(2);
@@ -436,19 +436,19 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar; Path=/; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('foo=bar; Path=/; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.setCookie('bar=baz; Path=/abc; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('bar=baz; Path=/abc; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', { path: '/' }, function (err, cookies) {
+                        return jar.getCookies('https://postman.com', { path: '/' }, function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
                             expect(cookies.length).to.equal(1);
@@ -467,7 +467,7 @@ describe('tough-cookie', function () {
                 async.series([
                     (next) => {
                         return jar.setCookie('foo=bar; Secure; HttpOnly; foo=bar; hostOnly=false',
-                            'https://postman-echo.com',
+                            'https://postman.com',
                             next);
                     },
 
@@ -476,11 +476,11 @@ describe('tough-cookie', function () {
                             key: 'baz',
                             value: 'qux',
                             secure: false
-                        }), 'https://postman-echo.com', next);
+                        }), 'https://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', { secure: false }, function (err, cookies) {
+                        return jar.getCookies('https://postman.com', { secure: false }, function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
 
@@ -499,15 +499,15 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar', 'http://postman-echo.com', next);
+                        return jar.setCookie('foo=bar', 'http://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.setCookie('bat=baz; Secure', 'http://postman-echo.com', next);
+                        return jar.setCookie('bat=baz; Secure', 'http://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.getCookies('http://postman-echo.com', { http: true }, function (err, cookies) {
+                        return jar.getCookies('http://postman.com', { http: true }, function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
 
@@ -526,19 +526,19 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar; Path=/; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('foo=bar; Path=/; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.setCookie('baz=qux; Path=/abc; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('baz=qux; Path=/abc; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', { allPaths: true }, function (err, cookies) {
+                        return jar.getCookies('https://postman.com', { allPaths: true }, function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
 
@@ -558,18 +558,18 @@ describe('tough-cookie', function () {
                 async.series([
                     (next) => {
                         return jar.setCookie('foo=bar; Expires=Thu, 03 Jan 1970 00:00:00 GMT',
-                            'https://postman-echo.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
                         return jar.setCookie('bar=baz; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-                            'https://postman-echo.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', {
+                        return jar.getCookies('https://postman.com', {
                             now: (new Date('Thu, 02 Jan 1970 00:00:00 GMT')).getTime()
                         }, function (err, cookies) {
                             expect(err).to.be.null;
@@ -590,18 +590,18 @@ describe('tough-cookie', function () {
                 async.series([
                     (next) => {
                         return jar.setCookie('foo=bar; Expires=Thu, 03 Jan 1970 00:00:00 GMT',
-                            'https://postman-echo.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
                         return jar.setCookie('bar=baz; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-                            'https://postman-echo.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', {
+                        return jar.getCookies('https://postman.com', {
                             now: (new Date('Thu, 02 Jan 1970 00:00:00 GMT')).getTime(),
                             expire: false
                         }, function (err, cookies) {
@@ -617,7 +617,7 @@ describe('tough-cookie', function () {
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', {
+                        return jar.getCookies('https://postman.com', {
                             now: (new Date('Thu, 02 Jan 1970 00:00:00 GMT')).getTime(),
                             expire: true
                         }, function (err, cookies) {
@@ -684,19 +684,19 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar; Path=/; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('foo=bar; Path=/; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.setCookie('baz=qux; Path=/abc; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('baz=qux; Path=/abc; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', { allPaths: true }, function (err, cookies) {
+                        return jar.getCookies('https://postman.com', { allPaths: true }, function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
 
@@ -715,19 +715,19 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar; Path=/; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('foo=bar; Path=/; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.setCookie('baz=qux; Path=/abc; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('baz=qux; Path=/abc; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.getCookies('https://postman-echo.com', {
+                        return jar.getCookies('https://postman.com', {
                             allPaths: true,
                             sort: false
                         }, function (err, cookies) {
@@ -744,8 +744,6 @@ describe('tough-cookie', function () {
                 ], done);
             });
 
-            // @todo: This should not be the case. For localhost, insecure protocol should be allowed.
-            // See: https://github.com/postmanlabs/postman-app-support/issues/11467
             it('does not get the "Secure" cookies for localhost with insecure protocol', function (done) {
                 const jar = new CookieJar(new TestCookieStore());
 
@@ -759,7 +757,7 @@ describe('tough-cookie', function () {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
 
-                            expect(cookies.length).to.equal(0); // should be 1 when fixed
+                            expect(cookies.length).to.equal(1);
 
                             next();
                         });
@@ -774,11 +772,11 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar', 'https://postman-echo.com', next);
+                        return jar.setCookie('foo=bar', 'https://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.getCookieString('https://postman-echo.com', function (err, cookies) {
+                        return jar.getCookieString('https://postman.com', function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
                             expect(cookies).to.equal('foo=bar');
@@ -794,11 +792,11 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar', 'https://postman-echo.com', next);
+                        return jar.setCookie('foo=bar', 'https://postman.com', next);
                     },
 
                     (next) => {
-                        return jar.getCookieString(new URL('https://postman-echo.com'), function (err, cookies) {
+                        return jar.getCookieString(new URL('https://postman.com'), function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
                             expect(cookies).to.equal('foo=bar');
@@ -814,19 +812,19 @@ describe('tough-cookie', function () {
 
                 async.series([
                     (next) => {
-                        return jar.setCookie('foo=bar; Path=/; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('foo=bar; Path=/; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.setCookie('bar=baz; Path=/abc; Domain=postman-echo.com',
-                            'https://postman-echo.com',
+                        return jar.setCookie('bar=baz; Path=/abc; Domain=postman.com',
+                            'https://postman.com',
                             next);
                     },
 
                     (next) => {
-                        return jar.getCookieString('https://postman-echo.com', { path: '/' }, function (err, cookies) {
+                        return jar.getCookieString('https://postman.com', { path: '/' }, function (err, cookies) {
                             expect(err).to.be.null;
                             expect(cookies).to.be.ok;
                             expect(cookies).to.equal('foo=bar');
@@ -847,7 +845,7 @@ describe('tough-cookie', function () {
                     value: 'bar',
                     expires: now,
                     maxAge: 0,
-                    domain: 'postman-echo.com',
+                    domain: 'postman.com',
                     path: '/my-path',
                     secure: true,
                     httpOnly: true,
@@ -860,7 +858,7 @@ describe('tough-cookie', function () {
             expect(cookie.value).to.equal('bar');
             expect(cookie.expires.toString()).to.equal(now.toString());
             expect(cookie.maxAge).to.equal(0);
-            expect(cookie.domain).to.equal('postman-echo.com');
+            expect(cookie.domain).to.equal('postman.com');
             expect(cookie.path).to.equal('/my-path');
             expect(cookie.secure).to.be.true;
             expect(cookie.httpOnly).to.be.true;
@@ -892,7 +890,7 @@ describe('tough-cookie', function () {
                         value: 'bar',
                         expires: expires,
                         maxAge: 0,
-                        domain: 'postman-echo.com',
+                        domain: 'postman.com',
                         path: '/my-path',
                         secure: true,
                         httpOnly: true,
@@ -906,7 +904,7 @@ describe('tough-cookie', function () {
                     value: 'bar',
                     expires: expires.toISOString(),
                     maxAge: 0,
-                    domain: 'postman-echo.com',
+                    domain: 'postman.com',
                     path: '/my-path',
                     secure: true,
                     httpOnly: true,
@@ -926,7 +924,7 @@ describe('tough-cookie', function () {
                         value: 'bar',
                         expires: expires.toISOString(),
                         maxAge: 0,
-                        domain: 'postman-echo.com',
+                        domain: 'postman.com',
                         path: '/my-path',
                         secure: true,
                         httpOnly: true,
@@ -940,7 +938,7 @@ describe('tough-cookie', function () {
                 expect(cookie.value).to.equal('bar');
                 expect(cookie.expires.toString()).to.equal(expires.toString());
                 expect(cookie.maxAge).to.equal(0);
-                expect(cookie.domain).to.equal('postman-echo.com');
+                expect(cookie.domain).to.equal('postman.com');
                 expect(cookie.path).to.equal('/my-path');
                 expect(cookie.secure).to.be.true;
                 expect(cookie.httpOnly).to.be.true;
@@ -958,7 +956,7 @@ describe('tough-cookie', function () {
                     'foo=bar',
                     'Expires=Wed, 28 Dec 2022 19:04:17 GMT',
                     'Max-Age=0',
-                    'Domain=postman-echo.com',
+                    'Domain=postman.com',
                     'Path=/my-path',
                     'Secure',
                     'HttpOnly',
@@ -968,7 +966,7 @@ describe('tough-cookie', function () {
                 expect(cookie).to.be.ok;
                 expect(cookie.key).to.equal('foo');
                 expect(cookie.value).to.equal('bar');
-                expect(cookie.domain).to.equal('postman-echo.com');
+                expect(cookie.domain).to.equal('postman.com');
                 expect(cookie.path).to.equal('/my-path');
                 expect(cookie.secure).to.be.true;
                 expect(cookie.httpOnly).to.be.true;
@@ -1156,15 +1154,8 @@ describe('tough-cookie', function () {
                 expect(permuteDomain('abcd', true)).to.be.null;
             });
 
-            it('should throw error if the domain is special use domain', function () {
-                expect(() => {
-                    return permuteDomain('example', true);
-                })
-                    .to.throw(Error)
-                    .with.property('message',
-
-                        // eslint-disable-next-line max-len
-                        'Cookie has domain set to the public suffix "example" which is a special use domain. To allow this, configure your CookieJar with {allowSpecialUseDomain:true, rejectPublicSuffixes: false}.');
+            it('should not throw error if the domain is special use domain and there are no permutations', function () {
+                expect(permuteDomain('example', true)).to.be.null;
             });
 
             it('should return an array for local domains', function () {
