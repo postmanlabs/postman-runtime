@@ -22,8 +22,9 @@ shipit({
     preReleaseSuffix: preReleaseSuffix,
     // make sure that following dependencies are up to date
     dependencyList: [
-        'node-oauth1', 'postman-collection', 'postman-request',
-        'postman-url-encoder', 'postman-sandbox', 'serialised-error'
+        '@postman/tough-cookie', 'node-oauth1', 'postman-collection',
+        'postman-request', 'postman-url-encoder', 'postman-sandbox',
+        'serialised-error'
     ]
 }).then((version) => {
     console.info('🚀', version);

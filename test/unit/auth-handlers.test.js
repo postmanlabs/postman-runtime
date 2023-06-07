@@ -2568,7 +2568,7 @@ describe('Auth Handler:', function () {
                             workstation: 'sample.work'
                         }
                     },
-                    url: 'httpbin.org/get'
+                    url: 'postman-echo.com/get'
                 },
                 request = new Request(data),
                 auth = request.auth,
