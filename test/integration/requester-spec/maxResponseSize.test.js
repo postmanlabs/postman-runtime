@@ -3,7 +3,7 @@ var sinon = require('sinon'),
 
 (typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: maxResponseSize', function () {
     var testrun,
-        HOST = 'https://httpbin.org/bytes/10';
+        HOST = 'https://postman-echo.com/bytes/10';
 
     describe('with response > maxResponseSize', function () {
         before(function (done) {

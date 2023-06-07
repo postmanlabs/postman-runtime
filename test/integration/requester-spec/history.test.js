@@ -10,7 +10,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://httpbin.org/get',
+                            url: 'https://postman-echo.com/get',
                             method: 'GET',
                             header: [{
                                 key: 'Connection',
@@ -65,7 +65,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://httpbin.org/get',
+                            url: 'https://postman-echo.com/get',
                             method: 'GET',
                             header: [{
                                 key: 'Connection',
@@ -130,7 +130,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://httpbin.org/get',
+                            url: 'https://postman-echo.com/get',
                             method: 'GET',
                             header: [{
                                 key: 'Invalid Header Name', // contains spaces

@@ -10,7 +10,7 @@ var sinon = require('sinon'),
                 item: [{
                     request: {
                         url: {
-                            host: 'httpbin.org',
+                            host: 'postman-echo.com',
                             path: 'response-headers',
                             query: [{
                                 key: 'Set-Cookie',
