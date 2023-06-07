@@ -1,5 +1,7 @@
 7.32.3:
   date: 2023-06-08
+  fixed bugs:
+    - GH-1306 Fixed a bug where JWT base64 secret was not decoded correctly
   chores:
     - Updated dependencies
 
