@@ -1,6 +1,12 @@
 unreleased:
+  new features:
+    - >-
+      GH-1326 Added support for uploading binary files via base64 encoded string
+      in formdata and file mode body
   fixed bugs:
     - GH-1312 Fixed a bug where dns lookup used to fail on Node.js v20
+  chores:
+    - Updated dependencies
 
 7.32.3:
   date: 2023-06-08
