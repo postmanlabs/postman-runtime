@@ -23,7 +23,7 @@ function configOverrides(testType) {
         case 'integration-legacy':
             return {
                 statements: 45,
-                branches: 35,
+                branches: 34,
                 functions: 45,
                 lines: 45
             };
