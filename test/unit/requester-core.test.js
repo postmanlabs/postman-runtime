@@ -832,9 +832,7 @@ describe('requester util', function () {
                     expect(requestBody.formData).to.eql([{ key: 'foo', value: 'bar' }]);
                 });
 
-                it('should not support fileName & fileLength', function () {
-                    // @todo this test is added to make sure to add tests for `fileName` & `fileLength`
-                    //       option when these options are added in Schema and SDK.
+                it('should support custom fileName', function () {
                     var request = new sdk.Request({
                             url: 'postman-echo.com/post',
                             method: 'POST',
@@ -844,14 +842,17 @@ describe('requester util', function () {
                                     key: 'foo',
                                     value: 'bar',
                                     fileName: 'file.json',
-                                    fileLength: 3,
                                     type: 'text'
                                 }]
                             }
                         }),
                         requestBody = requesterCore.getRequestBody(request);
 
-                    expect(requestBody.formData).to.eql([{ key: 'foo', value: 'bar' }]);
+                    expect(requestBody.formData).to.eql([{
+                        key: 'foo',
+                        value: 'bar',
+                        options: { filename: 'file.json' }
+                    }]);
                 });
             });
         });
