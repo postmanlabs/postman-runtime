@@ -68,7 +68,7 @@
     "chai": "^4.3.7",
     "chalk": "^4.1.2",
     "dependency-check": "^4.1.0",
-    "editorconfig": "^1.0.2",
+    "editorconfig": "^2.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-jsdoc": "^36.1.1",
     "eslint-plugin-lodash": "^7.4.0",
