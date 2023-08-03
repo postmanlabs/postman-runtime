@@ -1,3 +1,7 @@
+unreleased:
+  fixed bugs:
+    - GH-1312 Fixed a bug where dns lookup used to fail on Node.js v20
+
 7.32.3:
   date: 2023-06-08
   fixed bugs:
