@@ -42,4 +42,4 @@ Thumbs.db
 .nyc_output
 
 # - Don't commit dist (but include is published package)
-/dist/
+# /dist/
