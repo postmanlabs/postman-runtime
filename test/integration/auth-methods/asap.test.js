@@ -294,7 +294,7 @@ describe('asap auth', function () {
                                     alg: 'S256', // Invalid alg
                                     kid: 'test-kid',
                                     iss: 'postman.com',
-                                    exp: '1h',
+                                    exp: '3600',
                                     aud: 'test-audience',
                                     jti: 'test-jti',
                                     privateKey: ''
@@ -456,7 +456,7 @@ describe('asap auth', function () {
                                         alg: alg,
                                         kid: 'test-kid',
                                         iss: 'postman.com',
-                                        exp: '2h',
+                                        exp: '7200',
                                         aud: 'test-audience',
                                         privateKey: signKey,
                                         claims: {
@@ -536,7 +536,7 @@ describe('asap auth', function () {
                 expect(payload.iat).to.be.a('number');
                 expect(payload.exp).to.be.a('number');
                 expect(payload.exp).to.be.greaterThan(payload.iat);
-                expect(payload.iat + 7200).to.equal(payload.exp);// Default expiry is 1 hour
+                expect(payload.iat + 7200).to.equal(payload.exp);
             });
         });
     });
@@ -555,7 +555,7 @@ describe('asap auth', function () {
                                     alg: 'RS256',
                                     kid: 'test-kid',
                                     iss: 'postman.com',
-                                    exp: '2h',
+                                    exp: '7200',
                                     aud: 'test-audience',
                                     privateKey: getRSADerKeyForKeyId('test-kid', RSA_BASE64_DER),
                                     claims: {
@@ -635,12 +635,12 @@ describe('asap auth', function () {
             expect(payload.iat).to.be.a('number');
             expect(payload.exp).to.be.a('number');
             expect(payload.exp).to.be.greaterThan(payload.iat);
-            expect(payload.iat + 7200).to.equal(payload.exp);// Default expiry is 1 hour
+            expect(payload.iat + 7200).to.equal(payload.exp);
         });
     });
 
     // should default exp param to 1h if not provided
-    describe('with no exp param', function () {
+    describe('with optional exp param absent', function () {
         before(function (done) {
             const runOptions = {
                 collection: {
@@ -727,8 +727,7 @@ describe('asap auth', function () {
         });
     });
 
-    // should default exp param to 1h if not provided
-    describe('with no jti param', function () {
+    describe('with no jti param in claims', function () {
         before(function (done) {
             const runOptions = {
                 collection: {
@@ -806,6 +805,561 @@ describe('asap auth', function () {
 
             // Verify the issued at time and expiry times are right
             expect(payload.jti).to.be.a('string');
+        });
+    });
+
+    describe('with optional exp param present', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: URL_HEADER,
+                            auth: {
+                                type: 'asap',
+                                asap: {
+                                    alg: 'RS256',
+                                    kid: 'test-kid',
+                                    iss: 'postman.com',
+                                    exp: '7200',
+                                    aud: 'test-audience',
+                                    privateKey: privateKeyMap.privatekeyRSA,
+                                    claims: {
+                                        jti: 'test-jti'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            expect(headers).to.include('Authorization');
+        });
+
+        // It should not send expiry timestamp directly, it should add the duration
+        // to the current timestamp and send that as the expiry timestamp
+        it('should form the correct JWT with exp param', async function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+            });
+
+            expect(response.json()).to.deep.include({
+                key: 'Authorization',
+                value: `Bearer ${jwtToken}`
+            });
+
+            // eslint-disable-next-line one-var
+            const secret = await jose.importSPKI(privateKeyMap.publicKeyRSA, 'RS256');
+
+            // eslint-disable-next-line one-var
+            const { payload } = await jose.jwtVerify(jwtToken, secret);
+
+            // Verify the issued at time and expiry times is right
+            expect(payload.iat).to.be.a('number');
+            expect(payload.exp).to.be.a('number');
+            expect(payload.exp).to.be.greaterThan(payload.iat);
+            expect(payload.iat + 7200).to.equal(payload.exp);
+        });
+    });
+
+    describe('with exp param present in additional claims', function () {
+        let currentTimeStamp = Math.floor(Date.now() / 1000),
+            expiryTimestamp = currentTimeStamp + 7200;
+
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: URL_HEADER,
+                            auth: {
+                                type: 'asap',
+                                asap: {
+                                    alg: 'RS256',
+                                    kid: 'test-kid',
+                                    iss: 'postman.com',
+                                    aud: 'test-audience',
+                                    privateKey: privateKeyMap.privatekeyRSA,
+                                    claims: {
+                                        jti: 'test-jti',
+                                        exp: expiryTimestamp
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            expect(headers).to.include('Authorization');
+        });
+
+        it('should sent expiry timestamp directly', async function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+            });
+
+            expect(response.json()).to.deep.include({
+                key: 'Authorization',
+                value: `Bearer ${jwtToken}`
+            });
+
+            // eslint-disable-next-line one-var
+            const secret = await jose.importSPKI(privateKeyMap.publicKeyRSA, 'RS256');
+
+            // eslint-disable-next-line one-var
+            const { payload } = await jose.jwtVerify(jwtToken, secret);
+
+            // Verify the issued at time and expiry times is right
+            expect(payload.exp).to.be.a('number');
+            expect(payload.exp).to.equal(expiryTimestamp);
+        });
+    });
+
+    describe('with optional sub param present', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: URL_HEADER,
+                            auth: {
+                                type: 'asap',
+                                asap: {
+                                    alg: 'RS256',
+                                    kid: 'test-kid',
+                                    iss: 'postman.com',
+                                    exp: '4800',
+                                    aud: 'test-audience',
+                                    sub: 'test-subject',
+                                    privateKey: privateKeyMap.privatekeyRSA,
+                                    claims: {
+                                        jti: 'test-jti'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            expect(headers).to.include('Authorization');
+        });
+
+        it('should send the sub param in JWT', async function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+            });
+
+            expect(response.json()).to.deep.include({
+                key: 'Authorization',
+                value: `Bearer ${jwtToken}`
+            });
+
+            // eslint-disable-next-line one-var
+            const secret = await jose.importSPKI(privateKeyMap.publicKeyRSA, 'RS256');
+
+            // eslint-disable-next-line one-var
+            const { payload } = await jose.jwtVerify(jwtToken, secret);
+
+            // validate JWT payload
+            expect(payload.sub).to.be.deep.equal('test-subject');
+        });
+    });
+
+    describe('with optional sub param absent', function () {
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: URL_HEADER,
+                            auth: {
+                                type: 'asap',
+                                asap: {
+                                    alg: 'RS256',
+                                    kid: 'test-kid',
+                                    iss: 'postman.com',
+                                    exp: '7200',
+                                    aud: 'test-audience',
+                                    privateKey: privateKeyMap.privatekeyRSA,
+                                    claims: {
+                                        jti: 'test-jti'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            expect(headers).to.include('Authorization');
+        });
+
+        it('should send iss as sub', async function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+            });
+
+            expect(response.json()).to.deep.include({
+                key: 'Authorization',
+                value: `Bearer ${jwtToken}`
+            });
+
+            // eslint-disable-next-line one-var
+            const secret = await jose.importSPKI(privateKeyMap.publicKeyRSA, 'RS256');
+
+            // eslint-disable-next-line one-var
+            const { payload } = await jose.jwtVerify(jwtToken, secret);
+
+            // validate JWT payload
+            expect(payload.sub).to.be.deep.equal('postman.com');
+        });
+    });
+
+    describe('with additional claims to override params', function () {
+        let currentTimeStamp = Math.floor(Date.now() / 1000),
+            expiryTimestamp = currentTimeStamp + 1000;
+
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: URL_HEADER,
+                            auth: {
+                                type: 'asap',
+                                asap: {
+                                    alg: 'RS256',
+                                    kid: 'test-kid',
+                                    iss: 'postman.com',
+                                    exp: '3600',
+                                    aud: 'test-audience',
+                                    sub: 'test-subject',
+                                    privateKey: privateKeyMap.privatekeyRSA,
+                                    claims: {
+                                        jti: 'test-jti',
+                                        kid: 'test-override-kid',
+                                        iss: 'test-override-iss',
+                                        exp: expiryTimestamp,
+                                        aud: 'test-override-aud',
+                                        sub: 'test-override-sub'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            expect(headers).to.include('Authorization');
+        });
+
+        it('should override params using data in claims', async function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+            });
+
+            expect(response.json()).to.deep.include({
+                key: 'Authorization',
+                value: `Bearer ${jwtToken}`
+            });
+
+            // eslint-disable-next-line one-var
+            const secret = await jose.importSPKI(privateKeyMap.publicKeyRSA, 'RS256');
+
+            // eslint-disable-next-line one-var
+            const { payload } = await jose.jwtVerify(jwtToken, secret);
+
+            // validate JWT payload
+            expect(payload.kid).to.be.deep.equal('test-override-kid');
+            expect(payload.iss).to.be.deep.equal('test-override-iss');
+            expect(payload.aud).to.be.deep.equal('test-override-aud');
+            expect(payload.sub).to.be.deep.equal('test-override-sub');
+            expect(payload.jti).to.be.deep.equal('test-jti');
+
+            expect(payload.iat).to.be.a('number');
+            expect(payload.exp).to.be.a('number');
+            expect(payload.exp).to.equal(expiryTimestamp);
+        });
+    });
+
+    describe('with additional claims sent as a stringified JSON', function () {
+        let currentTimeStamp = Math.floor(Date.now() / 1000),
+            expiryTimestamp = currentTimeStamp + 1000,
+            stringifiedClaims = JSON.stringify({
+                jti: 'test-jti',
+                kid: 'test-override-kid',
+                iss: 'test-override-iss',
+                exp: expiryTimestamp,
+                aud: 'test-override-aud',
+                sub: 'test-override-sub'
+            });
+
+        before(function (done) {
+            const runOptions = {
+                collection: {
+                    item: {
+                        request: {
+                            url: URL_HEADER,
+                            auth: {
+                                type: 'asap',
+                                asap: {
+                                    alg: 'RS256',
+                                    kid: 'test-kid',
+                                    iss: 'postman.com',
+                                    exp: '3600',
+                                    aud: 'test-audience',
+                                    sub: 'test-subject',
+                                    privateKey: privateKeyMap.privatekeyRSA,
+                                    claims: stringifiedClaims
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true,
+                'request.calledOnce': true
+            });
+        });
+
+        it('should add Authorization header', function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            expect(headers).to.include('Authorization');
+        });
+
+        it('should override params using data in claims', async function () {
+            const headers = [],
+                request = testrun.request.firstCall.args[3],
+                response = testrun.request.firstCall.args[2];
+
+            request.headers.members.forEach(function (header) {
+                headers.push(header.key);
+            });
+
+            let jwtToken;
+
+            request.headers.members.forEach(function (header) {
+                if (header.key === 'Authorization') {
+                    jwtToken = header.value.split('Bearer ')[1];
+                }
+            });
+
+            expect(response.json()).to.deep.include({
+                key: 'Authorization',
+                value: `Bearer ${jwtToken}`
+            });
+
+            // eslint-disable-next-line one-var
+            const secret = await jose.importSPKI(privateKeyMap.publicKeyRSA, 'RS256');
+
+            // eslint-disable-next-line one-var
+            const { payload } = await jose.jwtVerify(jwtToken, secret);
+
+            // validate JWT payload
+            expect(payload.kid).to.be.deep.equal('test-override-kid');
+            expect(payload.iss).to.be.deep.equal('test-override-iss');
+            expect(payload.aud).to.be.deep.equal('test-override-aud');
+            expect(payload.sub).to.be.deep.equal('test-override-sub');
+            expect(payload.jti).to.be.deep.equal('test-jti');
+
+            expect(payload.iat).to.be.a('number');
+            expect(payload.exp).to.be.a('number');
+            expect(payload.exp).to.equal(expiryTimestamp);
         });
     });
 });
