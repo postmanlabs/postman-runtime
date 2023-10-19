@@ -4,10 +4,336 @@ var _ = require('lodash'),
     sdk = require('postman-collection'),
     AuthLoader = require('../../lib/authorizer').AuthLoader,
     createAuthInterface = require('../../lib/authorizer/auth-interface'),
-
     Request = sdk.Request,
     Url = sdk.Url,
-    rawRequests = require('../fixtures/auth-requests');
+    rawRequests = require('../fixtures/auth-requests'),
+    privateKeyMap = {
+        // RS & PS
+        privatekeyRSA: `-----BEGIN PRIVATE KEY-----
+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
+gMVKySHK/rZTODTDcfx9d+nr5l3et2/w
+-----END PRIVATE KEY-----`, // fileName inside - test/fixtures/jwt-keys/
+        publicKeyRSA: `-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA27jXqf/B71OUkyVWtsCJ
+5hPW6e6N4B7VnHL7OlW0M9G5kgNAEx0PFq2A2sHfwoQVIccP5fYfcBZCJ9lkzdde
+egvdNEHPivxYjsUyoFWXk3pTPKYPmTI5mgcG2FPwBuYfutiXj7VPdsIPSLpA+5Yg
+3AbHdsBUdkydRiLwO8m3B3AJvpZkBcQrF309O7wFzFBkwFphSpmdAILATPmzAvwK
+a2X3F6lLsB2BrNIvjEnSz/h/jwz/ghcouKCDZqjOGTQTFax4SLDsGcmu8ltZNmWN
+14I+ndWJPWE1MY24I1PO8xc1XZtxDqD0s9zwUY1o6gAIlCwD08X0az7BKfXGgu4Z
+/H8uMXN11wjTcGvTDpI7pJPZFUw91MFhAL8P6T04qZVgmKUUNv5pFCUK7gAFuH4Q
+Jub89tSXPVcadQb7SjplippnCv4AUFbcRW0iCZvKfryOLBd2xLJ5Qly1QRDfdvG9
+4uTFPhhkwCNU50gfeHGuP+0pr4QFPPzqy3gHH3KaOU6kjZfxRLye2bmND7/HUM94
+G3UW0bZ+V/X3NNN9oGazulx3T0PZaiTMZlDpMsTAy39+NgFI2fJu7LEblXW/AZmK
+qsucoUzmB30NkLLRIKjUoGkSmxWAw+MQd2nULlXm+1IxGNj5P1x03ChzQrTsx/cV
+/IFeIiuHCwhLOQ2fhs5kA1ECAwEAAQ==
+-----END PUBLIC KEY-----
+        `,
+        invalidPublicKeyRSA: `-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtUxvcPYA3IKl19HxJXvh
+nHAIEzXCRF8z13dCIx8+AfLmiY5C/fA4k+jiXtXwQcAtzUHtj27V/imWv5uYQdWh
+8l8rBsRdA9uLWxzXA5qc4w+cCoNvpPPmtR/aik4u6tCMQl85bQivaMrzUQKRlMyo
+MhDncVlRx+yJ+HqfoL8LYbrYfIy6RYeMGDr3R8T+VWJ3B6VyDKPVoXFw4GOqNsA1
+uU8NTjBjKp+iOLOwTuPr4Txi+/eTKptJiMDwYBXgaQSfvOAPjaAkC4sWc17ZyE1l
+sZAu2qO6ntAtE4K/wAddOc08+h8y9SANdG81yV+z/uI9BfaBX+X9uSifxm0HCF5Q
+YqO/fF5ckQk8Obgmh6cQ009WPNhS2IvL5KjPdpyYKGLXuWnaogKTVzrroiY1kEV3
+tpfep61qYsrnzkfnRb7G0puiL0tl45gTLDN6c4J4LdhElSpOtI6yb59nCjjycmjs
+yArBlhaeHTmVDPTLWmfppi9jDzRxUF9QRMjrVLTurvTcSzKcOGFWjegrkpGOomrg
+9wuaEp3hZhT0qxxuG1ODYoyMXyF9yDP4WCRIKVFgp+WNXzkoJ3FY7uEQoa13HWBv
+LjyNTSDWlGFpnKW1h5ByEoZxr75uQnKXRp3bd+6kfZ1Spq0sTABO9YTUuLlHpirc
+q7SQ+Ojyvg0I+Zs6EGfvqw0CAwEAAQ==
+-----END PUBLIC KEY-----`,
+        // ES - ECDSA
+        privateKeyECDSA256: `-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgrgMoQc7DG9l2l/Mx
+nAASnzHMjMMmYc7B6gkmQFL1PrChRANCAAStTgjJpgcmnD+couFzrU16ncK5L0Pg
+InGu0p2AUTbssr3lnsbVo4uUmyc7xkkcmEXl0NkLCuvxsIYjYUFcBwNb
+-----END PRIVATE KEY-----`,
+        publicKeyECDSA256: `-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAErU4IyaYHJpw/nKLhc61Nep3CuS9D
+4CJxrtKdgFE27LK95Z7G1aOLlJsnO8ZJHJhF5dDZCwrr8bCGI2FBXAcDWw==
+-----END PUBLIC KEY-----`,
+        privateKeyECDSA384: `-----BEGIN PRIVATE KEY-----
+MIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDASr1++UleLCWj7P7D+
+Or+NZZybIWzW9z+MxhEBv2SK+bC5gyzYro5TaDJ2Vn39qRqhZANiAARbnsyK0sry
+rlLHOBFAdhwetoyiPrl7n5dmi+lrMRNBQNzFw1bIQU9tN94TuVy/1O4IEM8DeuD5
+ekVtY/ucq+Tjik/yZKJHvLsAZk/1GGjjq8V1mMVid0KMPOY//b7Ls2o=
+-----END PRIVATE KEY-----`,
+        publicKeyECDSA384: `-----BEGIN PUBLIC KEY-----
+MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEW57MitLK8q5SxzgRQHYcHraMoj65e5+X
+ZovpazETQUDcxcNWyEFPbTfeE7lcv9TuCBDPA3rg+XpFbWP7nKvk44pP8mSiR7y7
+AGZP9Rho46vFdZjFYndCjDzmP/2+y7Nq
+-----END PUBLIC KEY-----`,
+        privateKeyECDSA512: `-----BEGIN PRIVATE KEY-----
+MIHtAgEAMBAGByqGSM49AgEGBSuBBAAjBIHVMIHSAgEBBEG01HA0X3S8b7aNvR5i
+wWoMkLTs941ZdDgldbmrGMO1FFCm82N8yTihcdupa3QEod8GZ7Vzqrlhpgdgq7Wd
+wcp6jKGBiQOBhgAEAK9P/yQ+b7izWZlB3MYdoeHvfyH4s/gbjSscXX1O2tW66vhC
+iswRl13ApzjtA1o1z+M193ilcROyb8DgPVTKXWc2AGF4Me/CanB+gu0xAtqEN94/
+in/uvzF/rmQgmOFwBmmDOqxmBDJqBWcaRWTQugQ/XHvOFoCzoPb0+lZ4kyUajuBH
+-----END PRIVATE KEY-----`,
+        publicKeyECDSA512: `-----BEGIN PUBLIC KEY-----
+MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAr0//JD5vuLNZmUHcxh2h4e9/Ifiz
++BuNKxxdfU7a1brq+EKKzBGXXcCnOO0DWjXP4zX3eKVxE7JvwOA9VMpdZzYAYXgx
+78JqcH6C7TEC2oQ33j+Kf+6/MX+uZCCY4XAGaYM6rGYEMmoFZxpFZNC6BD9ce84W
+gLOg9vT6VniTJRqO4Ec=
+-----END PUBLIC KEY-----`
+    },
+    RSA_BASE64_DER = `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`,
+    RSA_BASE64_DER_INVALID = `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
++)(_*)&(^*%&*()_*&^&()__*&^**(_)+(*)&()*&(()&)*(&*+7N+vPlVTvsPHv
+C287Q+KIzqTgDwUxUS8lfU067gPBor2sO/vjTxi3NDZzBZpVH9WGrYUSp/9KcQ7S
+h7Fy0cpDbJNME2V3os1HBAM5rPolBe3ZFLT7JetE5WO/bQsQw49kqx5pgykcA9pK
+pjukyodCDPcdm9RrV2JBPoTcyGgzasPRFXLfdgt4sefE1Eh7EqfCKCqVaW4oIJo4
+6HQWrrQr8VW96TKJYs7zOKD5z5aFibo0jYit74qMZJ+b9PWQhHb92B2cyORrOexZ
+gMhb5Xny+98yFnGXIzaz7Qhzhzx1frbYR8jjj5BtT5Bw+ZKaeyCJuKQYyE8b/p5W
+UOD9xW0CggEBANpj9Q5jfXFSlBa2FaTnzoTI5vOXqj5d1lCgRooEy/OryqQXyttI
+jDMmLpPEWyYGrk6ws7DkMaWSKqSK2sl/MXuwK95ciTusJKUzmTSBGEu9S6fZd30i
+kWBkQ5C8yV1LUMwgRTItKfOmEtM9VnelUh8payRZ/lJfiPeUYEIN7OiaccOhHeMS
+ko1pgrlGvo0Rr6Qf6nx030do79+y9XnGTJ8ZuI2aFXB+rVwSAU3nmsea5nqWA2T7
+clN097Wkk2qtDcCQXVQfUzHT5ER4WpobzA9ke3A2uYc81RZbqjYqJCHavE+WWbeK
++8aNmedz+oIIXvS2ka0U4aeh0j4KwWSd/eUCggEAYPIMxFAyGoep1dVsfDFhcK/n
+HYu10IoHu6fS7DmqLgnIYgWJbDtQ/qUCiXZSttoVmzCrgUfGjtFrbcJhctYyJ8sT
+R8c7g6ij/pmFGsGr74yZDqtcBfY7c95ryP3SUnWKBUzNyH/grgsdfgfdfB5g/TdC
+vaTNnnYbN1qbm6khcMk0Z9xl2VfC3A1SdK8gKLlgHeM0OGBHzspm1uOTNkbeKCqd
+pjOtUqTZKLFumlX2NQcfsSGWIeXd55bQSUSMjzsOkjMYYM2i1V4i+gdgdWDI0u/Y
+gTlrMaB+wlyJbWzZllihjn36J0dtwYDFSskhyv62Uzg0w3H8fXfp6+Zd3rdv8A==`,
+    // RS algorithms
+    RSAlgorithms = {
+        RS256: {
+            alg: 'RS256',
+            signKey: () => {
+                return privateKeyMap.privatekeyRSA;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyRSA;
+            }
+        },
+        RS384: {
+            alg: 'RS384',
+            signKey: () => {
+                return privateKeyMap.privatekeyRSA;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyRSA;
+            }
+        },
+        RS512: {
+            alg: 'RS512',
+            signKey: () => {
+                return privateKeyMap.privatekeyRSA;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyRSA;
+            }
+        }
+    },
+
+    // PS algorithms
+    PSAlgorithms = {
+        PS256: {
+            alg: 'PS256',
+            signKey: () => {
+                return privateKeyMap.privatekeyRSA;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyRSA;
+            }
+        },
+        PS384: {
+            alg: 'PS384',
+            signKey: () => {
+                return privateKeyMap.privatekeyRSA;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyRSA;
+            }
+        },
+        PS512: {
+            alg: 'PS512',
+            signKey: () => {
+                return privateKeyMap.privatekeyRSA;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyRSA;
+            }
+        }
+    },
+
+    // ES algorithms
+    ESAlgorithms = {
+        ES256: {
+            alg: 'ES256',
+            signKey: () => {
+                return privateKeyMap.privateKeyECDSA256;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyECDSA256;
+            }
+        },
+        ES384: {
+            alg: 'ES384',
+            signKey: () => {
+                return privateKeyMap.privateKeyECDSA384;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyECDSA384;
+            }
+        },
+        ES512: {
+            alg: 'ES512',
+            signKey: () => {
+                return privateKeyMap.privateKeyECDSA512;
+            },
+            publicKey: () => {
+                return privateKeyMap.publicKeyECDSA512;
+            }
+        }
+    },
+
+    // all Algorithms
+    algorithmsSupported = {
+        ...RSAlgorithms,
+        ...PSAlgorithms,
+        ...ESAlgorithms
+    },
+    algorithms = Object.entries(algorithmsSupported),
+    compulsoryParams = [
+        'kid',
+        'iss',
+        'aud',
+        'privateKey'
+    ],
+    getAsapRequestsForAlg = require('../fixtures/get-auth-requests').getAsapRequestsForAlg;
+
+function getRSADerKeyForKeyId (keyId, base64DerKey) {
+    return `data:application/pkcs8;kid=${encodeURIComponent(keyId)};base64,${base64DerKey}`;
+}
 
 describe('Auth Handler:', function () {
     describe('noauth', function () {
@@ -2865,6 +3191,182 @@ describe('Auth Handler:', function () {
                 expect(authHeader).to.include(`signature=${expectedSignature}`);
                 done();
             });
+        });
+    });
+
+    describe('asap', function () {
+        compulsoryParams.forEach((param) => {
+            it(`should NOT add the Auth header if ${param} is missing`, async function () {
+                var request = new Request({
+                        auth: {
+                            type: 'asap',
+                            asap: {
+                                alg: param === 'RS256',
+                                kid: param === 'kid' ? '' : 'test-kid',
+                                iss: param === 'iss' ? '' : 'postman.com',
+                                exp: '',
+                                aud: param === 'aud' ? '' : 'test-audience',
+                                jti: '',
+                                privateKey: param === 'privateKey' ? '' : privateKeyMap.privatekeyRSA
+                            }
+                        },
+                        url: 'https://postman-echo.com/get',
+                        method: 'GET',
+                        header: [],
+                        data: {
+                            mode: 'formdata',
+                            content: []
+                        },
+                        description: ''
+                    }),
+                    auth = request.auth,
+                    authInterface = createAuthInterface(auth),
+                    handler = AuthLoader.getHandler(auth.type),
+                    headers,
+                    authHandlerSignPromiseObject = {};
+
+                authHandlerSignPromiseObject.promise = new Promise((resolve, reject) => {
+                    authHandlerSignPromiseObject.resolve = resolve;
+                    authHandlerSignPromiseObject.reject = reject;
+                });
+
+                handler.sign(authInterface, request, authHandlerSignPromiseObject.resolve);
+
+                // Wait for the handler to sign this request
+                await authHandlerSignPromiseObject.promise;
+
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+
+                // Ensure that the required headers have been added.
+                expect(headers).to.not.have.property('authorization');
+            });
+        });
+
+        algorithms.forEach(([key]) => {
+            var alg = algorithmsSupported[key].alg,
+                signKey = algorithmsSupported[key].signKey();
+
+            it(`should add the Auth header for ${alg} algorithm`, async function () {
+                var request = new Request(getAsapRequestsForAlg(alg, signKey)),
+                    auth = request.auth,
+                    authInterface = createAuthInterface(auth),
+                    handler = AuthLoader.getHandler(auth.type),
+                    headers,
+                    authHandlerSignPromiseObject = {};
+
+                authHandlerSignPromiseObject.promise = new Promise((resolve, reject) => {
+                    authHandlerSignPromiseObject.resolve = resolve;
+                    authHandlerSignPromiseObject.reject = reject;
+                });
+
+                handler.sign(authInterface, request, authHandlerSignPromiseObject.resolve);
+
+                // Wait for the handler to sign this request
+                await authHandlerSignPromiseObject.promise;
+
+                headers = request.getHeaders({
+                    ignoreCase: true
+                });
+
+                // Ensure that the required headers have been added.
+                expect(headers).to.have.property('authorization');
+            });
+        });
+
+        it('should NOT add authorization header with invalid base64 DER key', async function () {
+            var request = new Request({
+                    auth: {
+                        type: 'asap',
+                        asap: {
+                            alg: 'RS256',
+                            kid: 'test-kid',
+                            iss: 'postman.com',
+                            exp: '',
+                            aud: 'test-audience',
+                            jti: '',
+                            privateKey: getRSADerKeyForKeyId('test-kid', RSA_BASE64_DER_INVALID)
+                        }
+                    },
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET',
+                    header: [],
+                    data: {
+                        mode: 'formdata',
+                        content: []
+                    },
+                    description: ''
+                }),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHandlerSignPromiseObject = {};
+
+            authHandlerSignPromiseObject.promise = new Promise((resolve, reject) => {
+                authHandlerSignPromiseObject.resolve = resolve;
+                authHandlerSignPromiseObject.reject = reject;
+            });
+
+            handler.sign(authInterface, request, authHandlerSignPromiseObject.resolve);
+
+            // Wait for the handler to sign this request
+            await authHandlerSignPromiseObject.promise;
+
+            headers = request.getHeaders({
+                ignoreCase: true
+            });
+
+            // Ensure that the required headers have been added.
+            expect(headers).to.not.have.property('authorization');
+        });
+
+        it('should add authorization header with valid base64 DER key', async function () {
+            var request = new Request({
+                    auth: {
+                        type: 'asap',
+                        asap: {
+                            alg: 'RS256',
+                            kid: 'test-kid',
+                            iss: 'postman.com',
+                            exp: '',
+                            aud: 'test-audience',
+                            jti: '',
+                            privateKey: getRSADerKeyForKeyId('test-kid', RSA_BASE64_DER)
+                        }
+                    },
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET',
+                    header: [],
+                    data: {
+                        mode: 'formdata',
+                        content: []
+                    },
+                    description: ''
+                }),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                headers,
+                authHandlerSignPromiseObject = {};
+
+            authHandlerSignPromiseObject.promise = new Promise((resolve, reject) => {
+                authHandlerSignPromiseObject.resolve = resolve;
+                authHandlerSignPromiseObject.reject = reject;
+            });
+
+            handler.sign(authInterface, request, authHandlerSignPromiseObject.resolve);
+
+            // Wait for the handler to sign this request
+            await authHandlerSignPromiseObject.promise;
+
+            headers = request.getHeaders({
+                ignoreCase: true
+            });
+
+            // Ensure that the required headers have been added.
+            expect(headers).to.have.property('authorization');
         });
     });
 });
