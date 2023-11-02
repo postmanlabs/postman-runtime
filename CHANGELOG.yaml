@@ -1,3 +1,7 @@
+master:
+  new features:
+    - GH-1354 Added support for skipping request execution through script
+
 7.34.0:
   date: 2023-10-19
   new features:
