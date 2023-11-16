@@ -1,3 +1,7 @@
+unreleased:
+  new features:
+    - GH-1336 Added support for fetching execution location context through script
+
 7.35.0:
   date: 2023-11-02
   new features:
