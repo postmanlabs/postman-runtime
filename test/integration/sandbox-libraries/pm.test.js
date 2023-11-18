@@ -578,4 +578,502 @@ describe('sandbox library - pm api', function () {
             });
         });
     });
+
+    describe('pm.execution', function () {
+        describe('.location ', function () {
+            describe('for requests without valid name property', function () {
+                before(function (done) {
+                    this.run({
+                        collection: {
+                            info: {
+                                _postman_id: 'collection-id',
+                                name: 'collection-name'
+                            },
+                            event: [
+                                {
+                                    listen: 'prerequest',
+                                    script: {
+                                        exec: [
+                                            'console.log("path", pm.execution.location)',
+                                            'console.log("current", pm.execution.location.current)'
+                                        ],
+                                        type: 'text/javascript'
+                                    }
+                                }
+                            ],
+                            item: [{
+                                request: {
+                                    auth: {
+                                        type: 'noauth'
+                                    },
+                                    method: 'GET',
+                                    header: [
+                                        {
+                                            key: 'fs',
+                                            value: '',
+                                            type: 'text'
+                                        }
+                                    ],
+                                    url: {
+                                        raw: 'postman-echo.com/get',
+                                        host: [
+                                            'postman-echo',
+                                            'com'
+                                        ],
+                                        path: [
+                                            'get'
+                                        ]
+                                    }
+                                },
+                                response: [],
+                                id: 'request-id'
+                            }]
+                        }
+                    }
+                    , function (_err, results) {
+                        testrun = results;
+                        expect(testrun).to.be.ok;
+                        done();
+                    });
+                });
+
+                it('should complete the run', function () {
+                    sinon.assert.calledOnce(testrun.start);
+                    sinon.assert.calledOnce(testrun.done);
+                    sinon.assert.calledWith(testrun.done.getCall(0), null);
+                });
+
+                it('should correct path property value', function () {
+                    const collPreConsole = testrun.console.getCall(0).args.slice(2);
+
+                    expect(collPreConsole).to.deep.include.ordered.members(['path', [
+                        'collection-name',
+                        null // FIXME: should be empty string
+                    ]]);
+                });
+
+                it('should correct current property value', function () {
+                    const collPreConsole = testrun.console.getCall(1).args.slice(2);
+
+                    expect(collPreConsole).to.deep.include.ordered.members(['current', 'collection-name']);
+                });
+            });
+
+            describe('for requests with valid name properties', function () {
+                before(function (done) {
+                    this.run({
+                        collection: {
+                            info: {
+                                _postman_id: '230937f7-2c1a-4196-8a19-cf962ae5d15c',
+                                name: 'collection-0',
+                                schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
+                                _exporter_id: '767722',
+                                _collection_link: ''
+                            },
+                            item: [
+                                {
+                                    name: 'folder-1',
+                                    id: 'folder-1-id',
+                                    item: [
+                                        {
+                                            name: 'folder-2',
+                                            id: 'folder-2-id',
+                                            item: [
+                                                {
+                                                    name: 'request-2',
+                                                    id: 'request-2-id',
+                                                    event: [
+                                                        {
+                                                            listen: 'prerequest',
+                                                            script: {
+                                                                exec: [
+                                                                    // eslint-disable-next-line max-len
+                                                                    'console.log("request pre path", pm.execution.location)',
+                                                                    // eslint-disable-next-line max-len
+                                                                    'console.log("request pre current", pm.execution.location.current)'
+                                                                ],
+                                                                type: 'text/javascript'
+                                                            }
+                                                        },
+                                                        {
+                                                            listen: 'test',
+                                                            script: {
+                                                                exec: [
+                                                                    // eslint-disable-next-line max-len
+                                                                    'console.log("request test path", pm.execution.location)',
+                                                                    // eslint-disable-next-line max-len
+                                                                    'console.log("request test current", pm.execution.location.current)'
+                                                                ],
+                                                                type: 'text/javascript'
+                                                            }
+                                                        }
+                                                    ],
+                                                    request: {
+                                                        method: 'GET',
+                                                        header: [],
+                                                        url: {
+                                                            raw: '{{URL}}',
+                                                            host: [
+                                                                '{{URL}}'
+                                                            ]
+                                                        }
+                                                    },
+                                                    response: []
+                                                }
+                                            ],
+                                            event: [
+                                                {
+                                                    listen: 'prerequest',
+                                                    script: {
+                                                        type: 'text/javascript',
+                                                        exec: [
+                                                            // eslint-disable-next-line max-len
+                                                            'console.log("folder pre path", pm.execution.location)',
+                                                            // eslint-disable-next-line max-len
+                                                            'console.log("folder pre current", pm.execution.location.current)'
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    listen: 'test',
+                                                    script: {
+                                                        type: 'text/javascript',
+                                                        exec: [
+                                                            // eslint-disable-next-line max-len
+                                                            'console.log("folder test path", pm.execution.location)',
+                                                            // eslint-disable-next-line max-len
+                                                            'console.log("folder test current", pm.execution.location.current)'
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    event: [
+                                        {
+                                            listen: 'prerequest',
+                                            script: {
+                                                type: 'text/javascript',
+                                                exec: [
+                                                    'console.log("folder pre path", pm.execution.location)',
+                                                    'console.log("folder pre current", pm.execution.location.current)'
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            listen: 'test',
+                                            script: {
+                                                type: 'text/javascript',
+                                                exec: [
+                                                    'console.log("folder test path", pm.execution.location)',
+                                                    'console.log("folder test current", pm.execution.location.current)'
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'request-0',
+                                    id: 'request-0-id',
+                                    event: [
+                                        {
+                                            listen: 'prerequest',
+                                            script: {
+                                                exec: [
+                                                    'console.log("request pre path", pm.execution.location)',
+                                                    'console.log("request pre current", pm.execution.location.current)'
+                                                ],
+                                                type: 'text/javascript'
+                                            }
+                                        },
+                                        {
+                                            listen: 'test',
+                                            script: {
+                                                exec: [
+                                                    'console.log("request test path", pm.execution.location)',
+                                                    'console.log("request test current", pm.execution.location.current)'
+                                                ],
+                                                type: 'text/javascript'
+                                            }
+                                        }
+                                    ],
+                                    request: {
+                                        method: 'GET',
+                                        header: [],
+                                        url: {
+                                            raw: '{{URL}}',
+                                            host: [
+                                                '{{URL}}'
+                                            ]
+                                        }
+                                    },
+                                    response: [
+                                        {
+                                            name: 'New Request',
+                                            originalRequest: {
+                                                method: 'GET',
+                                                header: [],
+                                                url: {
+                                                    raw: 'localhost:3000',
+                                                    host: [
+                                                        'localhost'
+                                                    ],
+                                                    port: '3000'
+                                                }
+                                            },
+                                            _postman_previewlanguage: null,
+                                            header: null,
+                                            cookie: [],
+                                            body: null
+                                        }
+                                    ]
+                                }
+                            ],
+                            event: [
+                                {
+                                    listen: 'prerequest',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
+                                            'console.log("collection pre path", pm.execution.location)',
+                                            'console.log("collection pre current", pm.execution.location.current)'
+                                        ]
+                                    }
+                                },
+                                {
+                                    listen: 'test',
+                                    script: {
+                                        type: 'text/javascript',
+                                        exec: [
+                                            'console.log("collection test path", pm.execution.location)',
+                                            'console.log("collection test current", pm.execution.location.current)'
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }, function (_err, results) {
+                        testrun = results;
+                        expect(testrun).to.be.ok;
+                        done();
+                    });
+                });
+
+                it('should complete the run', function () {
+                    sinon.assert.calledOnce(testrun.start);
+                    sinon.assert.calledOnce(testrun.done);
+                    sinon.assert.calledWith(testrun.done.getCall(0), null);
+                });
+
+                describe('when logged from collection pre request script', function () {
+                    it('should log correct value for location', function () {
+                        const collPreConsole = testrun.console.getCall(0).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('collection pre path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'folder-1',
+                            'folder-2',
+                            'request-2'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(1).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('collection pre current');
+                        expect(collPreConsole[1]).to.eql('collection-0');
+                    });
+                });
+
+
+                describe('when logged from 1 level nested folder pre request script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(2).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('folder pre path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'folder-1',
+                            'folder-2',
+                            'request-2'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(3).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('folder pre current');
+                        expect(collPreConsole[1]).to.eql('folder-1');
+                    });
+                });
+
+
+                describe('when logged from 2 level nested folder pre request script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(4).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('folder pre path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'folder-1',
+                            'folder-2',
+                            'request-2'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(5).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('folder pre current');
+                        expect(collPreConsole[1]).to.eql('folder-2');
+                    });
+                });
+
+                describe('when logged from request in nested folder pre request script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(6).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('request pre path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'folder-1',
+                            'folder-2',
+                            'request-2'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(7).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('request pre current');
+                        expect(collPreConsole[1]).to.eql('request-2');
+                    });
+                });
+
+
+                describe('when logged from collection test script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(8).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('collection test path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'folder-1',
+                            'folder-2',
+                            'request-2'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(9).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('collection test current');
+                        expect(collPreConsole[1]).to.eql('collection-0');
+                    });
+                });
+
+                describe('when logged from 1 level nested folder test script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(10).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('folder test path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'folder-1',
+                            'folder-2',
+                            'request-2'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(11).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('folder test current');
+                        expect(collPreConsole[1]).to.eql('folder-1');
+                    });
+                });
+
+                describe('when logged from 2 level nested folder test script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(12).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('folder test path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'folder-1',
+                            'folder-2',
+                            'request-2'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(13).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('folder test current');
+                        expect(collPreConsole[1]).to.eql('folder-2');
+                    });
+                });
+
+                describe('when logged from nested request test script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(14).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('request test path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'folder-1',
+                            'folder-2',
+                            'request-2'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(15).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('request test current');
+                        expect(collPreConsole[1]).to.eql('request-2');
+                    });
+                });
+
+                describe('when logged from (non-nested) request pre request script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(18).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('request pre path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'request-0'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(19).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('request pre current');
+                        expect(collPreConsole[1]).to.eql('request-0');
+                    });
+                });
+
+                describe('when logged from (non-nested) request test script', function () {
+                    it('should log correct location property value', function () {
+                        const collPreConsole = testrun.console.getCall(22).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('request test path');
+                        expect(collPreConsole[1]).to.eql([
+                            'collection-0',
+                            'request-0'
+                        ]);
+                    });
+
+                    it('should log correct value for current property', function () {
+                        const collPreConsole = testrun.console.getCall(23).args.slice(2);
+
+                        expect(collPreConsole[0]).to.eql('request test current');
+                        expect(collPreConsole[1]).to.eql('request-0');
+                    });
+                });
+            });
+        });
+    });
 });
