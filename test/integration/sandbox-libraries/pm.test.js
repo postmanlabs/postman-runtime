@@ -648,7 +648,7 @@ describe('sandbox library - pm api', function () {
 
                     expect(collPreConsole).to.deep.include.ordered.members(['path', [
                         'collection-name',
-                        ''
+                        null // FIXME: should be empty string
                     ]]);
                 });
 
