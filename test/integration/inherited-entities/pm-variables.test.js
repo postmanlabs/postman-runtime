@@ -10,13 +10,19 @@ describe('pm.variables', function () {
             globals: {
                 values: [
                     { key: 'key-1', value: 'global-value-1', name: 'key-1', enabled: true },
-                    { key: 'key-2', value: 'global-value-2', name: 'key-2', enabled: true }
+                    { key: 'key-2', value: 'global-value-2', name: 'key-2', enabled: true },
+                    { key: 'vault:key5', value: 'global-value-5', name: 'key-5', enabled: true }
                 ]
             },
             environment: {
                 values: [
                     { key: 'key-3', value: 'env-value-3', name: 'key-3', enabled: true },
                     { key: 'key-4', value: 'env-value-4', name: 'key-4', enabled: true }
+                ]
+            },
+            vaultVariables: {
+                values: [
+                    { key: 'vault:key5', value: 'vault-value-5', enabled: true }
                 ]
             },
             collection: {
@@ -55,11 +61,12 @@ describe('pm.variables', function () {
                         }
                     ],
                     request: {
-                        url: 'https://postman-echo.com/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}',
+                        url:
+                            'https://postman-echo.com/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}:{{vault:key5}}',
                         auth: {
                             type: 'bearer',
                             bearer: {
-                                token: '{{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}'
+                                token: '{{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}:{{vault:key5}}'
                             }
                         }
                     }
@@ -87,21 +94,22 @@ describe('pm.variables', function () {
                     'key-1': 'global-value-1',
                     'key-2': 'coll-value-2',
                     'key-3': 'env-value-3',
-                    'key-4': 'data-value-4'
+                    'key-4': 'data-value-4',
+                    'vault:key5': 'global-value-5'
                 });
             });
         });
 
         it('should be honoured in request URL', function () {
             var url = testRun.request.getCall(0).args[3].url.toString(),
-                expectedParam = 'global-value-1:coll-value-2:env-value-3:data-value-4';
+                expectedParam = 'global-value-1:coll-value-2:env-value-3:data-value-4:global-value-5';
 
             expect(url).to.equal('https://postman-echo.com/get?param=' + expectedParam);
         });
 
         it('should be honoured in auth', function () {
             var response = testRun.response.getCall(0).args[2],
-                expectedToken = 'global-value-1:coll-value-2:env-value-3:data-value-4';
+                expectedToken = 'global-value-1:coll-value-2:env-value-3:data-value-4:global-value-5';
 
             expect(response.json()).to.deep.nested.include({
                 'headers.authorization': 'Bearer ' + expectedToken
@@ -220,7 +228,8 @@ describe('pm.variables', function () {
                     'key-1': 'modified-1',
                     'key-2': 'modified-1',
                     'key-3': 'env-value-3',
-                    'key-4': 'data-value-4'
+                    'key-4': 'data-value-4',
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -230,7 +239,8 @@ describe('pm.variables', function () {
                     'key-1': 'modified-1',
                     'key-2': 'modified-2',
                     'key-3': 'modified-2',
-                    'key-4': 'data-value-4'
+                    'key-4': 'data-value-4',
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -240,7 +250,8 @@ describe('pm.variables', function () {
                     'key-1': 'modified-1',
                     'key-2': 'modified-2',
                     'key-3': 'modified-3',
-                    'key-4': 'modified-3'
+                    'key-4': 'modified-3',
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -250,7 +261,8 @@ describe('pm.variables', function () {
                     'key-1': 'modified-1',
                     'key-2': 'modified-2',
                     'key-3': 'modified-3',
-                    'key-4': 'modified-4'
+                    'key-4': 'modified-4',
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -260,7 +272,8 @@ describe('pm.variables', function () {
                     'key-1': 'modified-1',
                     'key-2': 'modified-1',
                     'key-3': 'modified-3',
-                    'key-4': 'modified-4'
+                    'key-4': 'modified-4',
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -270,7 +283,8 @@ describe('pm.variables', function () {
                     'key-1': 'modified-1',
                     'key-2': 'modified-1',
                     'key-3': 'modified-3',
-                    'key-4': 'modified-3'
+                    'key-4': 'modified-3',
+                    'vault:key5': 'global-value-5'
                 }
             ]);
         });
@@ -296,7 +310,8 @@ describe('pm.variables', function () {
                 });
                 expect(event.result.globals.toObject()).to.eql({
                     'key-1': 'global-value-1',
-                    'key-2': 'global-value-2'
+                    'key-2': 'global-value-2',
+                    'vault:key5': 'global-value-5'
                 });
             });
         });
@@ -334,7 +349,8 @@ describe('pm.variables', function () {
                     'key-1': 'global-value-1',
                     'key-2': 'coll-value-2',
                     'key-3': 'env-value-3',
-                    'key-4': 'data-value-4'
+                    'key-4': 'data-value-4',
+                    'vault:key5': 'global-value-5'
                 }
             ]);
         });
