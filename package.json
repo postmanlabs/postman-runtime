@@ -56,7 +56,7 @@
     "performance-now": "2.1.0",
     "postman-collection": "4.2.1",
     "postman-request": "2.88.1-postman.33",
-    "postman-sandbox": "github:postmanlabs/postman-sandbox#a1f9ac4ef0d",
+    "postman-sandbox": "github:postmanlabs/postman-sandbox#20b37a3934f5ef",
     "postman-url-encoder": "3.0.5",
     "serialised-error": "1.1.3",
     "strip-json-comments": "3.1.1",
