@@ -1855,7 +1855,7 @@ describe('Auth Handler:', function () {
                 },
                 request = new Request(_rawReq),
                 auth = request.auth,
-                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                authInterface = createAuthInterface(auth, {}, protocolProfileBehavior),
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, _.noop);
@@ -1887,7 +1887,7 @@ describe('Auth Handler:', function () {
                 },
                 request = new Request(_rawReq),
                 auth = request.auth,
-                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                authInterface = createAuthInterface(auth, {}, protocolProfileBehavior),
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, _.noop);
@@ -1949,7 +1949,7 @@ describe('Auth Handler:', function () {
                 protocolProfileBehavior,
                 request = new Request(_rawReq),
                 auth = request.auth,
-                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                authInterface = createAuthInterface(auth, {}, protocolProfileBehavior),
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, _.noop);
@@ -1981,7 +1981,7 @@ describe('Auth Handler:', function () {
                 },
                 request = new Request(_rawReq),
                 auth = request.auth,
-                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                authInterface = createAuthInterface(auth, {}, protocolProfileBehavior),
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, _.noop);
@@ -2011,7 +2011,7 @@ describe('Auth Handler:', function () {
                 },
                 request = new Request(_rawReq),
                 auth = request.auth,
-                authInterface = createAuthInterface(auth, protocolProfileBehavior),
+                authInterface = createAuthInterface(auth, {}, protocolProfileBehavior),
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, _.noop);
