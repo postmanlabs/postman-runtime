@@ -2898,7 +2898,7 @@ describe('Auth Handler:', function () {
                 },
                 request = new Request(data),
                 auth = request.auth,
-                authInterface = createAuthInterface(auth),
+                authInterface = createAuthInterface(auth, {}),
                 handler = AuthLoader.getHandler(auth.type);
 
             handler.sign(authInterface, request, _.noop);
