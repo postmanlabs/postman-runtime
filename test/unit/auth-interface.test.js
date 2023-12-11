@@ -144,8 +144,8 @@ describe('AuthInterface', function () {
         var fakeAuth = new sdk.RequestAuth(fakeAuthObj),
             authInterface = createAuthInterface(fakeAuth, {});
 
-        expect(authInterface.getState('NTLM')).to.equal(undefined);
-        authInterface.setState('NTLM', 'T1_MSG_CREATED');
-        expect(authInterface.getState('NTLM')).to.equal('T1_MSG_CREATED');
+        expect(authInterface.getState('state')).to.equal(undefined);
+        authInterface.setState('state', 'T1_MSG_CREATED');
+        expect(authInterface.getState('state')).to.equal('T1_MSG_CREATED');
     });
 });
