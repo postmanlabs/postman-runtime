@@ -536,7 +536,7 @@ var expect = require('chai').expect,
         });
     });
 
-    describe('with NTLM auth set at collection level with 4 collections', function () {
+    describe('with NTLM auth set at collection level with 4 requests', function () {
         before(function (done) {
             var localRunOptions = {
                 collection: {
