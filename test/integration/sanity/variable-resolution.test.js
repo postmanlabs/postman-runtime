@@ -73,6 +73,15 @@ describe('variable resolution', function () {
                             raw: getPolyChainedVariable(20) + `{{xyz${getPolyChainedVariable(19)}}}{{hello{{world}}}}`
                         }
                     }
+                }, {
+                    request: {
+                        url: 'https://postman-echo.com/post',
+                        method: 'POST',
+                        body: {
+                            mode: 'raw',
+                            raw: '{{vault:vaultVar1}}'
+                        }
+                    }
                 }],
                 variable: [{
                     key: 'world',
@@ -91,6 +100,15 @@ describe('variable resolution', function () {
             },
             globals: {
                 values: getVariables(11, 21)
+            },
+            vaultSecrets: {
+                values: [{
+                    key: 'vault:vaultVar1',
+                    value: '{{vault:vaultVar2}}'
+                }, {
+                    key: 'vault:vaultVar2',
+                    value: 'valueVar2'
+                }]
             }
         }, function (err, results) {
             testrun = results;
@@ -106,8 +124,8 @@ describe('variable resolution', function () {
     });
 
     it('should correctly resolve poly chained variables', function () {
-        sinon.assert.calledTwice(testrun.request);
-        sinon.assert.calledTwice(testrun.response);
+        sinon.assert.calledThrice(testrun.request);
+        sinon.assert.calledThrice(testrun.response);
 
         sinon.assert.calledWith(testrun.request.getCall(0), null);
         sinon.assert.calledWith(testrun.response.getCall(0), null);
@@ -118,6 +136,10 @@ describe('variable resolution', function () {
 
         expect(testrun.request.getCall(1).args[3]).to.nested.include({
             'body.raw': '{{19}}{{xyz}}{{22}}'
+        });
+
+        expect(testrun.request.getCall(2).args[3]).to.nested.include({
+            'body.raw': 'valueVar2'
         });
     });
 });
