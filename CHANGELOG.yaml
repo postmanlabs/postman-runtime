@@ -1,3 +1,7 @@
+unreleased:
+  chores:
+    - GH-1358 Added new vaultSecrets variable scope
+
 7.36.0:
   date: 2023-11-18
   new features:
