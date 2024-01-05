@@ -64,8 +64,16 @@ describe('pm.execution.skipRequest: ', function () {
                 'exception.calledOnce': false
             });
         });
-    });
 
+        it('should have isSkipped true in item callback', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'item.calledOnce': true
+            });
+
+            expect(testrun.item.getCall(0).args[4]).to.have.property('isSkipped', true);
+        });
+    });
 
     describe('when running multiple requests in a collection run', function () {
         var testRun,
@@ -262,6 +270,19 @@ describe('pm.execution.skipRequest: ', function () {
         it('should not invoke sendRequest if called after skipRequest', function () {
             expect(testRun.request.callCount).to.equal(1);
         });
+
+        it('should invoke item callback twice', function () {
+            expect(testRun.item.callCount).to.equal(2);
+        });
+
+        it('should have isSkipped true in item callback for first item', function () {
+            expect(testRun.item.getCall(0).args[4]).to.have.property('isSkipped', true);
+        });
+
+        it('should not have isSkipped true in item callback for request not containing skipRequest()',
+            function () {
+                expect(testRun.item.getCall(1).args[4]).to.be.undefined;
+            });
     });
 
     describe('when invoked from collection script', function () {
@@ -337,6 +358,15 @@ describe('pm.execution.skipRequest: ', function () {
 
         it('should not have console events from request\'s prerequest script', function () {
             expect(testrun.console.callCount).to.equal(0);
+        });
+
+        it('should have isSkipped true in item callback', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'item.calledOnce': true
+            });
+
+            expect(testrun.item.getCall(0).args[4]).to.have.property('isSkipped', true);
         });
     });
 });

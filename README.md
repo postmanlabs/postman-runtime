@@ -252,7 +252,7 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called after completion of an Item
-        item: function (err, cursor, item, visualizer) {
+        item: function (err, cursor, item, visualizer, result) {
             // err, cursor, item: Same as arguments for "beforeItem"
 
             // visualizer: null or object containing visualizer result that looks like this:
@@ -266,6 +266,13 @@ runner.run(collection, { /* options */ }, function(err, run) {
             //      -- Processed template
             //      processedTemplate: <String>
             //  }
+
+            // result: undefined or object containing following properties
+            // {
+            //      -- True for items skipped using pm.execution.skipRequest
+            //         isSkipped: <Boolean>
+            // }
+
         },
 
         // Called before running pre-request script(s) (Yes, Runtime supports multiple pre-request scripts!)
