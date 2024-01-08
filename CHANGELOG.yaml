@@ -1,3 +1,8 @@
+unreleased:
+    new features:
+        - >-
+          Add an argument to item callback to identify if the item execution was skipped
+
 7.36.1:
   date: 2023-12-20
   chores:
