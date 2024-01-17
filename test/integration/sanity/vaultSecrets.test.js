@@ -10,14 +10,14 @@ describe('vaultSecrets', function () {
                     values: [
                         {
                             key: 'vault:var1',
-                            type: 'secret',
+                            type: 'vault',
                             value: 'https://postman-echo.com',
                             enabled: true,
                             _domains: []
                         },
                         {
                             key: 'vault:var2',
-                            type: 'secret',
+                            type: 'vault',
                             value: 'postman',
                             enabled: true,
                             _domains: ['https://postman-echo.com']
@@ -171,14 +171,14 @@ describe('vaultSecrets', function () {
                     values: [
                         {
                             key: 'vault:var1',
-                            type: 'secret',
+                            type: 'vault',
                             value: 'https://postman-echo.com',
                             enabled: true,
                             _domains: []
                         },
                         {
                             key: 'vault:var2',
-                            type: 'secret',
+                            type: 'vault',
                             value: 'postman',
                             enabled: true,
                             _domains: ['https://postman-echo.com']
@@ -235,6 +235,157 @@ describe('vaultSecrets', function () {
                 password: 'password'
             });
             expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('should correctly resolve secrets with * in domains', function () {
+        var testrun;
+
+        before(function (done) {
+            this.run({
+                vaultSecrets: {
+                    values: [
+                        {
+                            key: 'vault:var1',
+                            type: 'vault',
+                            value: 'https://postman-echo.com',
+                            enabled: true,
+                            _domains: []
+                        },
+                        {
+                            key: 'vault:var2',
+                            type: 'vault',
+                            value: 'postman',
+                            enabled: true,
+                            _domains: ['https://*.postman-echo.com']
+                        },
+                        { key: 'vault:var3', type: 'vault', value: 'password', enabled: true }
+                    ]
+                },
+                collection: {
+                    item: {
+                        name: 'Vault Secrets Test Request',
+                        request: {
+                            url: 'https://my.postman-echo.com/basic-auth',
+                            method: 'GET',
+                            auth: {
+                                type: 'basic',
+                                basic: [
+                                    { key: 'username', value: '{{vault:var2}}' },
+                                    { key: 'password', value: '{{vault:var3}}' }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+        });
+
+        it('should be resolved in request URL', function () {
+            var url = testrun.request.getCall(0).args[3].url.toString();
+
+            expect(url).to.equal('https://my.postman-echo.com/basic-auth');
+        });
+
+        it('should be resolved in request auth', function () {
+            var request = testrun.response.getCall(0).args[3],
+                auth = request.auth.parameters().toObject();
+
+            expect(auth).to.deep.include({
+                username: 'postman',
+                password: 'password'
+            });
+        });
+    });
+
+    describe('should correctly resolve secrets with environment in non domain matching part of url', function () {
+        var testrun;
+
+        before(function (done) {
+            this.run({
+                vaultSecrets: {
+                    values: [
+                        {
+                            key: 'vault:var1',
+                            type: 'vault',
+                            value: 'https://postman-echo.com',
+                            enabled: true,
+                            _domains: []
+                        },
+                        {
+                            key: 'vault:var2',
+                            type: 'vault',
+                            value: 'postman',
+                            enabled: true,
+                            _domains: ['https://*.postman-echo.com']
+                        },
+                        { key: 'vault:var3', type: 'vault', value: 'password', enabled: true },
+                        {
+                            key: 'vault:pathVar',
+                            type: 'vault',
+                            value: 'basic-auth',
+                            enabled: true,
+                            _domains: ['https://*.postman-echo.com']
+                        }
+                    ]
+                },
+                collection: {
+                    item: {
+                        name: 'Vault Secrets Test Request',
+                        request: {
+                            url: 'https://my.postman-echo.com/{{vault:pathVar}}',
+                            method: 'GET',
+                            auth: {
+                                type: 'basic',
+                                basic: [
+                                    { key: 'username', value: '{{vault:var2}}' },
+                                    { key: 'password', value: '{{vault:var3}}' }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+        });
+
+        it('should be resolved in request URL', function () {
+            var url = testrun.request.getCall(0).args[3].url.toString();
+
+            expect(url).to.equal('https://my.postman-echo.com/basic-auth');
+        });
+
+        it('should be resolved in request auth', function () {
+            var request = testrun.response.getCall(0).args[3],
+                auth = request.auth.parameters().toObject();
+
+            expect(auth).to.deep.include({
+                username: 'postman',
+                password: 'password'
+            });
         });
     });
 });
