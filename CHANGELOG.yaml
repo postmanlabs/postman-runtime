@@ -1,4 +1,5 @@
-unreleased:
+7.36.2:
+  date: 2024-01-19
   chores:
     - >-
       GH-1362 Added an argument to item callback to identify if the item
