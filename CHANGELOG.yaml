@@ -3,6 +3,9 @@ unreleased:
     - >-
       GH-1374 Fixed a bug where execution.skipRequest listeners were not
       getting garbage collected
+    - >-
+      Fixed a bug where vault variables were not getting resolved for request
+      URL without protocol
 
 7.36.2:
   date: 2024-01-19
