@@ -1,8 +1,8 @@
 unreleased:
-    fixed bugs:
-        - >-
-          GH-1374 Fixed a bug where execution.result and execution.skipRequest listeners
-          were not getting garbage collected
+  fixed bugs:
+    - >-
+      GH-1374 Fixed a bug where execution.skipRequest listeners were not
+      getting garbage collected
 
 7.36.2:
   date: 2024-01-19
