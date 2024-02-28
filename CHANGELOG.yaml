@@ -1,3 +1,8 @@
+7.37.0:
+  date: 2024-02-28
+  new features:
+    - GH-1377 Add feature to resolve packages in scripts using `pm.require`
+
 7.36.3:
   date: 2024-02-01
   fixed bugs:
