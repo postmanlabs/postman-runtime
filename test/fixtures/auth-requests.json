@@ -40,8 +40,8 @@
             }
         }
     },
-    "digestWithQueryParams": {
-        "url": "https://postman-echo.com/digest-auth?key=value",
+    "digestWithoutAdvanceData": {
+        "url": "https://postman-echo.com/digest-auth",
         "method": "GET",
         "header": [],
         "data": {
@@ -52,17 +52,34 @@
             "type": "digest",
             "digest": {
                 "username": "postman",
-                "realm": "Users",
                 "password": "password",
-                "nonce": "bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp",
-                "nonceCount": "00000001",
-                "algorithm": "MD5",
-                "qop": "",
-                "clientNonce": "0a4f113b",
-                "opaque": "5ccc069c403ebaf9f0171e9517f40e"
+                "clientNonce": "0a4f113b"
             }
         }
     },
+    "digestWithQueryParams": {
+      "url": "https://postman-echo.com/digest-auth?key=value",
+      "method": "GET",
+      "header": [],
+      "data": {
+          "mode": "formdata",
+          "content": []
+      },
+      "auth": {
+          "type": "digest",
+          "digest": {
+              "username": "postman",
+              "realm": "Users",
+              "password": "password",
+              "nonce": "bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp",
+              "nonceCount": "00000001",
+              "algorithm": "MD5",
+              "qop": "",
+              "clientNonce": "0a4f113b",
+              "opaque": "5ccc069c403ebaf9f0171e9517f40e"
+          }
+      }
+  },
     "oauth1": {
         "auth": {
             "type": "oauth1",
