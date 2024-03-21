@@ -504,6 +504,41 @@ describe('Auth Handler:', function () {
     });
 
     describe('digest', function () {
+        it('should add the Auth header when we have upper case scheme and parameters names', function () {
+            var request = new Request(rawRequests.digestWithoutAdvanceData),
+                auth = request.auth,
+                authInterface = createAuthInterface(auth),
+                handler = AuthLoader.getHandler(auth.type),
+                digestData = auth.digest.members,
+                digestDataObject = {},
+                expectedDigestData = {
+                    username: 'postman',
+                    password: 'password',
+                    nonce: '123abc',
+                    realm: 'newRealm',
+                    qop: 'auth',
+                    clientNonce: '0a4f113b',
+                    nonceCount: '00000001'
+                },
+                response = {
+                    code: 401,
+                    headers: [
+                        {
+                            key: 'WWW-Authenticate',
+                            value: 'digest Realm="newRealm", Nonce="123abc", Qop="auth"'
+                        }
+                    ]
+                };
+
+            handler.post(authInterface, response, _.noop);
+
+            _.forEach(digestData, function ({ value, key }) {
+                digestDataObject[key] = value;
+            });
+
+            expect(digestDataObject).to.eql(expectedDigestData);
+        });
+
         it('should add the Auth header for (algorithm="MD5", qop=""', function () {
             var request = new Request(rawRequests.digest),
                 auth = request.auth,
