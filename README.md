@@ -160,7 +160,19 @@ runner.run(collection, {
 
         // Option to set whether to send console logs in serialized format which can be parsed
         // using the `teleport-javascript` serialization library.
-        serializeLogs: false
+        serializeLogs: false,
+
+        // Function to resolve packages that are used in the script.
+        packageResolver: function ({ packages /* sdk.Script.packages */ }, callback) {
+            return callback(null, {
+                pkg1: {
+                    data: 'packagedata'
+                },
+                pkg2: {
+                    error: 'Failed to get package'
+                }
+            });
+        }
     },
 
     // A ProxyConfigList, from the SDK
@@ -252,7 +264,7 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called after completion of an Item
-        item: function (err, cursor, item, visualizer) {
+        item: function (err, cursor, item, visualizer, result) {
             // err, cursor, item: Same as arguments for "beforeItem"
 
             // visualizer: null or object containing visualizer result that looks like this:
@@ -266,6 +278,13 @@ runner.run(collection, { /* options */ }, function(err, run) {
             //      -- Processed template
             //      processedTemplate: <String>
             //  }
+
+            // result: undefined or object containing following properties
+            // {
+            //      -- True for items skipped using pm.execution.skipRequest
+            //         isSkipped: <Boolean>
+            // }
+
         },
 
         // Called before running pre-request script(s) (Yes, Runtime supports multiple pre-request scripts!)

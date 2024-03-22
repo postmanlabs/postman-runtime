@@ -1,3 +1,36 @@
+7.37.1:
+  date: 2024-03-13
+  chores:
+    - Updated dependencies
+
+7.37.0:
+  date: 2024-02-28
+  new features:
+    - GH-1377 Add feature to resolve packages in scripts using `pm.require`
+
+7.36.3:
+  date: 2024-02-01
+  fixed bugs:
+    - >-
+      GH-1374 Fixed a bug where execution.skipRequest listeners were not getting
+      garbage collected
+    - >-
+      Fixed a bug where vault variables were not getting resolved for request
+      URL without protocol
+
+7.36.2:
+  date: 2024-01-19
+  chores:
+    - >-
+      GH-1362 Added an argument to item callback to identify if the item
+      execution was skipped
+    - GH-1368 Added support for domain property in vault variables
+
+7.36.1:
+  date: 2023-12-20
+  chores:
+    - GH-1358 Added new vaultSecrets variable scope
+
 7.36.0:
   date: 2023-11-18
   new features:
