@@ -1,3 +1,11 @@
+unreleased:
+  fixed bugs:
+    - >-
+      GH-1394 Fixed a bug where scheme and parameters name in Digest Auth were
+      matched in a case-sensitive manner
+  chores:
+    - Updated dependencies
+
 7.37.1:
   date: 2024-03-13
   chores:
