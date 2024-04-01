@@ -374,4 +374,215 @@ describe('EdgeGrid auth', function () {
             expect(response).to.have.property('code', 200);
         });
     });
+
+    describe('with correct credentials and max body, body as text', function () {
+        var testrun;
+
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'edgegrid',
+                                edgegrid: { ...credentials, maxBody: 48 }
+                            },
+                            url: global.servers.edgegrid,
+                            method: 'POST',
+                            body: {
+                                mode: 'raw',
+                                raw: 'Hello World!!! Hello World!!! Hello World!!! Hello World!!!'
+                            }
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should pass the EdgeGrid authentication', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
+
+            var request = testrun.request.getCall(0).args[3],
+                response = testrun.request.getCall(0).args[2],
+                header = request.headers.get('Authorization'),
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
+                timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
+
+            expect(header).to.be.a('string');
+            expect(header).to.include(`client_token=${credentials.clientToken}`);
+            expect(header).to.include(`access_token=${credentials.accessToken}`);
+            expect(header).to.include('signature=');
+            expect(header).to.match(nonceRegex);
+            expect(header).to.match(timestampRegex);
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('with correct credentials and max body, body as json', function () {
+        var testrun;
+
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'edgegrid',
+                                edgegrid: { ...credentials, maxBody: 48 }
+                            },
+                            url: global.servers.edgegrid,
+                            method: 'POST',
+                            body: {
+                                mode: 'raw',
+                                raw: '{\n    "key": "Hello World!!! Hello World!!! Hello World!!! Hello World!!!"\n}',
+                                options: {
+                                    raw: {
+                                        language: 'json'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should pass the EdgeGrid authentication', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
+
+            var request = testrun.request.getCall(0).args[3],
+                response = testrun.request.getCall(0).args[2],
+                header = request.headers.get('Authorization'),
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
+                timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
+
+            expect(header).to.be.a('string');
+            expect(header).to.include(`client_token=${credentials.clientToken}`);
+            expect(header).to.include(`access_token=${credentials.accessToken}`);
+            expect(header).to.include('signature=');
+            expect(header).to.match(nonceRegex);
+            expect(header).to.match(timestampRegex);
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('with correct credentials and max body, body as GraphQl', function () {
+        var testrun;
+
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'edgegrid',
+                                edgegrid: { ...credentials, maxBody: 48 }
+                            },
+                            url: global.servers.edgegrid,
+                            method: 'POST',
+                            body: {
+                                mode: 'graphql',
+                                graphql: {
+                                    query: 'query Hello {\n    Hello World!!! Hello World!!! Hello World!!! Hello\n}',
+                                    variables: ''
+                                }
+                            }
+                        }
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should pass the EdgeGrid authentication', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
+
+            var request = testrun.request.getCall(0).args[3],
+                response = testrun.request.getCall(0).args[2],
+                header = request.headers.get('Authorization'),
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
+                timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
+
+            expect(header).to.be.a('string');
+            expect(header).to.include(`client_token=${credentials.clientToken}`);
+            expect(header).to.include(`access_token=${credentials.accessToken}`);
+            expect(header).to.include('signature=');
+            expect(header).to.match(nonceRegex);
+            expect(header).to.match(timestampRegex);
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('with correct credentials and max body, body as binary file', function () {
+        var testrun;
+
+        before(function (done) {
+            // perform the collection run
+            this.run({
+                collection: {
+                    item: {
+                        request: {
+                            auth: {
+                                type: 'edgegrid',
+                                edgegrid: { ...credentials, maxBody: 48 }
+                            },
+                            url: global.servers.edgegrid,
+                            method: 'POST',
+                            body: {
+                                mode: 'file',
+                                file: {
+                                    src: path.resolve(__dirname, '../../fixtures/new-csv')
+                                }
+                            }
+                        }
+                    }
+                },
+                fileResolver: fs
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should pass the EdgeGrid authentication', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 1
+            });
+
+            var request = testrun.request.getCall(0).args[3],
+                response = testrun.request.getCall(0).args[2],
+                header = request.headers.get('Authorization'),
+                nonceRegex = /nonce=([A-Z]|[a-z]|[0-9]|-){36};/,
+                timestampRegex = /timestamp=[0-9]{8}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+0000;/;
+
+            expect(header).to.be.a('string');
+            expect(header).to.include(`client_token=${credentials.clientToken}`);
+            expect(header).to.include(`access_token=${credentials.accessToken}`);
+            expect(header).to.include('signature=');
+            expect(header).to.match(nonceRegex);
+            expect(header).to.match(timestampRegex);
+
+            expect(response).to.have.property('code', 200);
+        });
+    });
 });

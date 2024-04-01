@@ -384,6 +384,7 @@ function createEdgeGridAuthServer (options) {
         accessToken: 'postman_access_token',
         clientToken: 'postman_client_token',
         clientSecret: 'postman_client_secret',
+        maxBody: 131072,
         headersToSign: []
     });
 
@@ -479,6 +480,16 @@ function createEdgeGridAuthServer (options) {
         return base64HmacSha256(dataToSign, signingKey);
     }
 
+    function filterBody (body, maxBody) {
+        let trimmedBody = body;
+
+        if (body.length > maxBody) {
+            trimmedBody = body.slice(0, maxBody);
+        }
+
+        return trimmedBody;
+    }
+
     function authHandler (req, res, body) {
         var authHeader = req.headers.authorization,
             authParams,
@@ -506,7 +517,7 @@ function createEdgeGridAuthServer (options) {
         authParams.method = req.method;
         authParams.path = req.url;
         authParams.headers = req.headers;
-        authParams.body = body && body.toString && body.toString();
+        authParams.body = body && body.toString && filterBody(body.toString(), options.maxBody);
 
         requestSignature = calculateSignature(authParams);
 
