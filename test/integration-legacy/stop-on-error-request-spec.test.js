@@ -111,6 +111,14 @@ describe('Option', function () {
                 run.start({
                     console (cursor, level, msg1, msg2) {
                         check(function () {
+                            // handle deprecation warning since sandbox 4.7.0
+                            if (level === 'warn') {
+                                expect(cursor.ref).to.eql(runStore.ref);
+                                expect(msg1).to.equal('Using "tests" is deprecated. Use "pm.test()" instead.');
+
+                                return;
+                            }
+
                             expect(cursor.ref).to.eql(runStore.ref);
                             expect(level).to.equal('log');
                             expect(msg1).to.equal('yo');

@@ -939,6 +939,11 @@ describe('UVM', function () {
                 expect(err).to.be.null;
                 run.start({
                     console (cursor, level) {
+                        // handle deprecation warning since sandbox 4.7.0
+                        if (level === 'warn') {
+                            return;
+                        }
+
                         expect(level).to.equal('log');
                         expect(cursor).to.deep.include({
                             iteration: runStore.iteration,
