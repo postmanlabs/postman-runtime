@@ -1,3 +1,7 @@
+unreleased:
+  chores:
+    - Updated dependencies
+
 7.37.2:
   date: 2024-04-01
   fixed bugs:
