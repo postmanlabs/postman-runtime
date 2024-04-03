@@ -551,7 +551,7 @@ describe('EdgeGrid auth', function () {
                             body: {
                                 mode: 'file',
                                 file: {
-                                    src: path.resolve(__dirname, '../../fixtures/new-csv')
+                                    src: path.resolve(__dirname, '../../fixtures/new.csv')
                                 }
                             }
                         }
