@@ -481,13 +481,17 @@ function createEdgeGridAuthServer (options) {
     }
 
     function filterBody (body, maxBody) {
-        let trimmedBody = Array.from(body);
+        let trimmedBody = body;
 
-        if (body.length > maxBody) {
+        if (!Buffer.isBuffer(body)) {
+            trimmedBody = Buffer.from(body);
+        }
+
+        if (trimmedBody.byteLength > maxBody) {
             trimmedBody = trimmedBody.slice(0, maxBody);
         }
 
-        return trimmedBody.join('');
+        return trimmedBody.toString();
     }
 
     function authHandler (req, res, body) {
