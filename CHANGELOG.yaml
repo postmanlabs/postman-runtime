@@ -1,4 +1,5 @@
-unreleased:
+7.38.0:
+  date: 2024-04-03
   new features:
     - GH-1401 Deprecated legacy sandbox APIs
 
