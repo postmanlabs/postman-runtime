@@ -560,6 +560,7 @@ function createNTLMServer (options) {
         password = options.password || 'password',
         domain = options.domain || '',
         workstation = options.workstation || '',
+        authenticatedRequestId = [],
 
         type1Message = ntlmUtils.createType1Message({
             domain,
@@ -573,7 +574,10 @@ function createNTLMServer (options) {
         }),
 
         handler = function (req, res) {
-            var authHeaders = req.headers.authorization;
+            var authHeaders = req.headers.authorization,
+
+                // executionId is used to keep track of authenticated requests
+                executionId = req.headers['x-execution-id'];
 
             // send type2 message and ask for type3 message
             if (authHeaders && authHeaders.startsWith(type1Message.slice(0, 20))) {
@@ -591,12 +595,16 @@ function createNTLMServer (options) {
             // @note we don't check if the username and password are correct
             // because I don't know how.
             else if (authHeaders && authHeaders.startsWith(type3Message.slice(0, 100))) {
+                executionId && authenticatedRequestId.push(executionId);
                 res.writeHead(200);
 
                 options.debug && console.info('200: got type3 message');
             }
 
             // no valid auth headers, ask for type1 message
+            else if (!authHeaders && authenticatedRequestId.includes(executionId)) {
+                res.writeHead(200);
+            }
             else {
                 res.writeHead(401, {
                     'www-authenticate': ['NTLM', 'Negotiate']
