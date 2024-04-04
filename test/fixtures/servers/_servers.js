@@ -480,20 +480,6 @@ function createEdgeGridAuthServer (options) {
         return base64HmacSha256(dataToSign, signingKey);
     }
 
-    function filterBody (body, maxBody) {
-        let trimmedBody = body;
-
-        if (!Buffer.isBuffer(body)) {
-            trimmedBody = Buffer.from(body);
-        }
-
-        if (trimmedBody.byteLength > maxBody) {
-            trimmedBody = trimmedBody.slice(0, maxBody);
-        }
-
-        return trimmedBody.toString();
-    }
-
     function authHandler (req, res, body) {
         var authHeader = req.headers.authorization,
             authParams,
@@ -521,7 +507,7 @@ function createEdgeGridAuthServer (options) {
         authParams.method = req.method;
         authParams.path = req.url;
         authParams.headers = req.headers;
-        authParams.body = body && body.toString && filterBody(body.toString(), options.maxBody);
+        authParams.body = body && body.slice && body.slice(0, options.maxBody);
 
         requestSignature = calculateSignature(authParams);
 
