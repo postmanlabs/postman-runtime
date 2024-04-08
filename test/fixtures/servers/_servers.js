@@ -507,7 +507,7 @@ function createEdgeGridAuthServer (options) {
         authParams.method = req.method;
         authParams.path = req.url;
         authParams.headers = req.headers;
-        authParams.body = body && body.slice && body.slice(0, options.maxBody);
+        authParams.body = body && body.slice && body.subarray(0, options.maxBody);
 
         requestSignature = calculateSignature(authParams);
 
