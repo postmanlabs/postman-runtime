@@ -386,7 +386,7 @@ describe('EdgeGrid auth', function () {
                         request: {
                             auth: {
                                 type: 'edgegrid',
-                                edgegrid: { ...credentials, maxBody: 48 }
+                                edgegrid: { ...credentials, maxBodySize: 48 }
                             },
                             url: global.servers.edgegrid,
                             method: 'POST',
@@ -421,7 +421,7 @@ describe('EdgeGrid auth', function () {
                         request: {
                             auth: {
                                 type: 'edgegrid',
-                                edgegrid: { ...credentials, maxBody: 48 }
+                                edgegrid: { ...credentials, maxBodySize: 48 }
                             },
                             url: global.servers.edgegrid,
                             method: 'POST',
@@ -461,7 +461,7 @@ describe('EdgeGrid auth', function () {
                         request: {
                             auth: {
                                 type: 'edgegrid',
-                                edgegrid: { ...credentials, maxBody: 48 }
+                                edgegrid: { ...credentials, maxBodySize: 48 }
                             },
                             url: global.servers.edgegrid,
                             method: 'POST',
@@ -499,7 +499,7 @@ describe('EdgeGrid auth', function () {
                         request: {
                             auth: {
                                 type: 'edgegrid',
-                                edgegrid: { ...credentials, maxBody: 48 }
+                                edgegrid: { ...credentials, maxBodySize: 48 }
                             },
                             url: global.servers.edgegrid,
                             method: 'POST',

@@ -384,7 +384,7 @@ function createEdgeGridAuthServer (options) {
         accessToken: 'postman_access_token',
         clientToken: 'postman_client_token',
         clientSecret: 'postman_client_secret',
-        maxBody: 131072,
+        maxBodySize: 131072,
         headersToSign: []
     });
 
@@ -507,7 +507,7 @@ function createEdgeGridAuthServer (options) {
         authParams.method = req.method;
         authParams.path = req.url;
         authParams.headers = req.headers;
-        authParams.body = body && body.slice && body.subarray(0, options.maxBody);
+        authParams.body = body && body.slice && body.subarray(0, options.maxBodySize);
 
         requestSignature = calculateSignature(authParams);
 
