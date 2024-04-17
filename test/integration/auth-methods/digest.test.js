@@ -102,6 +102,265 @@ describe('digest auth', function () {
         });
     });
 
+    describe('with auth correct details at collection level and multiple requests', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: [
+                        {
+                            name: 'digest Sample Request 1',
+                            request: {
+                                url: global.servers.digest
+                            }
+                        },
+                        {
+                            name: 'digest Sample Request 2',
+                            request: {
+                                url: global.servers.digest
+                            }
+                        },
+                        {
+                            name: 'digest Sample Request 3',
+                            request: {
+                                url: global.servers.digest
+                            }
+                        },
+                        {
+                            name: 'digest Sample Request 4',
+                            request: {
+                                url: global.servers.digest
+                            }
+                        }
+                    ],
+                    auth: {
+                        type: 'digest',
+                        digest: {
+                            algorithm: 'MD5',
+                            username: '{{uname}}',
+                            password: '{{pass}}'
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: USERNAME
+                    }, {
+                        key: 'pass',
+                        value: PASSWORD
+                    }]
+                }
+            };
+
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run with 4 - 200 and 1 - 401', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 5
+            });
+            let response0 = testrun.request.getCall(0).args[2],
+                response1 = testrun.request.getCall(1).args[2],
+                response2 = testrun.request.getCall(2).args[2],
+                response3 = testrun.request.getCall(3).args[2],
+                response4 = testrun.request.getCall(4).args[2],
+                request0 = testrun.request.getCall(0).args[3],
+                request1 = testrun.request.getCall(1).args[3],
+                request2 = testrun.request.getCall(2).args[3],
+                request3 = testrun.request.getCall(3).args[3],
+                request4 = testrun.request.getCall(4).args[3];
+
+            expect(response0).to.have.property('code', 401);
+            expect(response1).to.have.property('code', 200);
+            expect(response2).to.have.property('code', 200);
+            expect(response3).to.have.property('code', 200);
+            expect(response4).to.have.property('code', 200);
+
+            // check if the auth header is present in all requests with correct nc value
+
+            expect(request0.headers.get('authorization')).to.eql(undefined);
+            expect(request1.headers.get('authorization')).to.match(/nc=00000001/);
+            expect(request2.headers.get('authorization')).to.match(/nc=00000002/);
+            expect(request3.headers.get('authorization')).to.match(/nc=00000003/);
+            expect(request4.headers.get('authorization')).to.match(/nc=00000004/);
+        });
+    });
+
+    describe('with auth correct details at collection level and with iterationCount: 4 ', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        name: 'digest Sample Request 1',
+                        request: {
+                            url: global.servers.digest
+                        }
+                    },
+                    auth: {
+                        type: 'digest',
+                        digest: {
+                            algorithm: 'MD5',
+                            username: '{{uname}}',
+                            password: '{{pass}}'
+                        }
+                    }
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: USERNAME
+                    }, {
+                        key: 'pass',
+                        value: PASSWORD
+                    }]
+                },
+                iterationCount: 4
+            };
+
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run with 4 - 200 and 1 - 401', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 5
+            });
+            let response0 = testrun.request.getCall(0).args[2],
+                response1 = testrun.request.getCall(1).args[2],
+                response2 = testrun.request.getCall(2).args[2],
+                response3 = testrun.request.getCall(3).args[2],
+                response4 = testrun.request.getCall(4).args[2],
+                request0 = testrun.request.getCall(0).args[3],
+                request1 = testrun.request.getCall(1).args[3],
+                request2 = testrun.request.getCall(2).args[3],
+                request3 = testrun.request.getCall(3).args[3],
+                request4 = testrun.request.getCall(4).args[3];
+
+            expect(response0).to.have.property('code', 401);
+            expect(response1).to.have.property('code', 200);
+            expect(response2).to.have.property('code', 200);
+            expect(response3).to.have.property('code', 200);
+            expect(response4).to.have.property('code', 200);
+
+            // check if the auth header is present in all requests with correct nc value
+
+            expect(request0.headers.get('authorization')).to.eql(undefined);
+            expect(request1.headers.get('authorization')).to.match(/nc=00000001/);
+            expect(request2.headers.get('authorization')).to.match(/nc=00000002/);
+            expect(request3.headers.get('authorization')).to.match(/nc=00000003/);
+            expect(request4.headers.get('authorization')).to.match(/nc=00000004/);
+        });
+    });
+
+    describe('with auth correct details at request level and multiple requests', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: [
+                        {
+                            name: 'digest Sample Request 1',
+                            request: {
+                                url: global.servers.digest,
+                                auth: {
+                                    type: 'digest',
+                                    digest: {
+                                        algorithm: 'MD5',
+                                        username: '{{uname}}',
+                                        password: '{{pass}}'
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            name: 'digest Sample Request 2',
+                            request: {
+                                url: global.servers.digest,
+                                auth: {
+                                    type: 'digest',
+                                    digest: {
+                                        algorithm: 'MD5',
+                                        username: '{{uname}}',
+                                        password: '{{pass}}'
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            name: 'digest Sample Request 3',
+                            request: {
+                                url: global.servers.digest,
+                                auth: {
+                                    type: 'digest',
+                                    digest: {
+                                        algorithm: 'MD5',
+                                        username: '{{uname}}',
+                                        password: '{{pass}}'
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                environment: {
+                    values: [{
+                        key: 'uname',
+                        value: USERNAME
+                    }, {
+                        key: 'pass',
+                        value: PASSWORD
+                    }]
+                }
+            };
+
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run with 3 - 200 and 3 - 401', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 6
+            });
+            let response0 = testrun.request.getCall(0).args[2],
+                response1 = testrun.request.getCall(1).args[2],
+                response2 = testrun.request.getCall(2).args[2],
+                response3 = testrun.request.getCall(3).args[2],
+                response4 = testrun.request.getCall(4).args[2],
+                response5 = testrun.request.getCall(5).args[2],
+                request0 = testrun.request.getCall(0).args[3],
+                request1 = testrun.request.getCall(1).args[3],
+                request2 = testrun.request.getCall(2).args[3],
+                request3 = testrun.request.getCall(3).args[3],
+                request4 = testrun.request.getCall(4).args[3],
+                request5 = testrun.request.getCall(5).args[3];
+
+            expect(response0).to.have.property('code', 401);
+            expect(response1).to.have.property('code', 200);
+            expect(response2).to.have.property('code', 401);
+            expect(response3).to.have.property('code', 200);
+            expect(response4).to.have.property('code', 401);
+            expect(response5).to.have.property('code', 200);
+
+            // check if the auth header is present in all requests with correct nc value
+
+            expect(request0.headers.get('authorization')).to.eql(undefined);
+            expect(request1.headers.get('authorization')).to.match(/nc=00000001/);
+            expect(request2.headers.get('authorization')).to.eql(undefined);
+            expect(request3.headers.get('authorization')).to.match(/nc=00000001/);
+            expect(request4.headers.get('authorization')).to.eql(undefined);
+            expect(request5.headers.get('authorization')).to.match(/nc=00000001/);
+        });
+    });
+
     describe('with correct details (qop="auth", algorithm="MD5-sess")', function () {
         before(function (done) {
             var runOptions = {

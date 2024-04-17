@@ -1,3 +1,15 @@
+7.39.0:
+  date: 2024-04-17
+  new features:
+    - GH-1399 Added support for max body size in EdgeGrid auth
+  fixed bugs:
+    - >-
+      GH-1400 Fixed a bug where NTLM auth state was not handled correctly when
+      configured at folder or collection level
+    - >-
+      GH-1403 Fixed a bug where Digest Auth nonce count value was not updated
+      for successive requests
+
 7.38.0:
   date: 2024-04-03
   new features:
