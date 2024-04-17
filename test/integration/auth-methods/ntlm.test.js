@@ -1,4 +1,5 @@
 var expect = require('chai').expect,
+    uuid = require('uuid'),
     _ = require('lodash');
 
 (typeof window === 'undefined' ? describe : describe.skip)('NTLM', function () {
@@ -464,6 +465,146 @@ var expect = require('chai').expect,
 
             expect(err).to.be.null;
             expect(response).to.have.property('code', 401);
+        });
+    });
+
+    describe('with NTLM auth set at collection level and 5 iterations', function () {
+        before(function (done) {
+            let executionId = uuid.v4();
+
+            var localRunOptions = {
+                collection: {
+                    item: {
+                        name: 'NTLM Sample Request',
+                        request: {
+                            url: ntlmServerURL,
+                            header: [{ key: 'x-execution-id', value: executionId }]
+                        }
+                    },
+                    auth: {
+                        type: 'ntlm',
+                        ntlm: {
+                            username: USERNAME,
+                            password: PASSWORD,
+                            domain: DOMAIN,
+                            workstation: WORKSTATION
+                        }
+                    }
+                },
+                iterationCount: 5
+            };
+
+            // perform the collection run
+            this.run(localRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'done.callCount': 1
+            });
+
+            var err = testrun.request.firstCall.args[0];
+
+            err && console.error(err.stack);
+            expect(err).to.be.null;
+
+            expect(testrun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have sent the request ( 3 * 1 ) + 4 = 7 times', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 7
+            });
+
+            var response0 = testrun.request.getCall(0).args[2],
+                response1 = testrun.request.getCall(1).args[2],
+                response2 = testrun.request.getCall(2).args[2],
+                response3 = testrun.request.getCall(3).args[2],
+                response4 = testrun.request.getCall(4).args[2],
+                response5 = testrun.request.getCall(5).args[2],
+                response6 = testrun.request.getCall(6).args[2];
+
+            expect(response0, 'iteration 1, request 1').to.have.property('code', 401);
+            expect(response1, 'iteration 1, request 2').to.have.property('code', 401);
+            expect(response2, 'iteration 1, request 3').to.have.property('code', 200);
+            expect(response3, 'iteration 2, request 1').to.have.property('code', 200);
+            expect(response4, 'iteration 3, request 1').to.have.property('code', 200);
+            expect(response5, 'iteration 4, request 1').to.have.property('code', 200);
+            expect(response6, 'iteration 5, request 1').to.have.property('code', 200);
+        });
+    });
+
+    describe('with NTLM auth set at collection level with 4 requests', function () {
+        before(function (done) {
+            let executionId = uuid.v4();
+
+            var localRunOptions = {
+                collection: {
+                    item: [
+                        { name: 'NTLM Sample Request 1',
+                            request: {
+                                url: ntlmServerURL,
+                                header: [{ key: 'x-execution-id', value: executionId }]
+                            } },
+                        { name: 'NTLM Sample Request 2',
+                            request: {
+                                url: ntlmServerURL,
+                                header: [{ key: 'x-execution-id', value: executionId }]
+                            } },
+                        { name: 'NTLM Sample Request 3',
+                            request: {
+                                url: ntlmServerURL,
+                                header: [{ key: 'x-execution-id', value: executionId }]
+                            } },
+                        { name: 'NTLM Sample Request 4',
+                            request: {
+                                url: ntlmServerURL,
+                                header: [{ key: 'x-execution-id', value: executionId }]
+                            } }
+                    ],
+                    auth: {
+                        type: 'ntlm',
+                        ntlm: {
+                            username: USERNAME,
+                            password: PASSWORD,
+                            domain: DOMAIN,
+                            workstation: WORKSTATION
+                        }
+                    }
+                },
+                iterationCount: 1
+            };
+
+            // perform the collection run
+            this.run(localRunOptions, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run with 4 - 200 and 2 - 401', function () {
+            expect(testrun).to.nested.include({
+                'request.callCount': 6
+            });
+            var response0 = testrun.request.getCall(0).args[2],
+                response1 = testrun.request.getCall(1).args[2],
+                response2 = testrun.request.getCall(2).args[2],
+                response3 = testrun.request.getCall(3).args[2],
+                response4 = testrun.request.getCall(4).args[2],
+                response5 = testrun.request.getCall(5).args[2];
+
+            expect(response0, 'iteration 1, request 1').to.have.property('code', 401);
+            expect(response1, 'iteration 1, request 2').to.have.property('code', 401);
+            expect(response2, 'iteration 1, request 3').to.have.property('code', 200);
+            expect(response3, 'iteration 2, request 1').to.have.property('code', 200);
+            expect(response4, 'iteration 3, request 1').to.have.property('code', 200);
+            expect(response5, 'iteration 4, request 1').to.have.property('code', 200);
         });
     });
 });
