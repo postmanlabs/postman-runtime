@@ -1,3 +1,7 @@
+unreleased:
+  chores:
+    - GH-1415 Updated dependencies
+
 7.39.0:
   date: 2024-04-17
   new features:
