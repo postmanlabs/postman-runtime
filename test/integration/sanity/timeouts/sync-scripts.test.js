@@ -140,34 +140,23 @@ describe('synchronous script timeouts', function () {
 
                 // @todo global timeout sets up two setTimeouts(timeback & sandbox) and,
                 // due to sync script its not predictable which timeout callback will be executed first.
-                var err = testrun.done.firstCall.args[0],
-                    knownErrMsg = [
-                        'Script execution timed out.',
-                        'callback timed out',
-                        'Script execution timed out after 1000ms'
-                    ];
+                var err = testrun.done.firstCall.args[0];
 
                 expect(err).to.be.ok;
-                expect(err).to.have.property('message');
-                expect(knownErrMsg).to.include(err.message);
+                expect(err).to.have.property('message', 'callback timed out');
             });
 
-            // @todo ensure prerequest callback is called on timeout
-            it.skip('should handle script timeouts correctly', function (done) {
-                // @todo done callback is called before the actual script execution timeout
-                setTimeout(function () {
-                    expect(testrun).to.be.ok;
-                    expect(testrun).to.have.property('prerequest').that.nested.include({
-                        callCount: 1,
-                        'firstCall.args[0]': null,
-                        'firstCall.args[2][0].error.message': 'sandbox: synchronous script execution timeout'
-                    });
-                    done();
-                }, 3000);
+            it('should handle script timeouts correctly', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.have.property('prerequest').that.nested.include({
+                    callCount: 1,
+                    'firstCall.args[0]': null,
+                    'firstCall.args[2][0].error.message': 'sandbox: execution interrupted, bridge disconnecting'
+                });
             });
         });
 
-        (typeof window === 'undefined' ? describe : describe.skip)('script timeout', function () {
+        describe('script timeout', function () {
             var testrun;
 
             before(function (done) {
@@ -193,7 +182,6 @@ describe('synchronous script timeouts', function () {
                     },
                     __disposeTimeout: 2000 // don't dispose sandbox in bootstrap.js immediately
                 }, function (err, results) {
-                    // @todo fix multiple callbacks
                     !testrun && (testrun = results) && done(err);
                 });
             });
@@ -204,27 +192,15 @@ describe('synchronous script timeouts', function () {
                     'done.callCount': 1,
                     'start.callCount': 1
                 });
-
-                expect(testrun.done.firstCall.args[0]).to.be.an('Error');
-
-                // @note nodeVersionDiscrepancy
-                expect(testrun.done.firstCall.args[0].message).to.be.oneOf([
-                    'Script execution timed out.',
-                    'Script execution timed out after 500ms'
-                ]);
             });
 
-            it('should handle script timeouts correctly', function (done) {
-                // @todo done callback is called before the actual script execution timeout
-                setTimeout(function () {
-                    expect(testrun).to.be.ok;
-                    expect(testrun).to.have.property('prerequest').that.nested.include({
-                        callCount: 1,
-                        'firstCall.args[0]': null,
-                        'firstCall.args[2][0].error.message': 'sandbox: synchronous script execution timeout'
-                    });
-                    done();
-                }, 3000);
+            it('should handle script timeouts correctly', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.have.property('prerequest').that.nested.include({
+                    callCount: 1,
+                    'firstCall.args[0]': null,
+                    'firstCall.args[2][0].error.message': 'sandbox not responding'
+                });
             });
         });
     });
