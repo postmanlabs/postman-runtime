@@ -408,7 +408,6 @@
         "jsdoc/check-param-names": "error",
         "jsdoc/check-tag-names": "off",
         "jsdoc/check-types": "off",
-        "jsdoc/newline-after-description": "error",
         "jsdoc/require-description-complete-sentence": "off",
         "jsdoc/require-example": "off",
         "jsdoc/require-hyphen-before-param-description": "off",
