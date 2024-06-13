@@ -5,11 +5,11 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
     var testrun;
 
     before(function () {
-        process.env.http_proxy = global.servers.proxy; // eslint-disable-line no-process-env
+        process.env.http_proxy = global.servers.proxy; // eslint-disable-line n/no-process-env
     });
 
     after(function () {
-        delete process.env.http_proxy; // eslint-disable-line no-process-env
+        delete process.env.http_proxy; // eslint-disable-line n/no-process-env
     });
 
     describe('default', function () {

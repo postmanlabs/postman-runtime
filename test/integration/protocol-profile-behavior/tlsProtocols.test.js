@@ -60,7 +60,7 @@ var fs = require('fs'),
 
     before(function (done) {
         forInAsync(servers, function (protocol, next) {
-            servers[protocol] = server.createSSLServer( // eslint-disable-line function-paren-newline
+            servers[protocol] = server.createSSLServer( // eslint-disable-line @stylistic/js/function-paren-newline
                 // use `maxVersion` and `minVersion` options if supported, fallback to secureProtocol
                 tls.DEFAULT_MAX_VERSION ? {
                     maxVersion: protocol.replace('_', '.'),

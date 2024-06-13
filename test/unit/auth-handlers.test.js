@@ -734,7 +734,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256", response="640a149858bc1b2a90a02453a328bad01c1bad5dad6ba92cf0bf7832fd7dcae2", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -762,7 +762,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256", qop=auth, nc=00000001, cnonce="0a4f113b", response="6025934347a57283989281f03d9c4e1adbb3ee50af57827c83182d87e0cb7ec0", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -790,7 +790,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="06ba0831e0043ddc784784a1915acfd6d58792ab8203edaff5082800f8d294a5", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -817,7 +817,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256-sess", response="0b4e18576fd9f4850dda49eab2a581a5f40bb50f6ecaa17ab4340cd416497e13", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -845,7 +845,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256-sess", qop=auth, nc=00000001, cnonce="0a4f113b", response="9388df8d879c3d988419aafca225ccc4626eb089192e992239b5595a532e243d", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -873,7 +873,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-256-sess", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="31ecccb1899773a8d2478e6f7042f3174485ce18949731e84c572a1dd48d1539", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -900,7 +900,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", response="1676ceef7b880281567d30ca03f2517131fbc4a0c0a16d577cc4ad477b6b8c52", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -928,7 +928,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth, nc=00000001, cnonce="0a4f113b", response="fb53cf8c6922b758cf05477afd5cd896ad0213f16588ed15089da72a2900cb19", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -956,7 +956,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="f928c7ae0b0d4e4fe870e2fe66ccb85362e08b7c9ac33dcc527915019dec7aa2", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -983,7 +983,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", response="501c722984db1ecab705757c060e359debac8c9ee98bea00fc70c111977fcaba", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -1011,7 +1011,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", qop=auth, nc=00000001, cnonce="0a4f113b", response="5b0af1e60cff4aaa751326f6e837ea5d32c77324254f6c0c9882ff6cc0947799", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -1039,7 +1039,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256-sess", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="6e12487570a4f493953dd7e378924eee9a61dea0e6f0ee59854cf2c77c223f53", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -1071,7 +1071,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="08af7d82b032a502331788f1e56e16337910c11a887b99c60abf86e9c26fab2a", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -1107,7 +1107,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="cbfd61ad1bc2a4c9bb3d058e2b9b9d231e11501261c2115a8f23f787d296d6f4", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -1143,7 +1143,7 @@ describe('Auth Handler:', function () {
                 headers,
                 authHeader,
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Authorization: Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/digest-auth", algorithm="SHA-512-256", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="88f80bf9c08dd1250ae6fa848f48147aaebc0d56b7f41f04ccd8de4f217d0256", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             handler.sign(authInterface, request, _.noop);
@@ -1731,9 +1731,9 @@ describe('Auth Handler:', function () {
         });
 
         it('should generate correct signature for RSA based signature method', function () {
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/js/max-len
             var privateKey = '-----BEGIN RSA PRIVATE KEY-----\nMIICWwIBAAKBgFKLvzM9zbm3I0+HWcHlBSqpfRY/bKs6NDLclERrzfnReFV4utjkhjaEQPPT6tHVHKrZkcxmIgwe3XrkJkUjcuingXIF+Fc3KpY61qJ4HSM50qIuHdi+C5YfuXwNrh6OOeZAhhqgSw2e2XqPfATbkYYwpIFpdVdcH/Pb2ynpd6VXAgMBAAECgYAbQE+LFyhH25Iou0KCpJ0kDHhjU+UIUlrRP8kjHYQOqXzUmtr0p903OkpHNPsc8wJX1SQxGra60aXE4HVR9fYFQNliAnSmA/ztGR4ddnirK1Gzog4y2OOkicTdSqJ/1XXtTEDSRkA0Z2DIqcWgudeSDzVjUpreYwQ/rCEZbi50AQJBAJcf9wi5bU8tdZUCg3/8MNDwHhr4If4V/9kmhsgNp+M/9tHwCbD05hCbiGS7g58DPF+6V2K30qQYq7yvBP8Te4ECQQCL1GhX/YwkD6rexi0E1bjz+RqhNLTR9kexkTfSYmL6zHeeIFSH8ROioGOJMU51lUtMNkkrKEeki5SZpkfaQOzXAkAvBnJPU6vQ7HtfH8YdiDMEgQNNLxMcxmmzf4qHK8CnNRsvnnrVho8kcdFSTwsY6t/Zhdl1TXANQeQGtYtfeAeBAkEAhUB351JSWJMtrHqCsFbTmHxNKk7F+kiObeMLpUvpM0PiwifhJmNQ6Oubr0Pzlw4c4ZXiCGSsUVxK0lmpo423pQJATYDoxVhZrKA3xDAifWoyxbyxf/WXtUGDaAOuZc/naVN5TKiqaEO6G+k3NpmOXNKsYU/Zd9e6P/TnfU74TyDDDA==\n-----END RSA PRIVATE KEY-----',
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 signature = 'Bi%2FocoeczWLcYlMpYtW9HdFh41YMEFXSWpdzFZkJKJ8T7rBsuYoC%2FVDeCUx52DLiHMlkrnfVwmNfnvwyUusEPIOq61Ytb0w3Oq3V2G5jE58%2BSYMmgKEZQuP6znqfadWq%2Bu8z3nv1oiN4xacJpIRtFh4M1iDz8q%2BpLvxl3of%2BtoE%3D',
                 rawReq = _.merge({}, rawRequests.oauth1, {
                     auth: {

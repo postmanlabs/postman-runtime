@@ -46,7 +46,7 @@ describe('response callback', function () {
 
             // ensure parameters in response callback are same as request callback
             // cookies
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/js/max-len
             expect(testrun).to.have.deep.nested.property('request.firstCall.args[5]', testrun.response.firstCall.args[5]);
             // item
             expect(testrun.request.firstCall.args[4].toJSON()).to.eql(testrun.response.firstCall.args[4].toJSON());
@@ -134,7 +134,7 @@ describe('response callback', function () {
 
             // ensure parameters in response callback are same as request callback
             // cookies
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/js/max-len
             expect(testrun).to.have.deep.nested.property('request.secondCall.args[5]', testrun.response.firstCall.args[5]);
             // item
             expect(testrun.request.secondCall.args[4].toJSON()).to.eql(testrun.response.firstCall.args[4].toJSON());

@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@postman/shipit": "^0.4.0",
+    "@stylistic/eslint-plugin-js": "^1.8.0",
     "ajv": "^8.16.0",
     "browserify": "^17.0.0",
     "chai": "^4.3.10",
@@ -74,6 +75,7 @@
     "eslint-plugin-jsdoc": "^47.0.2",
     "eslint-plugin-lodash": "^7.4.0",
     "eslint-plugin-mocha": "^10.4.3",
+    "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-security": "^2.1.1",
     "express": "^4.17.2",
     "graphql": "^15.7.2",

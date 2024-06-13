@@ -1,6 +1,7 @@
 unreleased:
   chores:
     - GH-1418 Dropped support for Node.js < v16
+    - GH-1418 Updated ESLint rules
 
 7.39.0:
   date: 2024-04-17

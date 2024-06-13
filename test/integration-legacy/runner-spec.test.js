@@ -25,7 +25,7 @@ describe('Runner', function () {
                                     listen: 'test',
                                     script: {
                                         type: 'text/javascript',
-                                        // eslint-disable-next-line max-len
+                                        // eslint-disable-next-line @stylistic/js/max-len
                                         exec: 'postman.setEnvironmentVariable(\'method\', \'get\');\npostman.setEnvironmentVariable(\'count\', \'1\');\nconsole.log(\'Environment is now: \', environment);\npostman.setNextRequest(\'method\');'
                                     }
                                 }
@@ -50,7 +50,7 @@ describe('Runner', function () {
                                     listen: 'test',
                                     script: {
                                         type: 'text/javascript',
-                                        // eslint-disable-next-line max-len
+                                        // eslint-disable-next-line @stylistic/js/max-len
                                         exec: 'var count = _.parseInt(postman.getEnvironmentVariable(\'count\'));\ncount++;\npostman.setEnvironmentVariable(\'count\', String(count));\n\nif (responseCode.code === 200) {\n    postman.setEnvironmentVariable(\'method\', \'headers\');\n    console.log(\'Setting next request to "method"\');\n    postman.setNextRequest(\'method\');\n}'
                                     }
                                 }
@@ -75,7 +75,7 @@ describe('Runner', function () {
                                     listen: 'test',
                                     script: {
                                         type: 'text/javascript',
-                                        // eslint-disable-next-line max-len
+                                        // eslint-disable-next-line @stylistic/js/max-len
                                         exec: 'var jsonData = JSON.parse(responseBody);\nvar count = _.parseInt(postman.getEnvironmentVariable(\'count\'));\ncount++;\npostman.setEnvironmentVariable(\'count\', String(count));\n\nif (jsonData.url === \'https://postman-echo.com/get\') {\n    console.log(\'Setting next request to "html"\');\n    postman.setNextRequest(\'html\');\n}\nelse if (!jsonData.url && jsonData.headers) {\n    console.log(\'Ending here.\'); tests[\'Success\'] = _.parseInt(postman.getEnvironmentVariable(\'count\')) === 4\n    postman.setNextRequest(null);\n}\nelse {\n    console.log(\'Not setting next request.. \', responseBody);\n}'
                                     }
                                 }
@@ -110,7 +110,7 @@ describe('Runner', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
