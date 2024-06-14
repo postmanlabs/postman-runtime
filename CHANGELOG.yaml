@@ -1,4 +1,5 @@
-unreleased:
+7.39.1:
+  date: 2024-06-14
   chores:
     - Bumped postman-request dependency
 
