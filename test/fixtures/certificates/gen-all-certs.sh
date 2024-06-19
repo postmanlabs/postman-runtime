@@ -33,6 +33,7 @@ openssl req -new -sha256 -key client-key.pem -out client.csr -config client.cnf 
 
 # Create client certificate
 openssl x509 -req \
+    -sha256 \
     -in client.csr \
     -CA ca.pem \
     -CAkey ca.key \
