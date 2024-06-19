@@ -48,7 +48,7 @@ describe('Control Flow', function () {
 
             return done();
         });
-        // eslint-disable-next-line handle-callback-err
+        // eslint-disable-next-line n/handle-callback-err
         runner.run(new Collection(spec.collection), {}, function (err, run) {
             run.start(callbacks);
             run.abort();
@@ -69,7 +69,7 @@ describe('Control Flow', function () {
             return done();
         });
 
-        // eslint-disable-next-line handle-callback-err
+        // eslint-disable-next-line n/handle-callback-err
         runner.run(new Collection(spec.collection), {}, function (err, run) {
             run.start(callbacks);
             run.pause(() => {
@@ -92,7 +92,7 @@ describe('Control Flow', function () {
             return done();
         });
 
-        // eslint-disable-next-line handle-callback-err
+        // eslint-disable-next-line n/handle-callback-err
         runner.run(new Collection(spec.collection), {}, function (err, run) {
             run.start(callbacks);
             run.pause(() => {
@@ -134,7 +134,7 @@ describe('Control Flow', function () {
             return done();
         });
 
-        // eslint-disable-next-line handle-callback-err
+        // eslint-disable-next-line n/handle-callback-err
         runner.run(new Collection(collection), {}, function (err, run) {
             callbacks.beforeScript = function () {
                 // wait until execution starts

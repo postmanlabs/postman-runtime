@@ -687,9 +687,9 @@ describe('sandbox library - pm api', function () {
                                                             listen: 'prerequest',
                                                             script: {
                                                                 exec: [
-                                                                    // eslint-disable-next-line max-len
+                                                                    // eslint-disable-next-line @stylistic/js/max-len
                                                                     'console.log("request pre path", pm.execution.location)',
-                                                                    // eslint-disable-next-line max-len
+                                                                    // eslint-disable-next-line @stylistic/js/max-len
                                                                     'console.log("request pre current", pm.execution.location.current)'
                                                                 ],
                                                                 type: 'text/javascript'
@@ -699,9 +699,9 @@ describe('sandbox library - pm api', function () {
                                                             listen: 'test',
                                                             script: {
                                                                 exec: [
-                                                                    // eslint-disable-next-line max-len
+                                                                    // eslint-disable-next-line @stylistic/js/max-len
                                                                     'console.log("request test path", pm.execution.location)',
-                                                                    // eslint-disable-next-line max-len
+                                                                    // eslint-disable-next-line @stylistic/js/max-len
                                                                     'console.log("request test current", pm.execution.location.current)'
                                                                 ],
                                                                 type: 'text/javascript'
@@ -727,9 +727,9 @@ describe('sandbox library - pm api', function () {
                                                     script: {
                                                         type: 'text/javascript',
                                                         exec: [
-                                                            // eslint-disable-next-line max-len
+                                                            // eslint-disable-next-line @stylistic/js/max-len
                                                             'console.log("folder pre path", pm.execution.location)',
-                                                            // eslint-disable-next-line max-len
+                                                            // eslint-disable-next-line @stylistic/js/max-len
                                                             'console.log("folder pre current", pm.execution.location.current)'
                                                         ]
                                                     }
@@ -739,9 +739,9 @@ describe('sandbox library - pm api', function () {
                                                     script: {
                                                         type: 'text/javascript',
                                                         exec: [
-                                                            // eslint-disable-next-line max-len
+                                                            // eslint-disable-next-line @stylistic/js/max-len
                                                             'console.log("folder test path", pm.execution.location)',
-                                                            // eslint-disable-next-line max-len
+                                                            // eslint-disable-next-line @stylistic/js/max-len
                                                             'console.log("folder test current", pm.execution.location.current)'
                                                         ]
                                                     }

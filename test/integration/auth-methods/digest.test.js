@@ -948,7 +948,7 @@ describe('digest auth', function () {
         it('should send correct Auth header', function () {
             var response = testrun.response.getCall(0).args[2],
 
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/js/max-len
                 expectedHeader = 'Digest username="postman", realm="Users", nonce="bcgEc5RPU1ANglyT2I0ShU0oxqPB5jXp", uri="/get", algorithm="MD5", qop=auth-int, nc=00000001, cnonce="0a4f113b", response="a6745c111f25f5816f3b14c9d23c2cb1", opaque="5ccc069c403ebaf9f0171e9517f40e"';
 
             expect(response.json().headers).to.have.property('authorization', expectedHeader);

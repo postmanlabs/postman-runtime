@@ -24,7 +24,7 @@ runtime = function (spec, done) {
         callbacks[eventName] = sinon.spy();
     });
 
-    // eslint-disable-next-line handle-callback-err
+    // eslint-disable-next-line n/handle-callback-err
     runner.run(new Collection(spec.collection), _.omit(spec, ['collection', 'options']), function (err, run) {
         // the final done callback needs special attention
         callbacks.done = sinon.spy(function () {

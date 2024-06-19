@@ -1089,7 +1089,7 @@ describe('tough-cookie', function () {
                 .to.throw(Error)
                 .with.property('message',
 
-                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line @stylistic/js/max-len
                     'Cookie has domain set to the public suffix "example" which is a special use domain. To allow this, configure your CookieJar with {allowSpecialUseDomain:true, rejectPublicSuffixes: false}.');
         });
 
@@ -1100,7 +1100,7 @@ describe('tough-cookie', function () {
                 .to.throw(Error)
                 .with.property('message',
 
-                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line @stylistic/js/max-len
                     'Cookie has domain set to the public suffix "localhost" which is a special use domain. To allow this, configure your CookieJar with {allowSpecialUseDomain:true, rejectPublicSuffixes: false}.');
         });
 
@@ -1116,7 +1116,7 @@ describe('tough-cookie', function () {
                 .to.throw(Error)
                 .with.property('message',
 
-                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line @stylistic/js/max-len
                     'Cookie has domain set to the public suffix "local" which is a special use domain. To allow this, configure your CookieJar with {allowSpecialUseDomain:true, rejectPublicSuffixes: false}.');
         });
 
