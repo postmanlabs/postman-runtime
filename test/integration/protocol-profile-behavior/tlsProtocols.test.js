@@ -43,7 +43,7 @@ var fs = require('fs'),
         next();
     };
 
-(IS_NODE ? describe.only : describe.skip)('protocolProfileBehavior: tls options', function () {
+(IS_NODE ? describe : describe.skip)('protocolProfileBehavior: tls options', function () {
     var testrun,
         servers = {
             // SSLv2 and SSLv3 methods are disabled in Node
