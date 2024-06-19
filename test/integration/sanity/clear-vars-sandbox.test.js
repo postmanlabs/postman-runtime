@@ -32,9 +32,9 @@ describe('Clear vars sandbox', function () {
                         script: {
                             exec: [
                                 'var data = JSON.parse(responseBody);',
-                                // eslint-disable-next-line max-len
+                                // eslint-disable-next-line @stylistic/js/max-len
                                 'tests[\'Variable substitution from env not working after clearing\'] = (data.args.a===\'{{e}}\');',
-                                // eslint-disable-next-line max-len
+                                // eslint-disable-next-line @stylistic/js/max-len
                                 'tests[\'Variable substitution from global not working after clearing\'] = (data.args.b===\'{{g}}\');',
                                 'postman.setEnvironmentVariable(\'e\', \'2\');',
                                 'postman.setGlobalVariable(\'g\',\'3\');',
@@ -54,9 +54,9 @@ describe('Clear vars sandbox', function () {
                         script: {
                             exec: [
                                 'var data = JSON.parse(responseBody);',
-                                // eslint-disable-next-line max-len
+                                // eslint-disable-next-line @stylistic/js/max-len
                                 'tests[\'Variable substitution from env not working after clearing invididually\'] = (data.args.a===\'{{e}}\');',
-                                // eslint-disable-next-line max-len
+                                // eslint-disable-next-line @stylistic/js/max-len
                                 'tests[\'Variable substitution from global not working after clearing invididually\'] = (data.args.b===\'{{g}}\');'
                             ]
                         }

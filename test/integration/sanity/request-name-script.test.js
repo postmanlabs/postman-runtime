@@ -13,7 +13,7 @@ describe('request name scripts', function () {
                         script: {
                             exec: [
                                 'var failed = postman.getEnvironmentVariable(\'fail\');',
-                                // eslint-disable-next-line max-len
+                                // eslint-disable-next-line @stylistic/js/max-len
                                 'tests[\'working\'] = !failed && (request.name===\'r1\' && request.description===\'testDesc\')'
                             ]
                         }

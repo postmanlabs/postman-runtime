@@ -55,7 +55,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -281,7 +281,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -503,7 +503,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -718,7 +718,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -932,7 +932,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -1155,7 +1155,7 @@ describe('Requester', function () {
              */
             check = function (func) {
                 try { func(); }
-                catch (e) { (errored = true) && mochaDone(e); }
+                catch (e) { errored = true; mochaDone(e); }
             };
 
         runner.run(collection, {
@@ -1376,7 +1376,7 @@ describe('Requester', function () {
              */
             check = function (func) {
                 try { func(); }
-                catch (e) { (errored = true) && mochaDone(e); }
+                catch (e) { errored = true; mochaDone(e); }
             };
 
         runner.run(collection, {
@@ -1602,7 +1602,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -1824,7 +1824,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -1845,7 +1845,7 @@ describe('Requester', function () {
                             expect(cursor.ref).to.eql(runStore.ref);
 
                             expect(level).to.equal('warn');
-                            // eslint-disable-next-line max-len
+                            // eslint-disable-next-line @stylistic/js/max-len
                             expect(message).to.equal('Form param `myfile`, file load error: file resolver not supported');
                         });
                     },
@@ -2062,7 +2062,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2293,7 +2293,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2521,7 +2521,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2741,7 +2741,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -2976,7 +2976,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -3225,7 +3225,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -3416,9 +3416,9 @@ describe('Requester', function () {
                                     script: {
                                         type: 'text/javascript',
                                         exec: [
-                                            // eslint-disable-next-line max-len
+                                            // eslint-disable-next-line @stylistic/js/max-len
                                             'tests[\'Cookie A\'] = postman.getResponseCookie(\'a\') && postman.getResponseCookie(\'a\').value === \'one\';',
-                                            // eslint-disable-next-line max-len
+                                            // eslint-disable-next-line @stylistic/js/max-len
                                             'tests[\'Cookie b\'] = postman.getResponseCookie(\'b\') && postman.getResponseCookie(\'b\').value === \'two\';'
                                         ]
                                     }
@@ -3448,7 +3448,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -3679,7 +3679,7 @@ describe('Requester', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 },
 
                 cookieJar = request.jar();
@@ -3896,7 +3896,7 @@ describe('Requester', function () {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
                     res.setHeader('Content-Encoding', 'deflate');
-                    // eslint-disable-next-line handle-callback-err
+                    // eslint-disable-next-line n/handle-callback-err
                     zlib.deflateRaw('thisisadeflatedresponse', function (err, buffer) {
                         res.end(buffer);
                     });
@@ -3953,7 +3953,7 @@ describe('Requester', function () {
                      */
                     check = function (func) {
                         try { func(); }
-                        catch (e) { (errored = true) && mochaDone(e); }
+                        catch (e) { errored = true; mochaDone(e); }
                     };
 
                 runner.run(collection, {
@@ -4139,7 +4139,7 @@ describe('Requester', function () {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
                     res.setHeader('Content-Encoding', 'deflate');
-                    // eslint-disable-next-line handle-callback-err
+                    // eslint-disable-next-line n/handle-callback-err
                     zlib.deflate('thisisadeflatedresponsetoo', function (err, buffer) {
                         res.end(buffer);
                     });
@@ -4196,7 +4196,7 @@ describe('Requester', function () {
                      */
                     check = function (func) {
                         try { func(); }
-                        catch (e) { (errored = true) && mochaDone(e); }
+                        catch (e) { errored = true; mochaDone(e); }
                     };
 
                 runner.run(collection, {
@@ -4382,7 +4382,7 @@ describe('Requester', function () {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain');
                     res.setHeader('Content-Encoding', 'gzip');
-                    // eslint-disable-next-line handle-callback-err
+                    // eslint-disable-next-line n/handle-callback-err
                     zlib.gzip('thisisagzippedresponse', function (err, buffer) {
                         res.end(buffer);
                     });
@@ -4448,7 +4448,7 @@ describe('Requester', function () {
                      */
                     check = function (func) {
                         try { func(); }
-                        catch (e) { (errored = true) && mochaDone(e); }
+                        catch (e) { errored = true; mochaDone(e); }
                     };
 
                 runner.run(collection, {

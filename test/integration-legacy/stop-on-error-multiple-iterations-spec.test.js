@@ -64,7 +64,7 @@ describe('Option', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {

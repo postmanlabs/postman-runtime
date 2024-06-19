@@ -49,7 +49,7 @@ describe('UVM', function () {
                                             'var newString="diabetes";',
                                             'tests["SugarJS working"]=newString.has("betes");',
                                             'tests["tv4 present"] = (typeof tv4.validate === "function");',
-                                            // eslint-disable-next-line max-len
+                                            // eslint-disable-next-line @stylistic/js/max-len
                                             'tests["CryptoJS md5"] = (CryptoJS.MD5("jasonpurse") == "288d14f08b5ad40da43dbe06467729c9");'
                                         ]
                                     }
@@ -84,11 +84,11 @@ describe('UVM', function () {
                                         exec: [
                                             'tests["Status code is 200"] = responseCode.code === 200;',
                                             'var jsonData = JSON.parse(responseBody);',
-                                            // eslint-disable-next-line max-len
+                                            // eslint-disable-next-line @stylistic/js/max-len
                                             'tests["Correct GUID: " + jsonData.form.guid] = jsonData.form.guid.length === 36;',
-                                            // eslint-disable-next-line max-len
+                                            // eslint-disable-next-line @stylistic/js/max-len
                                             'tests["Correct Random: " + jsonData.form.randomInt] = parseInt(jsonData.form.randomInt)>=0;',
-                                            // eslint-disable-next-line max-len
+                                            // eslint-disable-next-line @stylistic/js/max-len
                                             'tests["Correct Timestamp: " + jsonData.form.timestamp] = parseInt(jsonData.form.timestamp)>1000',
                                             'tests["Correct global"] = jsonData.form.global == "0";',
                                             'tests["Correct global2"] = jsonData.form.global == globals.g1;',
@@ -306,7 +306,7 @@ describe('UVM', function () {
                                         type: 'text/javascript',
                                         exec: [
                                             'var jsonData = JSON.parse(responseBody);',
-                                            // eslint-disable-next-line max-len
+                                            // eslint-disable-next-line @stylistic/js/max-len
                                             'tests["Correct auth header"] = jsonData.headers.authorization.indexOf("YWJoaWppdDprYW5l")>-1;'
                                         ]
                                     }
@@ -443,7 +443,7 @@ describe('UVM', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 },
 
                 cookieJar = request.jar();
@@ -668,7 +668,7 @@ describe('UVM', function () {
                                             'tests[\'string prototype\'] = \'asdasd\'.has(\'as\');',
                                             'tests[\'Object\'] = typeof Object.each === \'function\'',
                                             'tests[\'Date.create\'] = typeof Date.create === \'function\';',
-                                            // eslint-disable-next-line max-len
+                                            // eslint-disable-next-line @stylistic/js/max-len
                                             'tests[\'Other Date functions\'] = !!(1).daysAfter(new Date()).format(\'{yyyy}{MM}{dd}\');'
                                         ]
                                     }
@@ -697,7 +697,7 @@ describe('UVM', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {
@@ -893,7 +893,7 @@ describe('UVM', function () {
                                     listen: 'test',
                                     script: {
                                         type: 'text/javascript',
-                                        // eslint-disable-next-line max-len
+                                        // eslint-disable-next-line @stylistic/js/max-len
                                         exec: '// Extended Array prototype tests\ntests["Array prototype none"] = [\'a\', \'b\', \'c\'].none(\'d\');\ntests["Array prototype any"] = [ [1,2], [2,3] ].any([2,3]);\ntests["Array prototype average"] = [ 1, 2, 3, 4, 5 ].average() === 3;\n\n// Extended Date prototype tests\nconsole.log(Object.keys(new Date()));\ntests["Date prototype getTime"] = Date.now()==(new Date()).getTime();\ntests["Date prototype isFuture"] = Date.create(\'next week\').isFuture();\ntests["Date prototype isLeapYear"] = Date.create(\'2000\').isLeapYear();\ntests["Date prototype isPast"] = Date.create(\'last week\').isPast();\ntests["Date prototype isValid"] = new Date().isValid();\ntests["Date prototype negated isValid"] = !(new Date(\'random string\').isValid());\n\n// Extended Function prototype tests\nvar fCount = 0;\nvar fn = (function() {\n  fCount++;\n}).once(); fn(); fn(); fn();\ntests["Function prototype once"] = fCount===1;\n\n// Extended Number prototype tests\ntests["Number prototype hex"] = (56).hex() === \'38\';\ntests["Number prototype isEven"] = (56).isEven() === true;\ntests["Number prototype ordinalize"] = (56).ordinalize() === \'56th\';\ntests["Number prototype format"] = (56789.10).format() === \'56,789.1\';\n\n// Extended String prototype tests\ntests["String prototype endsWith"] = \'jumpy\'.endsWith(\'py\');\ntests["String prototype negated endsWith"] = !(\'jumpy\'.endsWith(\'MPY\'));\ntests["String prototype camelize"] = \'a-beta\'.camelize() === \'ABeta\';\ntests["String prototype repeat"] = \'a\'.repeat(5) === \'aaaaa\';\ntests["String prototype shift"] = \'abc\'.shift(5) === \'fgh\';\ntests["String prototype spacify"] = \'a-b_cD\'.spacify() === \'a b c d\';'
                                     }
                                 }
@@ -928,7 +928,7 @@ describe('UVM', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {

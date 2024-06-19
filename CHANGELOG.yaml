@@ -1,3 +1,13 @@
+7.40.0:
+  date: 2024-06-19
+  new features:
+    - GH-1415 Added support for top-level await in scripts
+  chores:
+    - GH-1415 Updated `postman-sandbox` to v5.0.0
+    - GH-1418 Dropped support for Node.js < v16
+    - GH-1418 Updated ESLint rules
+    - GH-1418 Updated dependencies
+
 7.39.1:
   date: 2024-06-14
   chores:

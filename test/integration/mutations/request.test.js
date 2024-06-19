@@ -434,7 +434,7 @@ describe('request mutations', function () {
                                 script: {
                                     exec: [
                                         'pm.request.body.mode = "formdata";',
-                                        // eslint-disable-next-line max-len
+                                        // eslint-disable-next-line @stylistic/js/max-len
                                         'pm.request.body.formdata = [{ key: "file", src: ["test/fixtures/upload-file.json"], type: "file"}];'
                                     ],
                                     type: 'text/javascript'
