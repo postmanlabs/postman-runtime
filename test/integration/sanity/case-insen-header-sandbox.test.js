@@ -10,7 +10,7 @@ describe('Case insensitive sandbox headers', function () {
                     event: [{
                         listen: 'test',
                         script: {
-                            // eslint-disable-next-line max-len
+                            // eslint-disable-next-line @stylistic/js/max-len
                             exec: 'tests[\'Case-insensitive header checking\'] = postman.getResponseHeader(\'contenT-TypE\')===\'application/json; charset=utf-8\';'
                         }
                     }],

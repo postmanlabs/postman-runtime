@@ -33,6 +33,7 @@ openssl req -new -sha256 -key client-key.pem -out client.csr -config client.cnf 
 
 # Create client certificate
 openssl x509 -req \
+    -sha256 \
     -in client.csr \
     -CA ca.pem \
     -CAkey ca.key \
@@ -42,6 +43,7 @@ openssl x509 -req \
 
 # Create client PKCS12 certificate without password
 openssl pkcs12 -export \
+    -certpbe AES-256-CBC \
     -inkey client-key.pem \
     -in client-crt.pem \
     -out client-pkcs12.pfx \
@@ -49,6 +51,7 @@ openssl pkcs12 -export \
 
 # Create client PKCS12 certificate with password
 openssl pkcs12 -export \
+    -certpbe AES-256-CBC \
     -inkey client-key.pem \
     -in client-crt.pem \
     -out client-pkcs12-passphrase.pfx \
