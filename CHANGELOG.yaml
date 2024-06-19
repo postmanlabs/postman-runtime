@@ -1,6 +1,6 @@
 unreleased:
   chores:
-    - GH-1415 Updated dependencies
+    - GH-1415 Updated `postman-sandbox` to v5.0.0
 
 7.39.1:
   date: 2024-06-14
