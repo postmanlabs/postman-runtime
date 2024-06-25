@@ -45,6 +45,9 @@ Redirect with the original HTTP method, by default redirects with HTTP method GE
 - `followAuthorizationHeader: Boolean`<br/>
 Retain `authorization` header when a redirect happens to a different hostname.
 
+- `protocolVersion: String`<br/>
+HTTP Protocol version to be used, supported values are 'http1', 'http2', and 'auto'
+
 - `removeRefererHeaderOnRedirect: Boolean`<br/>
 Removes the `referer` header when a redirect happens.
 
@@ -56,9 +59,6 @@ the SSL and TLS protocol versions to disabled during negotiation
 
 - `tlsCipherSelection: Array`<br/>
 Order of cipher suites that the SSL server profile uses to establish a secure connection
-
-- `protocolVersion: String`<br/>
-HTTP Protocol version to be used, supported values are 'http1', 'http2', and 'auto'
 
 **A collection with protocol profile behaviors:**
 
