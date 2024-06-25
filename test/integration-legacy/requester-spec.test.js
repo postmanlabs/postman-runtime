@@ -4383,7 +4383,7 @@ describe('Requester', function () {
                     res.setHeader('Content-Type', 'text/plain');
                     res.setHeader('Content-Encoding', 'gzip');
                     // eslint-disable-next-line handle-callback-err
-                    zlib.gzip('thisisagzippedresponse', function (err, buffer) {
+                    zlib.gzip('Compressible response content.\n', function (err, buffer) {
                         res.end(buffer);
                     });
                 });
@@ -4604,8 +4604,11 @@ describe('Requester', function () {
                                 });
 
                                 expect(response).to.have.property('code', 200);
-                                expect(response.text()).to.equal('thisisagzippedresponse');
+                                expect(response.text()).to.equal('Compressible response content.\n');
                                 expect(request).to.be.ok;
+                                expect(response.size()).to.eql({
+                                    body: 31, header: 173, total: 222, downloadedBytes: 49
+                                });
                             });
                         },
                         done (err) {
