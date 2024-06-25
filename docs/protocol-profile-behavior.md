@@ -45,6 +45,9 @@ Redirect with the original HTTP method, by default redirects with HTTP method GE
 - `followAuthorizationHeader: Boolean`<br/>
 Retain `authorization` header when a redirect happens to a different hostname.
 
+- `protocolVersion: String`<br/>
+HTTP Protocol version to be used, supported values are 'http1', 'http2', and 'auto'
+
 - `removeRefererHeaderOnRedirect: Boolean`<br/>
 Removes the `referer` header when a redirect happens.
 
