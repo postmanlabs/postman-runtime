@@ -57,6 +57,9 @@ the SSL and TLS protocol versions to disabled during negotiation
 - `tlsCipherSelection: Array`<br/>
 Order of cipher suites that the SSL server profile uses to establish a secure connection
 
+- `protocolVersion: String`<br/>
+HTTP Protocol version to be used, supported values are 'http1', 'http2', and 'auto'
+
 **A collection with protocol profile behaviors:**
 
 ```javascript
