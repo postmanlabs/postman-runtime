@@ -253,7 +253,7 @@ var expect = require('chai').expect,
             expect(executionData.request).to.be.an('object')
                 .that.has.all.keys(['headers', 'href', 'httpVersion', 'method', 'proxy']);
             expect(executionData.response).to.be.an('object')
-                .that.has.all.keys(['headers', 'httpVersion', 'statusCode']);
+                .that.has.all.keys(['headers', 'httpVersion', 'statusCode', 'downloadedBytes']);
         });
     });
 });
