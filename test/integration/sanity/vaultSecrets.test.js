@@ -7,11 +7,9 @@ describe('vaultSecrets', function () {
         before(function (done) {
             this.run({
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
-                        {
-                            key: 'vault:var1',
-                            value: 'https://postman-echo.com'
-                        },
                         {
                             key: 'vault:var2',
                             value: 'postman',
@@ -25,6 +23,16 @@ describe('vaultSecrets', function () {
                 },
                 collection: {
                     item: {
+                        event: [
+                            {
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                    pm.vault.set('var1', 'https://postman-echo.com');
+                                    `
+                                }
+                            }
+                        ],
                         request: {
                             url: '{{vault:var1}}/basic-auth',
                             method: 'GET',

@@ -7,6 +7,13 @@ describe('variable changes', function () {
     before(function (done) {
         this.run({
             requester: { followRedirects: false },
+            vaultSecrets: {
+                id: 'vault',
+                values: [
+                    { key: 'vault:key5', value: 'vault-value-5', enabled: true, _isAccessibleInScripts: true },
+                    { key: 'vault:key6', value: 'vault-value-6', enabled: true, _isAccessibleInScripts: true }
+                ]
+            },
             collection: {
                 item: {
                     // ensure that we run something for test and pre-req scripts
@@ -18,6 +25,7 @@ describe('variable changes', function () {
                                 pm.environment.set('environment', 'environment value');
                                 pm.globals.set('globals', 'globals value');
                                 pm.collectionVariables.set('collection', 'collection value');
+                                pm.vault.set('secret1', 'vault value');
                             `
                         }
                     }, {
@@ -26,6 +34,7 @@ describe('variable changes', function () {
                             exec: `
                                 pm.environment.set("environment", "environment updated value");
                                 pm.collectionVariables.set("collection", "collection updated value");
+                                pm.vault.set('secret1', 'vault updated value');
                             `
                         }
                     }],
@@ -60,10 +69,12 @@ describe('variable changes', function () {
         expect(sdk.VariableScope.isVariableScope(prerequest.environment)).to.be.true;
         expect(sdk.VariableScope.isVariableScope(prerequest.globals)).to.be.true;
         expect(sdk.VariableScope.isVariableScope(prerequest.collectionVariables)).to.be.true;
+        expect(sdk.VariableScope.isVariableScope(prerequest.vaultSecrets)).to.be.true;
 
         expect(sdk.VariableScope.isVariableScope(test.environment)).to.be.true;
         expect(sdk.VariableScope.isVariableScope(test.globals)).to.be.true;
         expect(sdk.VariableScope.isVariableScope(test.collectionVariables)).to.be.true;
+        expect(sdk.VariableScope.isVariableScope(test.vaultSecrets)).to.be.true;
     });
 
     it('should have provided variable changes in the scripts', function () {
@@ -72,6 +83,7 @@ describe('variable changes', function () {
         expect(prerequest.environment.mutations.count()).to.equal(1);
         expect(prerequest.globals.mutations.count()).to.equal(1);
         expect(prerequest.collectionVariables.mutations.count()).to.equal(1);
+        expect(prerequest.vaultSecrets.mutations.count()).to.equal(1);
         expect(prerequest._variables.mutations.count()).to.equal(1);
     });
 
@@ -80,6 +92,7 @@ describe('variable changes', function () {
 
         expect(test.environment.mutations.count()).to.equal(1);
         expect(test.collectionVariables.mutations.count()).to.equal(1);
+        expect(test.vaultSecrets.mutations.count()).to.equal(1);
         expect(test.globals.mutations.count()).to.equal(0);
         expect(test._variables.mutations.count()).to.equal(0);
     });
