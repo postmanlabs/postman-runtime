@@ -290,6 +290,7 @@ describe('requests from sandbox', function () {
                                 pm.sendRequest({}, function(err, _response) {
                                     pm.test('request did not complete', function () {
                                         pm.expect(err).to.not.eql(null);
+                                        pm.expect(err).to.have.property('message');
                                         pm.expect(_response).to.not.be.ok;
                                     });
                                 });
