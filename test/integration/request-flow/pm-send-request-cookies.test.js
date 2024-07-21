@@ -194,8 +194,9 @@ var _ = require('lodash'),
                         headers = historyOne.execution.data[1].request.headers;
 
                     // cookies are set after the first response in redirect
-                    expect(headers[headers.length - 2]).to.have.property('key', 'Cookie');
-                    expect(headers[headers.length - 2].value).to.not.include('foo=bar');
+                    const cookieHeaderIndex = headers.findIndex((header) => header.key === 'Cookie');
+                    expect(cookieHeaderIndex).to.be.greaterThan(-1);
+                    expect(headers[cookieHeaderIndex].value).to.not.include('foo=bar');
 
                     expect(resOne.json()).to.eql({ cookies: {} });
                     expect(testrun.request.secondCall.args[2].json()).to.eql({ cookies: { foo: 'bar' } });
@@ -491,8 +492,9 @@ var _ = require('lodash'),
                         historyOne = testrun.response.firstCall.lastArg,
                         headers = historyOne.execution.data[1].request.headers;
 
-                    expect(headers[headers.length - 2]).to.have.property('key', 'Cookie');
-                    expect(headers[headers.length - 2].value).to.include('foo=bar;');
+                    const cookieHeaderIndex = headers.findIndex((header) => header.key === 'Cookie');
+                    expect(cookieHeaderIndex).to.be.greaterThan(-1);
+                    expect(headers[cookieHeaderIndex].value).to.include('foo=bar;');
 
                     expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
