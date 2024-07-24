@@ -4607,7 +4607,7 @@ describe('Requester', function () {
                                 expect(response.text()).to.equal('Compressible response content.\n');
                                 expect(request).to.be.ok;
                                 expect(response.size()).to.eql({
-                                    body: 49, header: 173, total: 222, transferedBytes: 49, resourceBytes: 31
+                                    body: 49, header: 173, total: 222, resourceBytes: 31
                                 });
                             });
                         },
