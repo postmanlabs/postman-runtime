@@ -1,3 +1,12 @@
+unreleased:
+  fixed bugs:
+    - >-
+      GH-1433 Fixed a bug where errors from `pm.sendRequest` were not
+      transmitted correctly
+  chores:
+    - GH-1426 Added variable to track the downloaded content size in response
+    - Updated dependencies
+
 7.40.0:
   date: 2024-06-19
   new features:

@@ -4604,10 +4604,10 @@ describe('Requester', function () {
                                 });
 
                                 expect(response).to.have.property('code', 200);
-                                expect(response.text()).to.equal('Compressible response content.\n');
+                                expect(response.text()).to.equal('thisisagzippedresponse');
                                 expect(request).to.be.ok;
                                 expect(response.size()).to.eql({
-                                    body: 49, header: 173, total: 222, resourceBytes: 31
+                                    body: 42, header: 173, total: 215
                                 });
                             });
                         },
