@@ -1,6 +1,8 @@
 unreleased:
   fixed bugs:
     - Fixed a bug where errors from `pm.sendRequest` were not transmitted correctly
+  chores:
+    - Updated dependencies
 
 7.40.0:
   date: 2024-06-19
