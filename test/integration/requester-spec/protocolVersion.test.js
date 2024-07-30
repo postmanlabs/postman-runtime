@@ -1,6 +1,7 @@
 var sinon = require('sinon'),
     expect = require('chai').expect,
     IS_NODE = typeof window === 'undefined',
+    IS_NODE_20 = IS_NODE && parseInt(process.versions.node.split('.')[0], 10) === 20,
     server = IS_NODE && require('../../fixtures/servers/_servers');
 
 (IS_NODE ? describe : describe.skip)('Requester Spec: protocolVersion', function () {
@@ -95,8 +96,8 @@ var sinon = require('sinon'),
                             (protocolVersion === undefined && requesterProtocolVersion === 'http2')) {
                         const error = testrun.response.getCall(0).firstArg;
 
-                        expect(error.code).to.eql('ERR_HTTP2_ERROR');
-                        expect(error.errno).to.eql(-505);
+                        expect(error.code).to.eql(IS_NODE_20 ? 'ERR_HTTP2_STREAM_CANCEL' : 'ERR_HTTP2_ERROR');
+                        !IS_NODE_20 && expect(error.errno).to.eql(-505);
 
                         return;
                     }
