@@ -70,7 +70,7 @@ var sinon = require('sinon'),
                                     url: 'https://localhost:' + servers.http1.port + '/test'
                                 },
                                 protocolProfileBehavior: {
-                                    protocolVersion
+                                    ...(protocolVersion ? { protocolVersion } : {})
                                 }
                             }]
                         }
@@ -125,7 +125,7 @@ var sinon = require('sinon'),
                                     url: 'https://localhost:' + servers.http2.port + '/test'
                                 },
                                 protocolProfileBehavior: {
-                                    protocolVersion
+                                    ...(protocolVersion ? { protocolVersion } : {})
                                 }
                             }]
                         }
