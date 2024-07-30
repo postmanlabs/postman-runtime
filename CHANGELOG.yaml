@@ -1,4 +1,6 @@
 unreleased:
+  new features:
+    - GH-1427 Added support for HTTP/2. Configurable via `protocolVersion`
   fixed bugs:
     - >-
       GH-1433 Fixed a bug where errors from `pm.sendRequest` were not
