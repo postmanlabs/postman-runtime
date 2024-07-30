@@ -88,6 +88,8 @@ describe('vaultSecrets', function () {
         before(function (done) {
             this.run({
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
                         {
                             key: 'vault:var1',
@@ -161,6 +163,8 @@ describe('vaultSecrets', function () {
         before(function (done) {
             this.run({
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
                         {
                             key: 'vault:var1',
@@ -223,6 +227,8 @@ describe('vaultSecrets', function () {
                     ]
                 },
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
                         {
                             key: 'vault:var1',
@@ -296,6 +302,8 @@ describe('vaultSecrets', function () {
         before(function (done) {
             this.run({
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
                         {
                             key: 'vault:var1',
@@ -369,6 +377,8 @@ describe('vaultSecrets', function () {
         before(function (done) {
             this.run({
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
                         {
                             key: 'vault:var1',
@@ -447,6 +457,8 @@ describe('vaultSecrets', function () {
         before(function (done) {
             this.run({
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
                         {
                             key: 'vault:var1',
@@ -520,6 +532,8 @@ describe('vaultSecrets', function () {
         before(function (done) {
             this.run({
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
                         {
                             key: 'vault:var1',
@@ -608,6 +622,8 @@ describe('vaultSecrets', function () {
         before(function (done) {
             this.run({
                 vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
                     values: [
                         {
                             key: 'vault:var1',
