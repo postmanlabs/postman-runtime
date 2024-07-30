@@ -19,7 +19,7 @@ describe('Option', function () {
                     item: [
                         {
                             name: 'Request Methods',
-                            // eslint-disable-next-line max-len
+                            // eslint-disable-next-line @stylistic/js/max-len
                             description: 'HTTP has multiple request "verbs", such as `GET`, `PUT`, `POST`, `DELETE`,\n`PATCH`, `HEAD`, etc. \n\nAn HTTP Method (verb) defines how a request should be interpreted by a server. \nThe endpoints in this section demonstrate various HTTP Verbs. Postman supports \nall the HTTP Verbs, including some rarely used ones, such as `PROPFIND`, `UNLINK`, \netc.\n\nFor details about HTTP Verbs, refer to [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9)\n',
                             item: [
                                 {
@@ -29,7 +29,7 @@ describe('Option', function () {
                                             listen: 'test',
                                             script: {
                                                 type: 'text/javascript',
-                                                // eslint-disable-next-line max-len
+                                                // eslint-disable-next-line @stylistic/js/max-len
                                                 exec: 'tests["Body contains headers"] = responseBody.has("headers");\ntests["Body contains args"] = responseBody.has("args");\ntests["Body contains url"] = responseBody.has("url");\n\nvar data = JSON.parse(responseBody)\n\ntests["Args key contains argument passed as url parameter"] = \'test\' in data.args'
                                             }
                                         }
@@ -98,7 +98,7 @@ describe('Option', function () {
                  */
                 check = function (func) {
                     try { func(); }
-                    catch (e) { (errored = true) && mochaDone(e); }
+                    catch (e) { errored = true; mochaDone(e); }
                 };
 
             runner.run(collection, {

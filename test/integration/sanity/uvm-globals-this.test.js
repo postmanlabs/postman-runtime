@@ -1,4 +1,4 @@
-/* eslint-disable no-multi-spaces */
+/* eslint-disable @stylistic/js/no-multi-spaces */
 var expect = require('chai').expect;
 
 (typeof window === 'undefined' ? describe : describe.skip)('UVM allowed globals', function () {

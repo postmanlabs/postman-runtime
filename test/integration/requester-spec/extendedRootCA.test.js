@@ -111,7 +111,12 @@ var fs = require('fs'),
                 response = testrun.response.getCall(0).args[2];
 
             expect(error).to.be.an('error');
-            expect(error.message).to.eql('self signed certificate in certificate chain');
+
+            // @note nodeVersionDiscrepancy
+            expect(error.message).to.be.oneOf([
+                'self-signed certificate in certificate chain',
+                'self signed certificate in certificate chain'
+            ]);
             expect(response).to.be.undefined;
         });
     });
@@ -150,7 +155,12 @@ var fs = require('fs'),
                 response = testrun.response.getCall(0).args[2];
 
             expect(error).to.be.an('error');
-            expect(error.message).to.eql('self signed certificate in certificate chain');
+
+            // @note nodeVersionDiscrepancy
+            expect(error.message).to.oneOf([
+                'self-signed certificate in certificate chain',
+                'self signed certificate in certificate chain'
+            ]);
             expect(response).to.be.undefined;
         });
     });

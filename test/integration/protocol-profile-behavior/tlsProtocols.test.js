@@ -5,6 +5,7 @@ var fs = require('fs'),
     expect = require('chai').expect,
 
     IS_NODE = typeof window === 'undefined',
+    IS_NODE_17_AND_ABOVE = IS_NODE && process.versions.node.split('.')[0] >= 17,
     server = IS_NODE && require('../../fixtures/servers/_servers'),
     // @note nodeVersionDiscrepancy: v12 onwards, Node chooses TLSv1.3 as the default
     DEFAULT_TLS_VERSION = tls.DEFAULT_MAX_VERSION,
@@ -54,19 +55,36 @@ var fs = require('fs'),
         requestHandler = function (req, res) {
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end('okay');
+        },
+
+        // refer https://github.com/nodejs/node/issues/49210
+        // @note nodeVersionDiscrepancy: v17 onwards, Node throws error on using anything below TLSv1.2
+        getDefaultCipherList = (tlsVersion) => {
+            return IS_NODE_17_AND_ABOVE && (tlsVersion === 'TLSv1' || tlsVersion === 'TLSv1_1') ?
+                { ciphers: 'DEFAULT@SECLEVEL=0' } :
+                {};
+        },
+        getTLSCipherSelection = (tlsVersion) => {
+            const { ciphers } = getDefaultCipherList(tlsVersion);
+
+            return ciphers ? { tlsCipherSelection: [ciphers] } : {};
         };
 
     TLSv1_3_SUPPORTED && (servers.TLSv1_3 = undefined);
 
     before(function (done) {
         forInAsync(servers, function (protocol, next) {
-            servers[protocol] = server.createSSLServer( // eslint-disable-line function-paren-newline
+            const ciphers = getDefaultCipherList(protocol);
+
+            servers[protocol] = server.createSSLServer( // eslint-disable-line @stylistic/js/function-paren-newline
                 // use `maxVersion` and `minVersion` options if supported, fallback to secureProtocol
                 tls.DEFAULT_MAX_VERSION ? {
                     maxVersion: protocol.replace('_', '.'),
-                    minVersion: protocol.replace('_', '.')
+                    minVersion: protocol.replace('_', '.'),
+                    ...ciphers
                 } : {
-                    secureProtocol: protocol + '_method'
+                    secureProtocol: protocol + '_method',
+                    ...ciphers
                 });
             servers[protocol].on('/', requestHandler);
             servers[protocol].listen(0, next);
@@ -97,7 +115,8 @@ var fs = require('fs'),
                                         key: 'Connection',
                                         value: 'close'
                                     }]
-                                }
+                                },
+                                protocolProfileBehavior: { ...getTLSCipherSelection('TLSv1') }
                             }]
                         }
                     }, function (err, results) {
@@ -151,7 +170,8 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['TLSv1_1', 'TLSv1_2', 'TLSv1_3']
+                                    tlsDisabledProtocols: ['TLSv1_1', 'TLSv1_2', 'TLSv1_3'],
+                                    ...getTLSCipherSelection('TLSv1')
                                 }
                             }]
                         }
@@ -249,7 +269,8 @@ var fs = require('fs'),
                                         key: 'Connection',
                                         value: 'close'
                                     }]
-                                }
+                                },
+                                protocolProfileBehavior: { ...getTLSCipherSelection('TLSv1_1') }
                             }]
                         }
                     }, function (err, results) {
@@ -303,7 +324,8 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_2', 'TLSv1_3']
+                                    tlsDisabledProtocols: ['TLSv1', 'TLSv1_2', 'TLSv1_3'],
+                                    ...getTLSCipherSelection('TLSv1_1')
                                 }
                             }]
                         }
@@ -693,7 +715,8 @@ var fs = require('fs'),
                 sslServer = server.createSSLServer({
                     maxVersion: 'TLSv1.1',
                     minVersion: 'TLSv1',
-                    secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_TLSv1_2
+                    secureOptions: constants.SSL_OP_NO_SSLv3 | constants.SSL_OP_NO_TLSv1_2,
+                    ...getDefaultCipherList('TLSv1')
                 });
                 sslServer.on('/', requestHandler);
                 sslServer.listen(0, done);
@@ -715,7 +738,8 @@ var fs = require('fs'),
                                         key: 'Connection',
                                         value: 'close'
                                     }]
-                                }
+                                },
+                                protocolProfileBehavior: { ...getTLSCipherSelection('TLSv1') }
                             }]
                         }
                     }, function (err, results) {
@@ -771,7 +795,8 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1_1', 'TLSv1_2', 'TLSv1_3']
+                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1_1', 'TLSv1_2', 'TLSv1_3'],
+                                    ...getTLSCipherSelection('TLSv1')
                                 }
                             }]
                         }
@@ -828,7 +853,8 @@ var fs = require('fs'),
                                     }]
                                 },
                                 protocolProfileBehavior: {
-                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_2', 'TLSv1_3']
+                                    tlsDisabledProtocols: ['SSLv2', 'SSLv3', 'TLSv1', 'TLSv1_2', 'TLSv1_3'],
+                                    ...getTLSCipherSelection('TLSv1_1')
                                 }
                             }]
                         }

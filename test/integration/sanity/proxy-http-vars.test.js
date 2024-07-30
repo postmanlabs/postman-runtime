@@ -13,7 +13,7 @@ var expect = require('chai').expect;
             proxyPort = global.servers.proxy.split(':')[2];
 
             proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + proxyPort;
-            process.env.http_proxy = proxyUrlForHttpRequest; // eslint-disable-line no-process-env
+            process.env.http_proxy = proxyUrlForHttpRequest; // eslint-disable-line n/no-process-env
 
             this.run({
                 collection: {
@@ -28,7 +28,7 @@ var expect = require('chai').expect;
         });
 
         after(function () {
-            delete process.env.http_proxy; // eslint-disable-line no-process-env
+            delete process.env.http_proxy; // eslint-disable-line n/no-process-env
         });
 
         it('should have started and completed the test run', function () {
@@ -57,7 +57,7 @@ var expect = require('chai').expect;
             proxyPort = global.servers.proxy.split(':')[2];
 
             proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + proxyPort;
-            process.env.HTTP_PROXY = proxyUrlForHttpRequest; // eslint-disable-line no-process-env
+            process.env.HTTP_PROXY = proxyUrlForHttpRequest; // eslint-disable-line n/no-process-env
 
             this.run({
                 collection: {
@@ -72,7 +72,7 @@ var expect = require('chai').expect;
         });
 
         after(function () {
-            delete process.env.HTTP_PROXY; // eslint-disable-line no-process-env
+            delete process.env.HTTP_PROXY; // eslint-disable-line n/no-process-env
         });
 
         it('should have started and completed the test run', function () {

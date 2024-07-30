@@ -201,7 +201,7 @@ var _ = require('lodash'),
                     expect(testrun.request.secondCall.args[2].json()).to.eql({ cookies: { foo: 'bar' } });
 
                     // @TODO: The following assertion is flaky
-                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line @stylistic/js/max-len
                     // expect(resOne).to.have.nested.property('headers.reference.set-cookie.value').that.does.not.include('foo=bar;');
                 });
             });
@@ -345,7 +345,7 @@ var _ = require('lodash'),
                     expect(reqOne).to.have.property('headers').that.nested.include({
                         'reference.cookie.value': 'foo=bar'
                     });
-                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line @stylistic/js/max-len
                     expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
 
                     expect(resOne.headers.reference['set-cookie'].value).to.not.include('foo=bar');
@@ -420,7 +420,7 @@ var _ = require('lodash'),
                         resTwo = testrun.io.secondCall.args[3];
 
                     expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
-                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line @stylistic/js/max-len
                     expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
                     expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
                     expect(resTwo.json()).to.eql({ cookies: {} });
