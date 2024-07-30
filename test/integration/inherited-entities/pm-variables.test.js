@@ -21,12 +21,9 @@ describe('pm.variables', function () {
                 ]
             },
             vaultSecrets: {
-                id: 'vault',
-                prefix: 'vault:',
                 values: [
-                    { key: 'vault:key5', value: 'vault-value-5', enabled: true, _isAccessibleInScripts: true },
-                    { key: 'vault:key6', value: 'vault-value-6', enabled: true, _isAccessibleInScripts: true }
-                    // { key: 'vault:key7', value: 'vault-value-7', enabled: true, _isAccessibleInScripts: false }
+                    { key: 'vault:key5', value: 'vault-value-5', enabled: true },
+                    { key: 'vault:key6', value: 'vault-value-6', enabled: true }
                 ]
             },
             collection: {
