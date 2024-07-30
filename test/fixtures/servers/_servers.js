@@ -6,6 +6,7 @@ const fs = require('fs'),
     path = require('path'),
     http = require('http'),
     https = require('https'),
+    http2 = require('http2'),
     crypto = require('crypto'),
     GraphQL = require('graphql'),
     express = require('express'),
@@ -684,6 +685,40 @@ function createDigestServer (options) {
     return app;
 }
 
+function createHTTP2Server (opts) {
+    var server,
+        certDataPath = path.join(__dirname, '../certificates'),
+        options = {
+            key: path.join(certDataPath, 'server-key.pem'),
+            cert: path.join(certDataPath, 'server-crt.pem'),
+            ca: path.join(certDataPath, 'ca.pem')
+        },
+        optionsWithFilePath = ['key', 'cert', 'ca', 'pfx'];
+
+    if (opts) {
+        options = Object.assign(options, opts);
+    }
+
+    optionsWithFilePath.forEach(function (option) {
+        if (!options[option]) { return; }
+
+        options[option] = fs.readFileSync(options[option]);
+    });
+
+    server = http2.createSecureServer(options, function (req, res) {
+        server.emit(req.url, req, res);
+    });
+
+    server.on('listening', function () {
+        server.port = this.address().port;
+        server.url = 'https://localhost:' + server.port;
+    });
+
+    enableServerDestroy(server);
+
+    return server;
+}
+
 module.exports = {
     createSSLServer,
     createHTTPServer,
@@ -694,5 +729,6 @@ module.exports = {
     createEdgeGridAuthServer,
     createNTLMServer,
     createBytesServer,
-    createDigestServer
+    createDigestServer,
+    createHTTP2Server
 };
