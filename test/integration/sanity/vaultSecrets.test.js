@@ -638,15 +638,19 @@ describe('vaultSecrets', function () {
                         {
                             key: 'vault:var3',
                             value: 'password'
-                        },
-                        {
-                            key: 'vault:var4',
-                            value: 'postman-echo.com'
                         }
                     ]
                 },
                 collection: {
                     item: [{
+                        event: [
+                            {
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `pm.vault.set('var4', 'http://postman-echo.com')`
+                                }
+                            }
+                        ],
                         request: {
                             url: 'postman-echo.com/{{vault:var1}}',
                             method: 'GET',
@@ -701,6 +705,83 @@ describe('vaultSecrets', function () {
 
             expect(url).to.equal('http://postman-echo.com/basic-auth');
             expect(response).to.have.property('code', 200);
+        });
+    });
+
+    describe('should be accessible in scripts using pm.vault without needing vault: prefix', function () {
+       var testrun;
+        before(function (done) {
+            this.run({
+                vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
+                    values: [
+                        {
+                            key: 'vault:var1',
+                            value: 'value1',
+                            _isAccessibleInScripts: true
+                        },
+                        {
+                            key: 'vault:var2',
+                            value: 'value2',
+                        }
+                    ]
+                },
+                collection: {
+                    item: {
+                        event: [{
+                            listen: 'prerequest',
+                            script: {
+                                exec: `
+                                    console.log(pm.variables.toObject());
+                                `
+                            }
+                        }, {
+                            listen: 'test',
+                            script: {
+                                exec: `
+                                    pm.vault.set('var1', 'modified-value1');
+                                    console.log(pm.variables.toObject());
+                                `
+                            }
+                        }],
+                        request: 'https://postman-echo.com/get'
+                    }
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have sent the request successfully', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun).to.nested.include({
+                'request.calledOnce': true
+            });
+
+            expect(testrun.request.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should have triggered the script event twice', function () {
+            expect(testrun).to.nested.include({
+                'script.calledTwice': true
+            });
+        });
+
+        it('should be resolved in test and prerequest scripts', function () {
+            var testConsoleArgs = testrun.console.getCall(1).args.slice(2),
+                prConsoleArgs = testrun.console.getCall(0).args.slice(2),
+                variables = {
+                    'global-var': 'global var value',
+                    'env-var': 'env var value',
+                    'echo-url': 'https://postman-echo.com',
+                    user: 'postman',
+                    pass: 'password'
+                };
+
+            expect(prConsoleArgs).to.deep.equal([{ 'vault:var1': 'value1' }]);
+            expect(testConsoleArgs).to.deep.equal([{ 'vault:var1': 'modified-value1' }]);
         });
     });
 });
