@@ -194,7 +194,7 @@ var _ = require('lodash'),
                         headers = historyOne.execution.data[1].request.headers;
 
                     // cookies are set after the first response in redirect
-                    const cookieHeaderIndex = headers.findIndex((header) => { header.key === 'Cookie'; });
+                    const cookieHeaderIndex = headers.findIndex((header) => { return header.key === 'Cookie'; });
 
                     expect(cookieHeaderIndex).to.be.greaterThan(-1);
                     expect(headers[cookieHeaderIndex].value).to.not.include('foo=bar');
