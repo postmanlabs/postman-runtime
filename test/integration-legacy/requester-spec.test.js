@@ -4606,6 +4606,9 @@ describe('Requester', function () {
                                 expect(response).to.have.property('code', 200);
                                 expect(response.text()).to.equal('thisisagzippedresponse');
                                 expect(request).to.be.ok;
+                                expect(response.size()).to.eql({
+                                    body: 42, header: 173, total: 215
+                                });
                             });
                         },
                         done (err) {

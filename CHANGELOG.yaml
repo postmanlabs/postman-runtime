@@ -1,7 +1,10 @@
 unreleased:
   fixed bugs:
-    - Fixed a bug where errors from `pm.sendRequest` were not transmitted correctly
+    - >-
+      GH-1433 Fixed a bug where errors from `pm.sendRequest` were not
+      transmitted correctly
   chores:
+    - GH-1426 Added variable to track the downloaded content size in response
     - Updated dependencies
 
 7.40.0:
