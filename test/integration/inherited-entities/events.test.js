@@ -378,4 +378,50 @@ describe('Events', function () {
             });
         });
     });
+
+    describe('events with empty scripts', function () {
+        before(function (done) {
+            var runOptions = {
+                collection: {
+                    item: {
+                        event: [
+                            {
+                                listen: 'prerequest',
+                                script: {}
+                            }, {
+                                listen: 'test',
+                                script: { exec: '' }
+                            }
+                        ],
+                        request: 'https://postman-echo.com/get'
+                    }
+                }
+            };
+
+
+            // perform the collection run
+            this.run(runOptions, function (err, results) {
+                testRun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testRun).to.be.ok;
+            expect(testRun).to.nested.include({
+                'done.callCount': 1
+            });
+            testRun.done.getCall(0).args[0] && console.error(testRun.done.getCall(0).args[0].stack);
+            expect(testRun.done.getCall(0).args[0]).to.be.null;
+            expect(testRun).to.nested.include({
+                'start.callCount': 1
+            });
+        });
+
+        it('should have not executed the event', function () {
+            expect(testRun).to.nested.include({
+                'beforeScript.callCount': 0
+            });
+        });
+    });
 });

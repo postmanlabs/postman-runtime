@@ -5,6 +5,7 @@ unreleased:
     - >-
       GH-1433 Fixed a bug where errors from `pm.sendRequest` were not
       transmitted correctly
+    - GH-1437 Bailed out from executing empty scripts
   chores:
     - GH-1426 Added variable to track the downloaded content size in response
     - Updated dependencies
