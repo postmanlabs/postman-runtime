@@ -391,6 +391,9 @@ describe('Events', function () {
                             }, {
                                 listen: 'test',
                                 script: { exec: '' }
+                            },
+                            {
+                                listen: 'test'
                             }
                         ],
                         request: 'https://postman-echo.com/get'
