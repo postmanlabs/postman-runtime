@@ -9,31 +9,19 @@ describe('vaultSecrets', function () {
                 this.run({
                     vaultSecrets: {
                         id: 'vault',
-                        prefix: 'vault:',
-                        values: [
-                            {
-                                key: 'vault:var2',
-                                value: 'postman',
-                                _domains: ['https://postman-echo.com']
-                            },
-                            {
-                                key: 'vault:var3',
-                                value: 'password'
-                            }
-                        ]
+                        values: [{
+                            key: 'vault:var1',
+                            value: 'https://postman-echo.com'
+                        }, {
+                            key: 'vault:var2',
+                            value: 'postman'
+                        }, {
+                            key: 'vault:var3',
+                            value: 'password'
+                        }]
                     },
                     collection: {
                         item: {
-                            event: [
-                                {
-                                    listen: 'prerequest',
-                                    script: {
-                                        exec: `
-                                        pm.vault.set('var1', 'https://postman-echo.com');
-                                        `
-                                    }
-                                }
-                            ],
                             request: {
                                 url: '{{vault:var1}}/basic-auth',
                                 method: 'GET',
@@ -631,6 +619,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
+                        _allowScriptAccess: true,
                         values: [
                             {
                                 key: 'vault:var1',
