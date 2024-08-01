@@ -94,6 +94,9 @@ runner.run(collection, {
         // Maximum allowed response size in bytes (only supported on Node, ignored in the browser)
         maxResponseSize: 1000000,
 
+        // HTTP Protocol version to use. Valid options are http1, http2, and auto (only supported on Node, ignored in the browser)
+        protocolVersion: 'http1',
+
         // Enable to use WHATWG URL parser and encoder
         useWhatWGUrlParser: true,
 

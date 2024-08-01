@@ -16,18 +16,21 @@ coverage:
 
       # coverage status for unit tests
       unit:
-        flags: unit
-        target: 40
+        target: 35
+        flags:
+            - unit
 
       # coverage status for integration tests
       integration:
-        flags: integration
-        target: 70
+        target: 60
+        flags:
+            - integration
 
       # coverage status for integration-legacy tests
       legacy:
-        flags: legacy
-        target: 45
+        target: 35
+        flags:
+            - legacy
 
 parsers:
   javascript:

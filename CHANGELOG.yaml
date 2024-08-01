@@ -1,3 +1,17 @@
+7.41.0:
+  date: 2024-08-01
+  new features:
+    - GH-1427 Added support for HTTP/2. Configurable via `protocolVersion`
+    - GH-1412 Added support for `pm.vault` in scripts
+  fixed bugs:
+    - >-
+      GH-1433 Fixed a bug where errors from `pm.sendRequest` were not
+      transmitted correctly
+    - GH-1437 Bailed out from executing empty scripts
+  chores:
+    - GH-1426 Added variable to track the downloaded content size in response
+    - Updated dependencies
+
 7.40.0:
   date: 2024-06-19
   new features:
