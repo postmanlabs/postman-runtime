@@ -1,4 +1,5 @@
-unreleased:
+7.41.0:
+  date: 2024-08-01
   new features:
     - GH-1427 Added support for HTTP/2. Configurable via `protocolVersion`
     - GH-1412 Added support for `pm.vault` in scripts
