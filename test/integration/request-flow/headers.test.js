@@ -117,6 +117,25 @@ var sinon = require('sinon'),
                             }]
                         }
                     }
+                }, {
+                    name: 'http2',
+                    request: {
+                        url: 'https://postman-echo.com/get',
+                        method: 'GET'
+                    },
+                    protocolProfileBehavior: {
+                        protocolVersion: 'http2'
+                    }
+                },
+                {
+                    name: 'auto',
+                    request: {
+                        url: 'https://postman-echo.com/get',
+                        method: 'GET'
+                    },
+                    protocolProfileBehavior: {
+                        protocolVersion: 'auto'
+                    }
                 }]
             }
         }, function (err, results) {
@@ -131,8 +150,8 @@ var sinon = require('sinon'),
         sinon.assert.calledOnce(testrun.done);
         sinon.assert.calledWith(testrun.done.getCall(0), null);
 
-        sinon.assert.callCount(testrun.request, 6);
-        sinon.assert.callCount(testrun.response, 6);
+        sinon.assert.callCount(testrun.request, 8);
+        sinon.assert.callCount(testrun.response, 8);
     });
 
     it('should handle duplicate headers correctly', function () {
@@ -262,5 +281,42 @@ var sinon = require('sinon'),
 
         expect(request.headers.members[request.headers.count() - 1])
             .to.deep.equal(new Header({ key: 'Content-Length', system: true, value: '253' }));
+    });
+
+    it('should have all request headers in http2 in debug data', function () {
+        sinon.assert.calledWith(testrun.request.getCall(6), null);
+        sinon.assert.calledWith(testrun.response.getCall(6), null);
+
+        var history = testrun.response.getCall(6).lastArg,
+            executionData = history.execution.data[0],
+            requestHeaders = executionData.request.headers;
+
+        const headersToCheck = new Set(['accept', 'cache-control', 'accept-encoding',
+            'cookie', 'postman-token', ':path', ':method', ':authority', ':scheme', 'user-agent']);
+
+        expect(executionData.response.httpVersion).to.eql('2.0');
+
+        requestHeaders.forEach(({ key }) => {
+            expect(headersToCheck.has(key.toLowerCase())).to.eql(true, `Header ${key} not found`);
+        });
+    });
+
+    it('should have all request headers in http2 in debug auto', function () {
+        sinon.assert.calledWith(testrun.request.getCall(7), null);
+        sinon.assert.calledWith(testrun.response.getCall(7), null);
+
+        var history = testrun.response.getCall(7).lastArg,
+            executionData = history.execution.data[0],
+            requestHeaders = executionData.request.headers;
+
+
+        const headersToCheck = new Set(['accept', 'cache-control', 'accept-encoding',
+            'cookie', 'postman-token', ':path', ':method', ':authority', ':scheme', 'user-agent']);
+
+        expect(executionData.response.httpVersion).to.eql('2.0');
+
+        requestHeaders.forEach(({ key }) => {
+            expect(headersToCheck.has(key.toLowerCase())).to.eql(true, `Header ${key} not found`);
+        });
     });
 });
