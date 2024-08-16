@@ -1,4 +1,5 @@
-unreleased:
+7.41.2:
+  date: 2024-08-16
   fixed bugs:
     - Fixed a bug where script host was not disposed after the run
   chores:
