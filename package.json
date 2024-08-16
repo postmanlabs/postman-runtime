@@ -75,7 +75,7 @@
     "eslint-plugin-jsdoc": "^47.0.2",
     "eslint-plugin-lodash": "^7.4.0",
     "eslint-plugin-mocha": "^10.5.0",
-    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-n": "^17.10.2",
     "eslint-plugin-security": "^2.1.1",
     "express": "^4.17.2",
     "graphql": "^15.7.2",
