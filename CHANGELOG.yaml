@@ -1,3 +1,7 @@
+unreleased:
+  fixed bugs:
+    - GH-1452 Integrated async access to vault secrets
+
 7.41.2:
   date: 2024-08-16
   fixed bugs:
