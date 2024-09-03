@@ -99,8 +99,7 @@ describe('pm.variables', function () {
                     'key-2': 'coll-value-2',
                     'key-3': 'env-value-3',
                     'key-4': 'data-value-4',
-                    'vault:key5': 'global-value-5',
-                    'vault:key6': 'vault-value-6'
+                    'vault:key5': 'global-value-5'
                 });
             });
         });
@@ -234,8 +233,7 @@ describe('pm.variables', function () {
                     'key-2': 'modified-1',
                     'key-3': 'env-value-3',
                     'key-4': 'data-value-4',
-                    'vault:key5': 'global-value-5',
-                    'vault:key6': 'vault-value-6'
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -246,8 +244,7 @@ describe('pm.variables', function () {
                     'key-2': 'modified-2',
                     'key-3': 'modified-2',
                     'key-4': 'data-value-4',
-                    'vault:key5': 'global-value-5',
-                    'vault:key6': 'vault-value-6'
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -258,8 +255,7 @@ describe('pm.variables', function () {
                     'key-2': 'modified-2',
                     'key-3': 'modified-3',
                     'key-4': 'modified-3',
-                    'vault:key5': 'global-value-5',
-                    'vault:key6': 'vault-value-6'
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -270,8 +266,7 @@ describe('pm.variables', function () {
                     'key-2': 'modified-2',
                     'key-3': 'modified-3',
                     'key-4': 'modified-4',
-                    'vault:key5': 'global-value-5',
-                    'vault:key6': 'vault-value-6'
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -282,8 +277,7 @@ describe('pm.variables', function () {
                     'key-2': 'modified-1',
                     'key-3': 'modified-3',
                     'key-4': 'modified-4',
-                    'vault:key5': 'global-value-5',
-                    'vault:key6': 'vault-value-6'
+                    'vault:key5': 'global-value-5'
                 }
             ]);
 
@@ -294,8 +288,7 @@ describe('pm.variables', function () {
                     'key-2': 'modified-1',
                     'key-3': 'modified-3',
                     'key-4': 'modified-3',
-                    'vault:key5': 'global-value-5',
-                    'vault:key6': 'vault-value-6'
+                    'vault:key5': 'global-value-5'
                 }
             ]);
         });
@@ -361,8 +354,7 @@ describe('pm.variables', function () {
                     'key-2': 'coll-value-2',
                     'key-3': 'env-value-3',
                     'key-4': 'data-value-4',
-                    'vault:key5': 'global-value-5',
-                    'vault:key6': 'vault-value-6'
+                    'vault:key5': 'global-value-5'
                 }
             ]);
         });
