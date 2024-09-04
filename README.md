@@ -51,6 +51,9 @@ runner.run(collection, {
     // Globals (a "VariableScope" from the SDK)
     globals: new sdk.VariableScope(),
 
+    // Local variables (a "VariableScope" from the SDK)
+    localVariables: new sdk.VariableScope(),
+
     // Execute a folder/request using id/name or path
     entrypoint: {
         // execute a folder/request using id or name

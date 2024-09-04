@@ -26,7 +26,7 @@ describe('variable changes', function () {
                                 pm.environment.set('environment', 'environment value');
                                 pm.globals.set('globals', 'globals value');
                                 pm.collectionVariables.set('collection', 'collection value');
-                                pm.vault.set('secret1', 'vault value');
+                                await pm.vault.set('secret1', 'vault value');
                             `
                         }
                     }, {
@@ -35,7 +35,7 @@ describe('variable changes', function () {
                             exec: `
                                 pm.environment.set("environment", "environment updated value");
                                 pm.collectionVariables.set("collection", "collection updated value");
-                                pm.vault.set('secret1', 'vault updated value');
+                                await pm.vault.set('secret1', 'vault updated value');
                             `
                         }
                     }],
