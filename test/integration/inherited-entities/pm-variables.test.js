@@ -4,7 +4,7 @@ var _ = require('lodash'),
 describe('pm.variables', function () {
     var testRun,
         runOptions = {
-            locals: {
+            localVariables: {
                 values: [
                     { key: 'key-1', value: 'local-value-1', name: 'key-1', enabled: true },
                     { key: 'key-7', value: 'local-value-7', name: 'key-7', enabled: true }
