@@ -4,6 +4,12 @@ var _ = require('lodash'),
 describe('pm.variables', function () {
     var testRun,
         runOptions = {
+            localVariables: {
+                values: [
+                    { key: 'key-1', value: 'local-value-1', name: 'key-1', enabled: true },
+                    { key: 'key-7', value: 'local-value-7', name: 'key-7', enabled: true }
+                ]
+            },
             data: [{
                 'key-4': 'data-value-4'
             }],
@@ -95,25 +101,26 @@ describe('pm.variables', function () {
 
             consoleLogs.forEach(function (consoleLog) {
                 expect(consoleLog).to.eql({
-                    'key-1': 'global-value-1',
+                    'key-1': 'local-value-1',
                     'key-2': 'coll-value-2',
                     'key-3': 'env-value-3',
                     'key-4': 'data-value-4',
-                    'vault:key5': 'global-value-5'
+                    'vault:key5': 'global-value-5',
+                    'key-7': 'local-value-7'
                 });
             });
         });
 
         it('should be honoured in request URL', function () {
             var url = testRun.request.getCall(0).args[3].url.toString(),
-                expectedParam = 'global-value-1:coll-value-2:env-value-3:data-value-4:global-value-5';
+                expectedParam = 'local-value-1:coll-value-2:env-value-3:data-value-4:global-value-5';
 
             expect(url).to.equal('https://postman-echo.com/get?param=' + expectedParam);
         });
 
         it('should be honoured in auth', function () {
             var response = testRun.response.getCall(0).args[2],
-                expectedToken = 'global-value-1:coll-value-2:env-value-3:data-value-4:global-value-5';
+                expectedToken = 'local-value-1:coll-value-2:env-value-3:data-value-4:global-value-5';
 
             expect(response.json()).to.deep.nested.include({
                 'headers.authorization': 'Bearer ' + expectedToken
@@ -233,7 +240,8 @@ describe('pm.variables', function () {
                     'key-2': 'modified-1',
                     'key-3': 'env-value-3',
                     'key-4': 'data-value-4',
-                    'vault:key5': 'global-value-5'
+                    'vault:key5': 'global-value-5',
+                    'key-7': 'local-value-7'
                 }
             ]);
 
@@ -244,7 +252,8 @@ describe('pm.variables', function () {
                     'key-2': 'modified-2',
                     'key-3': 'modified-2',
                     'key-4': 'data-value-4',
-                    'vault:key5': 'global-value-5'
+                    'vault:key5': 'global-value-5',
+                    'key-7': 'local-value-7'
                 }
             ]);
 
@@ -255,7 +264,8 @@ describe('pm.variables', function () {
                     'key-2': 'modified-2',
                     'key-3': 'modified-3',
                     'key-4': 'modified-3',
-                    'vault:key5': 'global-value-5'
+                    'vault:key5': 'global-value-5',
+                    'key-7': 'local-value-7'
                 }
             ]);
 
@@ -266,7 +276,8 @@ describe('pm.variables', function () {
                     'key-2': 'modified-2',
                     'key-3': 'modified-3',
                     'key-4': 'modified-4',
-                    'vault:key5': 'global-value-5'
+                    'vault:key5': 'global-value-5',
+                    'key-7': 'local-value-7'
                 }
             ]);
 
@@ -277,7 +288,8 @@ describe('pm.variables', function () {
                     'key-2': 'modified-1',
                     'key-3': 'modified-3',
                     'key-4': 'modified-4',
-                    'vault:key5': 'global-value-5'
+                    'vault:key5': 'global-value-5',
+                    'key-7': 'local-value-7'
                 }
             ]);
 
@@ -288,7 +300,8 @@ describe('pm.variables', function () {
                     'key-2': 'modified-1',
                     'key-3': 'modified-3',
                     'key-4': 'modified-3',
-                    'vault:key5': 'global-value-5'
+                    'vault:key5': 'global-value-5',
+                    'key-7': 'local-value-7'
                 }
             ]);
         });
@@ -354,7 +367,8 @@ describe('pm.variables', function () {
                     'key-2': 'coll-value-2',
                     'key-3': 'env-value-3',
                     'key-4': 'data-value-4',
-                    'vault:key5': 'global-value-5'
+                    'vault:key5': 'global-value-5',
+                    'key-7': 'local-value-7'
                 }
             ]);
         });
