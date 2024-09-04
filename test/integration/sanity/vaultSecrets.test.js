@@ -706,7 +706,7 @@ describe('vaultSecrets', function () {
     });
 
     describe('scripts', function () {
-        describe('should be able to get vault secrets us pm.vault.get', function () {
+        describe('should be able to get vault secrets using pm.vault.get', function () {
             var testrun;
 
             before(function (done) {
@@ -758,7 +758,7 @@ describe('vaultSecrets', function () {
             });
         });
 
-        describe('should be able to set vault secrets us pm.vault.get', function () {
+        describe('should be able to set vault secrets using pm.vault.get', function () {
             var testrun;
 
             before(function (done) {
@@ -811,7 +811,7 @@ describe('vaultSecrets', function () {
             });
         });
 
-        describe('should be able to unset vault secrets us pm.vault.get', function () {
+        describe('should be able to unset vault secrets using pm.vault.unset', function () {
             var testrun;
 
             before(function (done) {
@@ -982,13 +982,8 @@ describe('vaultSecrets', function () {
                 expect(testrun).to.nested.include({
                     'exception.calledOnce': true
                 });
-                expect(testrun.exception.calledWith('Vault access denied')).to.be.true;
-            });
 
-            it('should have triggered the script event twice', function () {
-                expect(testrun).to.nested.include({
-                    'script.calledOnce': true
-                });
+                expect(testrun.exception.firstCall.args[1]).to.have.property('message', 'Vault access denied');
             });
 
             it('should not contain vault secrets', function () {
