@@ -1,3 +1,7 @@
+unreleased: 
+  new features:
+    - GH-1413 Added support for initializing local variables
+
 7.41.2:
   date: 2024-08-16
   fixed bugs:
