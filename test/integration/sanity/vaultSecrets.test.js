@@ -706,6 +706,168 @@ describe('vaultSecrets', function () {
     });
 
     describe('scripts', function () {
+        describe('should be able to get vault secrets using pm.vault.get', function () {
+            var testrun;
+
+            before(function (done) {
+                this.run({
+                    vaultSecrets: {
+                        id: 'vault',
+                        prefix: 'vault:',
+                        _allowScriptAccess: true,
+                        values: [
+                            {
+                                key: 'vault:var1',
+                                value: 'value1'
+                            }
+                        ]
+                    },
+                    collection: {
+                        item: {
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                        const v = await pm.vault.get('var1');
+                                        console.log(v);
+                                    `
+                                }
+                            }],
+                            request: 'https://postman-echo.com/get'
+                        }
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should have sent the request successfully', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'request.calledOnce': true
+                });
+
+                expect(testrun.request.getCall(0).args[0]).to.be.null;
+            });
+
+            it('should get vault secret value correctly', function () {
+                var prConsoleArgs = testrun.console.getCall(0).args.slice(2);
+
+                expect(prConsoleArgs).to.deep.equal(['value1']);
+            });
+        });
+
+        describe('should be able to set vault secrets using pm.vault.get', function () {
+            var testrun;
+
+            before(function (done) {
+                this.run({
+                    vaultSecrets: {
+                        id: 'vault',
+                        prefix: 'vault:',
+                        _allowScriptAccess: true,
+                        values: [
+                            {
+                                key: 'vault:var1',
+                                value: 'value1'
+                            }
+                        ]
+                    },
+                    collection: {
+                        item: {
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                        await pm.vault.set('var1', 'modified-value1');
+                                    `
+                                }
+                            }],
+                            request: 'https://postman-echo.com/get'
+                        }
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should have sent the request successfully', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'request.calledOnce': true
+                });
+
+                expect(testrun.request.getCall(0).args[0]).to.be.null;
+            });
+
+            it('should have updated vault secrets', function () {
+                var prerequest = testrun.script.firstCall.args[2];
+
+                expect(prerequest.vaultSecrets.values.toJSON()).to.deep.equal([{
+                    type: 'any', value: 'modified-value1', key: 'vault:var1'
+                }]);
+            });
+        });
+
+        describe('should be able to unset vault secrets using pm.vault.unset', function () {
+            var testrun;
+
+            before(function (done) {
+                this.run({
+                    vaultSecrets: {
+                        id: 'vault',
+                        prefix: 'vault:',
+                        _allowScriptAccess: true,
+                        values: [
+                            {
+                                key: 'vault:var1',
+                                value: 'value1'
+                            },
+                            {
+                                key: 'vault:var2',
+                                value: 'value2'
+                            }
+                        ]
+                    },
+                    collection: {
+                        item: {
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                        await pm.vault.unset('var2');
+                                    `
+                                }
+                            }],
+                            request: 'https://postman-echo.com/get'
+                        }
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should have sent the request successfully', function () {
+                expect(testrun).to.be.ok;
+                expect(testrun).to.nested.include({
+                    'request.calledOnce': true
+                });
+
+                expect(testrun.request.getCall(0).args[0]).to.be.null;
+            });
+
+            it('should have updated vault secrets', function () {
+                var prerequest = testrun.script.firstCall.args[2];
+
+                expect(prerequest.vaultSecrets.values.toJSON()).to.deep.equal([{
+                    type: 'any', value: 'value1', key: 'vault:var1'
+                }]);
+            });
+        });
+
         describe('should be accessible in scripts using pm.vault without needing vault: prefix', function () {
             var testrun;
 
@@ -728,15 +890,17 @@ describe('vaultSecrets', function () {
                                 listen: 'prerequest',
                                 script: {
                                     exec: `
-                                        console.log(pm.variables.toObject());
+                                        const v = await pm.vault.get('var1');
+                                        console.log(v);
                                     `
                                 }
                             }, {
                                 listen: 'test',
                                 script: {
                                     exec: `
-                                        pm.vault.set('var1', 'modified-value1');
-                                        console.log(pm.variables.toObject());
+                                        await pm.vault.set('var1', 'modified-value1');
+                                        const v = await pm.vault.get('var1');
+                                        console.log(v);
                                     `
                                 }
                             }],
@@ -768,8 +932,8 @@ describe('vaultSecrets', function () {
                 var testConsoleArgs = testrun.console.getCall(1).args.slice(2),
                     prConsoleArgs = testrun.console.getCall(0).args.slice(2);
 
-                expect(prConsoleArgs).to.deep.equal([{ 'vault:var1': 'value1' }]);
-                expect(testConsoleArgs).to.deep.equal([{ 'vault:var1': 'modified-value1' }]);
+                expect(prConsoleArgs).to.deep.equal(['value1']);
+                expect(testConsoleArgs).to.deep.equal(['modified-value1']);
             });
         });
 
@@ -794,7 +958,7 @@ describe('vaultSecrets', function () {
                                 listen: 'prerequest',
                                 script: {
                                     exec: `
-                                        pm.vault.set('var1', 'modified-value1');
+                                        await pm.vault.get('var1');
                                     `
                                 }
                             }],
@@ -812,16 +976,20 @@ describe('vaultSecrets', function () {
                 expect(testrun).to.nested.include({
                     'request.calledOnce': true
                 });
-                const prerequestErr = testrun.script.firstCall.args[0]?.message;
-
-                expect(testrun.request.getCall(0).args[0]).to.be.null;
-                expect(prerequestErr).to.be.eql('Cannot read properties of undefined (reading \'set\')');
             });
 
-            it('should have triggered the script event twice', function () {
+            it('should have thrown an exception', function () {
                 expect(testrun).to.nested.include({
-                    'script.calledOnce': true
+                    'exception.calledOnce': true
                 });
+
+                expect(testrun.exception.firstCall.args[1]).to.have.property('message', 'Vault access denied');
+            });
+
+            it('should not contain vault secrets', function () {
+                var prerequest = testrun.script.firstCall.args[2];
+
+                expect(prerequest.vaultSecrets).to.deep.equal(undefined);
             });
         });
     });

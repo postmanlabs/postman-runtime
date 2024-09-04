@@ -1,6 +1,9 @@
-unreleased: 
+unreleased:
   new features:
+    - GH-1452 Enabled async access to vault secrets
     - GH-1413 Added support for initializing local variables
+  chores:
+    - GH-1452 Update dependencies
 
 7.41.2:
   date: 2024-08-16
