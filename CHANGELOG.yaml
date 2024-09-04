@@ -1,4 +1,5 @@
-unreleased:
+7.42.0:
+  date: 2024-09-04
   new features:
     - GH-1452 Enabled async access to vault secrets
     - GH-1413 Added support for initializing local variables
