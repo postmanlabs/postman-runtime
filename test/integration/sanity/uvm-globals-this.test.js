@@ -31,7 +31,27 @@ var expect = require('chai').expect;
             'responseCookies', 'responseHeaders',    'responseTime',
             'setImmediate',    'setInterval',        'setTimeout',
             'tests',           'tv4',                'undefined',
-            'unescape',        'xml2Json'
+            'unescape',        'xml2Json',           'eval',
+            'require',
+
+            'URL',             'URLSearchParams',
+
+            'TextDecoder',     'TextDecoderStream',
+            'TextEncoder',     'TextEncoderStream',
+
+            'Blob',
+
+            'Crypto',          'CryptoKey',
+            'crypto',          'SubtleCrypto',
+
+            'ByteLengthQueuingStrategy',             'CountQueuingStrategy',
+            'CompressionStream',                     'DecompressionStream',
+            'ReadableByteStreamController',          'ReadableStream',
+            'ReadableStreamBYOBReader',              'ReadableStreamBYOBRequest',
+            'ReadableStreamDefaultController',       'ReadableStreamDefaultReader',
+            'TransformStream',                       'TransformStreamDefaultController',
+            'WritableStream',                        'WritableStreamDefaultController',
+            'WritableStreamDefaultWriter'
         ];
 
     if (typeof window !== 'undefined') {
@@ -51,7 +71,17 @@ var expect = require('chai').expect;
                         listen: 'test',
                         script: {
                             type: 'text/javascript',
-                            exec: 'console.log(Object.keys(this));'
+                            exec: `
+                                const propNames = Object.keys(this);
+                                const contextObject = Function('return this;')();
+
+                                do {
+                                    propNames = propNames.concat(Object.getOwnPropertyNames(contextObject));
+                                    contextObject = Object.getPrototypeOf(contextObject);
+                                } while (contextObject && !Object.hasOwnProperty.call(contextObject, 'hasOwnProperty'));
+
+                                console.log([...new Set(propNames)]);
+                            `
                         }
                     }],
                     request: 'postman-echo.com/get'
