@@ -619,7 +619,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -714,7 +714,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -766,7 +766,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -819,7 +819,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -876,7 +876,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
