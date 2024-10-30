@@ -9,7 +9,7 @@ describe('variable changes', function () {
             requester: { followRedirects: false },
             vaultSecrets: {
                 id: 'vault',
-                _allowScriptAccess: true,
+                _allowScriptAccess: function () { return true; },
                 values: [
                     { key: 'vault:key5', value: 'vault-value-5', enabled: true },
                     { key: 'vault:key6', value: 'vault-value-6', enabled: true }
