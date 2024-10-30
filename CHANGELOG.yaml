@@ -1,6 +1,8 @@
 unreleased:
   new features:
     - GH-1478 Added support for lazily fetching vault access status
+  fixed bugs:
+    - GH-1480 Fixed a bug where vault domain matching did not work with port in URL
 
 7.42.0:
   date: 2024-09-04
