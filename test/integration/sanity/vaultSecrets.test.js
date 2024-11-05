@@ -1065,7 +1065,7 @@ describe('vaultSecrets', function () {
                 });
 
                 // eslint-disable-next-line @stylistic/js/max-len
-                expect(testrun.exception.firstCall.args[1]).to.have.property('message', 'Vault access denied. Check your Vault settings.');
+                expect(testrun.exception.firstCall.args[1]).to.have.property('message', 'Vault access denied. Check your Vault settings');
             });
 
             it('should not contain vault secrets', function () {
@@ -1189,7 +1189,7 @@ describe('vaultSecrets', function () {
                 var consoleArgs = testrun.console.getCall(0).args.slice(2);
 
                 expect(consoleArgs[0]).to.equal('Vault error:');
-                expect(consoleArgs[1]).to.equal('Vault access denied. Check your Vault settings.');
+                expect(consoleArgs[1]).to.equal('Vault access denied. Check your Vault settings');
             });
         });
 
@@ -1239,7 +1239,7 @@ describe('vaultSecrets', function () {
                 var consoleArgs = testrun.console.getCall(0).args.slice(2);
 
                 expect(consoleArgs[0]).to.equal('Vault error:');
-                expect(consoleArgs[1]).to.equal('Vault access denied. Check your Vault settings.');
+                expect(consoleArgs[1]).to.equal('Vault access denied. Check your Vault settings');
             });
         });
     });
