@@ -1,3 +1,10 @@
+7.43.1:
+  date: 2024-12-11
+  fixed bugs:
+    - >-
+      Fixed a bug where item's parent reference was missing from request and
+      response callback
+
 7.43.0:
   date: 2024-10-30
   new features:
