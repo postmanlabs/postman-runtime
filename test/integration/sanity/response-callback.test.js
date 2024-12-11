@@ -145,5 +145,13 @@ describe('response callback', function () {
             // cursor
             expect(testrun).to.have.nested.property('response.firstCall.args[1]').that.has.property('ref');
         });
+
+        it('should have item\'s parent reference intact', function () {
+            const parent = testrun.beforeItem.firstCall.args[2].parent();
+
+            expect(testrun.request.firstCall.args[4].parent()).to.equal(parent);
+            expect(testrun.request.secondCall.args[4].parent()).to.equal(parent);
+            expect(testrun.response.firstCall.args[4].parent()).to.equal(parent);
+        });
     });
 });
