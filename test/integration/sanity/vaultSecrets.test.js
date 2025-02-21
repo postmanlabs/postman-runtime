@@ -619,7 +619,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -705,6 +705,87 @@ describe('vaultSecrets', function () {
         });
     });
 
+    describe('should resolve secrets when port is part of url', function () {
+        var testrun;
+
+        before(function (done) {
+            this.run({
+                vaultSecrets: {
+                    id: 'vault',
+                    prefix: 'vault:',
+                    _allowScriptAccess: true,
+                    values: [
+                        {
+                            key: 'vault:var1',
+                            value: 'basic-auth',
+                            _domains: ['https://postman-echo.com']
+                        },
+                        {
+                            key: 'vault:var2',
+                            value: 'postman',
+                            _domains: ['https://postman-echo.com']
+                        },
+                        {
+                            key: 'vault:var3',
+                            value: 'password'
+                        }
+                    ]
+                },
+                collection: {
+                    item: [{
+                        event: [
+                            {
+                                listen: 'prerequest',
+                                script: {
+                                    exec: 'pm.vault.set(\'var4\', \'http://postman-echo.com\')'
+                                }
+                            }
+                        ],
+                        request: {
+                            url: 'https://postman-echo.com:80/{{vault:var1}}',
+                            method: 'GET',
+                            auth: {
+                                type: 'basic',
+                                basic: [
+                                    { key: 'username', value: '{{vault:var2}}' },
+                                    { key: 'password', value: '{{vault:var3}}' }
+                                ]
+                            }
+                        }
+                    }]
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+            expect(testrun).to.nested.include({
+                'done.calledOnce': true,
+                'start.calledOnce': true
+            });
+        });
+
+        it('should handle protocol for a resolved domain', function () {
+            var url = testrun.request.getCall(0).args[3].url.toString();
+
+            expect(url).to.equal('https://postman-echo.com:80/basic-auth');
+        });
+
+        it('should resolve vault secrets in auth', function () {
+            var request = testrun.response.getCall(0).args[3],
+                auth = request.auth.parameters().toObject();
+
+            expect(auth).to.deep.include({
+                username: 'postman',
+                password: 'password'
+            });
+        });
+    });
+
     describe('scripts', function () {
         describe('should be able to get vault secrets using pm.vault.get', function () {
             var testrun;
@@ -714,7 +795,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -766,7 +847,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -819,7 +900,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -876,7 +957,7 @@ describe('vaultSecrets', function () {
                     vaultSecrets: {
                         id: 'vault',
                         prefix: 'vault:',
-                        _allowScriptAccess: true,
+                        _allowScriptAccess: function () { return true; },
                         values: [
                             {
                                 key: 'vault:var1',
@@ -990,6 +1071,174 @@ describe('vaultSecrets', function () {
                 var prerequest = testrun.script.firstCall.args[2];
 
                 expect(prerequest.vaultSecrets).to.deep.equal(undefined);
+            });
+        });
+
+        describe('should handle _allowScriptAccess as a function', function () {
+            var testrun;
+
+            before(function (done) {
+                this.run({
+                    vaultSecrets: {
+                        id: 'vault',
+                        prefix: 'vault:',
+                        _allowScriptAccess: function (itemId) {
+                            return itemId === 'item1';
+                        },
+                        values: [
+                            {
+                                key: 'vault:var1',
+                                value: 'value1'
+                            }
+                        ]
+                    },
+                    collection: {
+                        item: [{
+                            id: 'item1',
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                        const v = await pm.vault.get('var1');
+                                        console.log(v);
+                                    `
+                                }
+                            }],
+                            request: 'https://postman-echo.com/get'
+                        }, {
+                            id: 'item2',
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                        try {
+                                            const v = await pm.vault.get('var1');
+                                            console.log(v);
+                                        } catch (error) {
+                                            console.error(error.message);
+                                        }
+                                    `
+                                }
+                            }],
+                            request: 'https://postman-echo.com/get'
+                        }]
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should allow vault access for item1', function () {
+                var prConsoleArgs = testrun.console.getCall(0).args.slice(2);
+
+                expect(prConsoleArgs).to.deep.equal(['value1']);
+            });
+
+            it('should deny vault access for item2', function () {
+                var prConsoleArgs = testrun.console.getCall(1).args.slice(2);
+
+                expect(prConsoleArgs).to.deep.equal(['Vault access denied']);
+            });
+        });
+
+        describe('should fail if _allowScriptAccess is not a function', function () {
+            var testrun;
+
+            before(function (done) {
+                this.run({
+                    vaultSecrets: {
+                        id: 'vault',
+                        prefix: 'vault:',
+                        _allowScriptAccess: true,
+                        values: [
+                            {
+                                key: 'vault:var1',
+                                value: 'value1'
+                            }
+                        ]
+                    },
+                    collection: {
+                        item: {
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                        try {
+                                            const v = await pm.vault.get('var1');
+                                            console.log('Vault value:', v);
+                                        } catch (error) {
+                                            console.error('Vault error:', error.message);
+                                        }
+                                    `
+                                }
+                            }],
+                            request: 'https://postman-echo.com/get'
+                        }
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should deny vault access when _allowScriptAccess is not a function', function () {
+                expect(testrun.console.called).to.be.true;
+
+                var consoleArgs = testrun.console.getCall(0).args.slice(2);
+
+                expect(consoleArgs[0]).to.equal('Vault error:');
+                expect(consoleArgs[1]).to.equal('Vault access denied');
+            });
+        });
+
+        describe('should handle when _allowScriptAccess function throws', function () {
+            var testrun;
+
+            before(function (done) {
+                this.run({
+                    vaultSecrets: {
+                        id: 'vault',
+                        prefix: 'vault:',
+                        _allowScriptAccess: function () { throw new Error('Custom error'); },
+                        values: [
+                            {
+                                key: 'vault:var1',
+                                value: 'value1'
+                            }
+                        ]
+                    },
+                    collection: {
+                        item: {
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                        try {
+                                            const v = await pm.vault.get('var1');
+                                            console.log('Vault value:', v);
+                                        } catch (error) {
+                                            console.error('Vault error:', error.message);
+                                        }
+                                    `
+                                }
+                            }],
+                            request: 'https://postman-echo.com/get'
+                        }
+                    }
+                }, function (err, results) {
+                    testrun = results;
+                    done(err);
+                });
+            });
+
+            it('should deny vault access when _allowScriptAccess function throws', function () {
+                expect(testrun.console.called).to.be.true;
+
+                var consoleArgs = testrun.console.getCall(0).args.slice(2);
+
+                expect(consoleArgs[0]).to.equal('Vault error:');
+                expect(consoleArgs[1]).to.equal('Vault access denied');
             });
         });
     });

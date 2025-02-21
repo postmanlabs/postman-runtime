@@ -2,6 +2,22 @@ unreleased:
   chores:
     - GH-1464 Dropped support for Node.js < v18
 
+7.43.1:
+  date: 2024-12-11
+  fixed bugs:
+    - >-
+      Fixed a bug where item's parent reference was missing from request and
+      response callback
+
+7.43.0:
+  date: 2024-10-30
+  new features:
+    - GH-1478 Added support for lazily fetching vault access status
+  fixed bugs:
+    - >-
+      GH-1480 Fixed a bug where vault domain matching did not work with port in
+      URL
+
 7.42.0:
   date: 2024-09-04
   new features:
