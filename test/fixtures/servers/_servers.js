@@ -330,12 +330,14 @@ function createGraphQLServer (options) {
             return badRequest(res, request, 'Invalid JSON body');
         }
 
-        GraphQL.graphql(options.schema,
-            jsonBody.query,
-            options.root,
-            options.context,
-            jsonBody.variables,
-            jsonBody.operationName)
+        GraphQL.graphql({
+            schema: options.schema,
+            source: jsonBody.query,
+            rootValue: options.root,
+            contextValue: options.context,
+            variableValues: jsonBody.variables,
+            operationName: jsonBody.operationName
+        })
             .then(function (data) {
                 if (data.errors) {
                     return badRequest(res, request, data.errors);

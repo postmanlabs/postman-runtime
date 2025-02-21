@@ -51,7 +51,12 @@ var expect = require('chai').expect;
             'ReadableStreamDefaultController',       'ReadableStreamDefaultReader',
             'TransformStream',                       'TransformStreamDefaultController',
             'WritableStream',                        'WritableStreamDefaultController',
-            'WritableStreamDefaultWriter'
+            'WritableStreamDefaultWriter',
+
+            'AbortController', 'AbortSignal',        'AggregateError',
+            'DOMException',    'Event',              'EventTarget',
+            'File',            'Intl',               'queueMicrotask',
+            'structuredClone'
         ];
 
     if (typeof window !== 'undefined') {
@@ -72,8 +77,8 @@ var expect = require('chai').expect;
                         script: {
                             type: 'text/javascript',
                             exec: `
-                                const propNames = Object.keys(this);
-                                const contextObject = Function('return this;')();
+                                let propNames = Object.keys(this);
+                                let contextObject = Function('return this;')();
 
                                 do {
                                     propNames = propNames.concat(Object.getOwnPropertyNames(contextObject));
