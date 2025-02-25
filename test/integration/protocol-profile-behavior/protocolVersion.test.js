@@ -1,7 +1,7 @@
 var sinon = require('sinon'),
     expect = require('chai').expect,
     IS_NODE = typeof window === 'undefined',
-    IS_NODE_20 = IS_NODE && parseInt(process.versions.node.split('.')[0], 10) === 20,
+    IS_NODE_20 = IS_NODE && parseInt(process.versions.node.split('.')[0], 10) >= 20,
     server = IS_NODE && require('../../fixtures/servers/_servers');
 
 (IS_NODE ? describe : describe.skip)('Requester Spec: protocolVersion', function () {
