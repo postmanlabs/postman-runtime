@@ -1,3 +1,8 @@
+7.43.2:
+  date: 2025-03-06
+  chores:
+    - GH-1485 Dropped support for Node.js < v18
+
 7.43.1:
   date: 2024-12-11
   fixed bugs:
