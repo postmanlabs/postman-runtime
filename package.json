@@ -92,7 +92,7 @@
     "passport-http": "^0.3.0",
     "recursive-readdir": "^2.2.3",
     "server-destroy": "^1.0.1",
-    "shelljs": "^0.8.5",
+    "shelljs": "^0.9.2",
     "sinon": "^18.0.0",
     "teleport-javascript": "^1.0.0",
     "terser": "^5.39.0",
