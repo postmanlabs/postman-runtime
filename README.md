@@ -264,9 +264,10 @@ runner.run(collection, { /* options */ }, function(err, run) {
         },
 
         // Called before running a new Item (check the postman collection v2 format for what Item means)
-        beforeItem: function (err, cursor, item) {
+        beforeItem: function (err, cursor, item, environment) {
             // err, cursor: Same as arguments for "start"
             // item: sdk.Item
+            // environment: <VariableScope>
         },
 
         // Called after completion of an Item
