@@ -707,7 +707,9 @@ function createHTTP2Server (opts) {
         options[option] = fs.readFileSync(options[option]);
     });
 
-    server = http2.createSecureServer(options, function (req, res) {
+    server = http2.createSecureServer(options);
+
+    server.on('request', (req, res) => {
         server.emit(req.url, req, res);
     });
 

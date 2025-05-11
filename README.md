@@ -97,6 +97,9 @@ runner.run(collection, {
         // Maximum allowed response size in bytes (only supported on Node, ignored in the browser)
         maxResponseSize: 1000000,
 
+        // Maximum allowed header size in bytes (only supported on Node HTTP/1, ignored in the browser and when using HTTP/2)
+        maxHeaderSize: 1000000,
+
         // HTTP Protocol version to use. Valid options are http1, http2, and auto (only supported on Node, ignored in the browser)
         protocolVersion: 'http1',
 
@@ -125,7 +128,7 @@ runner.run(collection, {
         implicitTraceHeader: true,
 
         // Add system headers to all requests which cannot be overridden or disabled
-        systemHeaders: { 'User-Agent': 'PostmanRuntime' }
+        systemHeaders: { 'User-Agent': 'PostmanRuntime' },
 
         // Extend well known "root" CAs with the extra certificates in file. The file should consist of one or more trusted certificates in PEM format. (only supported on Node, ignored in the browser)
         extendedRootCA: 'path/to/extra/CA/certs.pem',
