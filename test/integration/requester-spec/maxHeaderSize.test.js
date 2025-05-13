@@ -12,7 +12,7 @@ const expect = require('chai').expect,
         done();
     });
 
-    describe('HTTP/1: with maxHeaderSize: undefined (Node.js default)', function () {
+    describe('HTTP/1: with maxHeaderSize: undefined (default)', function () {
         before(function (done) {
             this.run({
                 collection: {
@@ -49,7 +49,7 @@ const expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: `${BASE_URL_HTTP1}/16325`, // 16KB + 1B
+                            url: `${BASE_URL_HTTP1}/132000`, // > 128KB default set
                             method: 'GET'
                         }
                     }]
