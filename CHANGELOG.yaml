@@ -1,7 +1,8 @@
-unreleased:
+7.44.0:
+  date: 2025-05-15
   new features:
     - GH-1511 Add support for configurable maxHeaderSize in HTTP/1 requests
-    
+
 7.43.4:
   date: 2025-04-28
   chores:
