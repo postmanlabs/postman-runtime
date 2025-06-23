@@ -1064,7 +1064,8 @@ describe('vaultSecrets', function () {
                     'exception.calledOnce': true
                 });
 
-                expect(testrun.exception.firstCall.args[1]).to.have.property('message', 'Vault access denied');
+                expect(testrun.exception.firstCall.args[1]).to.have.property('message', 'Vault access denied.' +
+                    ' To allow script access, go to Vault settings and turn on "Enable support in scripts"');
             });
 
             it('should not contain vault secrets', function () {
@@ -1138,7 +1139,8 @@ describe('vaultSecrets', function () {
             it('should deny vault access for item2', function () {
                 var prConsoleArgs = testrun.console.getCall(1).args.slice(2);
 
-                expect(prConsoleArgs).to.deep.equal(['Vault access denied']);
+                expect(prConsoleArgs).to.deep.equal(['Vault access denied.' +
+                    ' To allow script access, go to Vault settings and turn on "Enable support in scripts"']);
             });
         });
 
@@ -1188,7 +1190,8 @@ describe('vaultSecrets', function () {
                 var consoleArgs = testrun.console.getCall(0).args.slice(2);
 
                 expect(consoleArgs[0]).to.equal('Vault error:');
-                expect(consoleArgs[1]).to.equal('Vault access denied');
+                expect(consoleArgs[1]).to.equal('Vault access denied.' +
+                    ' To allow script access, go to Vault settings and turn on "Enable support in scripts"');
             });
         });
 
@@ -1238,7 +1241,8 @@ describe('vaultSecrets', function () {
                 var consoleArgs = testrun.console.getCall(0).args.slice(2);
 
                 expect(consoleArgs[0]).to.equal('Vault error:');
-                expect(consoleArgs[1]).to.equal('Vault access denied');
+                expect(consoleArgs[1]).to.equal('Vault access denied.' +
+                    ' To allow script access, go to Vault settings and turn on "Enable support in scripts"');
             });
         });
     });
