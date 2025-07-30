@@ -1,3 +1,9 @@
+unreleased:
+  new features:
+    - GH-1520 Add support for SOCKS proxy
+  chores:
+    - GH-1520 Updated dependencies
+
 7.44.1:
   date: 2025-06-12
   chores:
