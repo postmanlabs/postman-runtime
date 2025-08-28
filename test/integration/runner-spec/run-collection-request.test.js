@@ -2,59 +2,60 @@ const sdk = require('postman-collection'),
     collectionRunner = require('../../../lib/runner');
 
 describe('pm.execution.runRequest handling', function () {
-    it('[overview] should receive calls from postman-sandbox, resolve the request and make an API call',
-        function (done) {
-            const collection = new sdk.Collection({
-                item: [{
-                    event: [{
-                        listen: 'test',
-                        script: {
-                            exec: `
-                                console.log("Response from self endpoint", pm.response.json());
-                                const response = await pm.execution.runRequest('nested-request-id');
-                                pm.test('response should be received from nested request', function () {
-                                    pm.expect(response.code).to.equal(200);
-                                    pm.expect(response.json()).to.be.ok;
-                                });
-                            `
-                        }
-                    }],
-                    request: {
-                        url: 'https://postman-echo.com/get',
-                        method: 'GET'
-                    }
-                }]
-            });
-
-            new collectionRunner().run(collection,
-                { requestResolverBridge (_requestId, callback) {
-                    callback(null, {
-                        item: {
-                            request: {
-                                url: 'https://postman-echo.com/post',
-                                method: 'POST'
-                            }
-                        }
-                    });
-                } },
-                function (_err, run) {
-                    run.start({
-                        assertion (_cursor, assertionOutcomes) {
-                            const internalRequestAssertions = assertionOutcomes
-                                .filter((outcome) => {
-                                    return outcome.name === 'response should be received from nested request';
-                                });
-
-                            internalRequestAssertions.forEach((assertion) => {
-                                expect(assertion.passed).to.be.true;
+    it('[overview] should receive calls from postman-sandbox, resolve a request using bridge & ' +
+        'make an API call to return a response',
+    function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'test',
+                    script: {
+                        exec: `
+                            console.log("Response from self endpoint", pm.response.json());
+                            const response = await pm.execution.runRequest('nested-request-id');
+                            pm.test('response should be received from nested request', function () {
+                                pm.expect(response.code).to.equal(200);
+                                pm.expect(response.json()).to.be.ok;
                             });
-                        },
-                        done (err) {
-                            done(err);
-                        }
-                    });
-                });
+                        `
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
         });
+
+        new collectionRunner().run(collection,
+            { requestResolverBridge (_requestId, callback) {
+                callback(null, {
+                    item: {
+                        request: {
+                            url: 'https://postman-echo.com/post',
+                            method: 'POST'
+                        }
+                    }
+                });
+            } },
+            function (_err, run) {
+                run.start({
+                    assertion (_cursor, assertionOutcomes) {
+                        const internalRequestAssertions = assertionOutcomes
+                            .filter(function (outcome) {
+                                return outcome.name === 'response should be received from nested request';
+                            });
+
+                        internalRequestAssertions.forEach(function (assertion) {
+                            expect(assertion.passed).to.be.true;
+                        });
+                    },
+                    done (err) {
+                        done(err);
+                    }
+                });
+            });
+    });
 
     it('should handle for exceptions thrown from nested request parsing or uncaught errors', function (done) {
         const collection = new sdk.Collection({
@@ -66,7 +67,7 @@ describe('pm.execution.runRequest handling', function () {
                         try {
                             await pm.execution.runRequest("nested-request-id");
                         } catch (error) {
-                            pm.test('error should have been thrown', () => {
+                            pm.test('error should have been thrown',function  () {
                                 pm.expect(true).to.be.true;
                             })
                         }
@@ -98,11 +99,11 @@ describe('pm.execution.runRequest handling', function () {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
                         const reqAssertions = assertionOutcomes
-                            .filter((outcome) => {
+                            .filter(function (outcome) {
                                 return outcome.name === 'error should have been thrown';
                             });
 
-                        reqAssertions.forEach((assertion) => {
+                        reqAssertions.forEach(function (assertion) {
                             expect(assertion.passed).to.be.true;
                         });
                     },
@@ -157,11 +158,11 @@ describe('pm.execution.runRequest handling', function () {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
                         const reqAssertions = assertionOutcomes
-                            .filter((outcome) => {
+                            .filter(function (outcome) {
                                 return outcome.name === 'variable passed from top scope should be received';
                             });
 
-                        reqAssertions.forEach((assertion) => {
+                        reqAssertions.forEach(function (assertion) {
                             expect(assertion.passed).to.be.true;
                         });
                     },
@@ -227,14 +228,14 @@ describe('pm.execution.runRequest handling', function () {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
                         const internalRequestAssertions = assertionOutcomes
-                            .filter((outcome) => {
+                            .filter(function (outcome) {
                                 return [
                                     'variable values should have been received',
                                     'variable values should have been resolved for url'
                                 ].includes(outcome.name);
                             });
 
-                        internalRequestAssertions.forEach((assertion) => {
+                        internalRequestAssertions.forEach(function (assertion) {
                             expect(assertion.passed).to.be.true;
                         });
                     },
@@ -261,7 +262,6 @@ describe('pm.execution.runRequest handling', function () {
                     listen: 'test',
                     script: {
                         exec: `
-                        console.log(pm.response);
                         pm.test('url should have been resolved via var set from nested req', function () {
                             pm.expect(pm.response.code).to.equal(200);
                         });`
@@ -297,14 +297,14 @@ describe('pm.execution.runRequest handling', function () {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
                         const reqAssertions = assertionOutcomes
-                            .filter((outcome) => {
+                            .filter(function (outcome) {
                                 return [
                                     'variable values should have been updated from nested request',
                                     'url should have been resolved via var set from nested req'
                                 ].includes(outcome.name);
                             });
 
-                        reqAssertions.forEach((assertion) => {
+                        reqAssertions.forEach(function (assertion) {
                             expect(assertion.passed).to.be.true;
                         });
                     },
@@ -315,20 +315,23 @@ describe('pm.execution.runRequest handling', function () {
             });
     });
 
-    it('[variables] should use passed collection vars & merge parent\'s collection vars to globals', function (done) {
+    it('[var sync] should use passed collection vars & merge parent\'s collection vars to globals', function (done) {
         const collection = new sdk.Collection({
             item: [{
                 event: [{
                     listen: 'prerequest',
                     script: {
-                        exec: 'await pm.execution.runRequest("nested-request-id")'
+                        exec: `
+                        pm.collectionVariables.set("api_url", "postman-echo.com");
+                        await pm.execution.runRequest("nested-request-id");`
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: 'https://{{api_url}}/{{api_method}}',
                     method: 'GET'
                 }
-            }]
+            }],
+            variable: [{ key: 'api_method', value: 'get' }]
         });
 
         new collectionRunner().run(collection,
@@ -339,13 +342,17 @@ describe('pm.execution.runRequest handling', function () {
                             {
                                 listen: 'prerequest',
                                 script: {
-                                    exec: 'pm.globals.set("api_url", "postman-echo.com");'
+                                    exec: `
+                                    pm.test("global var should be set from collection variable of parent", function () {
+                                        pm.expect(pm.globals.get("api_url")).to.equal("postman-echo.com");
+                                        pm.expect(pm.globals.get("api_method")).to.equal("get");
+                                    });`
                                 }
                             }
                         ],
                         request: {
-                            url: 'https://{{api_url}}/post',
-                            method: 'POST'
+                            url: 'https://{{api_url}}/{{api_method}}',
+                            method: 'GET'
                         }
                     }
                 });
@@ -354,14 +361,11 @@ describe('pm.execution.runRequest handling', function () {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
                         const reqAssertions = assertionOutcomes
-                            .filter((outcome) => {
-                                return [
-                                    'variable values should have been updated from nested request',
-                                    'url should have been resolved via var set from nested req'
-                                ].includes(outcome.name);
+                            .filter(function (outcome) {
+                                return outcome.name === 'global var should be set from collection variable of parent';
                             });
 
-                        reqAssertions.forEach((assertion) => {
+                        reqAssertions.forEach(function (assertion) {
                             expect(assertion.passed).to.be.true;
                         });
                     },
@@ -416,11 +420,11 @@ describe('pm.execution.runRequest handling', function () {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
                         const reqAssertions = assertionOutcomes
-                            .filter((outcome) => {
+                            .filter(function (outcome) {
                                 return outcome.name === 'response should be null';
                             });
 
-                        reqAssertions.forEach((assertion) => {
+                        reqAssertions.forEach(function (assertion) {
                             expect(assertion.passed).to.be.true;
                         });
                     },
