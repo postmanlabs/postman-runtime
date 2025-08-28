@@ -28,16 +28,20 @@ describe('pm.execution.runRequest handling', function () {
         });
 
         new collectionRunner().run(collection,
-            { requestResolverBridge (_requestId, callback) {
-                callback(null, {
-                    item: {
-                        request: {
-                            url: 'https://postman-echo.com/post',
-                            method: 'POST'
-                        }
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            }
+                        });
                     }
-                });
-            } },
+                }
+            },
             function (_err, run) {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
@@ -82,19 +86,22 @@ describe('pm.execution.runRequest handling', function () {
         });
 
         new collectionRunner().run(collection,
-            { requestResolverBridge (_requestId, callback) {
-                callback(null, {
-                    item: {
-                        event: [{
-                            listen: 'test',
-                            script: { exec: 'try { some invalid js code here ' }
-                        }],
-                        request: {
-                            url: 'https://postman-echo.com/get'
-                        }
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                event: [{
+                                    listen: 'test',
+                                    script: { exec: 'try { some invalid js code here ' }
+                                }],
+                                request: {
+                                    url: 'https://postman-echo.com/get'
+                                }
+                            }
+                        });
                     }
-                });
-            }
+                }
             }, function (_err, run) {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
@@ -133,28 +140,33 @@ describe('pm.execution.runRequest handling', function () {
         });
 
         new collectionRunner().run(collection,
-            { requestResolverBridge (_requestId, callback) {
-                callback(null, {
-                    item: {
-                        event: [
-                            {
-                                listen: 'prerequest',
-                                script: {
-                                    exec: `
-                                        pm.test('variable passed from top scope should be received', function () {
-                                            pm.expect(a).to.equal(1);
-                                        });
-                                    `
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: `
+                                                pm.test('variable passed from top scope should be received',
+                                                function () {
+                                                    pm.expect(a).to.equal(1);
+                                                });
+                                            `
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
                                 }
                             }
-                        ],
-                        request: {
-                            url: 'https://postman-echo.com/post',
-                            method: 'POST'
-                        }
+                        });
                     }
-                });
-            } }, function (_err, run) {
+                }
+            }, function (_err, run) {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
                         const reqAssertions = assertionOutcomes
@@ -192,38 +204,44 @@ describe('pm.execution.runRequest handling', function () {
         });
 
         new collectionRunner().run(collection,
-            { requestResolverBridge (_requestId, callback) {
-                callback(null, {
-                    item: {
-                        event: [
-                            {
-                                listen: 'prerequest',
-                                script: {
-                                    exec: `
-                                        pm.test('variable values should have been received', function () {
-                                            pm.expect(pm.environment.get("api_url")).to.equal("postman-echo.com");
-                                        });
-                                    `
-                                }
-                            },
-                            {
-                                listen: 'test',
-                                script: {
-                                    exec: `
-                                        pm.test('variable values should have been resolved for url', function () {
-                                            pm.expect(pm.response.code).to.equal(200);
-                                        });
-                                    `
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: `
+                                                pm.test('variable values should have been received', function () {
+                                                    pm.expect(pm.environment.get("api_url"))
+                                                        .to.equal("postman-echo.com");
+                                                });
+                                            `
+                                        }
+                                    },
+                                    {
+                                        listen: 'test',
+                                        script: {
+                                            exec: `
+                                                pm.test('variable values should have been resolved for url',
+                                                function () {
+                                                    pm.expect(pm.response.code).to.equal(200);
+                                                });
+                                            `
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://{{api_url}}/post',
+                                    method: 'POST'
                                 }
                             }
-                        ],
-                        request: {
-                            url: 'https://{{api_url}}/post',
-                            method: 'POST'
-                        }
+                        });
                     }
-                });
-            } },
+                }
+            },
             function (_err, run) {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
@@ -275,24 +293,28 @@ describe('pm.execution.runRequest handling', function () {
         });
 
         new collectionRunner().run(collection,
-            { requestResolverBridge (_requestId, callback) {
-                callback(null, {
-                    item: {
-                        event: [
-                            {
-                                listen: 'prerequest',
-                                script: {
-                                    exec: 'pm.globals.set("api_url", "postman-echo.com");'
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: 'pm.globals.set("api_url", "postman-echo.com");'
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://{{api_url}}/post',
+                                    method: 'POST'
                                 }
                             }
-                        ],
-                        request: {
-                            url: 'https://{{api_url}}/post',
-                            method: 'POST'
-                        }
+                        });
                     }
-                });
-            } },
+                }
+            },
             function (_err, run) {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
@@ -335,28 +357,33 @@ describe('pm.execution.runRequest handling', function () {
         });
 
         new collectionRunner().run(collection,
-            { requestResolverBridge (_requestId, callback) {
-                callback(null, {
-                    item: {
-                        event: [
-                            {
-                                listen: 'prerequest',
-                                script: {
-                                    exec: `
-                                    pm.test("global var should be set from collection variable of parent", function () {
-                                        pm.expect(pm.globals.get("api_url")).to.equal("postman-echo.com");
-                                        pm.expect(pm.globals.get("api_method")).to.equal("get");
-                                    });`
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: `
+                                            pm.test("global var should be set from collection variable of parent",
+                                            function () {
+                                                pm.expect(pm.collectionVariables.get("api_url")).to.equal("postman-echo.com");
+                                                pm.expect(pm.collectionVariables.get("api_method")).to.equal("get");
+                                            });`
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://{{api_url}}/{{api_method}}',
+                                    method: 'GET'
                                 }
                             }
-                        ],
-                        request: {
-                            url: 'https://{{api_url}}/{{api_method}}',
-                            method: 'GET'
-                        }
+                        });
                     }
-                });
-            } },
+                }
+            },
             function (_err, run) {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
@@ -397,25 +424,30 @@ describe('pm.execution.runRequest handling', function () {
         });
 
         new collectionRunner().run(collection,
-            { requestResolverBridge (_requestId, callback) {
-                callback(null, {
-                    item: {
-                        event: [
-                            {
-                                listen: 'prerequest',
-                                script: {
-                                    exec: 'pm.execution.skipRequest();'
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: 'pm.execution.skipRequest();'
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    // This would technically fail,
+                                    // but we wouldn't get here because skipRequest would be called
+                                    url: 'https://{{api_url}}/post',
+                                    method: 'POST'
                                 }
                             }
-                        ],
-                        request: {
-                            // This would technically fail, but we wouldn't get here because skipRequest would be called
-                            url: 'https://{{api_url}}/post',
-                            method: 'POST'
-                        }
+                        });
                     }
-                });
-            } },
+                }
+            },
             function (_err, run) {
                 run.start({
                     assertion (_cursor, assertionOutcomes) {
