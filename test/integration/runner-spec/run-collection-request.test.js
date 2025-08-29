@@ -274,6 +274,7 @@ describe('pm.execution.runRequest handling', function () {
 
                         pm.test('variable values should have been updated from nested request', function () {
                             pm.expect(pm.globals.get("api_url")).to.equal("postman-echo.com");
+                            pm.expect(pm.collectionVariables.get("api_path")).to.equal("get");
                         });`
                     }
                 }, {
@@ -286,10 +287,11 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://{{api_url}}/get',
+                    url: 'https://{{api_url}}/{{api_path}}',
                     method: 'GET'
                 }
-            }]
+            }],
+            variable: [{ key: 'api_method', value: 'post' }]
         });
 
         new collectionRunner().run(collection,
@@ -302,12 +304,26 @@ describe('pm.execution.runRequest handling', function () {
                                     {
                                         listen: 'prerequest',
                                         script: {
-                                            exec: 'pm.globals.set("api_url", "postman-echo.com");'
+                                            exec: `
+                                            pm.globals.set("api_url", "postman-echo.com");
+                                            pm.collectionVariables.set("api_path", "get");
+                                            `
+                                        }
+                                    },
+                                    {
+                                        listen: 'test',
+                                        script: {
+                                            exec: `
+                                            pm.test('url should have been resolved via var set from parent',
+                                            function () {
+                                                pm.expect(pm.collectionVariables.get("api_method")).to.equal("post");
+                                                pm.expect(pm.response.code).to.equal(200);
+                                            });`
                                         }
                                     }
                                 ],
                                 request: {
-                                    url: 'https://{{api_url}}/post',
+                                    url: 'https://{{api_url}}/{{api_method}}',
                                     method: 'POST'
                                 }
                             }
@@ -322,74 +338,9 @@ describe('pm.execution.runRequest handling', function () {
                             .filter(function (outcome) {
                                 return [
                                     'variable values should have been updated from nested request',
-                                    'url should have been resolved via var set from nested req'
+                                    'url should have been resolved via var set from nested req',
+                                    'url should have been resolved via var set from parent'
                                 ].includes(outcome.name);
-                            });
-
-                        reqAssertions.forEach(function (assertion) {
-                            expect(assertion.passed).to.be.true;
-                        });
-                    },
-                    done (err) {
-                        done(err);
-                    }
-                });
-            });
-    });
-
-    it('[var sync] should use passed collection vars & merge parent\'s collection vars to globals', function (done) {
-        const collection = new sdk.Collection({
-            item: [{
-                event: [{
-                    listen: 'prerequest',
-                    script: {
-                        exec: `
-                        pm.collectionVariables.set("api_url", "postman-echo.com");
-                        await pm.execution.runRequest("nested-request-id");`
-                    }
-                }],
-                request: {
-                    url: 'https://{{api_url}}/{{api_method}}',
-                    method: 'GET'
-                }
-            }],
-            variable: [{ key: 'api_method', value: 'get' }]
-        });
-
-        new collectionRunner().run(collection,
-            {
-                script: {
-                    requestResolver (_requestId, callback) {
-                        callback(null, {
-                            item: {
-                                event: [
-                                    {
-                                        listen: 'prerequest',
-                                        script: {
-                                            exec: `
-                                            pm.test("global var should be set from collection variable of parent",
-                                            function () {
-                                                pm.expect(pm.collectionVariables.get("api_url")).to.equal("postman-echo.com");
-                                                pm.expect(pm.collectionVariables.get("api_method")).to.equal("get");
-                                            });`
-                                        }
-                                    }
-                                ],
-                                request: {
-                                    url: 'https://{{api_url}}/{{api_method}}',
-                                    method: 'GET'
-                                }
-                            }
-                        });
-                    }
-                }
-            },
-            function (_err, run) {
-                run.start({
-                    assertion (_cursor, assertionOutcomes) {
-                        const reqAssertions = assertionOutcomes
-                            .filter(function (outcome) {
-                                return outcome.name === 'global var should be set from collection variable of parent';
                             });
 
                         reqAssertions.forEach(function (assertion) {

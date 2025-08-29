@@ -201,7 +201,7 @@ runner.run(collection, {
                 }],
                 variable: [{ key: 'api_method', value: 'post' }],
             })
-        }
+        },
 
         // Function to resolve packages that are used in the script.
         packageResolver: function ({ packages /* sdk.Script.packages */ }, callback) {
