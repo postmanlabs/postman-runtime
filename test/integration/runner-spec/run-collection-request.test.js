@@ -61,6 +61,33 @@ describe('pm.execution.runRequest handling', function () {
             });
     });
 
+    it('should throw an error in script if request resolver is not passed and runRequest is invoked', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: { exec: 'await pm.execution.runRequest("nested-request-id");' }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection, {}, function (_err, run) {
+            run.start({
+                exception (_cursor, err) {
+                    expect(err.message).to.be.ok;
+                    expect(err.message.includes('pm.execution.runRequest is not a function')).to.be.true;
+                },
+                done (err) {
+                    done(err);
+                }
+            });
+        });
+    });
+
     it('should handle for exceptions thrown from nested request parsing or uncaught errors', function (done) {
         const collection = new sdk.Collection({
             item: [{
