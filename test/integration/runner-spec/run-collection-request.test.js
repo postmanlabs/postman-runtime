@@ -33,6 +33,7 @@ describe('pm.execution.runRequest handling', function () {
                     requestResolver (_requestId, callback) {
                         callback(null, {
                             item: {
+                                id: 'nested-request-id',
                                 request: {
                                     url: 'https://postman-echo.com/post',
                                     method: 'POST'
@@ -118,6 +119,7 @@ describe('pm.execution.runRequest handling', function () {
                     requestResolver (_requestId, callback) {
                         callback(null, {
                             item: {
+                                id: 'nested-request-id',
                                 event: [{
                                     listen: 'test',
                                     script: { exec: 'try { some invalid js code here ' }
@@ -172,6 +174,7 @@ describe('pm.execution.runRequest handling', function () {
                     requestResolver (_requestId, callback) {
                         callback(null, {
                             item: {
+                                id: 'nested-request-id',
                                 event: [
                                     {
                                         listen: 'prerequest',
@@ -236,6 +239,7 @@ describe('pm.execution.runRequest handling', function () {
                     requestResolver (_requestId, callback) {
                         callback(null, {
                             item: {
+                                id: 'nested-request-id',
                                 event: [
                                     {
                                         listen: 'prerequest',
@@ -308,6 +312,8 @@ describe('pm.execution.runRequest handling', function () {
                     listen: 'test',
                     script: {
                         exec: `
+                        console.log(pm.collectionVariables.get("api_path"), pm.response);
+
                         pm.test('url should have been resolved via var set from nested req', function () {
                             pm.expect(pm.response.code).to.equal(200);
                         });`
@@ -327,6 +333,7 @@ describe('pm.execution.runRequest handling', function () {
                     requestResolver (_requestId, callback) {
                         callback(null, {
                             item: {
+                                id: 'nested-request-id',
                                 event: [
                                     {
                                         listen: 'prerequest',
@@ -407,6 +414,7 @@ describe('pm.execution.runRequest handling', function () {
                     requestResolver (_requestId, callback) {
                         callback(null, {
                             item: {
+                                id: 'nested-request-id',
                                 event: [
                                     {
                                         listen: 'prerequest',
