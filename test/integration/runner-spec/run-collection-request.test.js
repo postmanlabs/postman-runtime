@@ -452,4 +452,57 @@ describe('pm.execution.runRequest handling', function () {
                 });
             });
     });
+
+    it('should handle number of requests limitation set by opts.requester.maxInvokableNestedRequests', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: `
+                            await pm.execution.runRequest('nested-request-id');
+                            await pm.execution.runRequest('nested-request-id');
+                            await pm.execution.runRequest('nested-request-id');
+                        `
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-id',
+                                event: [],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            }
+                        });
+                    }
+                },
+                requester: {
+                    maxInvokableNestedRequests: 2
+                }
+            },
+            function (_err, run) {
+                run.start({
+                    exception (_cursor, err) {
+                        expect(err.message).to.eql('Exceeded max number of requests per script' +
+                            ' invokable by pm.execution.runRequest');
+                    },
+                    done (err) {
+                        done(err);
+                    }
+                });
+            });
+    });
 });
