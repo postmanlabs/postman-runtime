@@ -505,4 +505,73 @@ describe('pm.execution.runRequest handling', function () {
                 });
             });
     });
+
+    it('should correctly handle iterationData passed', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: `
+                            console.log("[l0]", pm.iterationData.get("foo"));
+                            await pm.execution.runRequest('nested-request-id');
+                        `
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-id',
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: `
+                                                console.log("[l1]", pm.iterationData.get("foo"));
+                                            `
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            }
+                        });
+                    }
+                },
+                iterationCount: 2,
+                data: [{ foo: 123 }, null, { foo: 456 }]
+            },
+            function (_err, run) {
+                let lastRecordedValueOfFooInParentRequest;
+
+                run.start({
+                    console (_cursor, ...args) {
+                        if (args.includes('[l0]')) {
+                            lastRecordedValueOfFooInParentRequest = args.pop();
+                        }
+
+                        if (args.includes('[l1]')) {
+                            const valueOfFooInNestedRequest = args.pop();
+
+                            expect(lastRecordedValueOfFooInParentRequest).to.eql(valueOfFooInNestedRequest);
+                        }
+                    },
+                    done (err) {
+                        done(err);
+                    }
+                });
+            });
+    });
 });
