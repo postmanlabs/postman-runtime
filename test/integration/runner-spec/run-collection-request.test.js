@@ -496,8 +496,8 @@ describe('pm.execution.runRequest handling', function () {
             function (_err, run) {
                 run.start({
                     exception (_cursor, err) {
-                        expect(err.message).to.eql('Exceeded max number of requests per script' +
-                            ' invokable by pm.execution.runRequest');
+                        expect(err.message).to.eql('The maximum number of pm.execution.runRequest()' +
+                            ' calls have been reached for this request.');
                     },
                     done (err) {
                         done(err);
