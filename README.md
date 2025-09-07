@@ -161,7 +161,11 @@ runner.run(collection, {
                 // calls the callback with the refreshed token or an error
                 // callback(err, token)
             },
-        }
+        },
+
+        // The max depth or number of requests a request can invoke via `pm.execution.runRequest`
+        // in its pre-request and post-response scripts
+        maxInvokableNestedRequests: 5
     },
 
     // Options specific to the script execution
