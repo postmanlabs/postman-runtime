@@ -161,7 +161,11 @@ runner.run(collection, {
                 // calls the callback with the refreshed token or an error
                 // callback(err, token)
             },
-        }
+        },
+
+        // The max depth or number of requests a request can invoke via `pm.execution.runRequest`
+        // in its pre-request and post-response scripts
+        maxInvokableNestedRequests: 5
     },
 
     // Options specific to the script execution
@@ -170,6 +174,38 @@ runner.run(collection, {
         // Option to set whether to send console logs in serialized format which can be parsed
         // using the `teleport-javascript` serialization library.
         serializeLogs: false,
+
+        // Function to resolve requests that have been referenced via `pm.execution.runRequest`
+        // Expects a full collection JSON with a single request item and pre-request + test scripts
+        // along with variables for the collection
+        requestResolver: function (requestId, callback) {
+            return callback(null, {
+                item: [{
+                    name: "Sample Request From Resolver",
+                    event: [
+                        {
+                            listen: "prerequest",
+                            script: {
+                                exec: [`pm.environment.set("api_url", 'postman-echo.com');`],
+                                type: "text/javascript",
+                                packages: {},
+                            },
+                        },
+                    ],
+                    request: {
+                        method: "POST",
+                        header: [],
+                        url: {
+                            raw: "https://{{api_url}}/{{api_method}}",
+                            protocol: "https",
+                            host: ["{{api_url}}"],
+                            path: ["{{api_method}}"],
+                        },
+                    }
+                }],
+                variable: [{ key: 'api_method', value: 'post' }],
+            })
+        },
 
         // Function to resolve packages that are used in the script.
         packageResolver: function ({ packages /* sdk.Script.packages */ }, callback) {

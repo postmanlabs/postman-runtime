@@ -1,4 +1,6 @@
 unreleased:
+  new features:
+    - GH-1522 Add support for referencing pre-defined collection requests using `pm.execution.runRequest`
   fixed bugs:
     - GH-1523 Fixed downloadedBytes tracking for redirected requests
   chores:
