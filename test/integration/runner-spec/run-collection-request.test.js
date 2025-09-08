@@ -574,4 +574,158 @@ describe('pm.execution.runRequest handling', function () {
                 });
             });
     });
+
+    it('should correctly handle cursor passed for root request in original', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: `
+                        console.log("[l0]");
+                        await pm.execution.runRequest("nested-request-id");`
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-id',
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: `
+                                                console.log("[l1] Log from level-1");
+
+                                                pm.test('assertion from level 1', function () {
+                                                    pm.expect(1).to.eql(1);
+                                                });
+                                            `
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            function (_err, run) {
+                let rootReqCursor;
+
+                run.start({
+                    console (cursor, ...args) {
+                        if (args.includes('[l0]')) {
+                            rootReqCursor = cursor;
+                        }
+                        else {
+                            // Validate child request's cursor
+                            expect(cursor).to.be.ok;
+                            expect(cursor.ref).to.eql(rootReqCursor.ref);
+                            expect(cursor.scriptId).to.eql(rootReqCursor.scriptId);
+                            expect(cursor.position).to.eql(rootReqCursor.position);
+                        }
+                    },
+                    assertion (cursor) {
+                        // Validate child request's cursor
+                        expect(cursor).to.be.ok;
+                        expect(cursor.ref).to.eql(rootReqCursor.ref);
+                        expect(cursor.scriptId).to.eql(rootReqCursor.scriptId);
+                        expect(cursor.position).to.eql(rootReqCursor.position);
+                    },
+                    done (err) {
+                        done(err);
+                    }
+                });
+            });
+    });
+
+    it('should correctly handle vault mutations and access across request executions', function (done) {
+        const vaultSecrets = new sdk.VariableScope({
+                prefix: 'vault:',
+                _allowScriptAccess: () => {
+                    return true;
+                }
+            }),
+            collection = new sdk.Collection({
+                item: [{
+                    event: [{
+                        listen: 'prerequest',
+                        script: {
+                            exec: `
+                            await pm.execution.runRequest("nested-request-id");
+                            pm.test('secret should have been set in parent request', async function () {
+                                pm.expect(await pm.vault.get("secretKey")).to.equal("secretValue");
+                            });
+                        `
+                        }
+                    }],
+                    request: {
+                        url: 'https://postman-echo.com/get',
+                        method: 'GET'
+                    }
+                }]
+            });
+
+        new collectionRunner().run(collection,
+            {
+                vaultSecrets: vaultSecrets,
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-id',
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: 'await pm.vault.set("secretKey", "secretValue");'
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            function (_err, run) {
+                run.start({
+                    script (_err, _cursor, result, _script, event) {
+                        if (event.listen === 'prerequest') {
+                            expect(result.vaultSecrets).to.be.ok;
+                            // Mutation should be applied and present
+                            expect(result.vaultSecrets.get('secretKey')).to.eql('secretValue');
+                            expect(result.vaultSecrets.mutations).to.be.ok;
+                            expect(result.vaultSecrets.mutations.compacted)
+                                .to.deep.include({ secretKey: ['secretKey', 'secretValue'] });
+                        }
+                    },
+                    assertion (_cursor, assertions) {
+                        assertions.forEach((assertion) => {
+                            expect(assertion.passed).to.be.true;
+                        });
+                    },
+                    done (err) {
+                        done(err);
+                    }
+                });
+            });
+    });
 });
