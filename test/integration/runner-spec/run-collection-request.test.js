@@ -453,7 +453,7 @@ describe('pm.execution.runRequest handling', function () {
             });
     });
 
-    it('should handle number of requests limitation set by opts.requester.maxInvokableNestedRequests', function (done) {
+    it('should handle number of requests limitation set by opts.maxInvokableNestedRequests', function (done) {
         const collection = new sdk.Collection({
             item: [{
                 event: [{
@@ -489,9 +489,7 @@ describe('pm.execution.runRequest handling', function () {
                         });
                     }
                 },
-                requester: {
-                    maxInvokableNestedRequests: 2
-                }
+                maxInvokableNestedRequests: 2
             },
             function (_err, run) {
                 run.start({
