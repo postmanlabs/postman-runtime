@@ -5,7 +5,7 @@ var _ = require('lodash'),
     Runner = require('../../../index.js').Runner;
 
 
-describe('Control Flow', function () {
+describe('Parallel Control Flow', function () {
     this.timeout(10 * 1000);
     var timeout = 1000,
         runner,
