@@ -1,3 +1,8 @@
+unreleased:
+  date: 2025-09-11
+  fixed bugs:
+    - GH-1525 Fixed a bug where nested requests were not aborting the run on failure in assertions
+
 7.46.0:
   date: 2025-09-08
   new features:
