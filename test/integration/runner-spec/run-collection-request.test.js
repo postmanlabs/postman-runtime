@@ -726,4 +726,83 @@ describe('pm.execution.runRequest handling', function () {
                 });
             });
     });
+
+    it('should not abort execution on encountering failure in nested request assertions', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: `
+                        await pm.execution.runRequest("nested-request-id");
+                        pm.test('[l0-prerequest] this test should have run', function () {
+                            pm.expect(true).to.equal(true);
+                        });
+                    `
+                    }
+                }, {
+                    listen: 'test',
+                    script: {
+                        exec: `
+                        pm.test('[l0-test] this test should also have run', function () {
+                            pm.expect(true).to.equal(false);
+                        });
+                    `
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-id',
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: `
+                                            pm.test('[l1-failure-test] this test should have failed', function () {
+                                                pm.expect(true).to.equal(false);
+                                            });
+                                            `
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            function (_err, run) {
+                let assertionCount = 0,
+                    expectedOrder = [false, true, false],
+                    actualOrder = []; // Expected order of assertion results
+
+                run.start({
+                    assertion (_cursor, assertions) {
+                        assertions.forEach((assertion) => {
+                            assertionCount++;
+                            actualOrder.push(assertion.passed);
+                        });
+                    },
+                    done (err) {
+                        expect(assertionCount).to.eql(3); // All 3 assertions should have run
+                        expect(actualOrder).to.deep.eql(expectedOrder);
+                        done(err);
+                    }
+                });
+            });
+    });
 });
