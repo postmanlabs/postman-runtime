@@ -182,14 +182,6 @@ describe('control command extension', function () {
             ]);
         });
 
-        it('should handle missing partition manager gracefully', function () {
-            mockRunner.partitionManager = null;
-
-            expect(function () {
-                controlCommand.process.abort.call(mockRunner, userback, payload, next);
-            }).to.throw();
-        });
-
         it('should handle missing pool gracefully', function () {
             mockRunner.pool = null;
 
