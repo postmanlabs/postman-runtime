@@ -406,5 +406,55 @@ describe('PartitionManager', function () {
 
             expect(mockRunInstance.triggers.called).to.be.false;
         });
+
+        it('should prevent multiple calls to triggerStopAction', function () {
+            mockRunInstance.options.customParallelIterations = true;
+            partitionManager.options = mockRunInstance.options;
+
+            // Call triggerStopAction multiple times
+            partitionManager.triggerStopAction();
+            partitionManager.triggerStopAction();
+            partitionManager.triggerStopAction();
+
+            // Should only be called once due to stopActionTriggered flag
+            expect(mockRunInstance.triggers.calledOnce).to.be.true;
+        });
+
+        it('should trigger stop action with customParallelIterations with schedule abort flow', function () {
+            mockRunInstance.options.customParallelIterations = true;
+            partitionManager.options = mockRunInstance.options;
+
+            // Create some partitions first
+            partitionManager.partitions = [
+                { hasInstructions: sinon.stub().returns(false) },
+                { hasInstructions: sinon.stub().returns(false) }
+            ];
+
+            // Simulate abort action with immediate flag to avoid partition scheduling
+            partitionManager.schedule('abort', {}, [], true);
+
+            // Should trigger stop action since no partitions have instructions
+            expect(mockRunInstance.triggers.called).to.be.true;
+        });
+
+        it('should not trigger stop action when partitions have instructions with schedule abort flow', function () {
+            mockRunInstance.options.customParallelIterations = true;
+            partitionManager.options = mockRunInstance.options;
+
+            // Create partitions with instructions
+            partitionManager.partitions = [
+                { hasInstructions: sinon.stub().returns(true) },
+                { hasInstructions: sinon.stub().returns(false) }
+            ];
+
+            // Reset triggers stub
+            mockRunInstance.triggers.resetHistory();
+
+            // Simulate abort action with immediate flag
+            partitionManager.schedule('abort', {}, [], true);
+
+            // Should not trigger stop action since some partitions have instructions
+            expect(mockRunInstance.triggers.called).to.be.false;
+        });
     });
 });
