@@ -2,6 +2,8 @@ unreleased:
   date: 2025-09-11
   fixed bugs:
     - GH-1526 Fixed a bug where nested requests were not aborting the run on failure in assertions
+  new features:
+    - GH-1527 Add support for logging nested requests invoked by `pm.execution.runRequest` to consumer console
 
 7.46.0:
   date: 2025-09-08
