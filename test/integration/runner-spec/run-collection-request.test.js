@@ -805,4 +805,84 @@ describe('pm.execution.runRequest handling', function () {
                 });
             });
     });
+
+    it('should invoke passed-down request trigger callback', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [
+                    {
+                        listen: 'prerequest',
+                        script: {
+                            exec: `
+                            await pm.execution.runRequest(
+                                "nested-request-id",
+                                { variables: { method: "post" } }
+                            );
+                            `
+                        }
+                    }
+                ],
+                request: {
+                    url: 'https://postman-echo.com/{{parent_method}}',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-id',
+                                event: [
+                                    {
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: 'pm.globals.set("parent_method", "get");'
+                                        }
+                                    }
+                                ],
+                                request: {
+                                    url: 'https://postman-echo.com/{{method}}',
+                                    method: 'POST'
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            function (_err, run) {
+                let requestConsoleInvocationCount = 0,
+                    invocationOrder = [];
+
+                run.start({
+                    request (_err, cursor, response, request, item, cookies, history) {
+                        requestConsoleInvocationCount++;
+                        invocationOrder.push(request.url.toString());
+
+                        expect(history.execution).to.be.ok;
+                        expect(response.status).to.be.ok;
+
+                        if (requestConsoleInvocationCount === 1) {
+                            // For nested request cursors: scriptId should be non-empty
+                            // Used by consumers to mark the log as an indirect request
+                            expect(cursor.scriptId).to.be.ok;
+                        }
+
+                        expect(request).to.be.ok;
+                        expect(item).to.be.ok;
+                        expect(cookies).to.be.ok;
+                    },
+                    done (err) {
+                        expect(requestConsoleInvocationCount).to.eql(2); // Nested request + Parent request
+                        expect(invocationOrder).to.deep.equal([
+                            'https://postman-echo.com/post', 'https://postman-echo.com/get'
+                        ]);
+                        done(err);
+                    }
+                });
+            });
+    });
 });
