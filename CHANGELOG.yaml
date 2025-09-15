@@ -1,6 +1,6 @@
 unreleased:
   fixed bugs:
-    - GH-1526 Fixed a bug where nested requests were not aborting the run on failure in assertions
+    - GH-1526 Fixed a bug where nested requests were aborting the run on assertion failures
     - GH-1527 Add support for invoking parent request trigger from nested requests
 
 7.46.0:
