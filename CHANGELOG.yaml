@@ -1,5 +1,4 @@
 unreleased:
-  date: 2025-09-11
   fixed bugs:
     - GH-1526 Fixed a bug where nested requests were not aborting the run on failure in assertions
   new features:
