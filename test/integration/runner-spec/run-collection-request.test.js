@@ -806,7 +806,7 @@ describe('pm.execution.runRequest handling', function () {
             });
     });
 
-    it('should log nested request to consumer console', function (done) {
+    it('should invoke passed-down request trigger callback', function (done) {
         const collection = new sdk.Collection({
             item: [{
                 event: [
