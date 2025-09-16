@@ -15,7 +15,21 @@ openssl genrsa 4096 > server-key.pem
 # Create server certificate signing request
 openssl req -new -nodes -sha256 -key server-key.pem -config server.cnf -out server.csr
 
-# Create server certificate
+# Create server extensions file
+cat > server.ext << EOF
+[v3_req]
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
+DNS.2 = *.localhost
+IP.1 = 127.0.0.1
+IP.2 = ::1
+EOF
+
+# Create server certificate with proper extensions
 openssl x509 -req \
   -sha256 \
   -in server.csr \
@@ -23,7 +37,9 @@ openssl x509 -req \
   -CAkey ca.key \
   -out server-crt.pem \
   -passin 'pass:password' \
-  -days 3650
+  -days 3650 \
+  -extensions v3_req \
+  -extfile server.ext
 
 # Create client private key
 openssl genrsa -out client-key.pem 2048
@@ -56,3 +72,6 @@ openssl pkcs12 -export \
     -in client-crt.pem \
     -out client-pkcs12-passphrase.pfx \
     -passout 'pass:password'
+
+# Clean up temporary files
+rm -f server.csr server.ext client.csr
