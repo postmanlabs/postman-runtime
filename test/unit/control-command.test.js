@@ -18,7 +18,7 @@ describe('control command extension', function () {
         };
 
         mockPartitionManager = {
-            clearPools: sinon.stub(),
+            dispose: sinon.stub(),
             triggerStopAction: sinon.stub()
         };
 
@@ -61,7 +61,7 @@ describe('control command extension', function () {
         it('should clear partition manager pools', function () {
             controlCommand.process.abort.call(mockRunner, userback, payload, next);
 
-            expect(mockPartitionManager.clearPools.calledOnce).to.be.true;
+            expect(mockPartitionManager.dispose.calledOnce).to.be.true;
         });
 
         it('should trigger abort event when not already aborted', function () {
@@ -127,14 +127,9 @@ describe('control command extension', function () {
             controlCommand.process.abort.call(mockRunner, userback, payload, next);
 
             expect(mockPool.clear.calledOnce).to.be.true;
-            expect(mockPartitionManager.clearPools.calledOnce).to.be.true;
+            expect(mockPartitionManager.dispose.calledOnce).to.be.true;
         });
 
-        it('should trigger partition manager stop action', function () {
-            controlCommand.process.abort.call(mockRunner, userback, payload, next);
-
-            expect(mockPartitionManager.triggerStopAction.calledOnce).to.be.true;
-        });
 
         it('should call next callback', function () {
             controlCommand.process.abort.call(mockRunner, userback, payload, next);
@@ -150,8 +145,8 @@ describe('control command extension', function () {
                 callOrder.push('pool.clear');
             });
 
-            mockPartitionManager.clearPools = sinon.stub().callsFake(function () {
-                callOrder.push('partitionManager.clearPools');
+            mockPartitionManager.dispose = sinon.stub().callsFake(function () {
+                callOrder.push('partitionManager.dispose');
             });
 
             mockTriggers.abort = sinon.stub().callsFake(function () {
@@ -162,10 +157,6 @@ describe('control command extension', function () {
                 callOrder.push('userback');
             });
 
-            mockPartitionManager.triggerStopAction = sinon.stub().callsFake(function () {
-                callOrder.push('triggerStopAction');
-            });
-
             next = sinon.stub().callsFake(function () {
                 callOrder.push('next');
             });
@@ -174,10 +165,9 @@ describe('control command extension', function () {
 
             expect(callOrder).to.deep.equal([
                 'pool.clear',
-                'partitionManager.clearPools',
+                'partitionManager.dispose',
                 'triggers.abort',
                 'userback',
-                'triggerStopAction',
                 'next'
             ]);
         });
@@ -188,6 +178,19 @@ describe('control command extension', function () {
             expect(function () {
                 controlCommand.process.abort.call(mockRunner, userback, payload, next);
             }).to.throw();
+        });
+
+        it('should handle missing partitionManager gracefully', function () {
+            mockRunner.partitionManager = undefined;
+
+            expect(function () {
+                controlCommand.process.abort.call(mockRunner, userback, payload, next);
+            }).to.not.throw();
+
+            expect(mockPool.clear.calledOnce).to.be.true;
+            expect(mockTriggers.abort.calledOnce).to.be.true;
+            expect(next.calledOnce).to.be.true;
+            expect(next.firstCall.args[0]).to.be.null;
         });
     });
 

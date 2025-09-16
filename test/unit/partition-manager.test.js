@@ -305,7 +305,7 @@ describe('PartitionManager', function () {
                 sinon.stub(partition, 'clearPool');
             });
 
-            partitionManager.clearPools();
+            partitionManager.dispose();
 
             partitionManager.partitions.forEach(function (partition) {
                 expect(partition.clearPool.calledOnce).to.be.true;
