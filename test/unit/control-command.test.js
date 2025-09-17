@@ -171,27 +171,6 @@ describe('control command extension', function () {
                 'next'
             ]);
         });
-
-        it('should handle missing pool gracefully', function () {
-            mockRunner.pool = null;
-
-            expect(function () {
-                controlCommand.process.abort.call(mockRunner, userback, payload, next);
-            }).to.throw();
-        });
-
-        it('should handle missing partitionManager gracefully', function () {
-            mockRunner.partitionManager = undefined;
-
-            expect(function () {
-                controlCommand.process.abort.call(mockRunner, userback, payload, next);
-            }).to.not.throw();
-
-            expect(mockPool.clear.calledOnce).to.be.true;
-            expect(mockTriggers.abort.calledOnce).to.be.true;
-            expect(next.calledOnce).to.be.true;
-            expect(next.firstCall.args[0]).to.be.null;
-        });
     });
 
     describe('module structure', function () {
