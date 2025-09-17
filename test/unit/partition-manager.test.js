@@ -32,6 +32,7 @@ describe('PartitionManager', function () {
         };
 
         partitionManager = new PartitionManager(mockRunInstance);
+        partitionManager.spawn();
     });
 
     afterEach(function () {
@@ -42,7 +43,7 @@ describe('PartitionManager', function () {
         it('should initialize with run instance', function () {
             expect(partitionManager.runInstance).to.equal(mockRunInstance);
             expect(partitionManager.partitions).to.be.an('array').that.is.empty;
-            // expect(partitionManager.priorityPartition).to.be.instanceOf(Partition);
+            expect(partitionManager.priorityPartition).to.be.instanceOf(Partition);
         });
     });
 
