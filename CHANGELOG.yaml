@@ -1,3 +1,8 @@
+7.47.0:
+  date: 2025-09-18
+  new features:
+    - GH-1525 Added iterations opimization
+
 7.46.1:
   date: 2025-09-15
   fixed bugs:

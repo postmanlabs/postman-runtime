@@ -1,10 +1,11 @@
 [ req ]
-default_bits           = 1024
+default_bits           = 2048
 days                   = 3650
 distinguished_name     = req_distinguished_name
 attributes             = req_attributes
 prompt                 = no
 output_password        = password
+x509_extensions        = v3_ca
 
 [ req_distinguished_name ]
 C                      = US
@@ -17,4 +18,10 @@ emailAddress           = do.not@email.me
 
 [ req_attributes ]
 challengePassword              = password challenge
+
+[ v3_ca ]
+basicConstraints = CA:TRUE
+keyUsage = keyCertSign, cRLSign
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
 
