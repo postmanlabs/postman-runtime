@@ -1,4 +1,5 @@
 const sdk = require('postman-collection'),
+    sinon = require('sinon').createSandbox(),
     collectionRunner = require('../../../lib/runner');
 
 describe('pm.execution.runRequest handling', function () {
@@ -919,19 +920,28 @@ describe('pm.execution.runRequest handling', function () {
                 }
             },
             function (_err, run) {
-                let invocationCount = 0;
+                const callbacks = {
+                    start: sinon.spy(),
+                    abort: sinon.spy(),
+                    request: sinon.spy()
+                };
 
-                run.start({ request () { invocationCount++; } });
+                callbacks.done = sinon.spy(function () {
+                    expect(run.state.nestedRequest).to.be.undefined;
+                    expect(callbacks).to.be.ok;
+                    expect(callbacks.done.getCall(0).args[0]).to.be.null;
+                    expect(callbacks).to.nested.include({
+                        'start.calledOnce': true,
+                        'abort.calledOnce': true,
+                        'request.calledOnce': false
+                    });
 
+                    return done();
+                });
+
+                run.start(callbacks);
                 // Abort root run
                 run.abort();
-
-                setTimeout(() => {
-                    expect(run.state.nestedRequest).to.be.undefined;
-                    // If the request event was triggered by any chance this counter would be greater than 0
-                    expect(invocationCount).to.eql(0);
-                    done();
-                }, 200);
             });
     });
 });
