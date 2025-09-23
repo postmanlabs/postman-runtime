@@ -1,4 +1,5 @@
 const sdk = require('postman-collection'),
+    sinon = require('sinon').createSandbox(),
     collectionRunner = require('../../../lib/runner');
 
 describe('pm.execution.runRequest handling', function () {
@@ -883,6 +884,64 @@ describe('pm.execution.runRequest handling', function () {
                         done(err);
                     }
                 });
+            });
+    });
+
+    it('should not invoke any events if root request is cancelled', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [
+                    {
+                        listen: 'prerequest',
+                        script: { exec: 'await pm.execution.runRequest("nested-request-id");' }
+                    }
+                ],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-id',
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            function (_err, run) {
+                const callbacks = {
+                    start: sinon.spy(),
+                    abort: sinon.spy(),
+                    request: sinon.spy()
+                };
+
+                callbacks.done = sinon.spy(function () {
+                    expect(run.state.nestedRequest).to.be.undefined;
+                    expect(callbacks).to.be.ok;
+                    expect(callbacks.done.getCall(0).args[0]).to.be.null;
+                    expect(callbacks).to.nested.include({
+                        'start.calledOnce': true,
+                        'abort.calledOnce': true,
+                        'request.calledOnce': false
+                    });
+
+                    return done();
+                });
+
+                run.start(callbacks);
+                // Abort root run
+                run.abort();
             });
     });
 });
