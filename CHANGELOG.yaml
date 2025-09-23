@@ -1,7 +1,8 @@
 unreleased:
   fixed bugs:
     - >-
-      GH-1529 Prevent crashes from nested request events after root request is aborted
+      GH-1529 Prevent crashes from nested request events after root request
+      is aborted
 
 7.47.1:
   date: 2025-09-19
