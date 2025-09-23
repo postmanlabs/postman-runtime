@@ -885,4 +885,53 @@ describe('pm.execution.runRequest handling', function () {
                 });
             });
     });
+
+    it('should not invoke any events if root request is cancelled', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [
+                    {
+                        listen: 'prerequest',
+                        script: { exec: 'await pm.execution.runRequest("nested-request-id");' }
+                    }
+                ],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-id',
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            function (_err, run) {
+                let invocationCount = 0;
+
+                run.start({ request () { invocationCount++; } });
+
+                // Abort root run
+                run.abort();
+
+                setTimeout(() => {
+                    expect(run.state.nestedRequest).to.be.undefined;
+                    // If the request event was triggered by any chance this counter would be greater than 0
+                    expect(invocationCount).to.eql(0);
+                    done();
+                }, 200);
+            });
+    });
 });
