@@ -90,7 +90,7 @@ describe('pm.execution.runRequest handling', function () {
         });
     });
 
-    it('should provide req metadata from event.requests object if resolver does not provide JSON', function (done) {
+    it('should provide req metadata from event.requests object to resolver along with root req id', function (done) {
         const requestsMeta = {
                 // Refer to postman-collection package to know more about this field
                 'nested-request-id': {
