@@ -1,4 +1,8 @@
 unreleased:
+  new features:
+    - >-
+      GH-1530 Pass any stored referenced request metadata and root item id
+      to nested request resolver
   fixed bugs:
     - >-
       GH-1529 Prevent crashes from nested request events after root request
