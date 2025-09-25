@@ -1,12 +1,13 @@
-unreleased:
+7.48.0:
+  date: 2025-09-25
   new features:
     - >-
-      GH-1530 Pass any stored referenced request metadata and root item id
-      to nested request resolver
+      GH-1530 Pass any stored referenced request metadata and root item id to
+      nested request resolver
   fixed bugs:
     - >-
-      GH-1529 Prevent crashes from nested request events after root request
-      is aborted
+      GH-1529 Prevent crashes from nested request events after root request is
+      aborted
 
 7.47.1:
   date: 2025-09-19
