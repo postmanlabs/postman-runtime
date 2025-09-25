@@ -31,7 +31,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -119,17 +119,18 @@ describe('pm.execution.runRequest handling', function () {
 
         new collectionRunner().run(collection, {
             script: {
-                requestResolver: (nestedRequestId, additionalData, callback) => {
+                requestResolver: (nestedRequestId, nestedRequestContext, callback) => {
                     expect(typeof callback).to.eql('function');
-                    expect(additionalData).to.be.ok;
-                    expect(additionalData.rootRequestId).to.eql('root-request-id');
+                    expect(nestedRequestContext).to.be.ok;
+                    expect(nestedRequestContext.rootItemId).to.eql('root-request-id');
 
                     if (nestedRequestId === 'nested-request-id') {
-                        expect(additionalData.requestMetadataFromItem).to.eql(requestsMeta['nested-request-id']);
+                        expect(nestedRequestContext.nestedRequestMeta).to.eql(requestsMeta['nested-request-id']);
                     }
 
                     if (nestedRequestId === 'nested-request-id-without-fallback') {
-                        expect(additionalData.requestMetadataFromItem).to.not.be.ok; // Should be empty for this request
+                        // Should be empty for this request
+                        expect(nestedRequestContext.nestedRequestMeta).to.not.be.ok;
                     }
 
                     return callback(null, {
@@ -176,7 +177,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -231,7 +232,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -296,7 +297,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -390,7 +391,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -471,7 +472,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -536,7 +537,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -586,7 +587,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -654,7 +655,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -742,7 +743,7 @@ describe('pm.execution.runRequest handling', function () {
             {
                 vaultSecrets: vaultSecrets,
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -820,7 +821,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -892,7 +893,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
@@ -965,7 +966,7 @@ describe('pm.execution.runRequest handling', function () {
         new collectionRunner().run(collection,
             {
                 script: {
-                    requestResolver (_requestId, _additionalData, callback) {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
                         callback(null, {
                             item: {
                                 id: 'nested-request-id',
