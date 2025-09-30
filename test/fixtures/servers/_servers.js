@@ -669,7 +669,8 @@ function createDigestServer (options) {
         expectedUsername = options.username || 'username',
         expectedPassword = options.password || 'password';
 
-    passport.use(new DigestStrategy({ qop: 'auth' },
+    // Register Digest strategies for MD5 and SHA-256
+    passport.use('digest-md5', new DigestStrategy({ qop: 'auth', algorithm: 'MD5' },
         function (username, done) {
             if (username !== expectedUsername) {
                 return done(null, false);
@@ -678,8 +679,30 @@ function createDigestServer (options) {
             return done(null, username, expectedPassword);
         }));
 
+    passport.use('digest-sha256', new DigestStrategy({ qop: 'auth', algorithm: 'SHA-256' },
+        function (username, done) {
+            if (username !== expectedUsername) {
+                return done(null, false);
+            }
+
+            return done(null, username, expectedPassword);
+        }));
+
+    app.use((req, res, next) => {
+        if (!req.headers.authorization) {
+            res.status(401);
+            res.set('WWW-Authenticate',
+                'Digest realm="Users", qop="auth", algorithm="MD5", nonce="md5nonce"');
+            res.append('WWW-Authenticate',
+                'Digest realm="Users", qop="auth", algorithm="SHA-256", nonce="sha256nonce"');
+
+            return res.send('Unauthorized');
+        }
+        next();
+    });
+
     app.all('*',
-        passport.authenticate('digest', { session: false }),
+        passport.authenticate(['digest-md5', 'digest-sha256'], { session: false }),
         function (req, res) {
             res.send(req.users);
         });
