@@ -234,7 +234,13 @@ runner.run(collection, {
 
     // *note* Not implemented yet.
     // In the future, this will be used to read certificates from the OS keychain.
-    systemCertificate: function() {}
+    systemCertificate: function() {},
+
+    // Debug options
+    debug: {
+        // Enable logging SSL session keys (only supported on Node, ignored in the browser)
+        keyLogFile: '/path/to/keylogfile',
+    }
 }, function (err, run) {
     console.log('Created a new Run!');
 
