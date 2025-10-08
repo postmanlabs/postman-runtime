@@ -55,7 +55,7 @@
     "node-oauth1": "1.3.0",
     "performance-now": "2.1.0",
     "postman-collection": "5.2.0",
-    "postman-request": "https://github.com/postmanlabs/postman-request.git#feature/ssl-keylog",
+    "postman-request": "github:postmanlabs/postman-request#feature/ssl-keylog",
     "postman-sandbox": "6.2.1",
     "postman-url-encoder": "3.0.8",
     "serialised-error": "1.1.3",
