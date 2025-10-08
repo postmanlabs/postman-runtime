@@ -239,7 +239,7 @@ runner.run(collection, {
     // Debug options
     debug: {
         // Enable logging SSL session keys (only supported on Node, ignored in the browser)
-        keyLogFile: '/path/to/keylogfile',
+        sslKeyLogFile: '/path/to/keylogfile',
     }
 }, function (err, run) {
     console.log('Created a new Run!');
