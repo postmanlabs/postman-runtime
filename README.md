@@ -165,7 +165,10 @@ runner.run(collection, {
 
         // The max depth or number of requests a request can invoke via `pm.execution.runRequest`
         // in its pre-request and post-response scripts
-        maxInvokableNestedRequests: 5
+        maxInvokableNestedRequests: 5,
+
+        // Enable logging SSL session keys (only supported on Node, ignored in the browser)
+        sslKeyLogFile: '/path/to/keylogfile',
     },
 
     // Options specific to the script execution
@@ -235,12 +238,6 @@ runner.run(collection, {
     // *note* Not implemented yet.
     // In the future, this will be used to read certificates from the OS keychain.
     systemCertificate: function() {},
-
-    // Debug options
-    debug: {
-        // Enable logging SSL session keys (only supported on Node, ignored in the browser)
-        sslKeyLogFile: '/path/to/keylogfile',
-    }
 }, function (err, run) {
     console.log('Created a new Run!');
 
