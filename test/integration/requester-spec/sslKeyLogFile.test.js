@@ -1,18 +1,25 @@
-const fs = require('fs'),
-    path = require('path'),
-    tmp = require('tmp'),
-    expect = require('chai').expect;
+var expect = require('chai').expect;
+var fs = require('fs');
+
 
 (typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: sslKeyLogFile', function () {
-    var testrun,
+    var tmp,
+        path,
+        testrun,
         tmpDir,
         sslKeyLogFilePath;
 
-    describe('with sslKeyLogFile', function () {
-        tmpDir = tmp.dirSync({ unsafeCleanup: true });
-        sslKeyLogFilePath = path.join(tmpDir.name, 'ssl-keylog.txt');
+    before(function () {
+        tmp = require('tmp');
+        path = require('path');
+    });
 
+    describe('with sslKeyLogFile', function () {
         before(function (done) {
+            tmpDir = tmp.dirSync({ unsafeCleanup: true });
+            sslKeyLogFilePath = path.join(tmpDir.name, 'ssl-keylog.txt');
+
+
             this.run({
                 requester: {
                     strictSSL: false,
