@@ -1,3 +1,10 @@
+unreleased:
+  new features:
+    - >-
+      GH-1532 Add support for logging SSL session keys to a file
+  chores:
+    - Updated dependencies
+
 7.48.0:
   date: 2025-09-25
   new features:
