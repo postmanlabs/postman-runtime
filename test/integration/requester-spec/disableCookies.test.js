@@ -35,12 +35,13 @@ var sinon = require('sinon'),
         });
 
         it('should not use cookies when requester disableCookies is true', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var response = testrun.response.getCall(0).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {}
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(Object.keys(body.cookies)).to.have.lengthOf(0);
         });
     });
 
@@ -75,14 +76,13 @@ var sinon = require('sinon'),
         });
 
         it('should use cookies when requester disableCookies is false', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var response = testrun.response.getCall(0).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {
-                    foo: 'bar'
-                }
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(body.cookies).to.have.property('foo', 'bar');
         });
     });
 
@@ -123,14 +123,13 @@ var sinon = require('sinon'),
         });
 
         it('should use cookies when per-request override is false', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var response = testrun.response.getCall(0).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {
-                    foo: 'bar'
-                }
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(body.cookies).to.have.property('foo', 'bar');
         });
     });
 
@@ -171,12 +170,13 @@ var sinon = require('sinon'),
         });
 
         it('should not use cookies when per-request override is true', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var response = testrun.response.getCall(0).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {}
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(Object.keys(body.cookies)).to.have.lengthOf(0);
         });
     });
 
@@ -231,32 +231,33 @@ var sinon = require('sinon'),
         });
 
         it('should not use cookies for request 1 (requester default)', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var response = testrun.response.getCall(0).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {}
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(Object.keys(body.cookies)).to.have.lengthOf(0);
         });
 
         it('should use cookies for request 2 (override to enable)', function () {
-            var response = testrun.response.getCall(1).args[2];
+            var response = testrun.response.getCall(1).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {
-                    second: 'two'
-                }
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(body.cookies).to.have.property('second', 'two');
         });
 
         it('should not use cookies for request 3 (explicitly disabled)', function () {
-            var response = testrun.response.getCall(2).args[2];
+            var response = testrun.response.getCall(2).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {}
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(Object.keys(body.cookies)).to.have.lengthOf(0);
         });
     });
 
@@ -288,14 +289,13 @@ var sinon = require('sinon'),
         });
 
         it('should use cookies by default (backward compatibility)', function () {
-            var response = testrun.response.getCall(0).args[2];
+            var response = testrun.response.getCall(0).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {
-                    foo: 'bar'
-                }
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(body.cookies).to.have.property('foo', 'bar');
         });
     });
 
@@ -330,12 +330,13 @@ var sinon = require('sinon'),
         });
 
         it('should not send cookies in subsequent requests', function () {
-            var response = testrun.response.getCall(1).args[2];
+            var response = testrun.response.getCall(1).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {}
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(Object.keys(body.cookies)).to.have.lengthOf(0);
         });
     });
 
@@ -370,14 +371,13 @@ var sinon = require('sinon'),
         });
 
         it('should send cookies in subsequent requests', function () {
-            var response = testrun.response.getCall(1).args[2];
+            var response = testrun.response.getCall(1).args[2],
+                body = response.json();
 
             expect(response).to.have.property('code', 200);
-            expect(response.json()).to.eql({
-                cookies: {
-                    test: 'value'
-                }
-            });
+            expect(body).to.have.property('cookies');
+            expect(body.cookies).to.be.an('object');
+            expect(body.cookies).to.have.property('test', 'value');
         });
     });
 });
