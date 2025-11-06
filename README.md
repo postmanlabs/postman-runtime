@@ -85,6 +85,9 @@ runner.run(collection, {
         // jar.allowProgrammaticAccess = function (domain) { return domain === 'postman-echo.com'; };
         cookieJar: jar,
 
+        // Prevents cookie jar from being used for in a request
+        disableCookies: false,
+
         // Controls redirect behavior (only supported on Node, ignored in the browser)
         followRedirects: true,
 

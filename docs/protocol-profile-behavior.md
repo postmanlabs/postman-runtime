@@ -15,6 +15,9 @@ Follow HTTP 3xx responses as redirects.
 - `maxRedirects: Number`<br/>
 Set maximum number of redirects to follow.
 
+- `disableCookies: Boolean`<br/>
+Prevent cookie jar from being used in a request.
+
 - `disableBodyPruning: Boolean`<br/>
 Control request body pruning for following methods: ```GET, COPY, HEAD, PURGE, UNLOCK```
 
