@@ -1,6 +1,11 @@
 unreleased:
   new features:
-    - GH-1533 Add support for disabling cookie jar via requester options
+    - GH-1534 Add support for disabling cookie jar via requester options
+
+7.49.1:
+  date: 2025-10-30
+  chores:
+    - Updated dependencies
 
 7.49.0:
   date: 2025-10-16
