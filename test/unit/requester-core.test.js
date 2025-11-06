@@ -332,6 +332,85 @@ describe('requester util', function () {
                 href: 'http:///'
             });
         });
+
+        describe('disableCookies option', function () {
+            it('should set jar when disableCookies is not set (default behavior)', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    requestOptions = requesterCore.getRequestOptions(request, {});
+
+                expect(requestOptions).to.have.property('jar', true);
+            });
+
+            it('should set jar when requester disableCookies is false', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    defaultOptions = { disableCookies: false },
+                    requestOptions = requesterCore.getRequestOptions(request, defaultOptions);
+
+                expect(requestOptions).to.have.property('jar', true);
+            });
+
+            it('should not set jar when requester disableCookies is true', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    defaultOptions = { disableCookies: true },
+                    requestOptions = requesterCore.getRequestOptions(request, defaultOptions);
+
+                expect(requestOptions).to.not.have.property('jar');
+            });
+
+            it('should not set jar when protocolProfileBehavior disableCookies is true', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    defaultOptions = { disableCookies: false },
+                    protocolProfileBehavior = { disableCookies: true },
+                    requestOptions = requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior);
+
+                expect(requestOptions).to.not.have.property('jar');
+            });
+
+            it('should set jar when protocolProfileBehavior disableCookies is false', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    defaultOptions = { disableCookies: true },
+                    protocolProfileBehavior = { disableCookies: false },
+                    requestOptions = requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior);
+
+                expect(requestOptions).to.have.property('jar', true);
+            });
+
+            it('should prioritize protocolProfileBehavior over requester default (override to enable)', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    defaultOptions = { disableCookies: true },
+                    protocolProfileBehavior = { disableCookies: false },
+                    requestOptions = requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior);
+
+                expect(requestOptions).to.have.property('jar', true);
+            });
+
+            it('should prioritize protocolProfileBehavior over requester default (override to disable)', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    defaultOptions = { disableCookies: false },
+                    protocolProfileBehavior = { disableCookies: true },
+                    requestOptions = requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior);
+
+                expect(requestOptions).to.not.have.property('jar');
+            });
+
+            it('should use requester disableCookies when protocolProfileBehavior is undefined', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    defaultOptions = { disableCookies: true },
+                    protocolProfileBehavior = {},
+                    requestOptions = requesterCore.getRequestOptions(request, defaultOptions, protocolProfileBehavior);
+
+                expect(requestOptions).to.not.have.property('jar');
+            });
+
+            it('should use cookieJar from defaultOptions when cookies are enabled', function () {
+                var request = new sdk.Request({ url: 'https://postman-echo.com' }),
+                    cookieJar = { fake: 'jar' },
+                    defaultOptions = { disableCookies: false, cookieJar: cookieJar },
+                    requestOptions = requesterCore.getRequestOptions(request, defaultOptions);
+
+                expect(requestOptions).to.have.property('jar', cookieJar);
+            });
+        });
     });
 
     describe('.getRequestBody', function () {
