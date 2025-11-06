@@ -1,4 +1,5 @@
-unreleased:
+7.50.0:
+  date: 2025-11-06
   new features:
     - GH-1534 Add support for disabling cookie jar via requester options
 
