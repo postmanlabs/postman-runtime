@@ -270,25 +270,31 @@ describe('runner util', function () {
         });
 
         it('should set stopRunNow on AssertionFailure error with stopOnAssertionFailure', function () {
-            var assertionError = new Error('Assertion failed');
+            var assertionError = new Error('Assertion failed'),
+                result;
+
             assertionError.name = 'AssertionFailure';
             mockOptions.executionError = assertionError;
             mockOptions.runnerOptions.stopOnAssertionFailure = true;
 
-            var result = runnerUtil.processExecutionResult(mockOptions);
+            result = runnerUtil.processExecutionResult(mockOptions);
 
             expect(result.stopRunNow).to.be.true;
         });
 
-        it('should set stopRunNow on AssertionFailure error nested in error property with stopOnAssertionFailure', function () {
-            var assertionError = new Error('Assertion failed');
+        it('should set stopRunNow on AssertionFailure error nested in error property ' +
+            'with stopOnAssertionFailure', function () {
+            var assertionError = new Error('Assertion failed'),
+                wrapperError = new Error('Wrapper error'),
+                result;
+
             assertionError.name = 'AssertionFailure';
-            var wrapperError = new Error('Wrapper error');
+
             wrapperError.error = assertionError;
             mockOptions.executionError = wrapperError;
             mockOptions.runnerOptions.stopOnAssertionFailure = true;
 
-            var result = runnerUtil.processExecutionResult(mockOptions);
+            result = runnerUtil.processExecutionResult(mockOptions);
 
             expect(result.stopRunNow).to.be.true;
         });
@@ -303,12 +309,14 @@ describe('runner util', function () {
         });
 
         it('should NOT set stopRunNow on AssertionFailure error when stopOnAssertionFailure is false', function () {
-            var assertionError = new Error('Assertion failed');
+            var assertionError = new Error('Assertion failed'),
+                result;
+
             assertionError.name = 'AssertionFailure';
             mockOptions.executionError = assertionError;
             mockOptions.runnerOptions.stopOnAssertionFailure = false;
 
-            var result = runnerUtil.processExecutionResult(mockOptions);
+            result = runnerUtil.processExecutionResult(mockOptions);
 
             expect(result.stopRunNow).to.be.undefined;
         });
