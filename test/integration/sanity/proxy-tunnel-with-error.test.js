@@ -53,8 +53,9 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             expect(testrun.request.calledOnce).to.be.ok;
             expect(request.proxy.getProxyUrl())
                 .to.eql(`http://${auth.username}:${auth.password}@${proxyHost}:${proxyPort}`);
-            expect(response.reason()).to.eql('Proxy Authentication Required');
-            expect(response.text()).to.equal('Proxy Authentication Required');
+
+            expect(response.code).to.equal(407);
+            expect(response.status).to.eql('Proxy Authentication Required');
         });
     });
 });
