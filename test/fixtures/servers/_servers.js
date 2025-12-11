@@ -293,6 +293,33 @@ function createProxyServer (options) {
         req.pipe(fwd);
     });
 
+    // Handle CONNECT requests for HTTPS tunneling
+    server.on('connect', function (req, clientSocket, head) {
+        if (options.auth && req.headers['proxy-authorization'] !== proxyAuthHeader) {
+            clientSocket.write('HTTP/1.1 407 Proxy Authentication Required\r\n\r\n');
+            clientSocket.end();
+
+            return;
+        }
+
+        var serverUrl = url.parse('http://' + req.url),
+            serverSocket = net.connect(serverUrl.port, serverUrl.hostname, function () {
+                clientSocket.write('HTTP/1.1 200 Connection Established\r\n\r\n');
+                serverSocket.write(head);
+                serverSocket.pipe(clientSocket);
+                clientSocket.pipe(serverSocket);
+            });
+
+        serverSocket.on('error', function () {
+            clientSocket.write('HTTP/1.1 500 Internal Server Error\r\n\r\n');
+            clientSocket.end();
+        });
+
+        clientSocket.on('error', function () {
+            serverSocket.end();
+        });
+    });
+
     return server;
 }
 

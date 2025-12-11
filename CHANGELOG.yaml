@@ -1,3 +1,7 @@
+unreleased:
+  new features:
+    - GH-1537 Handle request errors from postman-request with attached response
+
 7.50.0:
   date: 2025-11-06
   new features:
