@@ -115,9 +115,8 @@ describe('cursor', function () {
     });
     it('should have whatnext() match next() behavior at final position', function () {
         var Cursor = require('../../lib/runner/cursor'),
-            cursor = new Cursor(2, 1, 1, 0); // length=2, at last position
-
-        var predicted = cursor.whatnext(cursor.current());
+            cursor = new Cursor(2, 1, 1, 0), // length=2, at last position
+            predicted = cursor.whatnext(cursor.current());
 
         cursor.next(function () {
             var actual = cursor.current();
