@@ -1,5 +1,5 @@
 var expect = require('chai').expect,
-    uuid = require('uuid'),
+    crypto = require('crypto'),
     _ = require('lodash');
 
 (typeof window === 'undefined' ? describe : describe.skip)('NTLM', function () {
@@ -470,7 +470,7 @@ var expect = require('chai').expect,
 
     describe('with NTLM auth set at collection level and 5 iterations', function () {
         before(function (done) {
-            let executionId = uuid.v4();
+            let executionId = crypto.randomUUID();
 
             var localRunOptions = {
                 collection: {
@@ -542,7 +542,7 @@ var expect = require('chai').expect,
 
     describe('with NTLM auth set at collection level with 4 requests', function () {
         before(function (done) {
-            let executionId = uuid.v4();
+            let executionId = crypto.randomUUID();
 
             var localRunOptions = {
                 collection: {
