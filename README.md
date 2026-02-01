@@ -42,6 +42,10 @@ runner.run(collection, {
     //   calls the `item` and `iteration` callbacks and does not run any further items (requests)
     stopOnFailure: true,
 
+    // - gracefully halts on test failures only (not on errors).
+    //   calls the `item` and `iteration` callbacks and does not run any further items (requests)
+    stopOnAssertionFailure: true,
+
     // - abruptly halts the run on errors or test failures, and directly calls the `done` callback
     abortOnFailure: true,
 
