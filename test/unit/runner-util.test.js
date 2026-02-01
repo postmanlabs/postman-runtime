@@ -131,6 +131,16 @@ describe('runner util', function () {
     });
 
     describe('.getIterationData', function () {
+        it('should handle negative iteration index', function () {
+            var data = [
+                    { value: 'first' },
+                    { value: 'second' }
+                ],
+                result = runnerUtil.getIterationData(data, -1);
+
+            expect(result).to.equal(data[0]);
+        });
+
         it('should return data for the specified iteration', function () {
             var data = [
                     { iteration: 0, value: 'first' },
