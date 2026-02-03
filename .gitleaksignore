@@ -1,0 +1,3 @@
+# False positives in bundled dist file
+# These are test placeholder values and library code, not real secrets
+599664d51003114c5794d15920da7e5f13703b6f:dist/index.js:generic-api-key:1
