@@ -22,8 +22,8 @@ describe('secret resolution', function () {
                             value: 'placeholder-will-be-replaced',
                             type: 'secret',
                             source: {
-                                type: 'mock-secret-manager',
-                                secretId: 'my-api-key-secret'
+                                provider: 'postman',
+                                postman: { type: 'local', secretId: 'my-api-key-secret' }
                             }
                         },
                         {
@@ -33,9 +33,9 @@ describe('secret resolution', function () {
                     ]
                 },
                 secretResolvers: {
-                    'mock-secret-manager': {
-                        id: 'mock-resolver-1',
-                        name: 'Mock Secret Manager',
+                    postman: {
+                        id: 'postman-resolver-1',
+                        name: 'Postman Secret Manager',
                         resolver: function (secret) {
                             // Return a Promise for async resolution
                             return new Promise(function (resolve) {
@@ -97,8 +97,8 @@ describe('secret resolution', function () {
                             value: 'placeholder-will-be-replaced',
                             type: 'secret',
                             source: {
-                                type: 'mock-secret-manager',
-                                secretId: 'my-api-key-secret'
+                                provider: 'postman',
+                                postman: { type: 'local', secretId: 'my-api-key-secret' }
                             }
                         },
                         {
@@ -112,9 +112,9 @@ describe('secret resolution', function () {
                     ]
                 },
                 secretResolvers: {
-                    'mock-secret-manager': {
-                        id: 'mock-resolver-1',
-                        name: 'Mock Secret Manager',
+                    postman: {
+                        id: 'postman-resolver-1',
+                        name: 'Postman Secret Manager',
                         resolver: function (secret) {
                             return new Promise(function (resolve) {
                                 setTimeout(function () {
@@ -176,18 +176,21 @@ describe('secret resolution', function () {
                             value: '',
                             type: 'secret',
                             source: {
-                                type: 'vault',
-                                path: '/secret/data/myapp'
+                                provider: 'hashicorp',
+                                hashicorp: {
+                                    engine: 'secret',
+                                    path: '/secret/data/myapp',
+                                    key: 'value'
+                                }
                             }
                         }
                     ]
                 },
                 secretResolvers: {
-                    vault: {
-                        id: 'vault-resolver',
-                        name: 'Vault Resolver',
+                    hashicorp: {
+                        id: 'hashicorp-resolver',
+                        name: 'Hashicorp Resolver',
                         resolver: function () {
-                            // Return a Promise
                             return new Promise(function (resolve) {
                                 setTimeout(function () {
                                     resolve('promise-resolved-secret');
@@ -233,18 +236,17 @@ describe('secret resolution', function () {
                             value: 'fallback-value',
                             type: 'secret',
                             source: {
-                                type: 'failing-source',
-                                secretId: 'will-fail'
+                                provider: 'postman',
+                                postman: { type: 'local', secretId: 'will-fail' }
                             }
                         }
                     ]
                 },
                 secretResolvers: {
-                    'failing-source': {
+                    postman: {
                         id: 'failing-resolver',
                         name: 'Failing Resolver',
                         resolver: function () {
-                            // Simulate a failed resolution
                             return new Promise(function (resolve, reject) {
                                 setTimeout(function () {
                                     reject(new Error('Failed to fetch secret'));
@@ -307,32 +309,32 @@ describe('secret resolution', function () {
                             key: 'secret1',
                             value: '',
                             type: 'secret',
-                            source: { type: 'mock', id: '1' }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: '1' } }
                         },
                         {
                             key: 'secret2',
                             value: '',
                             type: 'secret',
-                            source: { type: 'mock', id: '2' }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: '2' } }
                         },
                         {
                             key: 'secret3',
                             value: '',
                             type: 'secret',
-                            source: { type: 'mock', id: '3' }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: '3' } }
                         }
                     ]
                 },
                 secretResolvers: {
-                    mock: {
-                        id: 'mock-resolver',
-                        name: 'Mock Resolver',
+                    postman: {
+                        id: 'postman-resolver',
+                        name: 'Postman Resolver',
                         resolver: function (secret) {
                             resolverCallCount++;
 
                             return new Promise(function (resolve) {
                                 setTimeout(function () {
-                                    resolve('secret-value-' + secret.id);
+                                    resolve('secret-value-' + secret.secretId);
                                 }, 10);
                             });
                         }
@@ -370,7 +372,7 @@ describe('secret resolution', function () {
             resolverSpy = sinon.spy(function (secret) {
                 return new Promise(function (resolve) {
                     setTimeout(function () {
-                        resolve('resolved-' + secret.id);
+                        resolve('resolved-' + secret.secretId);
                     }, 10);
                 });
             });
@@ -379,7 +381,6 @@ describe('secret resolution', function () {
                 collection: {
                     item: [{
                         request: {
-                            // Only uses secret1 - secret2 and secret3 are NOT used
                             url: global.servers.http + '?key1={{secret1}}'
                         }
                     }]
@@ -390,26 +391,26 @@ describe('secret resolution', function () {
                             key: 'secret1',
                             value: '',
                             type: 'secret',
-                            source: { type: 'mock', id: '1' }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: '1' } }
                         },
                         {
                             key: 'secret2',
                             value: '',
                             type: 'secret',
-                            source: { type: 'mock', id: '2' }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: '2' } }
                         },
                         {
                             key: 'secret3',
                             value: '',
                             type: 'secret',
-                            source: { type: 'mock', id: '3' }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: '3' } }
                         }
                     ]
                 },
                 secretResolvers: {
-                    mock: {
-                        id: 'mock-resolver',
-                        name: 'Mock Resolver',
+                    postman: {
+                        id: 'postman-resolver',
+                        name: 'Postman Resolver',
                         resolver: resolverSpy
                     }
                 }
@@ -432,7 +433,7 @@ describe('secret resolution', function () {
         it('should resolve only the used secret with correct source', function () {
             var secretArg = resolverSpy.getCall(0).args[0];
 
-            expect(secretArg.id).to.equal('1');
+            expect(secretArg.secretId).to.equal('1');
         });
 
         it('should resolve the used secret correctly', function () {
@@ -461,8 +462,8 @@ describe('secret resolution', function () {
                             value: 'original-value',
                             type: 'secret',
                             source: {
-                                type: 'some-source',
-                                secretId: 'some-secret'
+                                provider: 'postman',
+                                postman: { type: 'local', secretId: 'some-secret' }
                             }
                         }
                     ]
@@ -515,27 +516,27 @@ describe('secret resolution', function () {
                             key: 'authToken',
                             value: '',
                             type: 'secret',
-                            source: { type: 'mock', secretType: 'auth-token' }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: 'auth-token-secret' } }
                         },
                         {
                             key: 'apiKey',
                             value: '',
                             type: 'secret',
-                            source: { type: 'mock', secretType: 'api-key' }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: 'api-key-secret' } }
                         }
                     ]
                 },
                 secretResolvers: {
-                    mock: {
-                        id: 'mock-resolver',
-                        name: 'Mock Resolver',
+                    postman: {
+                        id: 'postman-resolver',
+                        name: 'Postman Resolver',
                         resolver: function (secret) {
                             return new Promise(function (resolve) {
                                 setTimeout(function () {
-                                    if (secret.secretType === 'auth-token') {
+                                    if (secret.secretId === 'auth-token-secret') {
                                         resolve('resolved-auth-token-xyz');
                                     }
-                                    else if (secret.secretType === 'api-key') {
+                                    else if (secret.secretId === 'api-key-secret') {
                                         resolve('resolved-api-key-abc');
                                     }
                                     else {
@@ -589,23 +590,22 @@ describe('secret resolution', function () {
                             value: 'fallback-value',
                             type: 'secret',
                             source: {
-                                type: 'slow-source',
-                                secretId: 'slow-secret'
+                                provider: 'postman',
+                                postman: { type: 'local', secretId: 'slow-secret' }
                             }
                         }
                     ]
                 },
                 secretResolvers: {
-                    'slow-source': {
+                    postman: {
                         id: 'slow-resolver',
                         name: 'Slow Resolver',
-                        timeout: 50, // 50ms timeout
+                        timeout: 50,
                         resolver: function () {
-                            // This resolver takes longer than the timeout
                             return new Promise(function (resolve) {
                                 setTimeout(function () {
                                     resolve('should-not-resolve');
-                                }, 200); // 200ms - longer than timeout
+                                }, 200);
                             });
                         }
                     }
@@ -665,21 +665,20 @@ describe('secret resolution', function () {
                             value: '',
                             type: 'secret',
                             source: {
-                                type: 'retry-source',
-                                secretId: 'retry-secret'
+                                provider: 'postman',
+                                postman: { type: 'local', secretId: 'retry-secret' }
                             }
                         }
                     ]
                 },
                 secretResolvers: {
-                    'retry-source': {
+                    postman: {
                         id: 'retry-resolver',
                         name: 'Retry Resolver',
-                        retryCount: 2, // Retry up to 2 times
+                        retryCount: 2,
                         resolver: function () {
                             attemptCount++;
 
-                            // Fail on first 2 attempts, succeed on 3rd
                             if (attemptCount < 3) {
                                 return Promise.reject(new Error('Temporary failure'));
                             }
@@ -730,17 +729,17 @@ describe('secret resolution', function () {
                             value: 'placeholder-value',
                             type: 'secret',
                             source: {
-                                type: 'unknown-source-type',
-                                secretId: 'some-secret'
+                                provider: 'azure',
+                                azure: { secretId: 'some-secret' }
                             }
                         }
                     ]
                 },
                 secretResolvers: {
-                    // Only have resolver for 'mock' type, not 'unknown-source-type'
-                    mock: {
-                        id: 'mock-resolver',
-                        name: 'Mock Resolver',
+                    // Only have resolver for 'postman', not 'azure'
+                    postman: {
+                        id: 'postman-resolver',
+                        name: 'Postman Resolver',
                         resolver: function () {
                             return Promise.resolve('should-not-be-called');
                         }
