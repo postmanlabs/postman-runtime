@@ -20,7 +20,7 @@ describe('secret resolution', function () {
                         {
                             key: 'apiKey',
                             value: 'placeholder-will-be-replaced',
-                            type: 'secret',
+                            secret: true,
                             source: {
                                 provider: 'postman',
                                 postman: { type: 'local', secretId: 'my-api-key-secret' }
@@ -32,24 +32,14 @@ describe('secret resolution', function () {
                         }
                     ]
                 },
-                secretResolvers: {
-                    postman: {
-                        id: 'postman-resolver-1',
-                        name: 'Postman Secret Manager',
-                        resolver: function (secret) {
-                            // Return a Promise for async resolution
-                            return new Promise(function (resolve) {
-                                setTimeout(function () {
-                                    if (secret.secretId === 'my-api-key-secret') {
-                                        resolve('resolved-secret-value-123');
-                                    }
-                                    else {
-                                        resolve(undefined);
-                                    }
-                                }, 10);
-                            });
-                        }
-                    }
+                secretResolver: function ({ secrets }, callback) {
+                    var result = secrets.map(function (s) {
+                        return {
+                            resolvedValue: s.variable.key === 'apiKey' ? 'resolved-secret-value-123' : undefined
+                        };
+                    });
+
+                    callback(null, result);
                 }
             }, function (err, results) {
                 testrun = results;
@@ -64,7 +54,7 @@ describe('secret resolution', function () {
             sinon.assert.calledWith(testrun.done.getCall(0), null);
         });
 
-        it('should resolve secret variable using secretResolvers', function () {
+        it('should resolve secret variable using secretResolver', function () {
             var request = testrun.request.getCall(0).args[3];
 
             expect(request.url.toString()).to.include('apiKey=resolved-secret-value-123');
@@ -95,7 +85,7 @@ describe('secret resolution', function () {
                         {
                             key: 'prod_apiKey',
                             value: 'placeholder-will-be-replaced',
-                            type: 'secret',
+                            secret: true,
                             source: {
                                 provider: 'postman',
                                 postman: { type: 'local', secretId: 'my-api-key-secret' }
@@ -111,23 +101,11 @@ describe('secret resolution', function () {
                         }
                     ]
                 },
-                secretResolvers: {
-                    postman: {
-                        id: 'postman-resolver-1',
-                        name: 'Postman Secret Manager',
-                        resolver: function (secret) {
-                            return new Promise(function (resolve) {
-                                setTimeout(function () {
-                                    if (secret.secretId === 'my-api-key-secret') {
-                                        resolve('resolved-secret-value-123');
-                                    }
-                                    else {
-                                        resolve(undefined);
-                                    }
-                                }, 10);
-                            });
-                        }
-                    }
+                secretResolver: function ({ secrets }, callback) {
+                    // Nested vars not in secrets or keep placeholder
+                    var result = secrets.map(function () { return { resolvedValue: undefined }; });
+
+                    callback(null, result);
                 }
             }, function (err, results) {
                 testrun = results;
@@ -174,7 +152,7 @@ describe('secret resolution', function () {
                         {
                             key: 'mySecret',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: {
                                 provider: 'hashicorp',
                                 hashicorp: {
@@ -186,18 +164,16 @@ describe('secret resolution', function () {
                         }
                     ]
                 },
-                secretResolvers: {
-                    hashicorp: {
-                        id: 'hashicorp-resolver',
-                        name: 'Hashicorp Resolver',
-                        resolver: function () {
-                            return new Promise(function (resolve) {
-                                setTimeout(function () {
-                                    resolve('promise-resolved-secret');
-                                }, 10);
-                            });
-                        }
+                secretResolver: function ({ secrets }, callback) {
+                    if (secrets.length === 0) {
+                        return callback(null, []);
                     }
+
+                    Promise.resolve('promise-resolved-secret')
+                        .then(function (v) {
+                            callback(null, [{ resolvedValue: v }]);
+                        })
+                        .catch(callback);
                 }
             }, function (err, results) {
                 testrun = results;
@@ -234,7 +210,7 @@ describe('secret resolution', function () {
                         {
                             key: 'failingSecret',
                             value: 'fallback-value',
-                            type: 'secret',
+                            secret: true,
                             source: {
                                 provider: 'postman',
                                 postman: { type: 'local', secretId: 'will-fail' }
@@ -242,18 +218,8 @@ describe('secret resolution', function () {
                         }
                     ]
                 },
-                secretResolvers: {
-                    postman: {
-                        id: 'failing-resolver',
-                        name: 'Failing Resolver',
-                        resolver: function () {
-                            return new Promise(function (resolve, reject) {
-                                setTimeout(function () {
-                                    reject(new Error('Failed to fetch secret'));
-                                }, 10);
-                            });
-                        }
-                    }
+                secretResolver: function (input, callback) {
+                    callback(new Error('Failed to fetch secret'));
                 }
             }, function (err, results) {
                 testrun = results;
@@ -273,14 +239,13 @@ describe('secret resolution', function () {
             var err = testrun.item.getCall(0).args[0];
 
             expect(err).to.be.an('error');
-            expect(err.message).to.include('Failed to resolve secret');
-            expect(err.code).to.equal('SECRET_RESOLUTION_FAILED');
+            expect(err.message).to.include('Failed to fetch secret');
         });
 
-        it('should include isSecretResolutionFailed flag in item trigger', function () {
+        it('should include hasSecretResolutionFailed flag in item trigger', function () {
             var options = testrun.item.getCall(0).args[4];
 
-            expect(options).to.have.property('isSecretResolutionFailed', true);
+            expect(options).to.have.property('hasSecretResolutionFailed', true);
         });
 
         it('should NOT make the HTTP request when secret resolution fails', function () {
@@ -308,37 +273,33 @@ describe('secret resolution', function () {
                         {
                             key: 'secret1',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: { provider: 'postman', postman: { type: 'local', secretId: '1' } }
                         },
                         {
                             key: 'secret2',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: { provider: 'postman', postman: { type: 'local', secretId: '2' } }
                         },
                         {
                             key: 'secret3',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: { provider: 'postman', postman: { type: 'local', secretId: '3' } }
                         }
                     ]
                 },
-                secretResolvers: {
-                    postman: {
-                        id: 'postman-resolver',
-                        name: 'Postman Resolver',
-                        resolver: function (secret) {
-                            resolverCallCount++;
+                secretResolver: function ({ secrets }, callback) {
+                    var result = secrets.map(function (item) {
+                        resolverCallCount++;
 
-                            return new Promise(function (resolve) {
-                                setTimeout(function () {
-                                    resolve('secret-value-' + secret.secretId);
-                                }, 10);
-                            });
-                        }
-                    }
+                        return {
+                            resolvedValue: 'secret-value-' + item.variable.source.postman.secretId
+                        };
+                    });
+
+                    callback(null, result);
                 }
             }, function (err, results) {
                 testrun = results;
@@ -364,7 +325,7 @@ describe('secret resolution', function () {
         });
     });
 
-    describe('only resolves secrets used in request', function () {
+    describe('resolves all secrets including those only referenced in scripts', function () {
         var testrun,
             resolverSpy;
 
@@ -390,29 +351,35 @@ describe('secret resolution', function () {
                         {
                             key: 'secret1',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: { provider: 'postman', postman: { type: 'local', secretId: '1' } }
                         },
                         {
                             key: 'secret2',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: { provider: 'postman', postman: { type: 'local', secretId: '2' } }
                         },
                         {
                             key: 'secret3',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: { provider: 'postman', postman: { type: 'local', secretId: '3' } }
                         }
                     ]
                 },
-                secretResolvers: {
-                    postman: {
-                        id: 'postman-resolver',
-                        name: 'Postman Resolver',
-                        resolver: resolverSpy
+                secretResolver: function ({ secrets }, callback) {
+                    if (secrets.length === 0) {
+                        return callback(null, []);
                     }
+
+                    Promise.all(secrets.map(function (s) {
+                        return resolverSpy(s.variable.source.postman);
+                    }))
+                        .then(function (values) {
+                            callback(null, values.map(function (v) { return { resolvedValue: v }; }));
+                        })
+                        .catch(callback);
                 }
             }, function (err, results) {
                 testrun = results;
@@ -425,15 +392,15 @@ describe('secret resolution', function () {
             sinon.assert.calledOnce(testrun.done);
         });
 
-        it('should only call resolver for used secrets', function () {
-            // Only secret1 is used in the request, so resolver should be called once
-            sinon.assert.calledOnce(resolverSpy);
+        it('should call resolver for all secrets', function () {
+            // All secrets are resolved (including those only referenced in scripts)
+            sinon.assert.calledThrice(resolverSpy);
         });
 
-        it('should resolve only the used secret with correct source', function () {
-            var secretArg = resolverSpy.getCall(0).args[0];
-
-            expect(secretArg.secretId).to.equal('1');
+        it('should resolve all secrets with correct sources', function () {
+            expect(resolverSpy.getCall(0).args[0].secretId).to.equal('1');
+            expect(resolverSpy.getCall(1).args[0].secretId).to.equal('2');
+            expect(resolverSpy.getCall(2).args[0].secretId).to.equal('3');
         });
 
         it('should resolve the used secret correctly', function () {
@@ -443,7 +410,7 @@ describe('secret resolution', function () {
         });
     });
 
-    describe('no secretResolvers provided', function () {
+    describe('no secretResolver provided', function () {
         var testrun;
 
         before(function (done) {
@@ -460,7 +427,7 @@ describe('secret resolution', function () {
                         {
                             key: 'secretVar',
                             value: 'original-value',
-                            type: 'secret',
+                            secret: true,
                             source: {
                                 provider: 'postman',
                                 postman: { type: 'local', secretId: 'some-secret' }
@@ -468,7 +435,7 @@ describe('secret resolution', function () {
                         }
                     ]
                 }
-                // Note: No secretResolvers provided
+                // Note: No secretResolver provided
             }, function (err, results) {
                 testrun = results;
                 done(err);
@@ -515,37 +482,28 @@ describe('secret resolution', function () {
                         {
                             key: 'authToken',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: { provider: 'postman', postman: { type: 'local', secretId: 'auth-token-secret' } }
                         },
                         {
                             key: 'apiKey',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: { provider: 'postman', postman: { type: 'local', secretId: 'api-key-secret' } }
                         }
                     ]
                 },
-                secretResolvers: {
-                    postman: {
-                        id: 'postman-resolver',
-                        name: 'Postman Resolver',
-                        resolver: function (secret) {
-                            return new Promise(function (resolve) {
-                                setTimeout(function () {
-                                    if (secret.secretId === 'auth-token-secret') {
-                                        resolve('resolved-auth-token-xyz');
-                                    }
-                                    else if (secret.secretId === 'api-key-secret') {
-                                        resolve('resolved-api-key-abc');
-                                    }
-                                    else {
-                                        resolve(undefined);
-                                    }
-                                }, 10);
-                            });
-                        }
-                    }
+                secretResolver: function ({ secrets }, callback) {
+                    var result = secrets.map(function (item) {
+                        var secretId = item.variable.source.postman.secretId;
+
+                        return {
+                            resolvedValue: secretId === 'auth-token-secret' ? 'resolved-auth-token-xyz' :
+                                secretId === 'api-key-secret' ? 'resolved-api-key-abc' : undefined
+                        };
+                    });
+
+                    callback(null, result);
                 }
             }, function (err, results) {
                 testrun = results;
@@ -588,7 +546,7 @@ describe('secret resolution', function () {
                         {
                             key: 'slowSecret',
                             value: 'fallback-value',
-                            type: 'secret',
+                            secret: true,
                             source: {
                                 provider: 'postman',
                                 postman: { type: 'local', secretId: 'slow-secret' }
@@ -596,19 +554,27 @@ describe('secret resolution', function () {
                         }
                     ]
                 },
-                secretResolvers: {
-                    postman: {
-                        id: 'slow-resolver',
-                        name: 'Slow Resolver',
-                        timeout: 50,
-                        resolver: function () {
-                            return new Promise(function (resolve) {
-                                setTimeout(function () {
-                                    resolve('should-not-resolve');
-                                }, 200);
-                            });
-                        }
-                    }
+                secretResolver: function (input, callback) {
+                    var timeout = 50,
+                        slowResolve = new Promise(function (resolve) {
+                            setTimeout(function () {
+                                resolve('should-not-resolve');
+                            }, 200);
+                        }),
+                        timeoutReject = new Promise(function (_, reject) {
+                            setTimeout(function () {
+                                var err = new Error('Secret resolution timed out after ' + timeout + 'ms');
+
+                                err.code = 'SECRET_RESOLUTION_TIMEOUT';
+                                reject(err);
+                            }, timeout);
+                        });
+
+                    Promise.race([slowResolve, timeoutReject])
+                        .then(function () {
+                            callback(null, []);
+                        })
+                        .catch(callback);
                 }
             }, function (err, results) {
                 testrun = results;
@@ -632,10 +598,10 @@ describe('secret resolution', function () {
             expect(err.code).to.equal('SECRET_RESOLUTION_TIMEOUT');
         });
 
-        it('should include isSecretResolutionFailed flag on timeout', function () {
+        it('should include hasSecretResolutionFailed flag on timeout', function () {
             var options = testrun.item.getCall(0).args[4];
 
-            expect(options).to.have.property('isSecretResolutionFailed', true);
+            expect(options).to.have.property('hasSecretResolutionFailed', true);
         });
 
         it('should NOT make the HTTP request when timeout occurs', function () {
@@ -663,7 +629,7 @@ describe('secret resolution', function () {
                         {
                             key: 'retrySecret',
                             value: '',
-                            type: 'secret',
+                            secret: true,
                             source: {
                                 provider: 'postman',
                                 postman: { type: 'local', secretId: 'retry-secret' }
@@ -671,21 +637,33 @@ describe('secret resolution', function () {
                         }
                     ]
                 },
-                secretResolvers: {
-                    postman: {
-                        id: 'retry-resolver',
-                        name: 'Retry Resolver',
-                        retryCount: 2,
-                        resolver: function () {
-                            attemptCount++;
+                secretResolver: function (input, callback) {
+                    var maxAttempts = 3;
 
-                            if (attemptCount < 3) {
-                                return Promise.reject(new Error('Temporary failure'));
-                            }
+                    function attempt () {
+                        attemptCount++;
 
-                            return Promise.resolve('success-after-retry');
+                        if (attemptCount < maxAttempts) {
+                            return Promise.reject(new Error('Temporary failure'));
                         }
+
+                        return Promise.resolve('success-after-retry');
                     }
+
+                    function retry (attemptsLeft) {
+                        return attempt()
+                            .then(function (value) {
+                                callback(null, [{ resolvedValue: value }]);
+                            })
+                            .catch(function (err) {
+                                if (attemptsLeft > 1) {
+                                    return retry(attemptsLeft - 1);
+                                }
+                                callback(err);
+                            });
+                    }
+
+                    retry(maxAttempts);
                 }
             }, function (err, results) {
                 testrun = results;
@@ -727,7 +705,7 @@ describe('secret resolution', function () {
                         {
                             key: 'unmatchedSecret',
                             value: 'placeholder-value',
-                            type: 'secret',
+                            secret: true,
                             source: {
                                 provider: 'azure',
                                 azure: { secretId: 'some-secret' }
@@ -735,15 +713,11 @@ describe('secret resolution', function () {
                         }
                     ]
                 },
-                secretResolvers: {
-                    // Only have resolver for 'postman', not 'azure'
-                    postman: {
-                        id: 'postman-resolver',
-                        name: 'Postman Resolver',
-                        resolver: function () {
-                            return Promise.resolve('should-not-be-called');
-                        }
-                    }
+                secretResolver: function ({ secrets }, callback) {
+                    // No resolver for azure; do not mutate
+                    var result = secrets.map(function () { return { resolvedValue: undefined }; });
+
+                    callback(null, result);
                 }
             }, function (err, results) {
                 testrun = results;
