@@ -1,6 +1,6 @@
 unreleased:
   new features:
-    - Add support for async secret resolution
+    - Add support for secret variable resolution
 
 7.51.1:
   date: 2026-01-27
