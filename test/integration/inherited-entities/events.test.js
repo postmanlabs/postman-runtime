@@ -429,7 +429,7 @@ describe('Events', function () {
     });
 
     describe('secret resolution with events', function () {
-        describe('safe secret accessible in collection-level prerequest', function () {
+        describe('secret allowed in script should be accessible in collection-level prerequest', function () {
             before(function (done) {
                 var runOptions = {
                     collection: {
@@ -451,12 +451,12 @@ describe('Events', function () {
                             key: 'apiKey',
                             value: '',
                             secret: true,
-                            source: { provider: 'postman', postman: { type: 'local', secretId: 'safe-secret' } }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: 'allowed-secret' } }
                         }]
                     },
                     secretResolver: function ({ secrets }, callback) {
                         callback(null, secrets.map(function () {
-                            return { resolvedValue: 'safe-secret-value', safe: true };
+                            return { resolvedValue: 'allowed-secret-value', allowedInScript: true };
                         }));
                     }
                 };
@@ -472,21 +472,21 @@ describe('Events', function () {
                 expect(testRun.done.getCall(0).args[0]).to.be.null;
             });
 
-            it('should expose safe secret to collection-level prerequest script', function () {
+            it('should expose allowed secret to collection-level prerequest script', function () {
                 var scriptResult = testRun.script.getCall(0).args[2];
 
                 expect(testRun.script.called).to.be.true;
-                expect(scriptResult.environment.get('scriptSawSecret')).to.equal('safe-secret-value');
+                expect(scriptResult.environment.get('scriptSawSecret')).to.equal('allowed-secret-value');
             });
 
             it('should use resolved value in request URL', function () {
                 var request = testRun.request.getCall(0).args[3];
 
-                expect(request.url.toString()).to.include('apiKey=safe-secret-value');
+                expect(request.url.toString()).to.include('apiKey=allowed-secret-value');
             });
         });
 
-        describe('safe secret accessible in collection-level test script', function () {
+        describe('secret allowed in script should be accessible in collection-level test script', function () {
             before(function (done) {
                 var runOptions = {
                     collection: {
@@ -514,12 +514,12 @@ describe('Events', function () {
                             key: 'apiKey',
                             value: '',
                             secret: true,
-                            source: { provider: 'postman', postman: { type: 'local', secretId: 'safe-secret' } }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: 'allowed-secret' } }
                         }]
                     },
                     secretResolver: function ({ secrets }, callback) {
                         callback(null, secrets.map(function () {
-                            return { resolvedValue: 'safe-secret-value', safe: true };
+                            return { resolvedValue: 'allowed-secret-value', allowedInScript: true };
                         }));
                     }
                 };
@@ -535,86 +535,87 @@ describe('Events', function () {
                 expect(testRun.done.getCall(0).args[0]).to.be.null;
             });
 
-            it('should expose safe secret to collection-level test script', function () {
+            it('should expose allowed secret to collection-level test script', function () {
                 var testResult = testRun.script.getCall(1).args[2];
 
                 expect(testRun.script.callCount).to.equal(2);
-                expect(testResult.environment.get('testSawSecret')).to.equal('safe-secret-value');
+                expect(testResult.environment.get('testSawSecret')).to.equal('allowed-secret-value');
             });
         });
 
-        describe('safe secret accessible in collection and request-level test scripts', function () {
-            before(function (done) {
-                var runOptions = {
-                    collection: {
-                        event: [
-                            {
-                                listen: 'prerequest',
-                                script: { exec: 'console.log("coll prerequest");' }
-                            },
-                            {
-                                listen: 'test',
-                                script: {
-                                    exec: [
-                                        'var v = pm.environment.get("apiKey");',
-                                        'pm.environment.set("collTestSawSecret", v || "undefined");'
-                                    ]
+        describe('secret allowed in script should be accessible in collection and request-level test scripts',
+            function () {
+                before(function (done) {
+                    var runOptions = {
+                        collection: {
+                            event: [
+                                {
+                                    listen: 'prerequest',
+                                    script: { exec: 'console.log("coll prerequest");' }
+                                },
+                                {
+                                    listen: 'test',
+                                    script: {
+                                        exec: [
+                                            'var v = pm.environment.get("apiKey");',
+                                            'pm.environment.set("collTestSawSecret", v || "undefined");'
+                                        ]
+                                    }
                                 }
+                            ],
+                            item: {
+                                event: [{
+                                    listen: 'test',
+                                    script: {
+                                        exec: [
+                                            'var v = pm.environment.get("apiKey");',
+                                            'pm.environment.set("reqTestSawSecret", v || "undefined");'
+                                        ]
+                                    }
+                                }],
+                                request: global.servers.http + '?apiKey={{apiKey}}'
                             }
-                        ],
-                        item: {
-                            event: [{
-                                listen: 'test',
-                                script: {
-                                    exec: [
-                                        'var v = pm.environment.get("apiKey");',
-                                        'pm.environment.set("reqTestSawSecret", v || "undefined");'
-                                    ]
-                                }
-                            }],
-                            request: global.servers.http + '?apiKey={{apiKey}}'
+                        },
+                        environment: {
+                            values: [{
+                                key: 'apiKey',
+                                value: '',
+                                secret: true,
+                                source: { provider: 'postman', postman: { type: 'local', secretId: 'allowed-secret' } }
+                            }]
+                        },
+                        secretResolver: function ({ secrets }, callback) {
+                            callback(null, secrets.map(function () {
+                                return { resolvedValue: 'allowed-secret-value', allowedInScript: true };
+                            }));
                         }
-                    },
-                    environment: {
-                        values: [{
-                            key: 'apiKey',
-                            value: '',
-                            secret: true,
-                            source: { provider: 'postman', postman: { type: 'local', secretId: 'safe-secret' } }
-                        }]
-                    },
-                    secretResolver: function ({ secrets }, callback) {
-                        callback(null, secrets.map(function () {
-                            return { resolvedValue: 'safe-secret-value', safe: true };
-                        }));
-                    }
-                };
+                    };
 
-                this.run(runOptions, function (err, results) {
-                    testRun = results;
-                    done(err);
+                    this.run(runOptions, function (err, results) {
+                        testRun = results;
+                        done(err);
+                    });
+                });
+
+                it('should have completed the run', function () {
+                    expect(testRun).to.be.ok;
+                    expect(testRun.done.getCall(0).args[0]).to.be.null;
+                });
+
+                it('should expose allowed secret to collection-level test script', function () {
+                    var collTestResult = testRun.script.getCall(1).args[2];
+
+                    expect(collTestResult.environment.get('collTestSawSecret')).to.equal('allowed-secret-value');
+                });
+
+                it('should expose allowed secret to request-level test script', function () {
+                    var reqTestResult = testRun.script.getCall(2).args[2];
+
+                    expect(reqTestResult.environment.get('reqTestSawSecret')).to.equal('allowed-secret-value');
                 });
             });
 
-            it('should have completed the run', function () {
-                expect(testRun).to.be.ok;
-                expect(testRun.done.getCall(0).args[0]).to.be.null;
-            });
-
-            it('should expose safe secret to collection-level test script', function () {
-                var collTestResult = testRun.script.getCall(1).args[2];
-
-                expect(collTestResult.environment.get('collTestSawSecret')).to.equal('safe-secret-value');
-            });
-
-            it('should expose safe secret to request-level test script', function () {
-                var reqTestResult = testRun.script.getCall(2).args[2];
-
-                expect(reqTestResult.environment.get('reqTestSawSecret')).to.equal('safe-secret-value');
-            });
-        });
-
-        describe('unsafe secret masked in collection-level prerequest and test', function () {
+        describe('secret not allowed in script should be masked in collection-level prerequest and test', function () {
             before(function (done) {
                 var runOptions = {
                     collection: {
@@ -647,12 +648,12 @@ describe('Events', function () {
                             key: 'apiKey',
                             value: '',
                             secret: true,
-                            source: { provider: 'postman', postman: { type: 'local', secretId: 'unsafe-secret' } }
+                            source: { provider: 'postman', postman: { type: 'local', secretId: 'forbidden-secret' } }
                         }]
                     },
                     secretResolver: function ({ secrets }, callback) {
                         callback(null, secrets.map(function () {
-                            return { resolvedValue: 'unsafe-secret-value', safe: false };
+                            return { resolvedValue: 'forbidden-secret-value', allowedInScript: false };
                         }));
                     }
                 };
@@ -668,13 +669,13 @@ describe('Events', function () {
                 expect(testRun.done.getCall(0).args[0]).to.be.null;
             });
 
-            it('should mask unsafe secret from collection-level prerequest script', function () {
+            it('should mask secrets not allowed in script from collection-level prerequest script', function () {
                 var prereqResult = testRun.script.getCall(0).args[2];
 
                 expect(prereqResult.environment.get('preReqSawSecret')).to.equal('masked');
             });
 
-            it('should mask unsafe secret from collection-level test script', function () {
+            it('should mask secrets not allowed in script from collection-level test script', function () {
                 var testResult = testRun.script.getCall(1).args[2];
 
                 expect(testResult.environment.get('testSawSecret')).to.equal('masked');
@@ -683,74 +684,79 @@ describe('Events', function () {
             it('should still use resolved value for request URL substitution', function () {
                 var request = testRun.request.getCall(0).args[3];
 
-                expect(request.url.toString()).to.include('apiKey=unsafe-secret-value');
+                expect(request.url.toString()).to.include('apiKey=forbidden-secret-value');
             });
         });
 
-        describe('unsafe secret masked in request-level event (inherited from collection)', function () {
-            before(function (done) {
-                var runOptions = {
-                    collection: {
-                        event: [{
-                            listen: 'prerequest',
-                            script: {
-                                exec: [
-                                    'var v = pm.environment.get("apiKey");',
-                                    'pm.environment.set("collPreReqSawSecret", v === undefined ? "masked" : "leaked");'
-                                ]
-                            }
-                        }],
-                        item: {
+        describe('secrets not allowed in script should be masked in request-level event (inherited from collection)',
+            function () {
+                before(function (done) {
+                    var runOptions = {
+                        collection: {
                             event: [{
                                 listen: 'prerequest',
                                 script: {
                                     exec: [
                                         'var v = pm.environment.get("apiKey");',
-                                        'var m = v === undefined ? "masked" : "leaked";',
-                                        'pm.environment.set("reqPreReqSawSecret", m);'
+                                        'pm.environment.set("collPreReqSawSecret",' +
+                                        ' v === undefined ? "masked" : "leaked");'
                                     ]
                                 }
                             }],
-                            request: global.servers.http + '?apiKey={{apiKey}}'
+                            item: {
+                                event: [{
+                                    listen: 'prerequest',
+                                    script: {
+                                        exec: [
+                                            'var v = pm.environment.get("apiKey");',
+                                            'var m = v === undefined ? "masked" : "leaked";',
+                                            'pm.environment.set("reqPreReqSawSecret", m);'
+                                        ]
+                                    }
+                                }],
+                                request: global.servers.http + '?apiKey={{apiKey}}'
+                            }
+                        },
+                        environment: {
+                            values: [{
+                                key: 'apiKey',
+                                value: '',
+                                secret: true,
+                                source: {
+                                    provider: 'postman',
+                                    postman: { type: 'local', secretId: 'forbidden-secret' }
+                                }
+                            }]
+                        },
+                        secretResolver: function ({ secrets }, callback) {
+                            callback(null, secrets.map(function () {
+                                return { resolvedValue: 'forbidden-secret-value', allowedInScript: false };
+                            }));
                         }
-                    },
-                    environment: {
-                        values: [{
-                            key: 'apiKey',
-                            value: '',
-                            secret: true,
-                            source: { provider: 'postman', postman: { type: 'local', secretId: 'unsafe-secret' } }
-                        }]
-                    },
-                    secretResolver: function ({ secrets }, callback) {
-                        callback(null, secrets.map(function () {
-                            return { resolvedValue: 'unsafe-secret-value', safe: false };
-                        }));
-                    }
-                };
+                    };
 
-                this.run(runOptions, function (err, results) {
-                    testRun = results;
-                    done(err);
+                    this.run(runOptions, function (err, results) {
+                        testRun = results;
+                        done(err);
+                    });
+                });
+
+                it('should have completed the run', function () {
+                    expect(testRun).to.be.ok;
+                    expect(testRun.done.getCall(0).args[0]).to.be.null;
+                });
+
+                it('should mask secrets not allowed in script in collection-level prerequest', function () {
+                    var collResult = testRun.script.getCall(0).args[2];
+
+                    expect(collResult.environment.get('collPreReqSawSecret')).to.equal('masked');
+                });
+
+                it('should mask secrets not allowed in script in request-level prerequest', function () {
+                    var reqResult = testRun.script.getCall(1).args[2];
+
+                    expect(reqResult.environment.get('reqPreReqSawSecret')).to.equal('masked');
                 });
             });
-
-            it('should have completed the run', function () {
-                expect(testRun).to.be.ok;
-                expect(testRun.done.getCall(0).args[0]).to.be.null;
-            });
-
-            it('should mask unsafe secret in collection-level prerequest', function () {
-                var collResult = testRun.script.getCall(0).args[2];
-
-                expect(collResult.environment.get('collPreReqSawSecret')).to.equal('masked');
-            });
-
-            it('should mask unsafe secret in request-level prerequest', function () {
-                var reqResult = testRun.script.getCall(1).args[2];
-
-                expect(reqResult.environment.get('reqPreReqSawSecret')).to.equal('masked');
-            });
-        });
     });
 });
