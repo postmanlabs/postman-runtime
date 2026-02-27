@@ -1,3 +1,8 @@
+7.52.0:
+  date: 2026-02-27
+  new features:
+    - Add support for secret variable resolution
+
 7.51.1:
   date: 2026-01-27
   chores:

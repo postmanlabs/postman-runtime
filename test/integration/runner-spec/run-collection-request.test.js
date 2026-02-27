@@ -773,7 +773,7 @@ describe('pm.execution.runRequest handling', function () {
                             expect(result.vaultSecrets.get('secretKey')).to.eql('secretValue');
                             expect(result.vaultSecrets.mutations).to.be.ok;
                             expect(result.vaultSecrets.mutations.compacted)
-                                .to.deep.include({ secretKey: ['secretKey', 'secretValue'] });
+                                .to.deep.include({ secretKey: ['secretKey', 'secretValue', {}] });
                         }
                     },
                     assertion (_cursor, assertions) {
