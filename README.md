@@ -54,6 +54,17 @@ runner.run(collection, {
     // Local variables (a "VariableScope" from the SDK)
     localVariables: new sdk.VariableScope(),
 
+    // Function to resolve secret variables (variables with secret: true) before request execution.
+    // Receives { secrets, url }; url is request URL without query params. Callback(err, result).
+    // On fatal error: callback(err) — execution stops. On success: callback(null, result) where result
+    // is Array<{ resolvedValue?, error?, allowedInScript? }>; result[i] maps to secrets[i].
+    // allowedInScript: true exposes value to scripts; false/undefined masks it from pm.environment/pm.variables.
+    secretResolver: function ({ secrets, url }, callback) {
+        callback(null, secrets.map(function (s) {
+            return { resolvedValue: 'resolved-string', error: undefined, allowedInScript: true };
+        }));
+    },
+
     // Execute a folder/request using id/name or path
     entrypoint: {
         // execute a folder/request using id or name
