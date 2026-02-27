@@ -736,4 +736,204 @@ describe('secret resolution', function () {
             expect(request.url.toString()).to.include('secret=placeholder-value');
         });
     });
+
+    describe('secretResolver receives resolved URL string', function () {
+        var testrun,
+            receivedUrlString;
+
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: [{
+                        request: {
+                            url: global.servers.http +
+                                '?tag={{tagName}}&apiKey={{apiKey}}'
+                        }
+                    }]
+                },
+                environment: {
+                    values: [
+                        {
+                            key: 'tagName',
+                            value: 'resolved-tag'
+                        },
+                        {
+                            key: 'apiKey',
+                            value: '',
+                            secret: true,
+                            source: {
+                                provider: 'postman',
+                                postman: {
+                                    type: 'local',
+                                    secretId: 'key-1'
+                                }
+                            }
+                        }
+                    ]
+                },
+                secretResolver: function ({ secrets, urlString }, callback) {
+                    receivedUrlString = urlString;
+                    callback(null, secrets.map(function () {
+                        return { resolvedValue: 'resolved-key' };
+                    }));
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+        });
+
+        it('should pass resolved URL (not template) to secretResolver', function () {
+            expect(receivedUrlString).to.be.a('string');
+            expect(receivedUrlString).to.not.include('{{tagName}}');
+            expect(receivedUrlString).to.include('resolved-tag');
+        });
+    });
+
+    describe('2nd secretResolver call after prerequest script changes URL', function () {
+        var testrun,
+            resolverCalls = [];
+
+        before(function (done) {
+            resolverCalls = [];
+
+            this.run({
+                collection: {
+                    event: [{
+                        listen: 'prerequest',
+                        script: {
+                            exec: [
+                                'var url = pm.request.url.toString();',
+                                'url = url.replace("original-host.com",' +
+                                    ' "changed-host.com");',
+                                'pm.request.url = url;'
+                            ]
+                        }
+                    }],
+                    item: [{
+                        request: {
+                            url: 'https://original-host.com/api' +
+                                '?key={{apiKey}}'
+                        }
+                    }]
+                },
+                environment: {
+                    values: [{
+                        key: 'apiKey',
+                        value: '',
+                        secret: true,
+                        source: {
+                            provider: 'postman',
+                            postman: {
+                                type: 'local',
+                                secretId: 'key-1'
+                            }
+                        }
+                    }]
+                },
+                secretResolver: function ({ secrets, urlString }, callback) {
+                    resolverCalls.push({ urlString });
+                    callback(null, secrets.map(function () {
+                        return { resolvedValue: 'resolved-key' };
+                    }));
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+        });
+
+        it('should call secretResolver twice when URL changes', function () {
+            expect(resolverCalls).to.have.lengthOf(2);
+        });
+
+        it('should pass original URL in 1st call', function () {
+            expect(resolverCalls[0].urlString)
+                .to.include('original-host.com');
+        });
+
+        it('should pass changed URL in 2nd call', function () {
+            expect(resolverCalls[1].urlString)
+                .to.include('changed-host.com');
+        });
+    });
+
+    describe('2nd secretResolver call is skipped when URL does not change', function () {
+        var testrun,
+            resolverCallCount = 0;
+
+        before(function (done) {
+            resolverCallCount = 0;
+
+            this.run({
+                collection: {
+                    event: [{
+                        listen: 'prerequest',
+                        script: {
+                            exec: [
+                                'pm.environment.set("marker", "done");'
+                            ]
+                        }
+                    }],
+                    item: [{
+                        request: {
+                            url: global.servers.http +
+                                '?key={{apiKey}}'
+                        }
+                    }]
+                },
+                environment: {
+                    values: [{
+                        key: 'apiKey',
+                        value: '',
+                        secret: true,
+                        source: {
+                            provider: 'postman',
+                            postman: {
+                                type: 'local',
+                                secretId: 'key-1'
+                            }
+                        }
+                    }]
+                },
+                secretResolver: function ({ secrets }, callback) {
+                    resolverCallCount++;
+                    callback(null, secrets.map(function () {
+                        return { resolvedValue: 'resolved-key' };
+                    }));
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should complete the run', function () {
+            expect(testrun).to.be.ok;
+            sinon.assert.calledOnce(testrun.done);
+            sinon.assert.calledWith(testrun.done.getCall(0), null);
+        });
+
+        it('should call secretResolver only once when URL unchanged', function () {
+            expect(resolverCallCount).to.equal(1);
+        });
+
+        it('should still resolve the secret correctly', function () {
+            var request = testrun.request.getCall(0).args[3];
+
+            expect(request.url.toString()).to.include('key=resolved-key');
+        });
+    });
 });
