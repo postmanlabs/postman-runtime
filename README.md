@@ -331,7 +331,7 @@ runner.run(collection, { /* options */ }, function(err, run) {
 
             // visualizer: null or object containing visualizer result that looks like this:
             //  {
-            //      -- Tmeplate processing error
+            //      -- Template processing error
             //      error: <Error>
             //
             //      -- Data used for template processing
