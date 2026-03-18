@@ -514,7 +514,7 @@ describe('pm.execution.runRequest handling', function () {
             });
     });
 
-    it('should handle number of requests limitation set by opts.maxInvokableNestedRequests', function (done) {
+    it('should allow sequential requests even if nesting limit is passed', function (done) {
         const collection = new sdk.Collection({
             item: [{
                 event: [{
@@ -524,6 +524,9 @@ describe('pm.execution.runRequest handling', function () {
                             await pm.execution.runRequest('nested-request-id');
                             await pm.execution.runRequest('nested-request-id');
                             await pm.execution.runRequest('nested-request-id');
+                            pm.test('max nested requests not enforced for sequential calls', function () {
+                                pm.expect(true).to.be.true;
+                            });
                         `
                     }
                 }],
@@ -553,13 +556,92 @@ describe('pm.execution.runRequest handling', function () {
                 maxInvokableNestedRequests: 2
             },
             function (_err, run) {
+                let exceptionEncountered;
+
                 run.start({
+                    assertion (_cursor, assertionOutcomes) {
+                        const reqAssertions = assertionOutcomes
+                            .filter(function (outcome) {
+                                return outcome.name === 'max nested requests not enforced for sequential calls';
+                            });
+
+                        reqAssertions.forEach(function (assertion) {
+                            expect(assertion.passed).to.be.true;
+                        });
+                    },
                     exception (_cursor, err) {
-                        expect(err.message).to.eql('The maximum number of pm.execution.runRequest()' +
-                            ' calls have been reached for this request.');
+                        exceptionEncountered = err;
                     },
                     done (err) {
-                        done(err);
+                        done(err || exceptionEncountered);
+                    }
+                });
+            });
+    });
+
+    it('should enforce nesting depth limit for nested requests', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                id: 'root-request-id',
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: `
+                            await pm.execution.runRequest('nested-request-1');
+                        `
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-1',
+                                event: [{
+                                    listen: 'prerequest',
+                                    script: {
+                                        exec: `
+                                            await pm.execution.runRequest('nested-request-2');
+                                        `
+                                    }
+                                }],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            },
+                            event: []
+                        });
+                    }
+                },
+                maxInvokableNestedRequests: 1
+            },
+            function (_err, run) {
+                let exceptionEncountered;
+
+                run.start({
+                    exception (_cursor, err) {
+                        exceptionEncountered = err;
+                    },
+                    done (err) {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const expectedErrorMessage = 'Max pm.execution.runRequest depth of 1 has been reached.';
+
+                        expect(exceptionEncountered).to.be.ok;
+                        expect(exceptionEncountered.message).to.eql(expectedErrorMessage);
+
+                        done();
                     }
                 });
             });
