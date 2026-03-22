@@ -647,6 +647,159 @@ describe('pm.execution.runRequest handling', function () {
             });
     });
 
+    it('should cap recursive self runRequest calls to avoid infinite loops', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: `
+                            await pm.execution.runRequest('nested-request-self');
+                        `
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
+                        callback(null, {
+                            item: {
+                                id: 'nested-request-self',
+                                event: [{
+                                    listen: 'prerequest',
+                                    script: {
+                                        exec: `
+                                            await pm.execution.runRequest('nested-request-self');
+                                        `
+                                    }
+                                }],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            },
+                            event: []
+                        });
+                    }
+                },
+                maxInvokableNestedRequests: 1
+            },
+            function (_err, run) {
+                let exceptions = [];
+
+                run.start({
+                    exception (_cursor, err) {
+                        exceptions.push(err);
+                    },
+                    done (err) {
+                        if (err) { return done(err); }
+
+                        expect(exceptions.length).to.be.greaterThan(0);
+                        exceptions.forEach(function (exception) {
+                            expect(exception && exception.message)
+                                .to.include('Max pm.execution.runRequest depth');
+                        });
+
+                        done();
+                    }
+                });
+            });
+    });
+
+    it('should cap cyclic runRequest calls to avoid infinite loops', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: `
+                            await pm.execution.runRequest('nested-request-1');
+                        `
+                    }
+                }],
+                request: {
+                    url: 'https://postman-echo.com/get',
+                    method: 'GET'
+                }
+            }]
+        });
+
+        let exceptions = [];
+
+        new collectionRunner().run(collection,
+            {
+                script: {
+                    requestResolver (_requestId, _nestedRequestContext, callback) {
+                        if (_requestId === 'nested-request-1') {
+                            return callback(null, {
+                                item: {
+                                    id: 'nested-request-1',
+                                    event: [{
+                                        listen: 'prerequest',
+                                        script: {
+                                            exec: `
+                                                await pm.execution.runRequest('nested-request-2');
+                                            `
+                                        }
+                                    }],
+                                    request: {
+                                        url: 'https://postman-echo.com/post',
+                                        method: 'POST'
+                                    }
+                                },
+                                event: []
+                            });
+                        }
+
+                        return callback(null, {
+                            item: {
+                                id: 'nested-request-2',
+                                event: [{
+                                    listen: 'prerequest',
+                                    script: {
+                                        exec: `
+                                            await pm.execution.runRequest('nested-request-1');
+                                        `
+                                    }
+                                }],
+                                request: {
+                                    url: 'https://postman-echo.com/post',
+                                    method: 'POST'
+                                }
+                            },
+                            event: []
+                        });
+                    }
+                },
+                maxInvokableNestedRequests: 2
+            },
+            function (_err, run) {
+                run.start({
+                    exception (_cursor, err) {
+                        exceptions.push(err);
+                    },
+                    done (err) {
+                        if (err) { return done(err); }
+
+                        expect(exceptions.length).to.be.greaterThan(0);
+                        exceptions.forEach(function (exception) {
+                            expect(exception && exception.message)
+                                .to.include('Max pm.execution.runRequest depth');
+                        });
+
+                        done();
+                    }
+                });
+            });
+    });
+
     it('should correctly handle iterationData passed', function (done) {
         const collection = new sdk.Collection({
             item: [{
