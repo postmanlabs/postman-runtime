@@ -1,7 +1,7 @@
-unreleased:
+7.53.0:
+  date: 2026-03-28
   new features:
-    - >-
-      GH-1544 Remove sequential execution limit for pm.execution.runRequest
+    - GH-1544 Remove sequential execution limit for pm.execution.runRequest
   chores:
     - Updated dependencies
 
