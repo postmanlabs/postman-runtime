@@ -1,3 +1,9 @@
+unreleased:
+  new features:
+    - GH-1546 Add support for pm.datasets in scripts
+  chores:
+    - Updated dependencies
+
 7.53.0:
   date: 2026-03-28
   new features:
