@@ -21,7 +21,13 @@ describe('datasets', function () {
                             script: {
                                 exec: `
                                     const result = await pm.datasets('ds-123').executeQuery('SELECT * FROM users');
-                                    console.log(JSON.stringify(result));
+                                    const rows = [];
+
+                                    for await (const row of result.rows) {
+                                        rows.push(row);
+                                    }
+
+                                    console.log(JSON.stringify({ columns: result.columns, rows: rows }));
                                 `
                             }
                         }],
@@ -59,15 +65,21 @@ describe('datasets', function () {
         it('should have received the result in the script', function () {
             var consoleArgs = testrun.console.getCall(0).args.slice(2);
 
-            expect(JSON.parse(consoleArgs[0])).to.deep.equal({ rows: [{ id: 1, name: 'Alice' }] });
+            expect(JSON.parse(consoleArgs[0])).to.deep.equal({
+                columns: [],
+                rows: [{ id: 1, name: 'Alice' }]
+            });
         });
     });
 
-    describe('should be able to call pm.datasets(id).addView via datasetsResolver', function () {
+    describe('should be able to call pm.datasets(id).executeView via datasetsResolver', function () {
         var testrun,
             datasetsResolverStub = sinon.stub().callsFake(function (cmd, datasetId, args, callback) {
-                if (cmd === 'addView' && datasetId === 'ds-456') {
-                    return callback(null, { id: 'view-1', name: args[0].name, query: args[0].sql });
+                if (cmd === 'executeView' && datasetId === 'ds-456') {
+                    return callback(null, {
+                        columns: ['id', 'status'],
+                        rows: [{ id: 1, status: args[1][0] }]
+                    });
                 }
 
                 callback(new Error('unexpected call'));
@@ -82,8 +94,14 @@ describe('datasets', function () {
                             script: {
                                 exec: `
                                     const result = await pm.datasets('ds-456')
-                                        .addView({ name: 'myView', sql: 'SELECT 1' });
-                                    console.log(JSON.stringify(result));
+                                        .executeView('active-users', ['active']);
+                                    const rows = [];
+
+                                    for await (const row of result.rows) {
+                                        rows.push(row);
+                                    }
+
+                                    console.log(JSON.stringify({ columns: result.columns, rows: rows }));
                                 `
                             }
                         }],
@@ -109,15 +127,18 @@ describe('datasets', function () {
 
             var call = datasetsResolverStub.getCall(0);
 
-            expect(call.args[0]).to.equal('addView');
+            expect(call.args[0]).to.equal('executeView');
             expect(call.args[1]).to.equal('ds-456');
-            expect(call.args[2][0]).to.deep.equal({ name: 'myView', sql: 'SELECT 1' });
+            expect(call.args[2]).to.deep.equal(['active-users', ['active']]);
         });
 
         it('should have received the result in the script', function () {
             var consoleArgs = testrun.console.getCall(0).args.slice(2);
 
-            expect(JSON.parse(consoleArgs[0])).to.deep.equal({ id: 'view-1', name: 'myView', query: 'SELECT 1' });
+            expect(JSON.parse(consoleArgs[0])).to.deep.equal({
+                columns: ['id', 'status'],
+                rows: [{ id: 1, status: 'active' }]
+            });
         });
     });
 
