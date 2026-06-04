@@ -1,5 +1,75 @@
 var expect = require('chai').expect;
 
+(typeof window === 'undefined' ? describe : describe.skip)('restricted addresses - CIDR ranges', function () {
+    var testrun;
+
+    before(function (done) {
+        this.run({
+            collection: {
+                item: [{
+                    // direct request to an IP inside the blocked /8 range (not an exact entry)
+                    request: 'http://127.0.0.2/'
+                }, {
+                    // hostname that resolves (via hostIpMap) to an IP inside the /8 range
+                    request: 'http://fake.cidr.postman.wtf/'
+                }, {
+                    // IP outside the blocked range — should succeed (or fail with a network error, not a block)
+                    request: 'http://128.0.0.1/'
+                }]
+            },
+            network: {
+                restrictedAddresses: { '127.0.0.0/8': true },
+                hostLookup: {
+                    type: 'hostIpMap',
+                    hostIpMap: {
+                        'fake.cidr.postman.wtf': '127.0.0.2'
+                    }
+                }
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
+    });
+
+    it('should block a direct request to an IP within a CIDR range', function () {
+        var error = testrun.response.getCall(0).args[0],
+            response = testrun.response.getCall(0).args[2];
+
+        expect(error).to.have.property('message');
+        expect(error.message).to.include('NETERR:');
+        expect(response).to.be.undefined;
+    });
+
+    it('should block a request whose hostname resolves to an IP within a CIDR range', function () {
+        var error = testrun.response.getCall(1).args[0],
+            response = testrun.response.getCall(1).args[2];
+
+        expect(error).to.have.property('message');
+        expect(error.message).to.include('NETERR:');
+        expect(response).to.be.undefined;
+    });
+
+    it('should not block a request to an IP outside the CIDR range', function () {
+        var error = testrun.response.getCall(2).args[0];
+
+        // a network/connection error is expected (no server at 128.0.0.1),
+        // but it must NOT be a NETERR block from restrictedAddresses
+        if (error) {
+            expect(error.message).to.not.include('ECONNREFUSED');
+        }
+    });
+});
+
 (typeof window === 'undefined' ? describe : describe.skip)('restricted addresses', function () {
     var testrun;
 

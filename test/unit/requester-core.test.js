@@ -962,4 +962,113 @@ describe('requester util', function () {
             expect(obj).to.eql({ a: ['b', 'e'], c: 'd' });
         });
     });
+
+    describe('.isAddressRestricted', function () {
+        describe('exact match (existing behaviour)', function () {
+            it('should return true for an exactly listed IPv4 address', function () {
+                expect(requesterCore.isAddressRestricted('169.254.169.254', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.true;
+            });
+
+            it('should return false for an IP not in the list', function () {
+                expect(requesterCore.isAddressRestricted('1.2.3.4', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.false;
+            });
+
+            it('should return false when restrictedAddresses is empty', function () {
+                expect(requesterCore.isAddressRestricted('127.0.0.1', {
+                    restrictedAddresses: {}
+                })).to.be.false;
+            });
+
+            it('should return false when host is falsy', function () {
+                expect(requesterCore.isAddressRestricted(null, {
+                    restrictedAddresses: { '127.0.0.1': true }
+                })).to.be.false;
+            });
+        });
+
+        describe('CIDR range matching', function () {
+            var ipv4CidrOpts;
+
+            before(function () {
+                var ipaddr = require('ipaddr.js');
+
+                ipv4CidrOpts = {
+                    restrictedAddresses: { '127.0.0.0/8': true },
+                    restrictedCidrs: [ipaddr.parseCIDR('127.0.0.0/8')]
+                };
+            });
+
+            it('should block the first IP in an IPv4 CIDR range', function () {
+                expect(requesterCore.isAddressRestricted('127.0.0.0', ipv4CidrOpts)).to.be.true;
+            });
+
+            it('should block an IP in the middle of an IPv4 CIDR range', function () {
+                expect(requesterCore.isAddressRestricted('127.1.2.3', ipv4CidrOpts)).to.be.true;
+            });
+
+            it('should block the last IP in an IPv4 CIDR range', function () {
+                expect(requesterCore.isAddressRestricted('127.255.255.255', ipv4CidrOpts)).to.be.true;
+            });
+
+            it('should not block an IP just outside an IPv4 CIDR range', function () {
+                expect(requesterCore.isAddressRestricted('128.0.0.0', ipv4CidrOpts)).to.be.false;
+            });
+
+            it('should block an IPv6 address matching an exact /128 CIDR', function () {
+                var ipaddr = require('ipaddr.js'),
+                    opts = {
+                        restrictedAddresses: { '::1/128': true },
+                        restrictedCidrs: [ipaddr.parseCIDR('::1/128')]
+                    };
+
+                expect(requesterCore.isAddressRestricted('::1', opts)).to.be.true;
+            });
+
+            it('should block an IPv6 address within a /7 CIDR range', function () {
+                var ipaddr = require('ipaddr.js'),
+                    opts = {
+                        restrictedAddresses: { 'fc00::/7': true },
+                        restrictedCidrs: [ipaddr.parseCIDR('fc00::/7')]
+                    };
+
+                expect(requesterCore.isAddressRestricted('fc00::1', opts)).to.be.true;
+            });
+
+            it('should not block an IPv6 address outside a CIDR range', function () {
+                var ipaddr = require('ipaddr.js'),
+                    opts = {
+                        restrictedAddresses: { '::1/128': true },
+                        restrictedCidrs: [ipaddr.parseCIDR('::1/128')]
+                    };
+
+                expect(requesterCore.isAddressRestricted('::2', opts)).to.be.false;
+            });
+
+            it('should not throw for a hostname string passed through the CIDR path', function () {
+                var ipaddr = require('ipaddr.js'),
+                    opts = {
+                        restrictedAddresses: {},
+                        restrictedCidrs: [ipaddr.parseCIDR('127.0.0.0/8')]
+                    };
+
+                expect(requesterCore.isAddressRestricted('postman-echo.com', opts)).to.be.false;
+            });
+
+            it('should honour exact-match entries alongside CIDR entries', function () {
+                var ipaddr = require('ipaddr.js'),
+                    opts = {
+                        restrictedAddresses: { '169.254.169.254': true, '10.0.0.0/8': true },
+                        restrictedCidrs: [ipaddr.parseCIDR('10.0.0.0/8')]
+                    };
+
+                expect(requesterCore.isAddressRestricted('169.254.169.254', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('10.10.10.10', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('192.168.1.1', opts)).to.be.false;
+            });
+        });
+    });
 });
