@@ -1,5 +1,61 @@
 var expect = require('chai').expect;
 
+(typeof window === 'undefined' ? describe : describe.skip)('restricted addresses - redirect to raw IP', function () {
+    var testrun;
+
+    before(function (done) {
+        // global.servers.http has a /redirect-to?url=<target> endpoint that issues a 301
+        var redirectServer = global.servers.http;
+
+        this.run({
+            collection: {
+                item: [{
+                    // server 301s to a restricted raw IP — bindOn.redirect should block it
+                    request: redirectServer + '/redirect-to?url=http://127.0.0.2/'
+                }, {
+                    // server 301s to an unrestricted raw IP — should not be blocked
+                    request: redirectServer + '/redirect-to?url=http://127.0.0.3/'
+                }]
+            },
+            network: {
+                restrictedAddresses: { '127.0.0.2': true }
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
+    });
+
+    it('should block a redirect to a restricted raw IP address', function () {
+        var error = testrun.response.getCall(0).args[0],
+            response = testrun.response.getCall(0).args[2];
+
+        expect(error).to.have.property('message');
+        expect(error.message).to.include('NETERR:');
+        expect(error.message).to.include('127.0.0.2');
+        expect(response).to.be.undefined;
+    });
+
+    it('should not block a redirect to an unrestricted raw IP address', function () {
+        var error = testrun.response.getCall(1).args[0];
+
+        // a connection error is expected (no server at 127.0.0.3)
+        // but it must NOT be a restrictedAddresses block
+        if (error) {
+            expect(error.message).to.not.include('NETERR:');
+        }
+    });
+});
+
 (typeof window === 'undefined' ? describe : describe.skip)('restricted addresses - CIDR ranges', function () {
     var testrun;
 

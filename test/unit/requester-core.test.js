@@ -963,6 +963,115 @@ describe('requester util', function () {
         });
     });
 
+    describe('.getRequestOptions - redirect listener', function () {
+        it('should attach a bindOn.redirect listener when restrictedAddresses is set', function () {
+            var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                options = {
+                    network: {
+                        restrictedAddresses: { '127.0.0.1': true }
+                    }
+                },
+                reqOptions = requesterCore.getRequestOptions(request, options);
+
+            expect(reqOptions.bindOn).to.be.an('object');
+            expect(reqOptions.bindOn.redirect).to.be.an('array').with.lengthOf(1);
+            expect(reqOptions.bindOn.redirect[0]).to.be.a('function');
+        });
+
+        it('should not attach bindOn when restrictedAddresses is absent', function () {
+            var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                reqOptions = requesterCore.getRequestOptions(request, {});
+
+            expect(reqOptions).to.not.have.nested.property('bindOn.redirect');
+        });
+
+        it('bindOn.redirect should abort and emit error for a restricted raw IP', function () {
+            var ipaddr = require('ipaddr.js'),
+                request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                networkOpts = {
+                    restrictedAddresses: { '127.0.0.2': true },
+                    restrictedCidrs: []
+                },
+                reqOptions = requesterCore.getRequestOptions(request, { network: networkOpts }),
+                aborted = false,
+                emittedError = null,
+                fakeRequest = {
+                    uri: { hostname: '127.0.0.2' },
+                    abort: function () { aborted = true; },
+                    emit: function (evt, err) { if (evt === 'error') { emittedError = err; } }
+                };
+
+            reqOptions.bindOn.redirect[0].call(fakeRequest);
+
+            expect(aborted).to.be.true;
+            expect(emittedError).to.be.an('error');
+            expect(emittedError.message).to.include('NETERR:');
+            expect(emittedError.message).to.include('127.0.0.2');
+        });
+
+        it('bindOn.redirect should not abort for a non-restricted raw IP', function () {
+            var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                networkOpts = {
+                    restrictedAddresses: { '127.0.0.2': true },
+                    restrictedCidrs: []
+                },
+                reqOptions = requesterCore.getRequestOptions(request, { network: networkOpts }),
+                aborted = false,
+                fakeRequest = {
+                    uri: { hostname: '8.8.8.8' },
+                    abort: function () { aborted = true; },
+                    emit: function () {}
+                };
+
+            reqOptions.bindOn.redirect[0].call(fakeRequest);
+
+            expect(aborted).to.be.false;
+        });
+
+        it('bindOn.redirect should not abort for a hostname (non-IP) redirect target', function () {
+            var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                networkOpts = {
+                    restrictedAddresses: { 'postman-echo.com': true },
+                    restrictedCidrs: []
+                },
+                reqOptions = requesterCore.getRequestOptions(request, { network: networkOpts }),
+                aborted = false,
+                fakeRequest = {
+                    uri: { hostname: 'postman-echo.com' },
+                    abort: function () { aborted = true; },
+                    emit: function () {}
+                };
+
+            reqOptions.bindOn.redirect[0].call(fakeRequest);
+
+            // hostname redirects are handled by the DNS lookup hook, not bindOn
+            expect(aborted).to.be.false;
+        });
+
+        it('bindOn.redirect should block an IP within a restricted CIDR range', function () {
+            var ipaddr = require('ipaddr.js'),
+                request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                networkOpts = {
+                    restrictedAddresses: { '10.0.0.0/8': true },
+                    restrictedCidrs: [ipaddr.parseCIDR('10.0.0.0/8')]
+                },
+                reqOptions = requesterCore.getRequestOptions(request, { network: networkOpts }),
+                aborted = false,
+                emittedError = null,
+                fakeRequest = {
+                    uri: { hostname: '10.10.10.10' },
+                    abort: function () { aborted = true; },
+                    emit: function (evt, err) { if (evt === 'error') { emittedError = err; } }
+                };
+
+            reqOptions.bindOn.redirect[0].call(fakeRequest);
+
+            expect(aborted).to.be.true;
+            expect(emittedError).to.be.an('error');
+            expect(emittedError.message).to.include('10.10.10.10');
+        });
+    });
+
     describe('.isAddressRestricted', function () {
         describe('exact match (existing behaviour)', function () {
             it('should return true for an exactly listed IPv4 address', function () {
