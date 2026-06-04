@@ -65,7 +65,7 @@ var expect = require('chai').expect;
         // a network/connection error is expected (no server at 128.0.0.1),
         // but it must NOT be a NETERR block from restrictedAddresses
         if (error) {
-            expect(error.message).to.not.include('ECONNREFUSED');
+            expect(error.message).to.not.include('NETERR:');
         }
     });
 });

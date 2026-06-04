@@ -1069,6 +1069,34 @@ describe('requester util', function () {
                 expect(requesterCore.isAddressRestricted('10.10.10.10', opts)).to.be.true;
                 expect(requesterCore.isAddressRestricted('192.168.1.1', opts)).to.be.false;
             });
+
+            it('should block an IPv4-mapped IPv6 address that falls within a blocked IPv4 CIDR', function () {
+                var ipaddr = require('ipaddr.js'),
+                    opts = {
+                        restrictedAddresses: { '127.0.0.0/8': true },
+                        restrictedCidrs: [ipaddr.parseCIDR('127.0.0.0/8')]
+                    };
+
+                // ::ffff:127.0.0.1 is the IPv4-mapped IPv6 form of 127.0.0.1
+                expect(requesterCore.isAddressRestricted('::ffff:127.0.0.1', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('::ffff:169.254.169.254', {
+                    restrictedAddresses: { '169.254.0.0/16': true },
+                    restrictedCidrs: [ipaddr.parseCIDR('169.254.0.0/16')]
+                })).to.be.true;
+            });
+
+            it('should evaluate all CIDRs in a mixed IPv4+IPv6 list without aborting on family mismatch', function () {
+                var ipaddr = require('ipaddr.js'),
+                    opts = {
+                        restrictedAddresses: { '127.0.0.0/8': true, '::1/128': true },
+                        restrictedCidrs: [ipaddr.parseCIDR('127.0.0.0/8'), ipaddr.parseCIDR('::1/128')]
+                    };
+
+                // IPv6 address must be matched even though an IPv4 CIDR comes first in the list
+                expect(requesterCore.isAddressRestricted('::1', opts)).to.be.true;
+                // IPv4 address must be matched even though an IPv6 CIDR follows
+                expect(requesterCore.isAddressRestricted('127.0.0.1', opts)).to.be.true;
+            });
         });
     });
 });

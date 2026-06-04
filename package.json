@@ -47,7 +47,7 @@
     "aws4": "1.13.2",
     "handlebars": "4.7.9",
     "httpntlm": "1.8.13",
-    "ipaddr.js": "^2.4.0",
+    "ipaddr.js": "2.4.0",
     "jose": "5.10.0",
     "js-sha512": "0.9.0",
     "lodash": "4.17.23",
