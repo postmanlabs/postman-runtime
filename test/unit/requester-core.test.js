@@ -1028,11 +1028,10 @@ describe('requester util', function () {
             expect(aborted).to.be.false;
         });
 
-        it('bindOn.redirect should not abort for a hostname (non-IP) redirect target', function () {
+        it('bindOn.redirect should not abort for a hostname not in restrictedAddresses', function () {
             var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
                 networkOpts = {
-                    restrictedAddresses: { 'postman-echo.com': true },
-                    restrictedCidrs: []
+                    restrictedAddresses: { '127.0.0.1': true }
                 },
                 reqOptions = requesterCore.getRequestOptions(request, { network: networkOpts }),
                 aborted = false,
@@ -1044,8 +1043,50 @@ describe('requester util', function () {
 
             reqOptions.bindOn.redirect[0].call(fakeRequest);
 
-            // hostname redirects are handled by the DNS lookup hook, not bindOn
+            // postman-echo.com is not in restrictedAddresses — DNS hook handles resolution
             expect(aborted).to.be.false;
+        });
+
+        it('bindOn.redirect should block a redirect to a hostname listed in restrictedAddresses', function () {
+            var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                networkOpts = {
+                    restrictedAddresses: { 'internal.corp': true }
+                },
+                reqOptions = requesterCore.getRequestOptions(request, { network: networkOpts }),
+                aborted = false,
+                emittedError = null,
+                fakeRequest = {
+                    uri: { hostname: 'internal.corp' },
+                    abort: function () { aborted = true; },
+                    emit: function (evt, err) { if (evt === 'error') { emittedError = err; } }
+                };
+
+            reqOptions.bindOn.redirect[0].call(fakeRequest);
+
+            expect(aborted).to.be.true;
+            expect(emittedError).to.be.an('error');
+            expect(emittedError.message).to.include('internal.corp');
+        });
+
+        it('bindOn.redirect should block a bracketed IPv6 redirect target', function () {
+            var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                networkOpts = {
+                    restrictedAddresses: { '::1': true }
+                },
+                reqOptions = requesterCore.getRequestOptions(request, { network: networkOpts }),
+                aborted = false,
+                emittedError = null,
+                fakeRequest = {
+                    uri: { hostname: '[::1]' },
+                    abort: function () { aborted = true; },
+                    emit: function (evt, err) { if (evt === 'error') { emittedError = err; } }
+                };
+
+            reqOptions.bindOn.redirect[0].call(fakeRequest);
+
+            expect(aborted).to.be.true;
+            expect(emittedError).to.be.an('error');
+            expect(emittedError.message).to.include('[::1]');
         });
 
         it('bindOn.redirect should block an IP within a restricted CIDR range', function () {
@@ -1207,5 +1248,84 @@ describe('requester util', function () {
                 expect(requesterCore.isAddressRestricted('127.0.0.1', opts)).to.be.true;
             });
         });
+
+        describe('bracketed IPv6 literals (B2/B3a)', function () {
+            it('should block [::1] when ::1 is in restrictedAddresses', function () {
+                expect(requesterCore.isAddressRestricted('[::1]', {
+                    restrictedAddresses: { '::1': true }
+                })).to.be.true;
+            });
+
+            it('should block ::1 when [::1] is in restrictedAddresses', function () {
+                expect(requesterCore.isAddressRestricted('::1', {
+                    restrictedAddresses: { '[::1]': true }
+                })).to.be.true;
+            });
+
+            it('should block [::1] when [::1] is in restrictedAddresses', function () {
+                expect(requesterCore.isAddressRestricted('[::1]', {
+                    restrictedAddresses: { '[::1]': true }
+                })).to.be.true;
+            });
+
+            it('should block [::ffff:127.0.0.1] via a 127.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('[::ffff:127.0.0.1]', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+        });
+
+        describe('IPv4-compatible IPv6 (::a.b.c.d)', function () {
+            it('should block ::127.0.0.1 via a 127.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::127.0.0.1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should block ::169.254.169.254 via a 169.254.0.0/16 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::169.254.169.254', {
+                    restrictedAddresses: { '169.254.0.0/16': true }
+                })).to.be.true;
+            });
+
+            it('should not treat ::1 as IPv4-compatible (its seventh group is 0)', function () {
+                // ::1 looks like ::0.0.0.1 which is NOT in 127.0.0.0/8
+                expect(requesterCore.isAddressRestricted('::1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.false;
+            });
+        });
+
+        describe('lazy CIDR init (N2)', function () {
+            it('should parse CIDR entries from restrictedAddresses without a pre-set restrictedCidrs', function () {
+                var opts = {
+                    restrictedAddresses: { '10.0.0.0/8': true }
+                };
+
+                expect(requesterCore.isAddressRestricted('10.10.10.10', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('11.0.0.0', opts)).to.be.false;
+            });
+
+            it('should cache parsed CIDRs on networkOptions after first call', function () {
+                var opts = {
+                    restrictedAddresses: { '10.0.0.0/8': true }
+                };
+
+                requesterCore.isAddressRestricted('10.0.0.1', opts);
+                expect(opts.restrictedCidrs).to.be.an('array').with.lengthOf(1);
+            });
+
+            it('should handle an invalid CIDR entry without throwing', function () {
+                var opts = {
+                    restrictedAddresses: { 'not-a-cidr/99': true }
+                };
+
+                expect(function () {
+                    requesterCore.isAddressRestricted('1.2.3.4', opts);
+                }).to.not.throw();
+                expect(opts.restrictedCidrs).to.be.an('array').with.lengthOf(0);
+            });
+        });
     });
 });
+

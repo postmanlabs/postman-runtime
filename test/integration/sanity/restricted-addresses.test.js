@@ -19,7 +19,9 @@ var expect = require('chai').expect;
             },
             network: {
                 restrictedAddresses: { '127.0.0.2': true }
-            }
+            },
+            // 127.0.0.3 has no server; cap wait time so the run completes
+            timeout: { request: 5000 }
         }, function (err, results) {
             testrun = results;
             done(err);
@@ -56,6 +58,58 @@ var expect = require('chai').expect;
     });
 });
 
+(typeof window === 'undefined' ? describe : describe.skip)('restricted addresses - *.localhost fast-path (B4)', function () {
+    var testrun;
+
+    before(function (done) {
+        this.run({
+            collection: {
+                item: [{
+                    // subdomain of localhost — fast-path resolves it to 127.0.0.1 / ::1
+                    // should be blocked when localhost/127.0.0.1 is restricted
+                    request: 'http://api.localhost/'
+                }, {
+                    // localhost itself — should be blocked
+                    request: 'http://localhost/'
+                }]
+            },
+            network: {
+                restrictedAddresses: { 'localhost': true, '127.0.0.1': true, '::1': true }
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
+    });
+
+    it('should block a request to a *.localhost subdomain', function () {
+        var error = testrun.response.getCall(0).args[0],
+            response = testrun.response.getCall(0).args[2];
+
+        expect(error).to.have.property('message');
+        expect(error.message).to.include('NETERR:');
+        expect(response).to.be.undefined;
+    });
+
+    it('should block a request to localhost itself', function () {
+        var error = testrun.response.getCall(1).args[0],
+            response = testrun.response.getCall(1).args[2];
+
+        expect(error).to.have.property('message');
+        expect(error.message).to.include('NETERR:');
+        expect(response).to.be.undefined;
+    });
+});
+
 (typeof window === 'undefined' ? describe : describe.skip)('restricted addresses - CIDR ranges', function () {
     var testrun;
 
@@ -81,7 +135,9 @@ var expect = require('chai').expect;
                         'fake.cidr.postman.wtf': '127.0.0.2'
                     }
                 }
-            }
+            },
+            // 128.0.0.1 has no server; cap wait time so the run completes
+            timeout: { request: 5000 }
         }, function (err, results) {
             testrun = results;
             done(err);
@@ -247,6 +303,47 @@ var expect = require('chai').expect;
             'NETERR: getaddrinfo ENOTFOUND xn--6s9h.com xn--6s9h.com:80'
         ]);
 
+        expect(response).to.be.undefined;
+    });
+});
+
+(typeof window === 'undefined' ? describe : describe.skip)('restricted addresses - bracketed IPv6 redirect (B2/B3a)', function () {
+    var testrun;
+
+    before(function (done) {
+        var redirectServer = global.servers.http;
+
+        this.run({
+            collection: {
+                item: [{
+                    // server 301s to http://[::1]/ — the bracketed form bypassed the old net.isIP guard
+                    request: redirectServer + '/redirect-to?url=http%3A%2F%2F%5B%3A%3A1%5D%2F'
+                }]
+            },
+            network: {
+                restrictedAddresses: { '::1': true }
+            }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
+
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'start.calledOnce': true
+        });
+    });
+
+    it('should block a redirect to a bracketed IPv6 address that is restricted', function () {
+        var error = testrun.response.getCall(0).args[0],
+            response = testrun.response.getCall(0).args[2];
+
+        expect(error).to.have.property('message');
+        expect(error.message).to.include('NETERR:');
         expect(response).to.be.undefined;
     });
 });
