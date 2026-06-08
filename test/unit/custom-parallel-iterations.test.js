@@ -1,7 +1,8 @@
 var sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
     PartitionManager = require('../../lib/runner/partition-manager'),
-    Partition = require('../../lib/runner/partition');
+    Partition = require('../../lib/runner/partition'),
+    parallelCommand = require('../../lib/runner/extensions/parallel.command');
 
 describe('customParallelIterations', function () {
     afterEach(function () {
@@ -192,6 +193,122 @@ describe('customParallelIterations', function () {
                 expect(p.loopIteration).to.equal(0);
                 expect(p.cursor.iteration).to.equal(0);
                 done();
+            });
+        });
+    });
+
+    describe('parallel.command processor — Change 4 + 5 guards', function () {
+        var parallelProc, ctx, partition, baseCoords;
+
+        beforeEach(function () {
+            parallelProc = parallelCommand.process.parallel;
+            partition = {
+                cursor: {
+                    whatnext: sinon.stub(),
+                    current: sinon.stub(),
+                    seek: sinon.stub()
+                },
+                startIndex: 0,
+                partitionIndex: 0
+            };
+            ctx = {
+                isCustomParallelIterations: true,
+                partitionManager: { partitions: [partition] },
+                state: { items: [{ id: 'item-0' }], data: null },
+                triggers: {
+                    beforeIteration: sinon.spy(),
+                    iteration: sinon.spy()
+                },
+                options: {},
+                queue: sinon.spy(),
+                queueDelay: sinon.spy()
+            };
+            // coords for "loop just rolled" — what runSinglePartition queues
+            // on loop 2 of a 1-item collection: cursor.iteration === 1.
+            baseCoords = {
+                iteration: 1,
+                position: 0,
+                partitionIndex: 0,
+                partitionCycles: 1,
+                cr: false,
+                eof: false,
+                empty: false
+            };
+        });
+
+        describe('Change 4 — end-of-partition guard is gated on custom mode', function () {
+            it('does NOT short-circuit on loop 2 in custom mode (items must execute)', function () {
+                var next = sinon.spy();
+
+                parallelProc.call(ctx, {
+                    coords: baseCoords,
+                    static: true,
+                    start: false
+                }, next);
+
+                // The guard at line 103 must be skipped in custom mode.
+                // No iteration trigger from the guard; no early next();
+                // the processor proceeds to queue the next item.
+                expect(ctx.triggers.iteration.callCount).to.equal(0);
+                expect(next.callCount).to.equal(0);
+                expect(ctx.queueDelay.callCount).to.equal(1);
+            });
+
+            it('still short-circuits in runtime-managed mode (regression)', function () {
+                var next = sinon.spy();
+
+                ctx.isCustomParallelIterations = false;
+                parallelProc.call(ctx, {
+                    coords: baseCoords,
+                    static: true,
+                    start: false
+                }, next);
+
+                expect(ctx.triggers.iteration.callCount).to.equal(1);
+                expect(next.callCount).to.equal(1);
+                expect(ctx.queueDelay.callCount).to.equal(0);
+            });
+        });
+
+        describe('Change 5 — cr block early-returns in custom mode', function () {
+            it('fires iteration trigger ONCE and returns next() without queuing more work', function () {
+                var next = sinon.spy(),
+                    crCoords = Object.assign({}, baseCoords, { cr: true });
+
+                parallelProc.call(ctx, {
+                    coords: crCoords,
+                    static: true,
+                    start: false
+                }, next);
+
+                expect(ctx.triggers.iteration.callCount).to.equal(1);
+                // beforeIteration MUST NOT fire — perftest's startParallelIteration
+                // will queue the next loop, which carries its own beforeIteration.
+                expect(ctx.triggers.beforeIteration.callCount).to.equal(0);
+                // No auto-loop: queueDelay must not run.
+                expect(ctx.queueDelay.callCount).to.equal(0);
+                // Early return.
+                expect(next.callCount).to.equal(1);
+            });
+
+            it('preserves auto-loop in runtime-managed mode (regression)', function () {
+                var next = sinon.spy(),
+                    crCoords = Object.assign({}, baseCoords, {
+                        cr: true,
+                        iteration: 1,
+                        partitionCycles: 5     // not at end of partition
+                    });
+
+                ctx.isCustomParallelIterations = false;
+                parallelProc.call(ctx, {
+                    coords: crCoords,
+                    static: true,
+                    start: false
+                }, next);
+
+                expect(ctx.triggers.iteration.callCount).to.equal(1);
+                expect(ctx.triggers.beforeIteration.callCount).to.equal(1);
+                expect(ctx.queueDelay.callCount).to.equal(1);
             });
         });
     });
