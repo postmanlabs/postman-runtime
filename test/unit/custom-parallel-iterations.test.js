@@ -270,6 +270,208 @@ describe('customParallelIterations', function () {
             });
         });
 
+        describe('Change 6 — stopSinglePartition: full fresh on reuse', function () {
+            var mgr, mockRun;
+
+            beforeEach(function () {
+                mockRun = {
+                    isCustomParallelIterations: true,
+                    options: {
+                        customParallelIterations: true,
+                        iterationCount: 1,
+                        maxConcurrency: 1
+                    },
+                    state: {
+                        items: [{ id: 'item1' }],
+                        environment: {},
+                        globals: {},
+                        vaultSecrets: {},
+                        collectionVariables: {},
+                        _variables: {},
+                        cursor: { current: sinon.stub().returns({}) }
+                    },
+                    queue: sinon.stub(),
+                    triggers: sinon.stub(),
+                    aborted: false,
+                    host: { dispose: sinon.stub() }
+                };
+                mgr = new PartitionManager(mockRun);
+                mgr.spawn();
+                mgr.options = mockRun.options;
+                sinon.stub(mgr, '_processPartition').callsArgWith(1, null);
+            });
+
+            it('resets loopIteration to 0 on stop in custom mode', function (done) {
+                mgr.runSinglePartition(0, null, function () {
+                    var p = mgr.partitions[0];
+
+                    sinon.stub(p, 'hasInstructions').returns(false);
+                    mgr.runSinglePartition(0, null, function () {
+                        expect(p.loopIteration).to.equal(2);
+                        mgr.stopSinglePartition(0, function () {
+                            expect(p.loopIteration).to.equal(0);
+                            done();
+                        });
+                    });
+                });
+            });
+
+            it('sets partition.stopped=true on stop', function (done) {
+                mgr.runSinglePartition(0, null, function () {
+                    var p = mgr.partitions[0];
+
+                    expect(p.stopped).to.equal(false);
+                    mgr.stopSinglePartition(0, function () {
+                        expect(p.stopped).to.equal(true);
+                        done();
+                    });
+                });
+            });
+
+            it('re-clones partition.variables on stop (full fresh contract)', function (done) {
+                mgr.runSinglePartition(0, null, function () {
+                    var p = mgr.partitions[0],
+                        originalVars = p.variables;
+
+                    mgr.stopSinglePartition(0, function () {
+                        expect(p.variables).to.not.equal(originalVars);
+                        expect(p.variables).to.have.all.keys(
+                            'environment', 'globals', 'vaultSecrets',
+                            'collectionVariables', '_variables'
+                        );
+                        done();
+                    });
+                });
+            });
+
+            it('clears partition.stopped flag on next runSinglePartition', function (done) {
+                mgr.runSinglePartition(0, null, function () {
+                    var p = mgr.partitions[0];
+
+                    mgr.stopSinglePartition(0, function () {
+                        expect(p.stopped).to.equal(true);
+                        sinon.stub(p, 'hasInstructions').returns(false);
+                        mgr.runSinglePartition(0, null, function () {
+                            expect(p.stopped).to.equal(false);
+                            done();
+                        });
+                    });
+                });
+            });
+
+            it('counter restarts from 0 after stop+restart (regression for footgun #4)', function (done) {
+                mgr.runSinglePartition(0, null, function () {
+                    var p = mgr.partitions[0];
+
+                    sinon.stub(p, 'hasInstructions').returns(false);
+                    mgr.runSinglePartition(0, null, function () {
+                        expect(p.cursor.iteration).to.equal(1);
+                        mgr.stopSinglePartition(0, function () {
+                            mgr.runSinglePartition(0, null, function () {
+                                expect(p.cursor.iteration).to.equal(0);
+                                expect(p.loopIteration).to.equal(1);
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+
+            it('does NOT reset counter or re-clone variables in runtime-managed mode', function (done) {
+                mockRun.isCustomParallelIterations = false;
+                mockRun.options.customParallelIterations = false;
+                mgr.options.customParallelIterations = false;
+
+                mgr.runSinglePartition(0, null, function () {
+                    var p = mgr.partitions[0],
+                        originalVars = p.variables;
+
+                    p.loopIteration = 5; // simulate mutation
+                    mgr.stopSinglePartition(0, function () {
+                        expect(p.loopIteration).to.equal(5);
+                        expect(p.variables).to.equal(originalVars);
+                        expect(p.stopped).to.equal(false);
+                        done();
+                    });
+                });
+            });
+        });
+
+        describe('Change 6c — updatePartitionVariables drops late writes', function () {
+            var mgr, mockRun;
+
+            beforeEach(function () {
+                mockRun = {
+                    isCustomParallelIterations: true,
+                    options: {
+                        customParallelIterations: true,
+                        iterationCount: 1,
+                        maxConcurrency: 1
+                    },
+                    state: {
+                        items: [{ id: 'item1' }],
+                        environment: {},
+                        globals: {},
+                        vaultSecrets: {},
+                        collectionVariables: {},
+                        _variables: {},
+                        cursor: { current: sinon.stub().returns({}) }
+                    },
+                    queue: sinon.stub(),
+                    triggers: sinon.stub(),
+                    aborted: false,
+                    host: { dispose: sinon.stub() }
+                };
+                mgr = new PartitionManager(mockRun);
+                mgr.spawn();
+                mgr.options = mockRun.options;
+                sinon.stub(mgr, '_processPartition').callsArgWith(1, null);
+            });
+
+            it('writes when partition.stopped is false (happy path)', function (done) {
+                mgr.runSinglePartition(0, null, function () {
+                    var p = mgr.partitions[0],
+                        VariableScope = require('postman-collection').VariableScope,
+                        fakeResult = { _variables: new VariableScope() };
+
+                    mgr.updatePartitionVariables(0, fakeResult);
+                    expect(p.variables._variables).to.not.equal(fakeResult._variables);
+                    // It should be a new VariableScope wrapping the result
+                    expect(p.variables._variables).to.be.instanceOf(VariableScope);
+                    done();
+                });
+            });
+
+            it('DROPS write when partition.stopped is true (race guard)', function (done) {
+                mgr.runSinglePartition(0, null, function () {
+                    var p = mgr.partitions[0],
+                        VariableScope = require('postman-collection').VariableScope,
+                        beforeStop = p.variables._variables;
+
+                    mgr.stopSinglePartition(0, function () {
+                        // re-clone happened — capture the post-stop scope
+                        var afterReset = p.variables._variables,
+                            fakeLateWrite = { _variables: new VariableScope() };
+
+                        expect(afterReset).to.not.equal(beforeStop);
+
+                        // simulate a script-result handler firing AFTER stop:
+                        mgr.updatePartitionVariables(0, fakeLateWrite);
+
+                        // The freshly-reset scope MUST be untouched.
+                        expect(p.variables._variables).to.equal(afterReset);
+                        done();
+                    });
+                });
+            });
+
+            it('handles non-existent partition index without error', function () {
+                expect(function () {
+                    mgr.updatePartitionVariables(99, { _variables: {} });
+                }).to.not.throw();
+            });
+        });
+
         describe('Change 5 — cr block early-returns in custom mode', function () {
             it('fires iteration trigger ONCE and returns next() without queuing more work', function () {
                 var next = sinon.spy(),
