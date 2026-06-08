@@ -2,7 +2,8 @@ var sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
     PartitionManager = require('../../lib/runner/partition-manager'),
     Partition = require('../../lib/runner/partition'),
-    parallelCommand = require('../../lib/runner/extensions/parallel.command');
+    parallelCommand = require('../../lib/runner/extensions/parallel.command'),
+    eventCommand = require('../../lib/runner/extensions/event.command');
 
 describe('customParallelIterations', function () {
     afterEach(function () {
@@ -512,6 +513,115 @@ describe('customParallelIterations', function () {
                 expect(ctx.triggers.beforeIteration.callCount).to.equal(1);
                 expect(ctx.queueDelay.callCount).to.equal(1);
             });
+        });
+
+        describe('Change 9 — eof trigger payload normalization', function () {
+            it('uses payload.coords ("loop just completed") in custom mode', function () {
+                var next = sinon.spy(),
+                    // payload.coords = the loop that just ended
+                    payloadCoords = {
+                        iteration: 2,
+                        position: 1,
+                        partitionIndex: 0,
+                        partitionCycles: 1,
+                        cr: false,
+                        eof: true,
+                        empty: false
+                    },
+                    // coords = post-rollover snapshot from whatnext (iteration+1)
+                    snapshotCoords = Object.assign({}, payloadCoords, {
+                        iteration: 3
+                    });
+
+                ctx.isCustomParallelIterations = true;
+                // wire whatnext to return the post-rollover snapshot
+                partition.cursor.whatnext.returns(snapshotCoords);
+
+                parallelProc.call(ctx, {
+                    coords: payloadCoords,
+                    static: false,
+                    start: false
+                }, next);
+
+                expect(ctx.triggers.iteration.callCount).to.equal(1);
+                // In custom mode, the trigger must carry payload.coords
+                // (iteration === 2, the loop that just completed), NOT
+                // the post-rollover snapshot (iteration === 3).
+                var arg = ctx.triggers.iteration.firstCall.args[1];
+
+                expect(arg.iteration).to.equal(2);
+            });
+
+            it('preserves post-rollover coords in runtime-managed mode (regression)', function () {
+                var next = sinon.spy(),
+                    payloadCoords = {
+                        iteration: 2,
+                        position: 1,
+                        partitionIndex: 0,
+                        partitionCycles: 5,
+                        cr: false,
+                        eof: true,
+                        empty: false
+                    },
+                    snapshotCoords = Object.assign({}, payloadCoords, {
+                        iteration: 3
+                    });
+
+                ctx.isCustomParallelIterations = false;
+                partition.cursor.whatnext.returns(snapshotCoords);
+
+                parallelProc.call(ctx, {
+                    coords: payloadCoords,
+                    static: false,
+                    start: false
+                }, next);
+
+                expect(ctx.triggers.iteration.callCount).to.equal(1);
+                // Newman/desktop mode: preserve the existing post-rollover
+                // behavior at the eof site. Trigger carries the snapshot
+                // coords (iteration === 3).
+                var arg = ctx.triggers.iteration.firstCall.args[1];
+
+                expect(arg.iteration).to.equal(3);
+            });
+        });
+    });
+
+    describe('event.command sandbox-cursor sentinel transform — Change 7', function () {
+        it('exposes a helper for the cycles → -1 sentinel transform', function () {
+            expect(eventCommand._applySandboxCursorSentinel).to.be.a('function');
+        });
+
+        it('replaces cycles with -1 in custom mode without mutating input', function () {
+            var scriptCursor = {
+                    position: 0,
+                    iteration: 4,
+                    cycles: Number.MAX_SAFE_INTEGER,
+                    partitionIndex: 0
+                },
+                transformed = eventCommand._applySandboxCursorSentinel(scriptCursor, true);
+
+            expect(transformed).to.not.equal(scriptCursor);
+            expect(transformed.cycles).to.equal(-1);
+            // every other field preserved
+            expect(transformed.position).to.equal(0);
+            expect(transformed.iteration).to.equal(4);
+            expect(transformed.partitionIndex).to.equal(0);
+            // input untouched
+            expect(scriptCursor.cycles).to.equal(Number.MAX_SAFE_INTEGER);
+        });
+
+        it('returns the cursor unchanged in runtime-managed mode', function () {
+            var scriptCursor = {
+                    position: 0,
+                    iteration: 2,
+                    cycles: 4,
+                    partitionIndex: 0
+                },
+                transformed = eventCommand._applySandboxCursorSentinel(scriptCursor, false);
+
+            expect(transformed).to.equal(scriptCursor);
+            expect(transformed.cycles).to.equal(4);
         });
     });
 });
