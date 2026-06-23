@@ -25,9 +25,10 @@ var _ = require('lodash'),
     VariableScope = require('postman-collection').VariableScope,
     RequestCookieJar = require('postman-request').jar,
     Runner = require('../../../index.js').Runner,
-    server = require('../../fixtures/servers/_servers');
+    IS_NODE = typeof window === 'undefined',
+    server = IS_NODE && require('../../fixtures/servers/_servers');
 
-describe('requester.perPartitionCookieJar end-to-end', function () {
+(IS_NODE ? describe : describe.skip)('requester.perPartitionCookieJar end-to-end', function () {
     this.timeout(30 * 1000); // local server only — should be fast
 
     var httpServer,
@@ -96,6 +97,8 @@ describe('requester.perPartitionCookieJar end-to-end', function () {
         var runner = new Runner({}),
             spies = {},
             stepIndex = 0,
+            completed = false,
+            aborting = false,
             run;
 
         // each schedule owns the server-side observation log (describe
@@ -107,11 +110,25 @@ describe('requester.perPartitionCookieJar end-to-end', function () {
             spies[name] = sinon.spy();
         });
 
+        function finish (err) {
+            if (completed) { return; }
+
+            completed = true;
+            run && run.host && setTimeout(function () { run.host.dispose(); }, 0);
+            done(err, spies);
+        }
+
         function advance () {
+            if (completed || aborting) { return; }
+
             var step = opts.schedule[stepIndex];
 
             // schedule exhausted — wind down
-            if (!step) { return run.abort(_.noop); }
+            if (!step) {
+                aborting = true;
+
+                return run.abort(_.noop);
+            }
 
             stepIndex += 1;
 
@@ -128,15 +145,12 @@ describe('requester.perPartitionCookieJar end-to-end', function () {
             iterationCount: 1,
             maxConcurrency: 1
         }, opts.requester ? { requester: opts.requester } : {}), function (err, runInstance) {
-            if (err) { return done(err); }
+            if (err) { return finish(err); }
             run = runInstance;
 
             spies.start = sinon.spy(function () { advance(); });
             spies.iteration = sinon.spy(function () { advance(); });
-            spies.done = sinon.spy(function () {
-                setTimeout(function () { run.host.dispose(); }, 0);
-                done(null, spies);
-            });
+            spies.done = sinon.spy(function () { finish(null); });
 
             run.start(spies);
         });

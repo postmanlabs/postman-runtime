@@ -14,6 +14,7 @@
 
 var sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
+    IS_NODE = typeof window === 'undefined',
 
     /**
      * Minimal jar stand-in for option-precedence tests.
@@ -28,7 +29,7 @@ var sinon = require('sinon').createSandbox(),
     RequesterPool = require('../../lib/requester').RequesterPool,
     Run = require('../../lib/runner/run');
 
-describe('per-partition cookie jar (unit)', function () {
+(IS_NODE ? describe : describe.skip)('per-partition cookie jar (unit)', function () {
     afterEach(function () {
         sinon.restore();
     });
