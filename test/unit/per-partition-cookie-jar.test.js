@@ -14,6 +14,8 @@
 
 var sinon = require('sinon').createSandbox(),
     expect = require('chai').expect,
+    EventEmitter = require('events').EventEmitter,
+    sdk = require('postman-collection'),
     IS_NODE = typeof window === 'undefined',
 
     /**
@@ -26,6 +28,7 @@ var sinon = require('sinon').createSandbox(),
     },
     Partition = require('../../lib/runner/partition'),
     PartitionManager = require('../../lib/runner/partition-manager'),
+    EventCommand = require('../../lib/runner/extensions/event.command'),
     RequesterPool = require('../../lib/requester').RequesterPool,
     Run = require('../../lib/runner/run');
 
@@ -246,6 +249,114 @@ var sinon = require('sinon').createSandbox(),
 
             expect(warn.calledOnce).to.be.true;
             expect(warn.firstCall.args[0]).to.include('perPartitionCookieJar');
+        });
+    });
+
+    describe('event.command cookie jar resolution', function () {
+        function cookieJarWithStore (store) {
+            return {
+                store
+            };
+        }
+
+        function runEvent (getCookieJarFor, sharedCookieJar, done) {
+            var host = new EventEmitter(),
+                item = new sdk.Item({
+                    name: 'request',
+                    request: 'https://example.com',
+                    event: [{
+                        listen: 'prerequest',
+                        script: {
+                            type: 'text/javascript',
+                            exec: ['var value = 1;']
+                        }
+                    }]
+                }),
+                runnerContext;
+
+            host.dispatch = sinon.stub();
+            host.execute = sinon.stub().callsFake(function (event, options, callback) {
+                host.emit('execution.cookies.' + options.id, 'cookie-event-id', 'store', 'findCookies',
+                    ['example.com', '/']);
+
+                callback(null, {});
+            });
+
+            runnerContext = {
+                options: {},
+                state: {},
+                requester: {
+                    options: {
+                        cookieJar: sharedCookieJar
+                    }
+                },
+                host: host,
+                getCookieJarFor: getCookieJarFor,
+                triggers: {
+                    beforePrerequest: sinon.stub(),
+                    beforeScript: sinon.stub(),
+                    script: sinon.stub(),
+                    prerequest: sinon.stub()
+                }
+            };
+
+            EventCommand.process.event.call(runnerContext, {
+                name: 'prerequest',
+                item: item,
+                coords: { partitionIndex: 0 },
+                context: {}
+            }, function (err) {
+                if (err) { return done(err); }
+
+                done(null, host);
+            });
+        }
+
+        it('uses the partition cookie jar when one is resolved for the cursor', function (done) {
+            var partitionStore = {
+                    findCookies: sinon.stub().callsArgWith(2, null, ['partition-cookie'])
+                },
+                sharedStore = {
+                    findCookies: sinon.stub().callsArgWith(2, null, ['shared-cookie'])
+                },
+                partitionCookieJar = cookieJarWithStore(partitionStore),
+                sharedCookieJar = cookieJarWithStore(sharedStore),
+                getCookieJarFor = sinon.stub().returns(partitionCookieJar);
+
+            runEvent(getCookieJarFor, sharedCookieJar, function (err, host) {
+                if (err) { return done(err); }
+
+                expect(getCookieJarFor.calledOnce).to.be.true;
+                expect(getCookieJarFor.firstCall.args[0]).to.deep.equal({ partitionIndex: 0 });
+                expect(partitionStore.findCookies.calledOnceWithExactly('example.com', '/', sinon.match.func))
+                    .to.be.true;
+                expect(sharedStore.findCookies.called).to.be.false;
+                expect(host.dispatch.calledWith('execution.cookies.' +
+                    host.execute.firstCall.args[1].id, 'cookie-event-id', null, ['partition-cookie'])).to.be.true;
+
+                done();
+            });
+        });
+
+        it('falls back to the shared requester cookie jar when no partition jar is resolved', function (done) {
+            var sharedStore = {
+                    findCookies: sinon.stub().callsArgWith(2, null, ['shared-cookie'])
+                },
+                sharedCookieJar = cookieJarWithStore(sharedStore),
+                getCookieJarFor = sinon.stub().returns();
+
+            runEvent(getCookieJarFor, sharedCookieJar, function (err, host) {
+                if (err) { return done(err); }
+
+                expect(getCookieJarFor.calledOnce).to.be.true;
+                expect(getCookieJarFor.firstCall.args[0]).to.deep.equal({ partitionIndex: 0 });
+                expect(sharedStore.findCookies.calledOnceWithExactly('example.com', '/', sinon.match.func))
+                    .to.be.true;
+                expect(host.dispatch.calledWith('execution.cookies.' +
+                    host.execute.firstCall.args[1].id, 'cookie-event-id', null, ['shared-cookie'])).to.be.true;
+
+                done();
+            });
         });
     });
 });
