@@ -259,7 +259,12 @@ var sinon = require('sinon').createSandbox(),
             };
         }
 
-        function runEvent (getCookieJarFor, sharedCookieJar, done) {
+        function runEvent (getCookieJarFor, sharedCookieJar, options, done) {
+            if (typeof options === 'function') {
+                done = options;
+                options = {};
+            }
+
             var host = new EventEmitter(),
                 item = new sdk.Item({
                     name: 'request',
@@ -284,7 +289,7 @@ var sinon = require('sinon').createSandbox(),
 
             runnerContext = {
                 options: {},
-                state: {},
+                state: options.state || {},
                 requester: {
                     options: {
                         cookieJar: sharedCookieJar
@@ -308,7 +313,7 @@ var sinon = require('sinon').createSandbox(),
             }, function (err) {
                 if (err) { return done(err); }
 
-                done(null, host);
+                done(null, host, runnerContext);
             });
         }
 
@@ -354,6 +359,39 @@ var sinon = require('sinon').createSandbox(),
                     .to.be.true;
                 expect(host.dispatch.calledWith('execution.cookies.' +
                     host.execute.firstCall.args[1].id, 'cookie-event-id', null, ['shared-cookie'])).to.be.true;
+
+                done();
+            });
+        });
+
+        it('uses the nested request root cursor for script callbacks', function (done) {
+            var rootCursor = {
+                    partitionIndex: 0,
+                    ref: 'root-cursor'
+                },
+                sharedStore = {
+                    findCookies: sinon.stub().callsArgWith(2, null, ['shared-cookie'])
+                },
+                sharedCookieJar = cookieJarWithStore(sharedStore),
+                getCookieJarFor = sinon.stub().returns();
+
+            runEvent(getCookieJarFor, sharedCookieJar, {
+                state: {
+                    nestedRequest: {
+                        rootCursor: rootCursor,
+                        rootItem: { id: 'root-item-id' }
+                    }
+                }
+            }, function (err, host, runnerContext) {
+                var scriptCursor;
+
+                if (err) { return done(err); }
+
+                expect(runnerContext.triggers.beforeScript.calledOnce).to.be.true;
+
+                scriptCursor = runnerContext.triggers.beforeScript.firstCall.args[1];
+                expect(scriptCursor).to.deep.equal(rootCursor);
+                expect(scriptCursor).to.not.equal(rootCursor);
 
                 done();
             });
