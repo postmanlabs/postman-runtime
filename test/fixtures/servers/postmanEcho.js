@@ -39,16 +39,6 @@ const _ = require('lodash'),
             key: 'testkey',
             algorithm: 'sha256'
         }
-    },
-    OAUTH1_CONSUMERS = {
-        RKCGzna7bv9YD57c: {
-            consumerSecret: 'D+EdQ-gs$-%@2Nu7',
-            tokenSecret: ''
-        },
-        testkey: {
-            consumerSecret: 'testsecret',
-            tokenSecret: 'testsecret'
-        }
     };
 
 let httpServer,
@@ -99,7 +89,7 @@ function queryArgs (req) {
         args = {};
 
     parsed.searchParams.forEach(function (value, key) {
-        if (Object.prototype.hasOwnProperty.call(args, key)) {
+        if (Object.hasOwn(args, key)) {
             if (Array.isArray(args[key])) {
                 args[key].push(value);
             }
@@ -117,7 +107,7 @@ function queryArgs (req) {
 }
 
 function sendJSON (res, status, body, headers) {
-    res.writeHead(status, Object.assign({ 'content-type': 'application/json; charset=utf-8' }, headers));
+    res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', ...headers });
     res.end(JSON.stringify(body));
 }
 
@@ -138,30 +128,28 @@ function parseCookies (header) {
 }
 
 function parseMultipart (contentType, body) {
-    const boundaryMatch = /boundary=(?:"([^"]+)"|([^;]+))/i.exec(contentType),
+    const boundaryMatch = (/boundary=(?:"([^"]+)"|([^;]+))/i).exec(contentType),
         form = {},
-        files = {};
+        files = {},
+        boundary = boundaryMatch && '--' + (boundaryMatch[1] || boundaryMatch[2]),
+        text = body.toString('binary');
 
     if (!boundaryMatch) {
         return { form, files };
     }
 
-    const boundary = '--' + (boundaryMatch[1] || boundaryMatch[2]),
-        text = body.toString('binary');
-
     text.split(boundary).forEach(function (part) {
         if (!part || part === '--\r\n' || part === '--') { return; }
 
-        part = part.replace(/^\r\n/, '').replace(/\r\n--$/, '');
+        part = part.replace((/^\r\n/), '').replace((/\r\n--$/), '');
 
-        const headerEnd = part.indexOf('\r\n\r\n');
+        const headerEnd = part.indexOf('\r\n\r\n'),
+            rawHeaders = part.slice(0, headerEnd),
+            content = part.slice(headerEnd + 4).replace((/\r\n$/), ''),
+            nameMatch = (/name="([^"]*)"/i).exec(rawHeaders),
+            filenameMatch = (/filename="([^"]*)"/i).exec(rawHeaders);
 
         if (headerEnd === -1) { return; }
-
-        const rawHeaders = part.slice(0, headerEnd),
-            content = part.slice(headerEnd + 4).replace(/\r\n$/, ''),
-            nameMatch = /name="([^"]*)"/i.exec(rawHeaders),
-            filenameMatch = /filename="([^"]*)"/i.exec(rawHeaders);
 
         if (!nameMatch) { return; }
 
@@ -171,7 +159,7 @@ function parseMultipart (contentType, body) {
             return;
         }
 
-        if (Object.prototype.hasOwnProperty.call(form, nameMatch[1])) {
+        if (Object.hasOwn(form, nameMatch[1])) {
             if (Array.isArray(form[nameMatch[1]])) {
                 form[nameMatch[1]].push(content);
             }
@@ -191,7 +179,7 @@ function parseMultipart (contentType, body) {
 function parseBody (req, body) {
     const contentType = req.headers['content-type'] || '';
 
-    if (/multipart\/form-data/i.test(contentType)) {
+    if ((/multipart\/form-data/i).test(contentType)) {
         const parsed = parseMultipart(contentType, body);
 
         return {
@@ -202,18 +190,18 @@ function parseBody (req, body) {
         };
     }
 
-    if (/application\/x-www-form-urlencoded/i.test(contentType)) {
+    if ((/application\/x-www-form-urlencoded/i).test(contentType)) {
         const form = querystring.parse(body.toString());
 
         return {
             data: '',
             files: {},
-            form,
+            form: form,
             json: Object.keys(form).length ? form : null
         };
     }
 
-    if (/application\/octet-stream/i.test(contentType)) {
+    if ((/application\/octet-stream/i).test(contentType)) {
         return {
             data: body,
             files: {},
@@ -222,7 +210,7 @@ function parseBody (req, body) {
         };
     }
 
-    if (/application\/json/i.test(contentType)) {
+    if ((/application\/json/i).test(contentType)) {
         if (!body.length) {
             return { data: '', files: {}, form: {}, json: null };
         }
@@ -230,7 +218,7 @@ function parseBody (req, body) {
         try {
             const json = JSON.parse(body.toString());
 
-            return { data: json, files: {}, form: {}, json };
+            return { data: json, files: {}, form: {}, json: json };
         }
         catch (e) {
             return { data: body.toString(), files: {}, form: {}, json: null };
@@ -276,23 +264,25 @@ function parseBody (req, body) {
 }
 
 function methodResponse (req, body) {
-    return Object.assign({
-        args: queryArgs(req)
-    }, parseBody(req, body), {
+    return {
+        args: queryArgs(req),
+        ...parseBody(req, body),
         headers: echoHeaders(req),
         url: originalUrl(req)
-    });
+    };
 }
 
 function verifyBasicAuth (req) {
     const authorization = req.headers.authorization;
+    let credentials,
+        index;
 
     if (!authorization || !authorization.startsWith('Basic ')) {
         return false;
     }
 
-    const credentials = Buffer.from(authorization.slice(6), 'base64').toString(),
-        index = credentials.indexOf(':');
+    credentials = Buffer.from(authorization.slice(6), 'base64').toString();
+    index = credentials.indexOf(':');
 
     if (index === -1) { return false; }
 
@@ -306,25 +296,31 @@ function md5 (value) {
 function parseAuthParams (authorization, prefix) {
     const params = {};
 
-    authorization.slice(prefix.length).replace(/(\w+)=(?:"([^"]*)"|([^,\s]+))/g, function (match, key, quoted, bare) {
-        params[key] = quoted || bare;
-    });
+    authorization.slice(prefix.length).replace((/(\w+)=(?:"([^"]*)"|([^,\s]+))/g),
+        function (match, key, quoted, bare) {
+            params[key] = quoted || bare;
+        });
 
     return params;
 }
 
 function verifyDigestAuth (req) {
     const authorization = req.headers.authorization;
+    let params,
+        password,
+        uri,
+        ha1,
+        ha2;
 
     if (!authorization || !authorization.startsWith('Digest ')) {
         return false;
     }
 
-    const params = parseAuthParams(authorization, 'Digest '),
-        password = BASIC_USERS[params.username],
-        uri = new URL(originalUrl(req)).pathname + new URL(originalUrl(req)).search,
-        ha1 = md5(params.username + ':' + params.realm + ':' + password),
-        ha2 = md5(req.method + ':' + uri);
+    params = parseAuthParams(authorization, 'Digest ');
+    password = BASIC_USERS[params.username];
+    uri = new URL(originalUrl(req)).pathname + new URL(originalUrl(req)).search;
+    ha1 = md5(params.username + ':' + params.realm + ':' + password);
+    ha2 = md5(req.method + ':' + uri);
 
     if (!password || params.realm !== 'Users' || params.uri !== uri) {
         return false;
@@ -333,40 +329,29 @@ function verifyDigestAuth (req) {
     return params.response === md5([ha1, params.nonce, params.nc, params.cnonce, params.qop, ha2].join(':'));
 }
 
-function encodeOAuth (value) {
-    return encodeURIComponent(value)
-        .replace(/[!'()]/g, function (char) { return '%' + char.charCodeAt(0).toString(16).toUpperCase(); })
-        .replace(/\*/g, '%2A');
-}
-
-function parseOAuthHeader (authorization) {
-    const params = {};
-
-    authorization.slice('OAuth '.length).replace(/([^=,\s]+)="([^"]*)"/g, function (match, key, value) {
-        params[decodeURIComponent(key)] = decodeURIComponent(value);
-    });
-
-    return params;
-}
-
 function verifyOAuth1 (req) {
     const authorization = req.headers.authorization,
-        parsedUrl = new URL(originalUrl(req));
+        parsedUrl = new URL(originalUrl(req)),
+        hasOAuthHeader = authorization && authorization.startsWith('OAuth ');
 
-    return Boolean((authorization && authorization.startsWith('OAuth ')) || parsedUrl.searchParams.get('oauth_signature'));
+    return Boolean(hasOAuthHeader || parsedUrl.searchParams.get('oauth_signature'));
 }
 
 function verifyHawk (req, body) {
     const authorization = req.headers.authorization;
+    let params,
+        credentials,
+        parsedUrl,
+        port;
 
     if (!authorization || !authorization.startsWith('Hawk ')) {
         return false;
     }
 
-    const params = parseAuthParams(authorization, 'Hawk '),
-        credentials = HAWK_CREDENTIALS[params.id],
-        parsedUrl = new URL(originalUrl(req)),
-        port = parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80);
+    params = parseAuthParams(authorization, 'Hawk ');
+    credentials = HAWK_CREDENTIALS[params.id];
+    parsedUrl = new URL(originalUrl(req));
+    port = parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80);
 
     if (!credentials) { return false; }
 
@@ -390,7 +375,7 @@ function verifyHawk (req, body) {
         method: req.method,
         resource: parsedUrl.pathname + parsedUrl.search,
         host: parsedUrl.hostname,
-        port,
+        port: port,
         hash: params.hash,
         ext: params.ext,
         app: params.app,
@@ -399,7 +384,7 @@ function verifyHawk (req, body) {
 }
 
 function redirect (res, location, headers) {
-    res.writeHead(302, Object.assign({ location }, headers));
+    res.writeHead(302, { location, ...headers });
     res.end();
 }
 
@@ -495,7 +480,7 @@ function handle (req, res) {
                 args = {};
 
             parsedUrl.searchParams.forEach(function (value, key) {
-                if (Object.prototype.hasOwnProperty.call(headers, key)) {
+                if (Object.hasOwn(headers, key)) {
                     headers[key] = Array.isArray(headers[key]) ? headers[key].concat(value) : [headers[key], value];
                 }
                 else {
@@ -545,13 +530,15 @@ function handle (req, res) {
         if (pathname === '/type/xml') {
             res.writeHead(200, { 'content-type': 'application/xml; charset=utf-8' });
 
-            return res.end('<?xml version="1.0" encoding="utf-8"?><food><key>Homestyle Breakfast</key><value>950</value></food>');
+            return res.end('<?xml version="1.0" encoding="utf-8"?><food><key>Homestyle Breakfast</key>' +
+                '<value>950</value></food>');
         }
 
         if (pathname === '/type/html') {
             res.writeHead(200, { 'content-type': 'application/html; charset=utf-8' });
 
-            return res.end('<!DOCTYPE html><html><head><title>Hello World!</title></head><body><h1>Hello World!</h1></body></html>');
+            return res.end('<!DOCTYPE html><html><head><title>Hello World!</title></head><body>' +
+                '<h1>Hello World!</h1></body></html>');
         }
 
         if (pathname === '/basic-auth') {
@@ -607,7 +594,7 @@ module.exports = {
         };
 
         httpServer = http.createServer(handle);
-        httpsServer = http2.createSecureServer(Object.assign({ allowHTTP1: true }, options), handle);
+        httpsServer = http2.createSecureServer({ allowHTTP1: true, ...options }, handle);
 
         enableServerDestroy(httpServer);
         enableServerDestroy(httpsServer);
