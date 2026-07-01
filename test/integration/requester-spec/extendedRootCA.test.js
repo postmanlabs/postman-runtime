@@ -52,7 +52,7 @@ var fs = require('fs'),
                 },
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }]
                 }
             }, function (err, results) {
@@ -76,7 +76,7 @@ var fs = require('fs'),
             var response = testrun.response.getCall(0).args[2];
 
             expect(response.reason()).to.eql('OK');
-            expect(response.json()).to.have.property('url', 'https://postman-echo.com/get');
+            expect(response.json()).to.have.property('url', `${global.ECHO_SERVER}/get`);
         });
     });
 

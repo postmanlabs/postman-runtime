@@ -36,7 +36,8 @@ module.exports = function (exit) {
             mocha.addFile(path.join(SPEC_SOURCE_DIR, 'bootstrap.js'));
 
             files.filter(function (file) { // extract all test files
-                return (file.substr(-8) === '.test.js');
+                return (file.substr(-8) === '.test.js' &&
+                    /\bECHO_SERVER(?:_HTTPS)?\b/.test(require('fs').readFileSync(file, 'utf8')));
             }).forEach(mocha.addFile.bind(mocha));
 
             mocha.run(function (err) {

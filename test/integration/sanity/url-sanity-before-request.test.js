@@ -22,7 +22,7 @@ describe('url', function () {
                     }
                 },
                 globals: {
-                    values: [{ key: 'url', value: 'https://postman-echo.com' }]
+                    values: [{ key: 'url', value: `${global.ECHO_SERVER}` }]
                 }
             }, function (err, results) {
                 testrun = results;
@@ -46,7 +46,7 @@ describe('url', function () {
             });
             expect(request).to.be.ok;
             expect(request.url.host).to.not.match(/^http:\/\/.*/);
-            expect(request.url.toString()).eql('https://postman-echo.com/get');
+            expect(request.url.toString()).eql(`${global.ECHO_SERVER}/get`);
             expect(request).to.have.property('method', 'GET');
         });
 
@@ -76,7 +76,7 @@ describe('url', function () {
                 globals: {
                     values: [
                         { key: 'id', value: '1' },
-                        { key: 'domain#1', value: 'https://postman-echo.com' }
+                        { key: 'domain#1', value: `${global.ECHO_SERVER}` }
                     ]
                 }
             }, function (err, results) {
@@ -101,7 +101,7 @@ describe('url', function () {
             });
             expect(request).to.be.ok;
             expect(request.url.host).to.not.match(/^http:\/\/.*/);
-            expect(request.url.toString()).eql('https://postman-echo.com/get');
+            expect(request.url.toString()).eql(`${global.ECHO_SERVER}/get`);
             expect(request).to.have.property('method', 'GET');
         });
 
@@ -119,6 +119,8 @@ describe('url', function () {
         var testrun;
 
         before(function (done) {
+            var echoUrl = new URL(global.ECHO_SERVER);
+
             this.run({
                 collection: {
                     item: {
@@ -130,8 +132,8 @@ describe('url', function () {
                 },
                 globals: {
                     values: [
-                        { key: 'proto://col', value: 'https' },
-                        { key: '#host:name#', value: 'postman-echo.com' },
+                        { key: 'proto://col', value: echoUrl.protocol.replace(/:$/, '') },
+                        { key: '#host:name#', value: echoUrl.host },
                         { key: 'p/a/t/h', value: 'get' }
                     ]
                 }
@@ -157,7 +159,7 @@ describe('url', function () {
             });
             expect(request).to.be.ok;
             expect(request.url.host).to.not.match(/^http:\/\/.*/);
-            expect(request.url.toString()).eql('https://postman-echo.com/get');
+            expect(request.url.toString()).eql(`${global.ECHO_SERVER}/get`);
             expect(request).to.have.property('method', 'GET');
         });
 

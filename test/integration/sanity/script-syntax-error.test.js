@@ -16,7 +16,7 @@ describe('Script syntax error', function () {
                         script: { exec: ['console.log 1'] } // deliberate syntax error
                     }],
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         method: 'GET'
                     }
                 }]

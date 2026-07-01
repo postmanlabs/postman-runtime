@@ -15,7 +15,7 @@ var expect = require('chai').expect;
                             exec: ['tests["working"] = postman.getResponseCookie("foo").value === "bar"']
                         }
                     }],
-                    request: 'https://postman-echo.com/cookies/set?foo=bar'
+                    request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                 }, {
                     event: [{
                         listen: 'test',
@@ -24,7 +24,7 @@ var expect = require('chai').expect;
                             exec: ['tests["working"] = postman.getResponseCookie("foo").value === "bar"']
                         }
                     }],
-                    request: 'https://postman-echo.com/cookies/get'
+                    request: `${global.ECHO_SERVER}/cookies/get`
                 }, {
                     event: [{
                         listen: 'test',
@@ -33,7 +33,7 @@ var expect = require('chai').expect;
                             exec: ['tests["working"] = postman.getResponseCookie("foo").value === "bar"']
                         }
                     }],
-                    request: global.servers.http + '/redirect-to?url=' + encodeURI('https://postman-echo.com/cookies')
+                    request: global.servers.http + '/redirect-to?url=' + encodeURI(`${global.ECHO_SERVER}/cookies`)
                 }]
             }
         }, function (err, results) {

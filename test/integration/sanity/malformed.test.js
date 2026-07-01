@@ -13,7 +13,7 @@ describe('malformation', function () {
                 item: [{
                     event: [{ listen: 'test', script: { exec: 'tests["200 OK"] = responseCode.code === 200;' } }],
                     request: {
-                        url: 'https://postman-echo.com/get?query={{alpha}}&param={{beta}}', // non-active endpoint
+                        url: `${global.ECHO_SERVER}/get?query={{alpha}}&param={{beta}}`, // non-active endpoint
                         method: 'GET'
                     }
                 }]

@@ -23,7 +23,7 @@ describe('Hawk authentication', function () {
                                 timestamp: ''
                             }
                         },
-                        url: 'https://postman-echo.com/auth/hawk',
+                        url: `${global.ECHO_SERVER}/auth/hawk`,
                         method: 'GET'
                     }
                 }]

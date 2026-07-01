@@ -12,7 +12,7 @@ var sinon = require('sinon'),
                 },
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                        request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                     }]
                 }
             }, function (err, results) {
@@ -53,7 +53,7 @@ var sinon = require('sinon'),
                 },
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                        request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                     }]
                 }
             }, function (err, results) {
@@ -95,7 +95,7 @@ var sinon = require('sinon'),
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/cookies/set?foo=bar',
+                            url: `${global.ECHO_SERVER}/cookies/set?foo=bar`,
                             method: 'GET'
                         }
                     }],
@@ -142,7 +142,7 @@ var sinon = require('sinon'),
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/cookies/set?foo=bar',
+                            url: `${global.ECHO_SERVER}/cookies/set?foo=bar`,
                             method: 'GET'
                         }
                     }],
@@ -190,12 +190,12 @@ var sinon = require('sinon'),
                     item: [
                         {
                             name: 'Request 1 - No Override (Uses Requester Default)',
-                            request: 'https://postman-echo.com/cookies/set?first=one'
+                            request: `${global.ECHO_SERVER}/cookies/set?first=one`
                         },
                         {
                             name: 'Request 2 - Override to Enable',
                             request: {
-                                url: 'https://postman-echo.com/cookies/set?second=two',
+                                url: `${global.ECHO_SERVER}/cookies/set?second=two`,
                                 method: 'GET'
                             },
                             protocolProfileBehavior: {
@@ -205,7 +205,7 @@ var sinon = require('sinon'),
                         {
                             name: 'Request 3 - Explicitly Disabled',
                             request: {
-                                url: 'https://postman-echo.com/cookies/set?third=three',
+                                url: `${global.ECHO_SERVER}/cookies/set?third=three`,
                                 method: 'GET'
                             },
                             protocolProfileBehavior: {
@@ -266,7 +266,7 @@ var sinon = require('sinon'),
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                        request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                     }]
                 }
             }, function (err, results) {
@@ -308,10 +308,10 @@ var sinon = require('sinon'),
                 collection: {
                     item: [
                         {
-                            request: 'https://postman-echo.com/cookies/set?test=value'
+                            request: `${global.ECHO_SERVER}/cookies/set?test=value`
                         },
                         {
-                            request: 'https://postman-echo.com/cookies'
+                            request: `${global.ECHO_SERVER}/cookies`
                         }
                     ]
                 }
@@ -349,10 +349,10 @@ var sinon = require('sinon'),
                 collection: {
                     item: [
                         {
-                            request: 'https://postman-echo.com/cookies/set?test=value'
+                            request: `${global.ECHO_SERVER}/cookies/set?test=value`
                         },
                         {
-                            request: 'https://postman-echo.com/cookies'
+                            request: `${global.ECHO_SERVER}/cookies`
                         }
                     ]
                 }

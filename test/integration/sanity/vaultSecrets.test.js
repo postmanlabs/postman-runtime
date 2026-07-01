@@ -1,6 +1,19 @@
 var expect = require('chai').expect;
 
 describe('vaultSecrets', function () {
+    function echoServerDomain () {
+        var parsed = new URL(global.ECHO_SERVER);
+
+        return parsed.protocol + '//' + parsed.hostname;
+    }
+
+    function echoServerWildcardDomain () {
+        var parsed = new URL(global.ECHO_SERVER),
+            parts = parsed.hostname.split('.');
+
+        return parsed.protocol + '//*.' + parts.slice(1).join('.');
+    }
+
     describe('resolution', function () {
         describe('should correctly resolve secrets', function () {
             var testrun;
@@ -11,7 +24,7 @@ describe('vaultSecrets', function () {
                         id: 'vault',
                         values: [{
                             key: 'vault:var1',
-                            value: 'https://postman-echo.com'
+                            value: `${global.ECHO_SERVER}`
                         }, {
                             key: 'vault:var2',
                             value: 'postman'
@@ -54,7 +67,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('https://postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -80,7 +93,7 @@ describe('vaultSecrets', function () {
                         values: [
                             {
                                 key: 'url',
-                                value: 'https://postman-echo.com'
+                                value: `${global.ECHO_SERVER}`
                             }
                         ]
                     },
@@ -90,12 +103,12 @@ describe('vaultSecrets', function () {
                         values: [
                             {
                                 key: 'vault:var1',
-                                value: 'https://postman-echo.com'
+                                value: `${global.ECHO_SERVER}`
                             },
                             {
                                 key: 'vault:var2',
                                 value: 'postman',
-                                _domains: ['https://postman-echo.com']
+                                _domains: [echoServerDomain()]
                             },
                             {
                                 key: 'vault:var3',
@@ -137,7 +150,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('https://postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -165,13 +178,13 @@ describe('vaultSecrets', function () {
                         values: [
                             {
                                 key: 'vault:var1',
-                                value: 'https://postman-echo.com'
+                                value: `${global.ECHO_SERVER}`
                             },
                             {
                                 key: 'vault:var2',
                                 value: 'postman',
                                 _domains: [
-                                    'https://postman.com', 'https://getpostman.com', 'https://*.postman-echo.com'
+                                    'https://postman.com', 'https://getpostman.com', echoServerWildcardDomain()
                                 ]
                             },
                             {
@@ -184,7 +197,7 @@ describe('vaultSecrets', function () {
                         item: [
                             {
                                 request: {
-                                    url: 'https://postman-echo.com/basic-auth',
+                                    url: `${global.ECHO_SERVER}/basic-auth`,
                                     method: 'GET',
                                     auth: {
                                         type: 'basic',
@@ -196,7 +209,7 @@ describe('vaultSecrets', function () {
                                 }
                             }, {
                                 request: {
-                                    url: 'https://postman-echo.com/get?var3={{vault:var3}}',
+                                    url: `${global.ECHO_SERVER}/get?var3={{vault:var3}}`,
                                     method: 'GET'
                                 }
                             }
@@ -221,7 +234,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('https://postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -241,7 +254,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(1).args[3].url.toString(),
                     response = testrun.response.getCall(1).args[2];
 
-                expect(url).to.equal('https://postman-echo.com/get?var3=password');
+                expect(url).to.equal(`${global.ECHO_SERVER}/get?var3=password`);
                 expect(response).to.have.property('code', 200);
             });
         });
@@ -259,12 +272,12 @@ describe('vaultSecrets', function () {
                         values: [
                             {
                                 key: 'vault:var1',
-                                value: 'https://postman-echo.com'
+                                value: `${global.ECHO_SERVER}`
                             },
                             {
                                 key: 'vault:var2',
                                 value: 'postman',
-                                _domains: ['postman-echo.com']
+                                _domains: [echoServerDomain()]
                             },
                             {
                                 key: 'vault:var3',
@@ -275,7 +288,7 @@ describe('vaultSecrets', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/basic-auth',
+                                url: `${global.ECHO_SERVER}/basic-auth`,
                                 method: 'GET',
                                 auth: {
                                     type: 'basic',
@@ -306,7 +319,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('https://postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -334,7 +347,7 @@ describe('vaultSecrets', function () {
                         values: [
                             {
                                 key: 'vault:var1',
-                                value: 'https://postman-echo.com'
+                                value: `${global.ECHO_SERVER}`
                             },
                             {
                                 key: 'vault:var2',
@@ -374,7 +387,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('https://postman-echo.com/get?var2=%7B%7Bvault:var2%7D%7D&var3=password');
+                expect(url).to.equal(`${global.ECHO_SERVER}/get?var2=%7B%7Bvault:var2%7D%7D&var3=password`);
                 expect(response).to.have.property('code', 200);
             });
         });
@@ -390,12 +403,12 @@ describe('vaultSecrets', function () {
                         values: [
                             {
                                 key: 'vault:var1',
-                                value: 'https://postman-echo.com'
+                                value: `${global.ECHO_SERVER}`
                             },
                             {
                                 key: 'vault:var2',
                                 value: 'postman',
-                                _domains: ['https://*.postman-echo.com']
+                                _domains: [echoServerWildcardDomain()]
                             },
                             {
                                 key: 'vault:var3',
@@ -406,7 +419,7 @@ describe('vaultSecrets', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://www.postman-echo.com/basic-auth',
+                                url: `${global.ECHO_SERVER}/basic-auth`,
                                 method: 'GET',
                                 auth: {
                                     type: 'basic',
@@ -437,7 +450,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('https://www.postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -465,12 +478,12 @@ describe('vaultSecrets', function () {
                         values: [
                             {
                                 key: 'vault:var1',
-                                value: 'https://postman-echo.com'
+                                value: `${global.ECHO_SERVER}`
                             },
                             {
                                 key: 'vault:var2',
                                 value: 'postman',
-                                _domains: ['https://*.postman-echo.com']
+                                _domains: [echoServerWildcardDomain()]
                             },
                             {
                                 key: 'vault:var3',
@@ -479,14 +492,14 @@ describe('vaultSecrets', function () {
                             {
                                 key: 'vault:pathVar',
                                 value: 'basic-auth',
-                                _domains: ['https://*.postman-echo.com']
+                                _domains: [echoServerWildcardDomain()]
                             }
                         ]
                     },
                     collection: {
                         item: {
                             request: {
-                                url: 'https://www.postman-echo.com/{{vault:pathVar}}',
+                                url: `${global.ECHO_SERVER}/{{vault:pathVar}}`,
                                 method: 'GET',
                                 auth: {
                                     type: 'basic',
@@ -517,7 +530,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('https://www.postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -545,13 +558,13 @@ describe('vaultSecrets', function () {
                         values: [
                             {
                                 key: 'vault:var1',
-                                value: 'https://postman-echo.com'
+                                value: `${global.ECHO_SERVER}`
                             },
                             {
                                 key: 'vault:var2',
                                 value: 'postman',
                                 _domains: [
-                                    'https://postman.com', 'https://getpostman.com', 'https://*.postman-echo.com'
+                                    'https://postman.com', 'https://getpostman.com', echoServerWildcardDomain()
                                 ]
                             },
                             {
@@ -563,7 +576,7 @@ describe('vaultSecrets', function () {
                     collection: {
                         item: {
                             request: {
-                                url: 'https://postman-echo.com/basic-auth',
+                                url: `${global.ECHO_SERVER}/basic-auth`,
                                 method: 'GET',
                                 auth: {
                                     type: 'basic',
@@ -594,7 +607,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('https://postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -624,12 +637,12 @@ describe('vaultSecrets', function () {
                             {
                                 key: 'vault:var1',
                                 value: 'basic-auth',
-                                _domains: ['http://postman-echo.com']
+                                _domains: [echoServerDomain()]
                             },
                             {
                                 key: 'vault:var2',
                                 value: 'postman',
-                                _domains: ['http://postman-echo.com']
+                                _domains: [echoServerDomain()]
                             },
                             {
                                 key: 'vault:var3',
@@ -643,12 +656,12 @@ describe('vaultSecrets', function () {
                                 {
                                     listen: 'prerequest',
                                     script: {
-                                        exec: 'pm.vault.set(\'var4\', \'http://postman-echo.com\')'
+                                        exec: `pm.vault.set(\'var4\', \'${global.ECHO_SERVER}\')`
                                     }
                                 }
                             ],
                             request: {
-                                url: 'postman-echo.com/{{vault:var1}}',
+                                url: `${global.ECHO_SERVER}/{{vault:var1}}`,
                                 method: 'GET',
                                 auth: {
                                     type: 'basic',
@@ -691,7 +704,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(0).args[3].url.toString(),
                     response = testrun.response.getCall(0).args[2];
 
-                expect(url).to.equal('http://postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -699,7 +712,7 @@ describe('vaultSecrets', function () {
                 var url = testrun.request.getCall(1).args[3].url.toString(),
                     response = testrun.response.getCall(1).args[2];
 
-                expect(url).to.equal('http://postman-echo.com/basic-auth');
+                expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
                 expect(response).to.have.property('code', 200);
             });
         });
@@ -718,12 +731,12 @@ describe('vaultSecrets', function () {
                         {
                             key: 'vault:var1',
                             value: 'basic-auth',
-                            _domains: ['https://postman-echo.com']
+                            _domains: [echoServerDomain()]
                         },
                         {
                             key: 'vault:var2',
                             value: 'postman',
-                            _domains: ['https://postman-echo.com']
+                            _domains: [echoServerDomain()]
                         },
                         {
                             key: 'vault:var3',
@@ -737,12 +750,12 @@ describe('vaultSecrets', function () {
                             {
                                 listen: 'prerequest',
                                 script: {
-                                    exec: 'pm.vault.set(\'var4\', \'http://postman-echo.com\')'
+                                    exec: `pm.vault.set(\'var4\', \'${global.ECHO_SERVER}\')`
                                 }
                             }
                         ],
                         request: {
-                            url: 'https://postman-echo.com:80/{{vault:var1}}',
+                            url: `${global.ECHO_SERVER}/{{vault:var1}}`,
                             method: 'GET',
                             auth: {
                                 type: 'basic',
@@ -772,7 +785,7 @@ describe('vaultSecrets', function () {
         it('should handle protocol for a resolved domain', function () {
             var url = testrun.request.getCall(0).args[3].url.toString();
 
-            expect(url).to.equal('https://postman-echo.com:80/basic-auth');
+            expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should resolve vault secrets in auth', function () {
@@ -814,7 +827,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }
                 }, function (err, results) {
@@ -865,7 +878,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }
                 }, function (err, results) {
@@ -922,7 +935,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }
                 }, function (err, results) {
@@ -985,7 +998,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }
                 }, function (err, results) {
@@ -1043,7 +1056,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }
                 }, function (err, results) {
@@ -1104,7 +1117,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }, {
                             id: 'item2',
                             event: [{
@@ -1120,7 +1133,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }]
                     }
                 }, function (err, results) {
@@ -1173,7 +1186,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }
                 }, function (err, results) {
@@ -1223,7 +1236,7 @@ describe('vaultSecrets', function () {
                                     `
                                 }
                             }],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }
                 }, function (err, results) {

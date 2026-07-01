@@ -18,7 +18,7 @@ describe('script result format', function () {
                             listen: 'test',
                             script: { exec: 'tests.worked = true;' }
                         }],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -140,7 +140,7 @@ describe('script result format', function () {
                             listen: 'prerequest',
                             script: { exec: 'postman.setNextRequest("some-req-name");' }
                         }],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {

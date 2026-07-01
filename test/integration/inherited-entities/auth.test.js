@@ -8,7 +8,7 @@ describe('Inherited Auth', function () {
                 item: {
                     name: 'BasicAuth Request',
                     request: {
-                        url: 'https://postman-echo.com/digest-auth'
+                        url: `${global.ECHO_SERVER}/digest-auth`
                     }
                 }
             }
@@ -72,7 +72,7 @@ describe('Inherited Auth', function () {
                 response2 = testrun.request.secondCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.equal(`${global.ECHO_SERVER}/digest-auth`);
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
         });
@@ -95,12 +95,12 @@ describe('Inherited Auth', function () {
                             item: [{
                                 name: 'digestAuth Request 1',
                                 request: {
-                                    url: 'https://postman-echo.com/digest-auth'
+                                    url: `${global.ECHO_SERVER}/digest-auth`
                                 }
                             }, {
                                 name: 'digestAuth Request 2',
                                 request: {
-                                    url: 'https://postman-echo.com/digest-auth'
+                                    url: `${global.ECHO_SERVER}/digest-auth`
                                 }
                             }]
                         }]
@@ -150,12 +150,12 @@ describe('Inherited Auth', function () {
                 response3 = testrun.request.thirdCall.args[2];
 
             expect(err1).to.be.null;
-            expect(request1.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request1.url.toString()).to.equal(`${global.ECHO_SERVER}/digest-auth`);
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
 
             expect(err2).to.be.null;
-            expect(request2.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request2.url.toString()).to.equal(`${global.ECHO_SERVER}/digest-auth`);
             expect(response3).to.have.property('code', 200);
         });
     });
@@ -177,12 +177,12 @@ describe('Inherited Auth', function () {
                             item: [{
                                 name: 'DigestAuth Request 1',
                                 request: {
-                                    url: 'https://postman-echo.com/digest-auth'
+                                    url: `${global.ECHO_SERVER}/digest-auth`
                                 }
                             }, {
                                 name: 'DigestAuth Request 2',
                                 request: {
-                                    url: 'https://postman-echo.com/digest-auth'
+                                    url: `${global.ECHO_SERVER}/digest-auth`
                                 }
                             }]
                         }]
@@ -233,8 +233,8 @@ describe('Inherited Auth', function () {
 
             expect(err1).to.be.null;
             expect(err2).to.be.null;
-            expect(request1.url.toString()).to.equal('https://postman-echo.com/digest-auth');
-            expect(request2.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request1.url.toString()).to.equal(`${global.ECHO_SERVER}/digest-auth`);
+            expect(request2.url.toString()).to.equal(`${global.ECHO_SERVER}/digest-auth`);
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
             expect(response3).to.have.property('code', 200);
@@ -306,7 +306,7 @@ describe('Inherited Auth', function () {
                 response2 = testrun.request.secondCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.equal(`${global.ECHO_SERVER}/digest-auth`);
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
         });

@@ -19,7 +19,8 @@ var sinon = require('sinon'),
 
         this.run({
             requester: {
-                cookieJar
+                cookieJar,
+                strictSSL: false
             },
             fileResolver: fs,
             collection: {
@@ -106,7 +107,7 @@ var sinon = require('sinon'),
                 }, {
                     name: 'content-length',
                     request: {
-                        url: 'https://postman-echo.com/post',
+                        url: `${global.ECHO_SERVER}/post`,
                         method: 'POST',
                         body: {
                             mode: 'formdata',
@@ -120,7 +121,7 @@ var sinon = require('sinon'),
                 }, {
                     name: 'http2',
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER_HTTPS}/get`,
                         method: 'GET'
                     },
                     protocolProfileBehavior: {
@@ -130,7 +131,7 @@ var sinon = require('sinon'),
                 {
                     name: 'auto',
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER_HTTPS}/get`,
                         method: 'GET'
                     },
                     protocolProfileBehavior: {

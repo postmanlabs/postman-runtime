@@ -23,7 +23,7 @@ describe('Clear vars sandbox', function () {
                         }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/get?a={{e}}&b={{g}}',
+                        url: `${global.ECHO_SERVER}/get?a={{e}}&b={{g}}`,
                         method: 'GET'
                     }
                 }, {
@@ -45,7 +45,7 @@ describe('Clear vars sandbox', function () {
                         }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/get?a={{e}}&b={{g}}',
+                        url: `${global.ECHO_SERVER}/get?a={{e}}&b={{g}}`,
                         method: 'GET'
                     }
                 }, {
@@ -62,7 +62,7 @@ describe('Clear vars sandbox', function () {
                         }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/get?a={{e}}&b={{g}}',
+                        url: `${global.ECHO_SERVER}/get?a={{e}}&b={{g}}`,
                         method: 'GET'
                     }
                 }]

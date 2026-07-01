@@ -4,18 +4,22 @@ var expect = require('chai').expect,
 describe('request url', function () {
     var testrun;
 
+    function echoServerWithProtocol (protocol) {
+        return protocol + '://' + new URL(global.ECHO_SERVER).host;
+    }
+
     describe('with lowercase', function () {
         before(function (done) {
             this.run({
                 collection: {
                     item: [{
                         request: {
-                            url: 'http://postman-echo.com/post?name=postman',
+                            url: `${global.ECHO_SERVER}/post?name=postman`,
                             method: 'POST'
                         }
                     }, {
                         request: {
-                            url: 'https://postman-echo.com/post?name=postman',
+                            url: `${global.ECHO_SERVER}/post?name=postman`,
                             method: 'POST'
                         }
                     }]
@@ -53,14 +57,14 @@ describe('request url', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'http://postman-echo.com/post?name=postman');
+                .property('url', `${global.ECHO_SERVER}/post?name=postman`);
         });
 
         it('should normalise the url for https', function () {
             var request = testrun.request.getCall(1).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'https://postman-echo.com/post?name=postman');
+                .property('url', `${global.ECHO_SERVER}/post?name=postman`);
         });
 
         it('should maintain the case sensitivity of path and query parameters for http', function () {
@@ -84,13 +88,13 @@ describe('request url', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'HTTP://POSTMAN-ECHO.COM/POST?NAME=POSTMAN',
+                            url: echoServerWithProtocol('HTTP') + '/POST?NAME=POSTMAN',
                             method: 'POST'
                         }
                     },
                     {
                         request: {
-                            url: 'HTTPS://POSTMAN-ECHO.COM/POST?NAME=POSTMAN',
+                            url: echoServerWithProtocol('HTTP') + '/POST?NAME=POSTMAN',
                             method: 'POST'
                         }
                     }
@@ -129,14 +133,14 @@ describe('request url', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'http://postman-echo.com/POST?NAME=POSTMAN');
+                .property('url', `${global.ECHO_SERVER}/POST?NAME=POSTMAN`);
         });
 
         it('should normalise the url for https', function () {
             var request = testrun.request.getCall(1).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'https://postman-echo.com/POST?NAME=POSTMAN');
+                .property('url', `${global.ECHO_SERVER}/POST?NAME=POSTMAN`);
         });
 
         it('should maintain the case sensitivity of path and query parameters for http', function () {
@@ -160,13 +164,13 @@ describe('request url', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'HttP://POsTmaN-ecHo.CoM/PoST?NamE=PosTMaN',
+                            url: echoServerWithProtocol('HttP') + '/PoST?NamE=PosTMaN',
                             method: 'POST'
                         }
                     },
                     {
                         request: {
-                            url: 'htTpS://POsTmaN-eChO.Com/Post?NaMe=PostMaN',
+                            url: echoServerWithProtocol('HttP') + '/Post?NaMe=PostMaN',
                             method: 'POST'
                         }
                     }
@@ -205,14 +209,14 @@ describe('request url', function () {
             var request = testrun.request.getCall(0).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'http://postman-echo.com/PoST?NamE=PosTMaN');
+                .property('url', `${global.ECHO_SERVER}/PoST?NamE=PosTMaN`);
         });
 
         it('should normalise the url for https', function () {
             var request = testrun.request.getCall(1).args[2].stream.toString();
 
             expect(JSON.parse(request)).to.have
-                .property('url', 'https://postman-echo.com/Post?NaMe=PostMaN');
+                .property('url', `${global.ECHO_SERVER}/Post?NaMe=PostMaN`);
         });
 
         it('should maintain the case sensitivity of path and query parameters for http', function () {

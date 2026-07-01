@@ -7,7 +7,7 @@ var expect = require('chai').expect;
         this.run({
             collection: {
                 item: {
-                    request: 'https://postman-echo.com/delay/9'
+                    request: `${global.ECHO_SERVER}/delay/9`
                 }
             },
             timeout: {

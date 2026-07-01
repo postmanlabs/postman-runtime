@@ -18,7 +18,7 @@ describe('sanity test', function () {
                     item: [{
                         name: 'F1.R1',
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             header: [],
                             body: {}
@@ -27,7 +27,7 @@ describe('sanity test', function () {
                     }, {
                         name: 'F1.R2',
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             header: [],
                             body: {}
@@ -36,7 +36,7 @@ describe('sanity test', function () {
                     }, {
                         name: 'F1.R3',
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             header: [],
                             body: {}
@@ -50,7 +50,7 @@ describe('sanity test', function () {
                         item: [{
                             name: 'F2.F3.R1',
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: `${global.ECHO_SERVER}/get`,
                                 method: 'GET',
                                 header: [],
                                 body: {}
@@ -62,7 +62,7 @@ describe('sanity test', function () {
                     }, {
                         name: 'F2.R1',
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             header: [],
                             body: {}
@@ -72,7 +72,7 @@ describe('sanity test', function () {
                 }, {
                     name: 'R1',
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         method: 'GET',
                         header: [],
                         body: {}

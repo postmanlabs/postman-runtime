@@ -30,7 +30,7 @@ describe('OAuth1 var in url params', function () {
                                 addEmptyParamsToSign: false
                             }
                         },
-                        url: 'https://postman-echo.com/oauth1?a={{vala}}',
+                        url: `${global.ECHO_SERVER}/oauth1?a={{vala}}`,
                         method: 'GET'
                     }
                 }]

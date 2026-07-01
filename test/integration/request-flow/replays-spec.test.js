@@ -7,7 +7,7 @@ describe('requests replayed', function () {
             collection: {
                 item: [{
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         auth: {
                             type: 'fake',
                             fake: {}
@@ -78,7 +78,7 @@ describe('requests replayed', function () {
             expect(testrun).to.nested.include({
                 'response.callCount': 1
             });
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
         });
 
@@ -90,7 +90,7 @@ describe('requests replayed', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             expect(trace).to.deep.include({
@@ -107,7 +107,7 @@ describe('requests replayed', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             expect(trace).to.deep.include({
@@ -132,7 +132,7 @@ describe('requests replayed', function () {
                     },
 
                     pre (auth, done) {
-                        done(null, intermediateReqCount++ >= 1, 'https://postman-echo.com/fake/url');
+                        done(null, intermediateReqCount++ >= 1, `${global.ECHO_SERVER}/fake/url`);
                     },
 
                     post (auth, response, done) {
@@ -179,7 +179,7 @@ describe('requests replayed', function () {
             expect(testrun).to.nested.include({
                 'response.callCount': 1
             });
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
         });
 
@@ -190,7 +190,7 @@ describe('requests replayed', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/fake/url');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/fake/url`);
 
             expect(trace).to.deep.include({
                 type: 'http',
@@ -206,7 +206,7 @@ describe('requests replayed', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             expect(trace).to.deep.include({
@@ -223,7 +223,7 @@ describe('requests replayed', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             expect(trace).to.deep.include({
@@ -314,7 +314,7 @@ describe('requests replayed', function () {
                 },
 
                 pre (auth, done) {
-                    done(null, false, 'https://postman-echo.com/get');
+                    done(null, false, `${global.ECHO_SERVER}/get`);
                 },
 
                 post (auth, response, done) {

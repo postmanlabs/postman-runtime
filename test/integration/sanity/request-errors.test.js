@@ -9,7 +9,7 @@ describe('unhandled errors in request send', function () {
             collection: {
                 item: [{
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         auth: {
                             type: 'fake',
                             fake: {

@@ -9,17 +9,9 @@ var sinon = require('sinon'),
             collection: {
                 item: [{
                     request: {
-                        url: {
-                            host: 'postman-echo.com',
-                            path: 'response-headers',
-                            query: [{
-                                key: 'Set-Cookie',
-                                value: 'cookie_1=value_1; path=/'
-                            }, {
-                                key: 'Set-Cookie',
-                                value: 'cookie_2=value_2; path=/; Max-Age=1000'
-                            }]
-                        }
+                        url: `${global.ECHO_SERVER}/response-headers?` +
+                            'Set-Cookie=cookie_1%3Dvalue_1%3B%20path%3D%2F&' +
+                            'Set-Cookie=cookie_2%3Dvalue_2%3B%20path%3D%2F%3B%20Max-Age%3D1000'
                     }
                 }]
             }

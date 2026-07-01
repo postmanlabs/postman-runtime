@@ -11,7 +11,7 @@ describe('sandbox library - pm api', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
@@ -66,7 +66,7 @@ describe('sandbox library - pm api', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
@@ -147,13 +147,13 @@ describe('sandbox library - pm api', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
                                 type: 'text/javascript',
                                 exec: `
-                                pm.sendRequest('https://postman-echo.com/cookies/set?foo=bar', (err, res, history) => {
+                                pm.sendRequest('${global.ECHO_SERVER}/cookies/set?foo=bar', (err, res, history) => {
                                     var CookieList = require('postman-collection').CookieList;
                                     pm.test("History object in pm.sendRequest", function () {
                                         pm.expect(history).to.be.ok;
@@ -216,7 +216,7 @@ describe('sandbox library - pm api', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'http://postman-echo.com/cookies/set?foo=bar',
+                            request: `${global.ECHO_SERVER}/cookies/set?foo=bar`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -225,7 +225,7 @@ describe('sandbox library - pm api', function () {
                                     var jar = pm.cookies.jar();
 
                                     pm.test('jar.get in pre-request', function (done) {
-                                        jar.get("http://postman-echo.com/", "foo", function (err, value) {
+                                        jar.get("${global.ECHO_SERVER}/", "foo", function (err, value) {
                                             pm.expect(err).to.be.null;
                                             pm.expect(value).to.be.null;
                                             done();
@@ -301,7 +301,7 @@ describe('sandbox library - pm api', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'http://postman-echo.com/cookies',
+                            request: `${global.ECHO_SERVER}/cookies`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -310,7 +310,7 @@ describe('sandbox library - pm api', function () {
                                     var jar = pm.cookies.jar();
 
                                     pm.test('jar.set in pre-request', function (done) {
-                                        jar.set('postman-echo.com', "hello=world; Path=/", function (err) {
+                                        jar.set('${global.ECHO_SERVER}', "hello=world; Path=/", function (err) {
                                             pm.expect(err).to.be.null;
                                             done();
                                         });
@@ -363,9 +363,9 @@ describe('sandbox library - pm api', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'http://postman-echo.com/cookies/set?foo=bar'
+                            request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                         }, {
-                            request: 'http://postman-echo.com/cookies',
+                            request: `${global.ECHO_SERVER}/cookies`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -429,7 +429,7 @@ describe('sandbox library - pm api', function () {
                 var cookieJar = postmanRequest.jar();
 
                 cookieJar.allowProgrammaticAccess = function (domain) {
-                    return domain === 'postman-echo.com';
+                    return domain === `${global.ECHO_SERVER}`;
                 };
 
                 this.run({
@@ -438,7 +438,7 @@ describe('sandbox library - pm api', function () {
                     },
                     collection: {
                         item: [{
-                            request: 'http://postman-echo.com/cookies',
+                            request: `${global.ECHO_SERVER}/cookies`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -447,13 +447,13 @@ describe('sandbox library - pm api', function () {
                                     var jar = pm.cookies.jar();
 
                                     pm.test('jar.set in pre-request', function (done) {
-                                        jar.set('www.postman-echo.com', "hello=world; Path=/", done);
+                                        jar.set('${global.ECHO_SERVER}', "hello=world; Path=/", done);
                                     });
                                     `
                                 }
                             }]
                         }, {
-                            request: 'http://postman-echo.com/cookies',
+                            request: `${global.ECHO_SERVER}/cookies`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -462,7 +462,7 @@ describe('sandbox library - pm api', function () {
                                     var jar = pm.cookies.jar();
 
                                     pm.test('jar.set in pre-request', function (done) {
-                                        jar.set('postman-echo.com', "hello=world; Path=/", done);
+                                        jar.set('${global.ECHO_SERVER}', "hello=world; Path=/", done);
                                     });
                                     `
                                 }
@@ -504,7 +504,7 @@ describe('sandbox library - pm api', function () {
                     error: {
                         type: 'Error',
                         name: 'Error',
-                        message: 'CookieStore: programmatic access to "www.postman-echo.com" is denied'
+                        message: `CookieStore: programmatic access to "${global.ECHO_SERVER}" is denied`
                     },
                     index: 0,
                     passed: false,
@@ -527,7 +527,7 @@ describe('sandbox library - pm api', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
@@ -614,16 +614,7 @@ describe('sandbox library - pm api', function () {
                                             type: 'text'
                                         }
                                     ],
-                                    url: {
-                                        raw: 'postman-echo.com/get',
-                                        host: [
-                                            'postman-echo',
-                                            'com'
-                                        ],
-                                        path: [
-                                            'get'
-                                        ]
-                                    }
+                                    url: `${global.ECHO_SERVER}/get`
                                 },
                                 response: [],
                                 id: 'request-id'

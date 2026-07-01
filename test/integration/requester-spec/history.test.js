@@ -10,7 +10,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             header: [{
                                 key: 'Connection',
@@ -65,7 +65,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER_HTTPS}/get`,
                             method: 'GET',
                             header: [{
                                 key: 'Connection',
@@ -75,6 +75,7 @@ var expect = require('chai').expect,
                     }]
                 },
                 requester: {
+                    strictSSL: false,
                     verbose: true
                 }
             }, function (err, result) {
@@ -130,7 +131,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             header: [{
                                 key: 'Invalid Header Name', // contains spaces

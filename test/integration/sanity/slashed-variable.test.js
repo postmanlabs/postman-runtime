@@ -11,7 +11,7 @@ describe('Slashed variables', function () {
             },
             collection: {
                 item: [{
-                    request: 'https://postman-echo.com/get?foo={{fo/o}}&bar={{b\\ar}}'
+                    request: `${global.ECHO_SERVER}/get?foo={{fo/o}}&bar={{b\\ar}}`
                 }]
             }
         }, function (err, results) {

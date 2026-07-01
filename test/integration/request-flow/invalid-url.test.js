@@ -10,12 +10,12 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: '!http://postman-echo.com',
+                            url: `!${global.ECHO_SERVER}`,
                             method: 'GET'
                         }
                     }, {
                         request: {
-                            url: '→ https://postman-echo.com',
+                            url: `→ ${global.ECHO_SERVER}`,
                             method: 'GET'
                         }
                     }]
@@ -41,7 +41,7 @@ var expect = require('chai').expect,
             sinon.assert.calledTwice(testrun.response);
 
             expect(testrun.request.getCall(0).args[0].message).to.equal('Invalid protocol: !http:');
-            expect(testrun.request.getCall(1).args[0].message).to.equal('Invalid protocol: → https:');
+            expect(testrun.request.getCall(1).args[0].message).to.equal('Invalid protocol: → http:');
         });
     });
 
@@ -53,12 +53,12 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: '!http://postman-echo.com',
+                            url: `!${global.ECHO_SERVER}`,
                             method: 'GET'
                         }
                     }, {
                         request: {
-                            url: '→ https://postman-echo.com',
+                            url: `→ ${global.ECHO_SERVER}`,
                             method: 'GET'
                         }
                     }]
@@ -83,8 +83,8 @@ var expect = require('chai').expect,
             sinon.assert.calledTwice(testrun.request);
             sinon.assert.calledTwice(testrun.response);
 
-            expect(testrun.request.getCall(0).args[0].message).to.equal('Invalid URI "!http://postman-echo.com"');
-            expect(testrun.request.getCall(1).args[0].message).to.equal('Invalid URI "→%20https://postman-echo.com"');
+            expect(testrun.request.getCall(0).args[0].message).to.equal(`Invalid URI "!${global.ECHO_SERVER}"`);
+            expect(testrun.request.getCall(1).args[0].message).to.equal(`Invalid URI "→%20${global.ECHO_SERVER}"`);
         });
     });
 });

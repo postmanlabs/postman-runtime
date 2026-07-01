@@ -18,7 +18,7 @@ var expect = require('chai').expect;
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -62,7 +62,7 @@ var expect = require('chai').expect;
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {

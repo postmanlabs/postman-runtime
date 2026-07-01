@@ -17,7 +17,7 @@ describe('synchronous script timeouts', function () {
                         `
                         }],
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET'
                         }
                     }]
@@ -67,7 +67,7 @@ describe('synchronous script timeouts', function () {
                         `
                         }],
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET'
                         }
                     }]
@@ -117,7 +117,7 @@ describe('synchronous script timeouts', function () {
                                 `
                             }],
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: `${global.ECHO_SERVER}/get`,
                                 method: 'GET'
                             }
                         }]
@@ -175,7 +175,7 @@ describe('synchronous script timeouts', function () {
                                 `
                             }],
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: `${global.ECHO_SERVER}/get`,
                                 method: 'GET'
                             }
                         }]

@@ -7,7 +7,7 @@ describe('waitStateChange event for item', function () {
         this.run({
             delay: { item: 200 },
             collection: {
-                item: { request: 'https://postman-echo.com/get?1' }
+                item: { request: `${global.ECHO_SERVER}/get?1` }
             }
         }, function (err, results) {
             testrun = results;

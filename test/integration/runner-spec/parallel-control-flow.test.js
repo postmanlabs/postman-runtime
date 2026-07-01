@@ -19,7 +19,7 @@ describe('Parallel Control Flow', function () {
             collection: {
                 item: [{
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         method: 'GET'
                     }
                 }]
@@ -125,7 +125,7 @@ describe('Parallel Control Flow', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]

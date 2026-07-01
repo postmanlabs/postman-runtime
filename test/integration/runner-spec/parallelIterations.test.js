@@ -4,7 +4,7 @@ var _ = require('lodash'),
 describe('Run option parallelIterations', function () {
     var collection = {
         item: [{
-            request: 'https://postman-echo.com/get',
+            request: `${global.ECHO_SERVER}/get`,
             event: [{
                 listen: 'test',
                 script: {
@@ -189,7 +189,7 @@ describe('Run option parallelIterations', function () {
                 collection: {
                     item: [{
                         name: 'First Request',
-                        request: 'https://postman-echo.com/get?request=1',
+                        request: `${global.ECHO_SERVER}/get?request=1`,
                         event: [{
                             listen: 'test',
                             script: {
@@ -203,7 +203,7 @@ describe('Run option parallelIterations', function () {
                         }]
                     }, {
                         name: 'Second Request',
-                        request: 'https://postman-echo.com/get?request=2',
+                        request: `${global.ECHO_SERVER}/get?request=2`,
                         event: [{
                             listen: 'test',
                             script: {
@@ -216,7 +216,7 @@ describe('Run option parallelIterations', function () {
                         }]
                     }, {
                         name: 'Third Request',
-                        request: 'https://postman-echo.com/get?request=3',
+                        request: `${global.ECHO_SERVER}/get?request=3`,
                         event: [{
                             listen: 'test',
                             script: {
@@ -256,7 +256,7 @@ describe('Run option parallelIterations', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
@@ -306,7 +306,7 @@ describe('Run option parallelIterations', function () {
                     item: [{
                         name: 'Delayed Request',
                         request: {
-                            url: 'https://postman-echo.com/delay/1', // 1 second delay
+                            url: `${global.ECHO_SERVER}/delay/1`, // 1 second delay
                             method: 'GET'
                         }
                     }]
@@ -326,7 +326,7 @@ describe('Run option parallelIterations', function () {
                         item: [{
                             name: 'Delayed Request',
                             request: {
-                                url: 'https://postman-echo.com/delay/1', // 1 second delay
+                                url: `${global.ECHO_SERVER}/delay/1`, // 1 second delay
                                 method: 'GET'
                             }
                         }]
@@ -409,7 +409,7 @@ describe('Run option parallelIterations', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -443,7 +443,7 @@ describe('Run option parallelIterations', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }]
                     },
                     iterationCount: 2,
@@ -474,7 +474,7 @@ describe('Run option parallelIterations', function () {
                     collection: {
                         item: [{
                             name: 'First Request',
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -488,7 +488,7 @@ describe('Run option parallelIterations', function () {
                             }]
                         }, {
                             name: 'Second Request',
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -524,7 +524,7 @@ describe('Run option parallelIterations', function () {
                     collection: {
                         item: [{
                             name: 'First Request',
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -538,7 +538,7 @@ describe('Run option parallelIterations', function () {
                             }]
                         }, {
                             name: 'Second Request',
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -574,7 +574,7 @@ describe('Run option parallelIterations', function () {
                     collection: {
                         item: [{
                             name: 'First Request',
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -588,7 +588,7 @@ describe('Run option parallelIterations', function () {
                             }]
                         }, {
                             name: 'Second Request',
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -601,7 +601,7 @@ describe('Run option parallelIterations', function () {
                             }]
                         }, {
                             name: 'Third Request',
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }]
                     },
                     iterationCount: 1,
@@ -642,7 +642,7 @@ describe('Run option parallelIterations', function () {
                     collection: {
                         item: [{
                             name: 'Failing Request',
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -653,7 +653,7 @@ describe('Run option parallelIterations', function () {
                             }]
                         }, {
                             name: 'Second Request',
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }]
                     },
                     iterationCount: 2,
@@ -679,7 +679,7 @@ describe('Run option parallelIterations', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -715,7 +715,7 @@ describe('Run option parallelIterations', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -763,7 +763,7 @@ describe('Run option parallelIterations', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {
@@ -811,7 +811,7 @@ describe('Run option parallelIterations', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'https://postman-echo.com/get',
+                            request: `${global.ECHO_SERVER}/get`,
                             event: [{
                                 listen: 'test',
                                 script: {

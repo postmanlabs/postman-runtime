@@ -6,6 +6,22 @@ var fs = require('fs'),
 describe('oauth 1', function () {
     var testrun;
 
+    function echoUrl (path, overrides) {
+        var parsed = new URL(global.ECHO_SERVER),
+            url = {
+                host: parsed.hostname.split('.'),
+                path: Array.isArray(path) ? path : [path],
+                port: parsed.port,
+                protocol: parsed.protocol.replace(/:$/, '')
+            };
+
+        overrides && Object.keys(overrides).forEach(function (key) {
+            url[key] = overrides[key];
+        });
+
+        return url;
+    }
+
     describe('correct credentials', function () {
         before(function (done) {
             // perform the collection run
@@ -29,7 +45,7 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: 'https://postman-echo.com/oauth1',
+                            url: `${global.ECHO_SERVER}/oauth1`,
                             method: 'GET'
                         }
                     }
@@ -54,7 +70,7 @@ describe('oauth 1', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/oauth1');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/oauth1`);
             expect(response).to.have.property('code', 200);
         });
 
@@ -66,7 +82,7 @@ describe('oauth 1', function () {
                 firstResponse = testrun.io.firstCall.args[3];
 
             expect(firstError).to.be.null;
-            expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/oauth1');
+            expect(firstRequest.url.toString()).to.eql(`${global.ECHO_SERVER}/oauth1`);
             expect(firstResponse).to.have.property('code', 200);
         });
 
@@ -76,7 +92,7 @@ describe('oauth 1', function () {
             var request = testrun.request.getCall(0).args[3],
                 response = testrun.request.getCall(0).args[2];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/oauth1');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/oauth1`);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -99,7 +115,7 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: 'https://postman-echo.com/oauth1',
+                            url: `${global.ECHO_SERVER}/oauth1`,
                             method: 'GET',
                             body: {
                                 mode: 'urlencoded',
@@ -156,16 +172,13 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: {
-                                host: ['postman-echo', 'com'],
-                                path: ['oauth1'],
-                                protocol: 'https',
+                            url: echoUrl('oauth1', {
                                 query: [
                                     { key: 'param_1', value: 'value_1' },
                                     { key: 'param_2', value: 'value_2', disabled: true }
                                 ],
                                 variable: []
-                            },
+                            }),
                             method: 'GET'
                         }
                     }
@@ -212,11 +225,7 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: {
-                                host: ['postman-echo', 'com'],
-                                path: ['post'],
-                                protocol: 'https'
-                            },
+                            url: echoUrl('post'),
                             method: 'POST',
                             body: {
                                 mode: 'urlencoded',
@@ -273,7 +282,7 @@ describe('oauth 1', function () {
                                     disableHeaderEncoding: true
                                 }
                             },
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET'
                         }
                     }
@@ -318,7 +327,7 @@ describe('oauth 1', function () {
                                     disableHeaderEncoding: false
                                 }
                             },
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET'
                         }
                     }
@@ -362,7 +371,7 @@ describe('oauth 1', function () {
                                     addParamsToHeader: true
                                 }
                             },
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET'
                         }
                     }
@@ -407,7 +416,7 @@ describe('oauth 1', function () {
                                     includeBodyHash: false
                                 }
                             },
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             body: {
                                 mode: 'file',
@@ -459,7 +468,7 @@ describe('oauth 1', function () {
                                     includeBodyHash: true
                                 }
                             },
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             body: {
                                 mode: 'file',
@@ -513,17 +522,14 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: {
-                                host: ['postman-echo', 'com'],
-                                path: ['oauth1'],
-                                protocol: 'https',
+                            url: echoUrl('oauth1', {
                                 query: [
                                     { key: 'param_1', value: 'value_1,value_2,value_3' },
                                     { key: 'param_2', value: 'value_4&value_5' },
                                     { key: 'param_3', value: 'value_1%2Cvalue_2%2Cvalue_3' }
                                 ],
                                 variable: []
-                            },
+                            }),
                             method: 'GET'
                         }
                     }
@@ -579,16 +585,13 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: {
-                                host: ['postman-echo', 'com'],
-                                path: ['oauth1'],
-                                protocol: 'https',
+                            url: echoUrl('oauth1', {
                                 query: [
                                     { key: 'param_1', value: 'value_1' },
                                     { key: 'param_1', value: 'value_2' }
                                 ],
                                 variable: []
-                            },
+                            }),
                             method: 'GET'
                         }
                     }
@@ -636,15 +639,12 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: {
-                                host: ['postman-echo', 'com'],
-                                path: ['oauth1'],
-                                protocol: 'https',
+                            url: echoUrl('oauth1', {
                                 query: [
                                     { key: '', value: 'value_1' }
                                 ],
                                 variable: []
-                            },
+                            }),
                             method: 'GET'
                         }
                     }
@@ -690,16 +690,13 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: {
-                                host: ['postman-echo', 'com'],
-                                path: ['oauth1'],
-                                protocol: 'https',
+                            url: echoUrl('oauth1', {
                                 query: [
                                     { key: 'param_1', value: 'value_1,value_2,value_3' },
                                     { key: 'param_2', value: 'value_4/value_5' }
                                 ],
                                 variable: []
-                            },
+                            }),
                             method: 'GET'
                         }
                     },
@@ -755,16 +752,13 @@ describe('oauth 1', function () {
                                     addEmptyParamsToSign: false
                                 }
                             },
-                            url: {
-                                host: ['postman-echo', 'com'],
-                                path: ['oauth1'],
-                                protocol: 'https',
+                            url: echoUrl('oauth1', {
                                 query: [
                                     { key: 'param_1', value: 'value_1,value_2,value_3' },
                                     { key: 'param_2', value: 'value_4/value_5' }
                                 ],
                                 variable: []
-                            },
+                            }),
                             method: 'GET'
                         }
                     },

@@ -21,7 +21,7 @@ describe('Collection Variables', function () {
                 variable: [
                     { key: 'user', value: 'postman', enabled: true },
                     { key: 'pass', value: 'incorrect password', enabled: true },
-                    { key: 'echo-url', value: 'https://postman-echo.com', enabled: true }
+                    { key: 'echo-url', value: `${global.ECHO_SERVER}`, enabled: true }
                 ],
                 item: {
                     name: 'Collection Variables Test Request',
@@ -75,7 +75,7 @@ describe('Collection Variables', function () {
     it('should be resolved in request URL', function () {
         var url = testrun.request.getCall(0).args[3].url.toString();
 
-        expect(url).to.equal('https://postman-echo.com/basic-auth');
+        expect(url).to.equal(`${global.ECHO_SERVER}/basic-auth`);
     });
 
     it('should be resolved in request auth', function () {
@@ -96,7 +96,7 @@ describe('Collection Variables', function () {
             variables = {
                 'global-var': 'global var value',
                 'env-var': 'env var value',
-                'echo-url': 'https://postman-echo.com',
+                'echo-url': `${global.ECHO_SERVER}`,
                 user: 'postman',
                 pass: 'password'
             };

@@ -9,7 +9,7 @@ describe('form data', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get?hi=hello&hi=lolol',
+                            url: `${global.ECHO_SERVER}/get?hi=hello&hi=lolol`,
                             method: 'GET'
                         }
                     }]
@@ -50,7 +50,7 @@ describe('form data', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'urlencoded',
@@ -94,7 +94,7 @@ describe('form data', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',

@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 describe('Request Body Mode: raw', function () {
     var testrun,
-        HOST = 'https://postman-echo.com/post';
+        HOST = `${global.ECHO_SERVER}/post`;
 
     describe('with string', function () {
         before(function (done) {

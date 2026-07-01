@@ -4,7 +4,7 @@ var expect = require('chai').expect,
 describe('requests from sandbox', function () {
     describe('single .sendRequest', function () {
         var testrun,
-            sandboxRequestUrl = 'https://postman-echo.com/get?sandbox=true';
+            sandboxRequestUrl = `${global.ECHO_SERVER}/get?sandbox=true`;
 
         before(function (done) {
             this.run({
@@ -27,7 +27,7 @@ describe('requests from sandbox', function () {
                                 `
                             }
                         }],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -82,7 +82,7 @@ describe('requests from sandbox', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             expect(trace).to.deep.include({
@@ -115,8 +115,8 @@ describe('requests from sandbox', function () {
 
     describe('multiple sends', function () {
         var testrun,
-            sandboxRequestUrl1 = 'https://postman-echo.com/get?sandbox=true&n=1',
-            sandboxRequestUrl2 = 'https://postman-echo.com/get?sandbox=true&n=2',
+            sandboxRequestUrl1 = `${global.ECHO_SERVER}/get?sandbox=true&n=1`,
+            sandboxRequestUrl2 = `${global.ECHO_SERVER}/get?sandbox=true&n=2`,
             testname1 = 'sending-1',
             testname2 = 'sending-2';
 
@@ -153,7 +153,7 @@ describe('requests from sandbox', function () {
                                 `
                             }
                         }],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -226,7 +226,7 @@ describe('requests from sandbox', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             expect(trace).to.deep.include({
@@ -297,7 +297,7 @@ describe('requests from sandbox', function () {
                                 `
                             }
                         }],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -338,7 +338,7 @@ describe('requests from sandbox', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             expect(trace).to.deep.include({
@@ -382,7 +382,7 @@ describe('requests from sandbox', function () {
                                 `
                             }
                         }],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -451,7 +451,7 @@ describe('requests from sandbox', function () {
 
             expect(error).to.be.null;
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             expect(trace).to.deep.include({
@@ -485,7 +485,7 @@ describe('requests from sandbox', function () {
                                     exec: `
                                     var sdk = require('postman-collection'),
                                         myreq = new sdk.Request({
-                                            url: 'https://postman-echo.com/post',
+                                            url: '${global.ECHO_SERVER}/post',
                                             method: 'POST',
                                             body: {
                                                 mode: 'file',
@@ -502,7 +502,7 @@ describe('requests from sandbox', function () {
                                 }
                             }],
                             request: {
-                                url: 'https://postman-echo.com/get'
+                                url: `${global.ECHO_SERVER}/get`
                             }
                         }
                     }
@@ -539,7 +539,7 @@ describe('requests from sandbox', function () {
                                     exec: `
                                     var sdk = require('postman-collection'),
                                         myreq = new sdk.Request({
-                                            url: 'https://postman-echo.com/post',
+                                            url: '${global.ECHO_SERVER}/post',
                                             method: 'POST',
                                             body: {
                                                 mode: 'formdata',
@@ -564,7 +564,7 @@ describe('requests from sandbox', function () {
                                 }
                             }],
                             request: {
-                                url: 'https://postman-echo.com/get'
+                                url: `${global.ECHO_SERVER}/get`
                             }
                         }
                     }
@@ -605,7 +605,7 @@ describe('requests from sandbox', function () {
                             script: {
                                 exec: `
                                 pm.sendRequest({
-                                    url: 'https://postman-echo.com/get',
+                                    url: '${global.ECHO_SERVER}/get',
                                     body: {
                                         mode: 'raw',
                                         raw: 'foo'
@@ -620,7 +620,7 @@ describe('requests from sandbox', function () {
                                 `
                             }
                         }],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {

@@ -10,7 +10,7 @@ describe('Console', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
@@ -106,7 +106,7 @@ describe('Console', function () {
                 },
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {

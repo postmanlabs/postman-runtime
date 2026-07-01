@@ -17,7 +17,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -51,7 +51,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
                 ignoreProxyEnvironmentVariables: true,
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -83,7 +83,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
                 ignoreProxyEnvironmentVariables: false,
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {
@@ -114,13 +114,13 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             this.run({
                 ignoreProxyEnvironmentVariables: true,
                 proxies: new ProxyConfigList({}, [{
-                    match: '*://postman-echo.com/*',
+                    match: global.ECHO_SERVER_PROXY_MATCH,
                     host: 'localhost',
                     port: global.servers.proxy.split(':')[2]
                 }]),
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {

@@ -9,7 +9,7 @@ describe('Set next request', function () {
                 item: [{
                     name: 'one',
                     request: {
-                        url: 'https://postman-echo.com/get?name=one',
+                        url: `${global.ECHO_SERVER}/get?name=one`,
                         method: 'GET'
                     },
                     event: [{
@@ -21,13 +21,13 @@ describe('Set next request', function () {
                 }, {
                     name: 'two',
                     request: {
-                        url: 'https://postman-echo.com/get?name=two',
+                        url: `${global.ECHO_SERVER}/get?name=two`,
                         method: 'GET'
                     }
                 }, {
                     name: 'three',
                     request: {
-                        url: 'https://postman-echo.com/get?name=three',
+                        url: `${global.ECHO_SERVER}/get?name=three`,
                         method: 'GET'
                     }
                 }]

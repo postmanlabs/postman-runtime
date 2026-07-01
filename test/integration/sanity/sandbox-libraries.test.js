@@ -42,7 +42,7 @@ describe('Sandbox libraries', function () {
                         script: { exec: ['postman.setGlobalVariable(\'g1\', \'0\');'] }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/type/xml',
+                        url: `${global.ECHO_SERVER}/type/xml`,
                         method: 'GET'
                     }
                 }, {
@@ -63,7 +63,7 @@ describe('Sandbox libraries', function () {
                         }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/post',
+                        url: `${global.ECHO_SERVER}/post`,
                         method: 'POST',
                         body: {
                             mode: 'formdata',
@@ -81,19 +81,19 @@ describe('Sandbox libraries', function () {
                         listen: 'test',
                         script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
-                    request: { url: 'https://postman-echo.com/put', method: 'PUT' }
+                    request: { url: `${global.ECHO_SERVER}/put`, method: 'PUT' }
                 }, {
                     event: [{
                         listen: 'test',
                         script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
-                    request: { url: 'https://postman-echo.com/patch', method: 'PATCH' }
+                    request: { url: `${global.ECHO_SERVER}/patch`, method: 'PATCH' }
                 }, {
                     event: [{
                         listen: 'test',
                         script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
-                    request: { url: 'https://postman-echo.com/delete', method: 'DELETE' }
+                    request: { url: `${global.ECHO_SERVER}/delete`, method: 'DELETE' }
                 }, {
                     event: [{
                         listen: 'test',
@@ -104,7 +104,7 @@ describe('Sandbox libraries', function () {
                             ]
                         }
                     }],
-                    request: { url: 'https://postman-echo.com/get', method: 'HEAD' }
+                    request: { url: `${global.ECHO_SERVER}/get`, method: 'HEAD' }
                 }, {
                     event: [{
                         listen: 'test',
@@ -116,14 +116,14 @@ describe('Sandbox libraries', function () {
                             ]
                         }
                     }],
-                    request: { url: 'https://postman-echo.com/get', method: 'OPTIONS' }
+                    request: { url: `${global.ECHO_SERVER}/get`, method: 'OPTIONS' }
                 }, {
                     event: [{
                         listen: 'test',
                         script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/post',
+                        url: `${global.ECHO_SERVER}/post`,
                         method: 'POST',
                         body: { mode: 'raw', raw: 'RAWDATA' }
                     }
@@ -144,7 +144,7 @@ describe('Sandbox libraries', function () {
                             // eslint-disable-next-line @stylistic/js/max-len
                             basic: { username: 'postman', password: 'password', saveHelperData: true, showPassword: false }
                         },
-                        url: 'https://postman-echo.com/post',
+                        url: `${global.ECHO_SERVER}/post`,
                         method: 'POST'
                     }
                 }, {
@@ -172,7 +172,7 @@ describe('Sandbox libraries', function () {
                                 qop: ''
                             }
                         },
-                        url: 'https://postman-echo.com/digest-auth',
+                        url: `${global.ECHO_SERVER}/digest-auth`,
                         method: 'GET'
                     }
                 }, {
@@ -193,7 +193,7 @@ describe('Sandbox libraries', function () {
                             ]
                         }
                     }],
-                    request: { url: 'https://postman-echo.com/get?a={{name{{i}}}}', method: 'GET' }
+                    request: { url: `${global.ECHO_SERVER}/get?a={{name{{i}}}}`, method: 'GET' }
                 }]
             }
         }, function (err, results) {

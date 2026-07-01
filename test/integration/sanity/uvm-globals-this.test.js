@@ -87,7 +87,7 @@ var expect = require('chai').expect;
                             `
                         }
                     }],
-                    request: 'postman-echo.com/get'
+                    request: `${global.ECHO_SERVER}/get`
                 }
             }
         }, function (err, results) {

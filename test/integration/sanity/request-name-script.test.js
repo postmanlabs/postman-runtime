@@ -28,7 +28,7 @@ describe('request name scripts', function () {
                         }
                     }],
                     request: {
-                        url: 'postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         method: 'GET',
                         body: {
                             mode: 'formdata',

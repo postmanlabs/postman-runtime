@@ -14,7 +14,7 @@ describe('response callback', function () {
             var runOptions = {
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }]
                 }
             };
@@ -41,7 +41,7 @@ describe('response callback', function () {
             expect(testrun).to.nested.include({
                 'response.callCount': 1
             });
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             expect(response).to.have.property('code', 200);
 
             // ensure parameters in response callback are same as request callback
@@ -71,7 +71,7 @@ describe('response callback', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/digest-auth',
+                                url: `${global.ECHO_SERVER}/digest-auth`,
                                 auth: {
                                     type: 'digest',
                                     digest: {
@@ -128,7 +128,7 @@ describe('response callback', function () {
                 'response.callCount': 1,
                 'request.callCount': 2
             });
-            expect(request.url.toString()).to.eql('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/digest-auth`);
             expect(response).to.have.property('code', 200);
             expect(response.json()).to.have.property('authenticated', true);
 

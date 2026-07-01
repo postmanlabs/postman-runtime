@@ -8,7 +8,7 @@ describe('bearer token', function () {
                 item: {
                     name: 'BearerToken Sample Item',
                     request: {
-                        url: 'https://postman-echo.com/headers',
+                        url: `${global.ECHO_SERVER}/headers`,
                         auth: {
                             type: 'bearer',
                             bearer: {

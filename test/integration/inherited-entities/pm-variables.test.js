@@ -72,7 +72,7 @@ describe('pm.variables', function () {
                     ],
                     request: {
                         url:
-                            'https://postman-echo.com/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}:{{vault:key5}}',
+                            `${global.ECHO_SERVER}/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}:{{vault:key5}}`,
                         auth: {
                             type: 'bearer',
                             bearer: {
@@ -115,7 +115,7 @@ describe('pm.variables', function () {
             var url = testRun.request.getCall(0).args[3].url.toString(),
                 expectedParam = 'local-value-1:coll-value-2:env-value-3:data-value-4:global-value-5';
 
-            expect(url).to.equal('https://postman-echo.com/get?param=' + expectedParam);
+            expect(url).to.equal(`${global.ECHO_SERVER}/get?param=` + expectedParam);
         });
 
         it('should be honoured in auth', function () {
@@ -174,7 +174,7 @@ describe('pm.variables', function () {
                             }
                         ],
                         request: {
-                            url: 'https://postman-echo.com/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}',
+                            url: `${global.ECHO_SERVER}/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}`,
                             auth: {
                                 type: 'bearer',
                                 bearer: {
@@ -206,7 +206,7 @@ describe('pm.variables', function () {
                             }
                         ],
                         request: {
-                            url: 'https://postman-echo.com/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}',
+                            url: `${global.ECHO_SERVER}/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}`,
                             auth: {
                                 type: 'bearer',
                                 bearer: {
@@ -339,8 +339,8 @@ describe('pm.variables', function () {
                 expectedToken1 = 'modified-1:modified-2:modified-2:data-value-4',
                 expectedToken2 = 'modified-1:modified-1:modified-3:modified-4';
 
-            expect(url1).to.equal('https://postman-echo.com/get?param=' + expectedToken1);
-            expect(url2).to.equal('https://postman-echo.com/get?param=' + expectedToken2);
+            expect(url1).to.equal(`${global.ECHO_SERVER}/get?param=` + expectedToken1);
+            expect(url2).to.equal(`${global.ECHO_SERVER}/get?param=` + expectedToken2);
         });
 
         it('should be resolved in request auth', function () {

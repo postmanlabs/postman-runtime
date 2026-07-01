@@ -22,7 +22,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -36,7 +36,7 @@ describe('pm.execution.runRequest handling', function () {
                             item: {
                                 id: 'nested-request-id',
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             }
@@ -71,7 +71,7 @@ describe('pm.execution.runRequest handling', function () {
                     script: { exec: 'await pm.execution.runRequest("nested-request-id");' }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -111,7 +111,7 @@ describe('pm.execution.runRequest handling', function () {
                         }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         method: 'GET'
                     }
                 }]
@@ -136,7 +136,7 @@ describe('pm.execution.runRequest handling', function () {
                     return callback(null, {
                         item: {
                             id: 'nested-request-id',
-                            request: { url: 'https://postman-echo.com/post', method: 'POST' }
+                            request: { url: `${global.ECHO_SERVER}/post`, method: 'POST' }
                         }
                     });
                 }
@@ -168,7 +168,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -186,7 +186,7 @@ describe('pm.execution.runRequest handling', function () {
                                     script: { exec: 'try { some invalid js code here ' }
                                 }],
                                 request: {
-                                    url: 'https://postman-echo.com/get'
+                                    url: `${global.ECHO_SERVER}/get`
                                 }
                             }
                         });
@@ -223,7 +223,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -250,7 +250,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 ],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             }
@@ -283,12 +283,12 @@ describe('pm.execution.runRequest handling', function () {
                     listen: 'prerequest',
                     script: {
                         exec: `
-                        pm.environment.set("api_url", "postman-echo.com");
+                        pm.environment.set("api_url", "${global.ECHO_SERVER}");
                         await pm.execution.runRequest("nested-request-id");`
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -308,7 +308,7 @@ describe('pm.execution.runRequest handling', function () {
                                             exec: `
                                                 pm.test('variable values should have been received', function () {
                                                     pm.expect(pm.environment.get("api_url"))
-                                                        .to.equal("postman-echo.com");
+                                                        .to.equal("${global.ECHO_SERVER}");
                                                 });
                                             `
                                         }
@@ -365,7 +365,7 @@ describe('pm.execution.runRequest handling', function () {
                         exec: `await pm.execution.runRequest("nested-request-id");
 
                         pm.test('variable values should have been updated from nested request', function () {
-                            pm.expect(pm.globals.get("api_url")).to.equal("postman-echo.com");
+                            pm.expect(pm.globals.get("api_url")).to.equal("${global.ECHO_SERVER}");
                             pm.expect(pm.collectionVariables.get("api_path")).to.equal("get");
                         });`
                     }
@@ -400,7 +400,7 @@ describe('pm.execution.runRequest handling', function () {
                                         listen: 'prerequest',
                                         script: {
                                             exec: `
-                                            pm.globals.set("api_url", "postman-echo.com");
+                                            pm.globals.set("api_url", "${global.ECHO_SERVER}");
                                             pm.collectionVariables.set("api_path", "get");
                                             `
                                         }
@@ -463,7 +463,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -531,7 +531,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -546,7 +546,7 @@ describe('pm.execution.runRequest handling', function () {
                                 id: 'nested-request-id',
                                 event: [],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             }
@@ -592,7 +592,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -614,7 +614,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 }],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             },
@@ -659,7 +659,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -681,7 +681,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 }],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             },
@@ -725,7 +725,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -750,7 +750,7 @@ describe('pm.execution.runRequest handling', function () {
                                         }
                                     }],
                                     request: {
-                                        url: 'https://postman-echo.com/post',
+                                        url: `${global.ECHO_SERVER}/post`,
                                         method: 'POST'
                                     }
                                 },
@@ -770,7 +770,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 }],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             },
@@ -813,7 +813,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -837,7 +837,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 ],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             }
@@ -881,7 +881,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -909,7 +909,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 ],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             }
@@ -968,7 +968,7 @@ describe('pm.execution.runRequest handling', function () {
                         }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         method: 'GET'
                     }
                 }]
@@ -991,7 +991,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 ],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             }
@@ -1047,7 +1047,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 }],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -1073,7 +1073,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 ],
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             }
@@ -1119,7 +1119,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 ],
                 request: {
-                    url: 'https://postman-echo.com/{{parent_method}}',
+                    url: `${global.ECHO_SERVER}/{{parent_method}}`,
                     method: 'GET'
                 }
             }]
@@ -1141,7 +1141,7 @@ describe('pm.execution.runRequest handling', function () {
                                     }
                                 ],
                                 request: {
-                                    url: 'https://postman-echo.com/{{method}}',
+                                    url: `${global.ECHO_SERVER}/{{method}}`,
                                     method: 'POST'
                                 }
                             }
@@ -1174,7 +1174,7 @@ describe('pm.execution.runRequest handling', function () {
                     done (err) {
                         expect(requestConsoleInvocationCount).to.eql(2); // Nested request + Parent request
                         expect(invocationOrder).to.deep.equal([
-                            'https://postman-echo.com/post', 'https://postman-echo.com/get'
+                            `${global.ECHO_SERVER}/post`, `${global.ECHO_SERVER}/get`
                         ]);
                         done(err);
                     }
@@ -1192,7 +1192,7 @@ describe('pm.execution.runRequest handling', function () {
                     }
                 ],
                 request: {
-                    url: 'https://postman-echo.com/get',
+                    url: `${global.ECHO_SERVER}/get`,
                     method: 'GET'
                 }
             }]
@@ -1206,7 +1206,7 @@ describe('pm.execution.runRequest handling', function () {
                             item: {
                                 id: 'nested-request-id',
                                 request: {
-                                    url: 'https://postman-echo.com/post',
+                                    url: `${global.ECHO_SERVER}/post`,
                                     method: 'POST'
                                 }
                             }

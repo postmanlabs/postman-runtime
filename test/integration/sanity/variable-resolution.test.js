@@ -57,7 +57,7 @@ describe('variable resolution', function () {
             collection: {
                 item: [{
                     request: {
-                        url: 'https://postman-echo.com/post',
+                        url: `${global.ECHO_SERVER}/post`,
                         method: 'POST',
                         body: {
                             mode: 'raw',
@@ -66,7 +66,7 @@ describe('variable resolution', function () {
                     }
                 }, {
                     request: {
-                        url: 'https://postman-echo.com/post',
+                        url: `${global.ECHO_SERVER}/post`,
                         method: 'POST',
                         body: {
                             mode: 'raw',
@@ -75,7 +75,7 @@ describe('variable resolution', function () {
                     }
                 }, {
                     request: {
-                        url: 'https://postman-echo.com/post',
+                        url: `${global.ECHO_SERVER}/post`,
                         method: 'POST',
                         body: {
                             mode: 'raw',

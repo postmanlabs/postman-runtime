@@ -30,7 +30,7 @@ describe('oauth 2', function () {
                                         id: 'some-auth-id'
                                     }
                                 },
-                                url: 'https://postman-echo.com/get',
+                                url: `${global.ECHO_SERVER}/get`,
                                 method: 'GET'
                             }
                         }
@@ -62,7 +62,7 @@ describe('oauth 2', function () {
                 var request = testrun.request.getCall(0).args[3],
                     response = testrun.request.getCall(0).args[2];
 
-                expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+                expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -74,7 +74,7 @@ describe('oauth 2', function () {
                     firstResponse = testrun.io.firstCall.args[3];
 
                 expect(firstError).to.be.null;
-                expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/get');
+                expect(firstRequest.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
                 expect(firstResponse).to.have.property('code', 200);
             });
 
@@ -109,7 +109,7 @@ describe('oauth 2', function () {
                                         id: 'some-auth-id'
                                     }
                                 },
-                                url: 'https://postman-echo.com/get',
+                                url: `${global.ECHO_SERVER}/get`,
                                 method: 'GET'
                             }
                         }
@@ -141,7 +141,7 @@ describe('oauth 2', function () {
                 var request = testrun.request.getCall(0).args[3],
                     response = testrun.request.getCall(0).args[2];
 
-                expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+                expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
                 expect(response).to.have.property('code', 200);
             });
 
@@ -153,7 +153,7 @@ describe('oauth 2', function () {
                     firstResponse = testrun.io.firstCall.args[3];
 
                 expect(firstError).to.be.null;
-                expect(firstRequest.url.toString()).to.eql('https://postman-echo.com/get');
+                expect(firstRequest.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
                 expect(firstResponse).to.have.property('code', 200);
             });
 

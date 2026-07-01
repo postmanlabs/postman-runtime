@@ -8,7 +8,7 @@ describe('sandbox library - AJV', function () {
         this.run({
             collection: {
                 item: [{
-                    request: 'https://postman-echo.com/get',
+                    request: `${global.ECHO_SERVER}/get`,
                     event: [{
                         listen: 'test',
                         script: {
@@ -41,7 +41,7 @@ describe('sandbox library - AJV', function () {
                         }
                     }]
                 }, {
-                    request: 'https://postman-echo.com/get',
+                    request: `${global.ECHO_SERVER}/get`,
                     event: [{
                         listen: 'test',
                         script: {

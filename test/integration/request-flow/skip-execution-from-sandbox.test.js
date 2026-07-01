@@ -5,7 +5,7 @@ var expect = require('chai').expect,
 describe('pm.execution.skipRequest: ', function () {
     describe('when single request is run', function () {
         var testrun,
-            cookieUrl = 'https://postman-echo.com/cookies';
+            cookieUrl = `${global.ECHO_SERVER}/cookies`;
 
         before(function (done) {
             this.run({
@@ -127,7 +127,7 @@ describe('pm.execution.skipRequest: ', function () {
                                     pm.variables.set('key-1', 'modified-1');
                                     pm.execution.skipRequest();
                                     // postman.setNextRequest('Sample Request 2');
-                                    pm.sendRequest('https://postman-echo.com/GET');
+                                    pm.sendRequest('${global.ECHO_SERVER}/GET');
                                     pm.variables.set('key-2', 'modified-2');
                                     console.log('item 1 pre', pm.variables.toObject())
                                 ` }
@@ -142,7 +142,7 @@ describe('pm.execution.skipRequest: ', function () {
                             }
                         ],
                         request: {
-                            url: 'https://postman-echo.com/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}',
+                            url: `${global.ECHO_SERVER}/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}`,
                             auth: {
                                 type: 'bearer',
                                 bearer: {
@@ -177,7 +177,7 @@ describe('pm.execution.skipRequest: ', function () {
                             }
                         ],
                         request: {
-                            url: 'https://postman-echo.com/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}',
+                            url: `${global.ECHO_SERVER}/get?param={{key-1}}:{{key-2}}:{{key-3}}:{{key-4}}`,
                             auth: {
                                 type: 'bearer',
                                 bearer: {
@@ -257,7 +257,7 @@ describe('pm.execution.skipRequest: ', function () {
             var url1 = testRun.request.getCall(0).args[3].url.toString(),
                 expectedToken = 'modified-1:coll-value-2:env-value-3:modified-4';
 
-            expect(url1).to.equal('https://postman-echo.com/get?param=' + expectedToken);
+            expect(url1).to.equal(`${global.ECHO_SERVER}/get?param=` + expectedToken);
         });
 
         it('should not have setNextRequest property set if called after skipRequest', function () {
@@ -322,7 +322,7 @@ describe('pm.execution.skipRequest: ', function () {
                                 `
                             }
                         }],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }, function (err, results) {

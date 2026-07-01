@@ -50,7 +50,7 @@ describe('Collection variables', function () {
                                 ` }
                             }
                         ],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             }

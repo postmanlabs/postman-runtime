@@ -3,7 +3,7 @@ var fs = require('fs'),
 
 (typeof window === 'undefined' ? describe : describe.skip)('File uploads', function () {
     var testrun,
-        HOST = 'https://postman-echo.com/post';
+        HOST = `${global.ECHO_SERVER}/post`;
 
     before(function (done) {
         this.run({

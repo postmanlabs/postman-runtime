@@ -8,7 +8,7 @@ describe('auth control flow', function () {
             item: {
                 name: 'FakeAuth',
                 request: {
-                    url: 'https://postman-echo.com/basic-auth',
+                    url: `${global.ECHO_SERVER}/basic-auth`,
                     auth: {
                         type: 'fake',
                         fake: {
@@ -82,7 +82,7 @@ describe('auth control flow', function () {
                 request = testrun.request.firstCall.args[3];
 
             expect(err).to.have.property('message', 'Pre Error!');
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should have not call init, sign and post', function () {
@@ -156,7 +156,7 @@ describe('auth control flow', function () {
                 'console.callCount': 1
             });
             expect(err).to.have.property('message', 'Post Error!');
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should not repeat the auth flow', function () {
@@ -228,7 +228,7 @@ describe('auth control flow', function () {
                 request = testrun.request.firstCall.args[3];
 
             expect(err).to.have.property('message', 'Post Error!');
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should not sign and should not repeat the auth flow', function () {
@@ -297,7 +297,7 @@ describe('auth control flow', function () {
 
             var request = testrun.request.firstCall.args[3];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should have bubbled the error to the request', function () {
@@ -371,7 +371,7 @@ describe('auth control flow', function () {
 
             var request = testrun.request.firstCall.args[3];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should have bubbled the error', function () {
@@ -397,7 +397,7 @@ describe('auth control flow', function () {
                     done(new Error('Init Error!'));
                 },
                 pre (auth, done) {
-                    done(null, false, 'https://postman-echo.com/get');
+                    done(null, false, `${global.ECHO_SERVER}/get`);
                 },
                 post (auth, response, done) {
                     done(null, true);
@@ -441,13 +441,13 @@ describe('auth control flow', function () {
         it('should have sent the original request', function () {
             var request = testrun.request.secondCall.args[3];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should have sent the intermediate request', function () {
             var request = testrun.request.firstCall.args[3];
 
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
         });
 
         it('should have bubbled the error', function () {

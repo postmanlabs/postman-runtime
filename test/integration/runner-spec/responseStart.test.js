@@ -9,7 +9,7 @@ describe('Runner Spec: responseStart', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://www.postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }]
                 }
             }, function (err, results) {
@@ -49,13 +49,13 @@ describe('Runner Spec: responseStart', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://www.postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
                                 type: 'text/javascript',
                                 exec: `
-                                pm.sendRequest('https://postman-echo.com/status/200', function (err, res) {
+                                pm.sendRequest('${global.ECHO_SERVER}/status/200', function (err, res) {
                                     pm.test("Status code is 200", function () {
                                         pm.expect(res).to.have.status(200);
                                     });
@@ -100,7 +100,7 @@ describe('Runner Spec: responseStart', function () {
             expect(response).to.have.property('headers');
             expect(response).to.not.have.property('stream');
 
-            expect(request.url.toString()).to.not.have.property('https://www.postman-echo.com/get');
+            expect(request.url.toString()).to.not.have.property(`${global.ECHO_SERVER}/get`);
 
             // assert script request
             sinon.assert.calledOnce(testrun.script);
@@ -125,14 +125,14 @@ describe('Runner Spec: responseStart', function () {
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://www.postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
                                 type: 'text/javascript',
                                 exec: `
                                 pm.sendRequest({
-                                    url: 'https://postman-echo.com/digest-auth',
+                                    url: '${global.ECHO_SERVER}/digest-auth',
                                     auth: {
                                         type: 'digest',
                                         digest: {
@@ -187,7 +187,7 @@ describe('Runner Spec: responseStart', function () {
             expect(response).to.have.property('headers');
             expect(response).to.not.have.property('stream');
 
-            expect(request.url.toString()).to.not.have.property('https://www.postman-echo.com/get');
+            expect(request.url.toString()).to.not.have.property(`${global.ECHO_SERVER}/get`);
 
             // assert script request
             sinon.assert.calledOnce(testrun.script);

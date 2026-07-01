@@ -41,7 +41,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: {
                         request: {
-                            url: 'https://postman-echo.com/digest'
+                            url: `${global.ECHO_SERVER}/digest`
                         }
                     }
                 }

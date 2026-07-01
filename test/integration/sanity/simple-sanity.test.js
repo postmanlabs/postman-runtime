@@ -6,7 +6,7 @@ describe('sanity test', function () {
     before(function (done) {
         this.run({
             collection: {
-                item: { request: 'https://postman-echo.com/get?testvar={{testVar}}' }
+                item: { request: `${global.ECHO_SERVER}/get?testvar={{testVar}}` }
             },
             environment: {
                 values: [{ key: 'testVar', value: 'test-var-value' }]
@@ -32,7 +32,7 @@ describe('sanity test', function () {
             'beforeRequest.calledOnce': true
         });
         expect(request).to.be.ok;
-        expect(request.url.toString()).eql('https://postman-echo.com/get?testvar=test-var-value');
+        expect(request.url.toString()).eql(`${global.ECHO_SERVER}/get?testvar=test-var-value`);
         expect(request).to.have.property('method', 'GET');
     });
 

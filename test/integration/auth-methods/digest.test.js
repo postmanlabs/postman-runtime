@@ -918,7 +918,7 @@ describe('digest auth', function () {
                                     opaque: '5ccc069c403ebaf9f0171e9517f40e'
                                 }
                             },
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             body: {
                                 mode: 'file',

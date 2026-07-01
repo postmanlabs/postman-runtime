@@ -3,11 +3,17 @@ var _ = require('lodash'),
     expect = require('chai').expect,
     Collection = require('postman-collection').Collection,
     Runner = require('../../index.js').Runner,
+    servers = require('../fixtures/servers/servers.json'),
 
     runtime;
 
 // by default Node 12 throws error on using anything below TLSv1.2
 require('tls').DEFAULT_MIN_VERSION = 'TLSv1';
+
+global.servers = servers;
+global.ECHO_SERVER = servers.postmanEcho;
+global.ECHO_SERVER_HTTPS = servers.postmanEchoHttps;
+global.ECHO_SERVER_PROXY_MATCH = '*://' + new URL(global.ECHO_SERVER).host + '/*';
 
 runtime = function (spec, done) {
     // restores all spies created through sandbox in the previous run
@@ -38,12 +44,14 @@ runtime = function (spec, done) {
 
 before(function () {
     global.expect = expect; // expose global
-    global.servers = require('../fixtures/servers/servers.json');
     this.run = runtime;
 });
 
 after(function () {
     delete global.expect;
+    delete global.ECHO_SERVER;
+    delete global.ECHO_SERVER_HTTPS;
+    delete global.ECHO_SERVER_PROXY_MATCH;
     // restores all spies created through sandbox in the previous run
     sinon.restore();
 });

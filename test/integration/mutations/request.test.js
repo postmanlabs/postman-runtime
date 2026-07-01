@@ -15,7 +15,7 @@ describe('request mutations', function () {
                             listen: 'prerequest',
                             script: {
                                 exec: [
-                                    'pm.request.update({ url: "https://postman-echo.com/get" });'
+                                    `pm.request.update({ url: "${global.ECHO_SERVER}/get" });`
                                 ],
                                 type: 'text/javascript'
                             }
@@ -50,10 +50,10 @@ describe('request mutations', function () {
             expect(initialRequest.url.toString()).to.equal('http://localhost');
 
             expect(request).to.have.property('method', 'GET');
-            expect(request.url.toString()).to.equal('https://postman-echo.com/get');
+            expect(request.url.toString()).to.equal(`${global.ECHO_SERVER}/get`);
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.property('url', 'https://postman-echo.com/get');
+            expect(responseBody).to.have.property('url', `${global.ECHO_SERVER}/get`);
         });
     });
 
@@ -63,7 +63,7 @@ describe('request mutations', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post'
+                            url: `${global.ECHO_SERVER}/post`
                         },
                         event: [{
                             listen: 'prerequest',
@@ -104,7 +104,7 @@ describe('request mutations', function () {
             expect(request).to.have.property('method', 'POST');
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
+            expect(responseBody).to.have.property('url', `${global.ECHO_SERVER}/post`);
         });
     });
 
@@ -114,7 +114,7 @@ describe('request mutations', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             header: [
                                 { key: 'h0', value: 'v0' },
                                 { key: 'h1', value: 'v0' }
@@ -181,7 +181,7 @@ describe('request mutations', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/basic-auth',
+                            url: `${global.ECHO_SERVER}/basic-auth`,
                             auth: {
                                 type: 'digest',
                                 basic: {
@@ -242,7 +242,7 @@ describe('request mutations', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/post',
+                                url: `${global.ECHO_SERVER}/post`,
                                 method: 'POST',
                                 body: {
                                     mode: 'raw',
@@ -297,7 +297,7 @@ describe('request mutations', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/post',
+                                url: `${global.ECHO_SERVER}/post`,
                                 method: 'POST',
                                 body: {
                                     mode: 'raw',
@@ -357,7 +357,7 @@ describe('request mutations', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/post',
+                                url: `${global.ECHO_SERVER}/post`,
                                 method: 'POST',
                                 body: {
                                     mode: 'raw',
@@ -422,7 +422,7 @@ describe('request mutations', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/post',
+                                url: `${global.ECHO_SERVER}/post`,
                                 method: 'POST',
                                 body: {
                                     mode: 'raw',
@@ -479,7 +479,7 @@ describe('request mutations', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/post',
+                                url: `${global.ECHO_SERVER}/post`,
                                 method: 'POST'
                             },
                             event: [{
@@ -539,7 +539,7 @@ describe('request mutations', function () {
                             listen: 'prerequest',
                             script: {
                                 exec: [
-                                    'pm.request.update({ url: "https://postman-echo.com/post" });'
+                                    `pm.request.update({ url: "${global.ECHO_SERVER}/post" });`
                                 ],
                                 type: 'text/javascript'
                             }
@@ -592,11 +592,11 @@ describe('request mutations', function () {
             expect(initialRequest.getHeaders()).to.eql({});
 
             expect(request).to.have.property('method', 'POST');
-            expect(request.url.toString()).to.equal('https://postman-echo.com/post');
+            expect(request.url.toString()).to.equal(`${global.ECHO_SERVER}/post`);
             expect(request.getHeaders()).to.deep.include({ h0: 'v0' });
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
+            expect(responseBody).to.have.property('url', `${global.ECHO_SERVER}/post`);
             expect(responseBody).to.have.property('data', 'new-postman');
             expect(responseBody).to.have.property('headers').that.deep.include({ h0: 'v0' });
         });
@@ -619,7 +619,7 @@ describe('request mutations', function () {
                             listen: 'prerequest',
                             script: {
                                 exec: [
-                                    'pm.request.update({ url: "https://postman-echo.com/post" });',
+                                    `pm.request.update({ url: "${global.ECHO_SERVER}/post" });`,
                                     'pm.request.update({ method: "POST" });',
                                     'pm.request.headers.add({key: "h0", value: "v0"})',
                                     'pm.request.body.raw = "new-postman"'
@@ -659,11 +659,11 @@ describe('request mutations', function () {
             expect(initialRequest.getHeaders()).to.eql({});
 
             expect(request).to.have.property('method', 'POST');
-            expect(request.url.toString()).to.equal('https://postman-echo.com/post');
+            expect(request.url.toString()).to.equal(`${global.ECHO_SERVER}/post`);
             expect(request.getHeaders()).to.deep.include({ h0: 'v0' });
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
+            expect(responseBody).to.have.property('url', `${global.ECHO_SERVER}/post`);
             expect(responseBody).to.have.property('data', 'new-postman');
             expect(responseBody).to.have.property('headers').that.deep.include({ h0: 'v0' });
         });
@@ -679,11 +679,11 @@ describe('request mutations', function () {
             expect(initialRequest.getHeaders()).to.eql({});
 
             expect(request).to.have.property('method', 'POST');
-            expect(request.url.toString()).to.equal('https://postman-echo.com/post');
+            expect(request.url.toString()).to.equal(`${global.ECHO_SERVER}/post`);
             expect(request.getHeaders()).to.deep.include({ h0: 'v0' });
 
             expect(response).to.have.property('code', 200);
-            expect(responseBody).to.have.property('url', 'https://postman-echo.com/post');
+            expect(responseBody).to.have.property('url', `${global.ECHO_SERVER}/post`);
             expect(responseBody).to.have.property('data', 'new-postman');
             expect(responseBody).to.have.property('headers').that.deep.include({ h0: 'v0' });
         });

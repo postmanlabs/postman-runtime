@@ -17,7 +17,7 @@ var sinon = require('sinon'),
             this.run({
                 collection: {
                     item: [{
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }]
                 },
                 requester: {
@@ -61,10 +61,11 @@ var sinon = require('sinon'),
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER_HTTPS}/get`
                     }]
                 },
                 requester: {
+                    strictSSL: false,
                     agents: {
                         https: customAgent
                     }
@@ -109,7 +110,7 @@ var sinon = require('sinon'),
             this.run({
                 collection: {
                     item: [{
-                        request: 'http://postman-echo.com/redirect-to?url=https://httpbin.org/get'
+                        request: `${global.ECHO_SERVER}/redirect-to?url=https://httpbin.org/get`
                     }]
                 },
                 requester: {
@@ -143,7 +144,7 @@ var sinon = require('sinon'),
                 response = testrun.response.getCall(0).args[2];
 
             expect(httpsAgentOpts).to.have.property('agent').that.be.an.instanceof(http.Agent);
-            expect(httpAgentOpts).to.have.property('host').that.equal('postman-echo.com');
+            expect(httpAgentOpts).to.have.property('host').that.equal(`${global.ECHO_SERVER}`);
 
             expect(httpsAgentOpts).to.have.property('agent').that.be.an.instanceof(https.Agent);
             expect(httpsAgentOpts).to.have.property('host').that.equal('httpbin.org');

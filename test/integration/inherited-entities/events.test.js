@@ -17,7 +17,7 @@ describe('Events', function () {
                                 script: { exec: 'console.log("request level test script")' }
                             }
                         ],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             };
@@ -71,7 +71,7 @@ describe('Events', function () {
                             }
                         ],
                         item: {
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }]
                 }
@@ -124,7 +124,7 @@ describe('Events', function () {
                         }
                     ],
                     item: {
-                        request: 'https://postman-echo.com'
+                        request: `${global.ECHO_SERVER}`
                     }
                 }
             };
@@ -190,7 +190,7 @@ describe('Events', function () {
                                 script: { exec: 'console.log("request level test script")' }
                             }
                         ],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             };
@@ -258,7 +258,7 @@ describe('Events', function () {
                             }
                         ],
                         item: {
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }]
                 }
@@ -339,7 +339,7 @@ describe('Events', function () {
                                     script: { exec: 'console.log("request level test script")' }
                                 }
                             ],
-                            request: 'https://postman-echo.com/get'
+                            request: `${global.ECHO_SERVER}/get`
                         }
                     }]
                 }
@@ -396,7 +396,7 @@ describe('Events', function () {
                                 listen: 'test'
                             }
                         ],
-                        request: 'https://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 }
             };

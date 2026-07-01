@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 (typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: useWhatWGUrlParser', function () {
     var testrun,
-        URL = 'https://postman-echo.com/get?q=(%{^*^}%)',
+        URL = `${global.ECHO_SERVER}/get?q=(%{^*^}%)`,
         collection = {
             item: [{
                 request: {
@@ -25,7 +25,7 @@ var expect = require('chai').expect;
         it('should use Legacy URL encoder by default', function () {
             var response = testrun.response.getCall(0).args[2].json();
 
-            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=%28%25%7B%5E%2A%5E%7D%25%29');
+            expect(response).to.have.property('url', `${global.ECHO_SERVER}/get?q=%28%25%7B%5E%2A%5E%7D%25%29`);
         });
     });
 
@@ -45,7 +45,7 @@ var expect = require('chai').expect;
         it('should encode characters in query params', function () {
             var response = testrun.response.getCall(0).args[2].json();
 
-            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=%28%25%7B%5E%2A%5E%7D%25%29');
+            expect(response).to.have.property('url', `${global.ECHO_SERVER}/get?q=%28%25%7B%5E%2A%5E%7D%25%29`);
         });
     });
 
@@ -65,7 +65,7 @@ var expect = require('chai').expect;
         it('should not encode characters in query params', function () {
             var response = testrun.response.getCall(0).args[2].json();
 
-            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=(%{^*^}%)');
+            expect(response).to.have.property('url', `${global.ECHO_SERVER}/get?q=(%{^*^}%)`);
         });
     });
 });

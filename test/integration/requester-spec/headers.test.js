@@ -3,7 +3,7 @@ var sinon = require('sinon'),
 
 describe('Requester Spec: implicitCacheControl and implicitTraceHeader', function () {
     var testrun,
-        HOST = 'https://www.postman-echo.com/get';
+        HOST = `${global.ECHO_SERVER}/get`;
 
     describe('with undefined', function () {
         before(function (done) {

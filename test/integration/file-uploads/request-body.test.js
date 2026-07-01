@@ -13,7 +13,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -26,7 +26,7 @@ describe('file upload in request body', function () {
                         }
                     }, {
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -39,7 +39,7 @@ describe('file upload in request body', function () {
                         }
                     }, {
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -52,7 +52,7 @@ describe('file upload in request body', function () {
                         }
                     }, {
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'file',
@@ -133,7 +133,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -142,7 +142,7 @@ describe('file upload in request body', function () {
                         }
                     }, {
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -151,7 +151,7 @@ describe('file upload in request body', function () {
                         }
                     }, {
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: { mode: 'file', file: {} }
                         }
@@ -204,7 +204,7 @@ describe('file upload in request body', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/post',
+                                url: `${global.ECHO_SERVER}/post`,
                                 method: 'POST',
                                 body: {
                                     disabled: true,
@@ -256,7 +256,7 @@ describe('file upload in request body', function () {
                     collection: {
                         item: [{
                             request: {
-                                url: 'https://postman-echo.com/post',
+                                url: `${global.ECHO_SERVER}/post`,
                                 method: 'POST',
                                 body: {
                                     disabled: false,
@@ -306,7 +306,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -353,7 +353,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -366,7 +366,7 @@ describe('file upload in request body', function () {
                         }
                     }, {
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -379,7 +379,7 @@ describe('file upload in request body', function () {
                         }
                     }, {
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'file',
@@ -440,7 +440,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'file',
@@ -485,7 +485,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'file',
@@ -530,7 +530,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'formdata',
@@ -577,7 +577,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'file',
@@ -615,7 +615,7 @@ describe('file upload in request body', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/post',
+                            url: `${global.ECHO_SERVER}/post`,
                             method: 'POST',
                             body: {
                                 mode: 'file',

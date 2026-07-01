@@ -7,7 +7,7 @@ describe('sandbox test for `undefined` test values', function () {
         this.run({
             collection: {
                 item: {
-                    request: 'https://postman-echo.com/get',
+                    request: `${global.ECHO_SERVER}/get`,
                     event: [
                         {
                             listen: 'test',

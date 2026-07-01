@@ -20,7 +20,7 @@ var expect = require('chai').expect,
                 systemProxyCalled = true;
 
                 return callback(null, {
-                    match: '*://postman-echo.com/*',
+                    match: global.ECHO_SERVER_PROXY_MATCH,
                     host: proxyHost,
                     port: proxyPort,
                     tunnel: false
@@ -30,7 +30,7 @@ var expect = require('chai').expect,
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 },
                 systemProxy: systemProxy
@@ -81,7 +81,7 @@ var expect = require('chai').expect,
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 },
                 systemProxy: systemProxy
@@ -131,7 +131,7 @@ var expect = require('chai').expect,
                 systemProxyCalled = true;
 
                 return callback(null, {
-                    match: '*://postman-echo.com/*',
+                    match: global.ECHO_SERVER_PROXY_MATCH,
                     host: proxyHost,
                     port: systemProxyPort,
                     tunnel: false
@@ -141,12 +141,12 @@ var expect = require('chai').expect,
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 },
                 systemProxy: systemProxy,
                 proxies: new sdk.ProxyConfigList({}, [{
-                    match: '*://postman-echo.com/*',
+                    match: global.ECHO_SERVER_PROXY_MATCH,
                     host: proxyHost,
                     port: globalProxyPort,
                     tunnel: false

@@ -3,7 +3,7 @@ var expect = require('chai').expect,
 
 describe('Request Body Mode: formdata', function () {
     var testrun,
-        HOST = 'https://postman-echo.com/post';
+        HOST = `${global.ECHO_SERVER}/post`;
 
     describe('with string as value', function () {
         before(function (done) {

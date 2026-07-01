@@ -21,7 +21,7 @@ describe('variable replacement', function () {
                         script: { exec: 'postman.setEnvironmentVariable(\'var\', \'replaced\');' }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/get?novar={{novar}}&var={{var}}',
+                        url: `${global.ECHO_SERVER}/get?novar={{novar}}&var={{var}}`,
                         method: 'GET',
                         body: { mode: 'formdata', formdata: [] }
                     }

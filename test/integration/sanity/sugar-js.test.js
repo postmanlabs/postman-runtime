@@ -35,7 +35,7 @@ describe('Sugar.js', function () {
                         }
                     }],
                     request: {
-                        url: 'postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         method: 'GET'
                     }
                 }]

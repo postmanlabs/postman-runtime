@@ -13,7 +13,7 @@ describe('asynchronous script timeouts', function () {
                             script: 'setTimeout(function () {}, 0);'
                         }],
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET'
                         }
                     }]
@@ -58,7 +58,7 @@ describe('asynchronous script timeouts', function () {
                                 script: 'setTimeout(function () {}, 2000);'
                             }],
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: `${global.ECHO_SERVER}/get`,
                                 method: 'GET'
                             }
                         }]
@@ -105,7 +105,7 @@ describe('asynchronous script timeouts', function () {
                                 `
                             }],
                             request: {
-                                url: 'https://postman-echo.com/get',
+                                url: `${global.ECHO_SERVER}/get`,
                                 method: 'GET'
                             }
                         }]

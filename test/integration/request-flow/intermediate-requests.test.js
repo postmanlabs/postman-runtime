@@ -8,7 +8,7 @@ describe('intermediate requests from auth', function () {
             item: {
                 name: 'FakeAuth',
                 request: {
-                    url: 'https://postman-echo.com/basic-auth',
+                    url: `${global.ECHO_SERVER}/basic-auth`,
                     auth: {
                         type: 'fake',
                         fake: {
@@ -34,7 +34,7 @@ describe('intermediate requests from auth', function () {
                     done(null);
                 },
                 pre (auth, done) {
-                    done(null, fin, 'https://postman-echo.com/get');
+                    done(null, fin, `${global.ECHO_SERVER}/get`);
                 },
                 post (auth, response, done) {
                     done(null, true);
@@ -89,7 +89,7 @@ describe('intermediate requests from auth', function () {
 
             expect(err).to.be.null;
             expect(cursor).to.include.keys(['ref', 'httpRequestId']);
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should have sent the intermediate request', function () {
@@ -97,7 +97,7 @@ describe('intermediate requests from auth', function () {
                 request = testrun.request.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.equal('https://postman-echo.com/get');
+            expect(request.url.toString()).to.equal(`${global.ECHO_SERVER}/get`);
         });
 
         it('should have the right trace', function () {
@@ -126,7 +126,7 @@ describe('intermediate requests from auth', function () {
                     done(null);
                 },
                 pre (auth, done) {
-                    done(null, fin, { url: 'https://postman-echo.com/get' });
+                    done(null, fin, { url: `${global.ECHO_SERVER}/get` });
                 },
                 post (auth, response, done) {
                     done(null, true);
@@ -179,7 +179,7 @@ describe('intermediate requests from auth', function () {
                 request = testrun.response.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         it('should have sent the intermediate request', function () {
@@ -187,7 +187,7 @@ describe('intermediate requests from auth', function () {
                 request = testrun.request.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/get');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/get`);
             // @todo: add trace to cursor and enable this test
             // expect(cursor.trace.source).to.equal('fake.auth');
         });
@@ -264,7 +264,7 @@ describe('intermediate requests from auth', function () {
                 request = testrun.response.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
         });
 
         (typeof window === 'undefined' ?
@@ -311,7 +311,7 @@ describe('intermediate requests from auth', function () {
                     done(null);
                 },
                 pre (auth, done) {
-                    done(null, false, 'https://postman-echo.com/get');
+                    done(null, false, `${global.ECHO_SERVER}/get`);
                 },
                 post (auth, response, done) {
                     done(null, true);

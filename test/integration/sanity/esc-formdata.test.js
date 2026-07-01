@@ -14,7 +14,7 @@ describe('escaped formdata', function () {
             collection: {
                 item: [{
                     request: {
-                        url: 'https://postman-echo.com/post?a={{msg}}',
+                        url: `${global.ECHO_SERVER}/post?a={{msg}}`,
                         method: 'POST',
                         body: {
                             mode: 'urlencoded',

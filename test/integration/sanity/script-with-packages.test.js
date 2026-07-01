@@ -49,7 +49,7 @@ describe('Scripts with packages', function () {
                         }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/get',
+                        url: `${global.ECHO_SERVER}/get`,
                         method: 'GET'
                     }
                 }]

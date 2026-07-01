@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 (typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: timings', function () {
     var testrun,
-        URL = 'https://postman-echo.com/get',
+        URL = `${global.ECHO_SERVER_HTTPS}/get`,
         collection = {
             item: [{
                 request: {
@@ -15,7 +15,10 @@ var expect = require('chai').expect;
     describe('with timings: undefined', function () {
         before(function (done) {
             this.run({
-                collection
+                collection,
+                requester: {
+                    strictSSL: false
+                }
             }, function (err, results) {
                 testrun = results;
                 done(err);
@@ -51,6 +54,7 @@ var expect = require('chai').expect;
         before(function (done) {
             this.run({
                 requester: {
+                    strictSSL: false,
                     timings: true
                 },
                 collection: collection
@@ -87,6 +91,7 @@ var expect = require('chai').expect;
         before(function (done) {
             this.run({
                 requester: {
+                    strictSSL: false,
                     timings: false
                 },
                 collection: collection

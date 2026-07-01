@@ -13,7 +13,7 @@ describe('redirects', function () {
                 requester: { followRedirects: false },
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/redirect-to?url=https://postman-echo.com/get'
+                        request: `\${global.ECHO_SERVER}/redirect-to?url=${global.ECHO_SERVER}/get`
                     }]
                 }
             }, function (err, results) {

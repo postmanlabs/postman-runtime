@@ -12,7 +12,7 @@ describe('Requester Spec: systemHeaders', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET'
                         }
                     }]
@@ -58,7 +58,7 @@ describe('Requester Spec: systemHeaders', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET',
                             header: [{
                                 key: 'foo',
@@ -108,7 +108,7 @@ describe('Requester Spec: systemHeaders', function () {
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: `${global.ECHO_SERVER}/get`,
                             method: 'GET'
                         },
                         protocolProfileBehavior: {
@@ -158,13 +158,13 @@ describe('Requester Spec: systemHeaders', function () {
                 },
                 collection: {
                     item: [{
-                        request: 'https://www.postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: {
                                 type: 'text/javascript',
                                 exec: `
-                                pm.sendRequest('https://postman-echo.com/GET', function (err, res) {
+                                pm.sendRequest('${global.ECHO_SERVER}/GET', function (err, res) {
                                     pm.test("Status code is 200", function () {
                                         pm.expect(res).to.have.status(200);
                                     });

@@ -7,7 +7,7 @@ describe('basic auth', function () {
                 item: {
                     name: 'DigestAuth',
                     request: {
-                        url: 'https://postman-echo.com/basic-auth',
+                        url: `${global.ECHO_SERVER}/basic-auth`,
                         auth: {
                             type: 'basic',
                             basic: {
@@ -60,7 +60,7 @@ describe('basic auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
             expect(response).to.have.property('code', 200);
         });
     });
@@ -105,7 +105,7 @@ describe('basic auth', function () {
                 response = testrun.request.lastCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(`${global.ECHO_SERVER}/basic-auth`);
             expect(response).to.have.property('code', 401);
         });
     });

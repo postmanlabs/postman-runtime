@@ -8,9 +8,9 @@ describe('Distinct random number generation', function () {
         this.run({
             collection: {
                 item: [{
-                    request: 'https://postman-echo.com/get?a={{$randomInt}}'
+                    request: `${global.ECHO_SERVER}/get?a={{$randomInt}}`
                 }, {
-                    request: 'https://postman-echo.com/get?a={{$randomInt}}'
+                    request: `${global.ECHO_SERVER}/get?a={{$randomInt}}`
                 }]
             }
         }, function (err, results) {

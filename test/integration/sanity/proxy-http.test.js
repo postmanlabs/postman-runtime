@@ -16,7 +16,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             proxyPort = global.servers.proxy.split(':')[2];
             proxyUrlForHttpRequest = 'http://' + proxyHost + ':' + proxyPort;
             var proxyList = new ProxyConfigList({}, [{
-                match: '*://postman-echo.com/*',
+                match: global.ECHO_SERVER_PROXY_MATCH,
                 host: proxyHost,
                 port: proxyPort,
                 tunnel: false
@@ -25,7 +25,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 },
                 proxies: proxyList
@@ -71,7 +71,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             proxyHost = 'localhost';
             proxyPort = global.servers.proxyAuth.split(':')[2];
             proxyList = new ProxyConfigList({}, [{
-                match: '*://postman-echo.com/*',
+                match: global.ECHO_SERVER_PROXY_MATCH,
                 host: 'localhost',
                 port: proxyPort,
                 authenticate: true,
@@ -82,7 +82,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 },
                 proxies: proxyList
@@ -125,7 +125,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             proxyHost = 'localhost';
             proxyPort = global.servers.proxyAuth.split(':')[2];
             proxyList = new ProxyConfigList({}, [{
-                match: '*://postman-echo.com/*',
+                match: global.ECHO_SERVER_PROXY_MATCH,
                 host: proxyHost,
                 port: proxyPort,
                 authenticate: true,
@@ -136,7 +136,7 @@ var ProxyConfigList = require('postman-collection').ProxyConfigList,
             this.run({
                 collection: {
                     item: {
-                        request: 'http://postman-echo.com/get'
+                        request: `${global.ECHO_SERVER}/get`
                     }
                 },
                 proxies: proxyList

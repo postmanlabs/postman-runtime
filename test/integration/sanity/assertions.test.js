@@ -9,7 +9,7 @@ describe('assertions', function () {
                 stopOnFailure: true,
                 collection: {
                     item: {
-                        request: 'https://postman-echo.com/get?testvar={{testVar}}',
+                        request: `${global.ECHO_SERVER}/get?testvar={{testVar}}`,
                         event: [{
                             listen: 'test',
                             script: [`"use sandbox2";
@@ -83,7 +83,7 @@ describe('assertions', function () {
                 stopOnFailure: true,
                 collection: {
                     item: {
-                        request: 'https://postman-echo.com/get',
+                        request: `${global.ECHO_SERVER}/get`,
                         event: [{
                             listen: 'test',
                             script: [`

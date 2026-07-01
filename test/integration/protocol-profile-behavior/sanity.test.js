@@ -221,7 +221,7 @@ var fs = require('fs'),
 
     // @todo un-skip https://github.com/postmanlabs/httpbin/issues/617
     describe.skip('with followAuthorizationHeader: false', function () {
-        var URL = 'https://httpbin.org/redirect-to?url=https://postman-echo.com/get';
+        var URL = `https://httpbin.org/redirect-to?url=${global.ECHO_SERVER}/get`;
 
         before(function (done) {
             this.run({
@@ -269,7 +269,7 @@ var fs = require('fs'),
 
     // @todo un-skip https://github.com/postmanlabs/httpbin/issues/617
     describe.skip('with followAuthorizationHeader: true', function () {
-        var URL = 'https://httpbin.org/redirect-to?url=https://postman-echo.com/get';
+        var URL = `https://httpbin.org/redirect-to?url=${global.ECHO_SERVER}/get`;
 
         before(function (done) {
             this.run({
@@ -321,7 +321,7 @@ var fs = require('fs'),
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get?q=("*")'
+                            url: `${global.ECHO_SERVER}/get?q=("*")`
                         }
                     }],
                     protocolProfileBehavior: {
@@ -354,7 +354,7 @@ var fs = require('fs'),
         it('should percent encode URL segments', function () {
             var response = testrun.response.getCall(0).args[2].json();
 
-            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=(%22*%22)');
+            expect(response).to.have.property('url', `${global.ECHO_SERVER}/get?q=(%22*%22)`);
         });
     });
 
@@ -450,7 +450,7 @@ var fs = require('fs'),
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get?q=("*")'
+                            url: `${global.ECHO_SERVER}/get?q=("*")`
                         }
                     }],
                     protocolProfileBehavior: {
@@ -483,7 +483,7 @@ var fs = require('fs'),
         it('should not percent encode URL segments', function () {
             var response = testrun.response.getCall(0).args[2].json();
 
-            expect(response).to.have.property('url', 'https://postman-echo.com/get?q=("*")');
+            expect(response).to.have.property('url', `${global.ECHO_SERVER}/get?q=("*")`);
         });
     });
 
@@ -694,7 +694,7 @@ var fs = require('fs'),
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                        request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                     }],
                     protocolProfileBehavior: {
                         disableCookies: false
@@ -736,7 +736,7 @@ var fs = require('fs'),
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                        request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                     }],
                     protocolProfileBehavior: {
                         disableCookies: true

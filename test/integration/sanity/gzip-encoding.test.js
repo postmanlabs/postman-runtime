@@ -7,7 +7,7 @@ describe('GZIP encoding', function () {
         this.run({
             collection: {
                 item: [{
-                    request: 'https://postman-echo.com/gzip'
+                    request: `${global.ECHO_SERVER}/gzip`
                 }]
             }
         }, function (err, results) {

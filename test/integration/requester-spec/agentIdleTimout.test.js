@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 (typeof window === 'undefined' ? describe : describe.skip)('Requester Spec: agentIdleTimeout', function () {
     var testrun,
-        URL = 'https://postman-echo.com/get',
+        URL = `${global.ECHO_SERVER_HTTPS}/get`,
         collection = {
             item: [{
                 request: {
@@ -20,7 +20,10 @@ var expect = require('chai').expect;
     describe('with no time gap between requests', function () {
         before(function (done) {
             this.run({
-                collection
+                collection,
+                requester: {
+                    strictSSL: false
+                }
             }, function (err, results) {
                 testrun = results;
                 done(err);
@@ -52,6 +55,7 @@ var expect = require('chai').expect;
             this.run({
                 collection: newCollection,
                 requester: {
+                    strictSSL: false,
                     agentIdleTimeout: 100
                 }
             }, function (err, results) {
@@ -86,6 +90,7 @@ var expect = require('chai').expect;
             this.run({
                 collection: newCollection,
                 requester: {
+                    strictSSL: false,
                     agentIdleTimeout: 1000
                 }
             }, function (err, results) {
