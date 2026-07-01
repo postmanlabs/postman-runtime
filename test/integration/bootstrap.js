@@ -3,7 +3,6 @@ var _ = require('lodash'),
     expect = require('chai').expect,
     Collection = require('postman-collection').Collection,
     Runner = require('../../index.js').Runner,
-    postmanEcho = require('../fixtures/servers/postmanEcho'),
     servers = require('../fixtures/servers/servers.json'),
 
     echoHttpsUrl,
@@ -14,7 +13,7 @@ require('tls').DEFAULT_MIN_VERSION = 'TLSv1';
 
 global.servers = servers;
 global.ECHO_SERVER = servers.postmanEcho;
-echoHttpsUrl = new URL(postmanEcho.httpsUrl);
+echoHttpsUrl = new URL(servers.postmanEchoHttps);
 echoHttpsUrl.hostname = 'localhost';
 global.ECHO_HTTPS_SERVER = echoHttpsUrl.origin;
 
