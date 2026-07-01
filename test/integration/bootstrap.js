@@ -5,6 +5,7 @@ var _ = require('lodash'),
     Runner = require('../../index.js').Runner,
     servers = require('../fixtures/servers/servers.json'),
 
+    echoHttpUrl,
     echoHttpsUrl,
     runtime;
 
@@ -13,6 +14,9 @@ require('tls').DEFAULT_MIN_VERSION = 'TLSv1';
 
 global.servers = servers;
 global.ECHO_SERVER = servers.postmanEcho;
+echoHttpUrl = new URL(servers.postmanEcho);
+echoHttpUrl.hostname = 'localhost';
+global.ECHO_HTTP_SERVER = echoHttpUrl.origin;
 echoHttpsUrl = new URL(servers.postmanEchoHttps);
 echoHttpsUrl.hostname = 'localhost';
 global.ECHO_HTTPS_SERVER = echoHttpsUrl.origin;
@@ -52,6 +56,7 @@ before(function () {
 after(function () {
     delete global.expect;
     delete global.ECHO_SERVER;
+    delete global.ECHO_HTTP_SERVER;
     delete global.ECHO_HTTPS_SERVER;
     // restores all spies created through sandbox in the previous run
     sinon.restore();
