@@ -5,21 +5,23 @@ var _ = require('lodash'),
     Runner = require('../../index.js').Runner,
     servers = require('../fixtures/servers/servers.json'),
 
-    echoHttpUrl,
-    echoHttpsUrl,
     runtime;
+
+function localhostOrigin (url) {
+    var parsedUrl = new URL(url);
+
+    parsedUrl.hostname = 'localhost';
+
+    return parsedUrl.origin;
+}
 
 // by default Node 12 throws error on using anything below TLSv1.2
 require('tls').DEFAULT_MIN_VERSION = 'TLSv1';
 
 global.servers = servers;
 global.ECHO_SERVER = servers.postmanEcho;
-echoHttpUrl = new URL(servers.postmanEcho);
-echoHttpUrl.hostname = 'localhost';
-global.ECHO_HTTP_SERVER = echoHttpUrl.origin;
-echoHttpsUrl = new URL(servers.postmanEchoHttps);
-echoHttpsUrl.hostname = 'localhost';
-global.ECHO_HTTPS_SERVER = echoHttpsUrl.origin;
+global.ECHO_HTTP_SERVER = localhostOrigin(servers.postmanEcho);
+global.ECHO_HTTPS_SERVER = localhostOrigin(servers.postmanEchoHttps);
 
 runtime = function (spec, done) {
     // restores all spies created through sandbox in the previous run
