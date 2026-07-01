@@ -5,10 +5,11 @@ var dns = require('dns'),
     var testrun;
 
     before(function (done) {
-        var self = this;
+        var self = this,
+            echoUrl = new URL(global.ECHO_SERVER);
 
         // Not hard-coding since this can change
-        dns.lookup('postman-echo.com', function (err, echoIp) {
+        dns.lookup(echoUrl.hostname, function (err, echoIp) {
             if (err) {
                 return done(err);
             }
@@ -16,7 +17,7 @@ var dns = require('dns'),
             return self.run({
                 collection: {
                     item: {
-                        request: 'http://邮差.com/get?foo=bar',
+                        request: `http://邮差.com:${echoUrl.port}/get?foo=bar`,
                         event: [{
                             listen: 'prerequest',
                             script: { exec: 'console.log(pm.request.url.toString())' }
@@ -45,7 +46,7 @@ var dns = require('dns'),
     it('should have the Host header with correct value in sent request', function () {
         var request = testrun.request.getCall(0).args[3];
 
-        expect(request.headers.get('Host')).to.equal('xn--nstq34i.com');
+        expect(request.headers.get('Host')).to.equal(`xn--nstq34i.com:${new URL(global.ECHO_SERVER).port}`);
     });
 
     it('should have completed the run', function () {
@@ -63,13 +64,15 @@ var dns = require('dns'),
         var request = testrun.response.firstCall.args[3],
             response = testrun.response.firstCall.args[2];
 
-        expect(request.url.toString()).to.equal('http://xn--nstq34i.com/get?foo=bar');
+        expect(request.url.toString()).to.equal(`http://xn--nstq34i.com:${new URL(global.ECHO_SERVER).port}/get?foo=bar`);
 
         // @note pm.request.url is different in prerequest and test scripts
         // pm.request in prerequest is what users authored
         // pm.request in test is what runtime sent
-        expect(testrun.console.firstCall.args[2]).to.equal('http://邮差.com/get?foo=bar');
-        expect(testrun.console.secondCall.args[2]).to.equal('http://xn--nstq34i.com/get?foo=bar');
+        expect(testrun.console.firstCall.args[2])
+            .to.equal(`http://邮差.com:${new URL(global.ECHO_SERVER).port}/get?foo=bar`);
+        expect(testrun.console.secondCall.args[2])
+            .to.equal(`http://xn--nstq34i.com:${new URL(global.ECHO_SERVER).port}/get?foo=bar`);
 
         expect(response).to.have.property('code', 200);
         expect(response.json()).to.deep.include({

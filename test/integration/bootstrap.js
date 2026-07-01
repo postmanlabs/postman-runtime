@@ -39,11 +39,13 @@ runtime = function (spec, done) {
 before(function () {
     global.expect = expect; // expose global
     global.servers = require('../fixtures/servers/servers.json');
+    global.ECHO_SERVER = global.servers.postmanEcho;
     this.run = runtime;
 });
 
 after(function () {
     delete global.expect;
+    delete global.ECHO_SERVER;
     // restores all spies created through sandbox in the previous run
     sinon.restore();
 });

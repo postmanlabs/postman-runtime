@@ -363,9 +363,9 @@ describe('sandbox library - pm api', function () {
                 this.run({
                     collection: {
                         item: [{
-                            request: 'http://postman-echo.com/cookies/set?foo=bar'
+                            request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                         }, {
-                            request: 'http://postman-echo.com/cookies',
+                            request: `${global.ECHO_SERVER}/cookies`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -426,10 +426,11 @@ describe('sandbox library - pm api', function () {
 
         describe('allowProgrammaticAccess', function () {
             before(function (done) {
-                var cookieJar = postmanRequest.jar();
+                var cookieJar = postmanRequest.jar(),
+                    echoHost = new URL(global.ECHO_SERVER).hostname;
 
                 cookieJar.allowProgrammaticAccess = function (domain) {
-                    return domain === 'postman-echo.com';
+                    return domain === echoHost;
                 };
 
                 this.run({
@@ -438,7 +439,7 @@ describe('sandbox library - pm api', function () {
                     },
                     collection: {
                         item: [{
-                            request: 'http://postman-echo.com/cookies',
+                            request: `${global.ECHO_SERVER}/cookies`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -447,13 +448,13 @@ describe('sandbox library - pm api', function () {
                                     var jar = pm.cookies.jar();
 
                                     pm.test('jar.set in pre-request', function (done) {
-                                        jar.set('www.postman-echo.com', "hello=world; Path=/", done);
+                                        jar.set('www.${echoHost}', "hello=world; Path=/", done);
                                     });
                                     `
                                 }
                             }]
                         }, {
-                            request: 'http://postman-echo.com/cookies',
+                            request: `${global.ECHO_SERVER}/cookies`,
                             event: [{
                                 listen: 'prerequest',
                                 script: {
@@ -462,7 +463,7 @@ describe('sandbox library - pm api', function () {
                                     var jar = pm.cookies.jar();
 
                                     pm.test('jar.set in pre-request', function (done) {
-                                        jar.set('postman-echo.com', "hello=world; Path=/", done);
+                                        jar.set('${echoHost}', "hello=world; Path=/", done);
                                     });
                                     `
                                 }
@@ -504,7 +505,7 @@ describe('sandbox library - pm api', function () {
                     error: {
                         type: 'Error',
                         name: 'Error',
-                        message: 'CookieStore: programmatic access to "www.postman-echo.com" is denied'
+                        message: `CookieStore: programmatic access to "www.${new URL(global.ECHO_SERVER).hostname}" is denied`
                     },
                     index: 0,
                     passed: false,
