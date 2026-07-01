@@ -23,9 +23,10 @@ function parseCookies (header) {
 }
 
 function sendJSON (res, body, headers) {
-    res.writeHead(200, Object.assign({
-        'content-type': 'application/json; charset=utf-8'
-    }, headers));
+    res.writeHead(200, {
+        'content-type': 'application/json; charset=utf-8',
+        ...headers
+    });
 
     res.end(JSON.stringify(body));
 }

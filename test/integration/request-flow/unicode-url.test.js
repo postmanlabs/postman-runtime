@@ -64,7 +64,8 @@ var dns = require('dns'),
         var request = testrun.response.firstCall.args[3],
             response = testrun.response.firstCall.args[2];
 
-        expect(request.url.toString()).to.equal(`http://xn--nstq34i.com:${new URL(global.ECHO_SERVER).port}/get?foo=bar`);
+        expect(request.url.toString())
+            .to.equal(`http://xn--nstq34i.com:${new URL(global.ECHO_SERVER).port}/get?foo=bar`);
 
         // @note pm.request.url is different in prerequest and test scripts
         // pm.request in prerequest is what users authored

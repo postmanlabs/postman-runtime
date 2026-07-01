@@ -505,7 +505,8 @@ describe('sandbox library - pm api', function () {
                     error: {
                         type: 'Error',
                         name: 'Error',
-                        message: `CookieStore: programmatic access to "www.${new URL(global.ECHO_SERVER).hostname}" is denied`
+                        message:
+                          `CookieStore: programmatic access to "www.${new URL(global.ECHO_SERVER).hostname}" is denied`
                     },
                     index: 0,
                     passed: false,
