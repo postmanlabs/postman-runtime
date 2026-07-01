@@ -7,9 +7,9 @@ describe('response size', function () {
         this.run({
             collection: {
                 item: [{
-                    request: 'https://postman-echo.com/get'
+                    request: global.ECHO_SERVER + '/get'
                 }, {
-                    request: 'https://httpbin.org/get'
+                    request: global.servers.http
                 }]
             }
         }, function (err, results) {

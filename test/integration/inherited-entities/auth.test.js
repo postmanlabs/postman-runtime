@@ -1,22 +1,26 @@
 var _ = require('lodash'),
     expect = require('chai').expect;
 
-describe('Inherited Auth', function () {
-    var testrun,
-        runOptions = {
+// Browser XHR cannot reliably expose Digest challenge/retry flows; keep this coverage in Node.
+(typeof window === 'undefined' ? describe : describe.skip)('Inherited Auth', function () {
+    var testrun;
+
+    function getRunOptions () {
+        return {
             collection: {
                 item: {
                     name: 'BasicAuth Request',
                     request: {
-                        url: 'https://postman-echo.com/digest-auth'
+                        url: new URL(global.servers.digest).toString()
                     }
                 }
             }
         };
+    }
 
     describe('in request level', function () {
         before(function (done) {
-            var clonedRunOptions = _.merge({}, runOptions,
+            var clonedRunOptions = _.merge({}, getRunOptions(),
                 {
                     collection: {
                         item: {
@@ -72,7 +76,7 @@ describe('Inherited Auth', function () {
                 response2 = testrun.request.secondCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.equal(new URL(global.servers.digest).toString());
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
         });
@@ -80,7 +84,7 @@ describe('Inherited Auth', function () {
 
     describe('in itemGroup level', function () {
         before(function (done) {
-            var clonedRunOptions = _.merge({}, runOptions,
+            var clonedRunOptions = _.merge({}, getRunOptions(),
                 {
                     collection: {
                         item: [{
@@ -95,12 +99,12 @@ describe('Inherited Auth', function () {
                             item: [{
                                 name: 'digestAuth Request 1',
                                 request: {
-                                    url: 'https://postman-echo.com/digest-auth'
+                                    url: new URL(global.servers.digest).toString()
                                 }
                             }, {
                                 name: 'digestAuth Request 2',
                                 request: {
-                                    url: 'https://postman-echo.com/digest-auth'
+                                    url: new URL(global.servers.digest).toString()
                                 }
                             }]
                         }]
@@ -150,19 +154,19 @@ describe('Inherited Auth', function () {
                 response3 = testrun.request.thirdCall.args[2];
 
             expect(err1).to.be.null;
-            expect(request1.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request1.url.toString()).to.equal(new URL(global.servers.digest).toString());
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
 
             expect(err2).to.be.null;
-            expect(request2.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request2.url.toString()).to.equal(new URL(global.servers.digest).toString());
             expect(response3).to.have.property('code', 200);
         });
     });
 
     describe('in collection level', function () {
         before(function (done) {
-            var clonedRunOptions = _.merge({}, runOptions,
+            var clonedRunOptions = _.merge({}, getRunOptions(),
                 {
                     collection: {
                         auth: {
@@ -177,12 +181,12 @@ describe('Inherited Auth', function () {
                             item: [{
                                 name: 'DigestAuth Request 1',
                                 request: {
-                                    url: 'https://postman-echo.com/digest-auth'
+                                    url: new URL(global.servers.digest).toString()
                                 }
                             }, {
                                 name: 'DigestAuth Request 2',
                                 request: {
-                                    url: 'https://postman-echo.com/digest-auth'
+                                    url: new URL(global.servers.digest).toString()
                                 }
                             }]
                         }]
@@ -233,8 +237,8 @@ describe('Inherited Auth', function () {
 
             expect(err1).to.be.null;
             expect(err2).to.be.null;
-            expect(request1.url.toString()).to.equal('https://postman-echo.com/digest-auth');
-            expect(request2.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request1.url.toString()).to.equal(new URL(global.servers.digest).toString());
+            expect(request2.url.toString()).to.equal(new URL(global.servers.digest).toString());
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
             expect(response3).to.have.property('code', 200);
@@ -243,7 +247,7 @@ describe('Inherited Auth', function () {
 
     describe('in collection and request level', function () {
         before(function (done) {
-            var clonedRunOptions = _.merge({}, runOptions,
+            var clonedRunOptions = _.merge({}, getRunOptions(),
                 {
                     collection: {
                         item: {
@@ -306,7 +310,7 @@ describe('Inherited Auth', function () {
                 response2 = testrun.request.secondCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.equal('https://postman-echo.com/digest-auth');
+            expect(request.url.toString()).to.equal(new URL(global.servers.digest).toString());
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
         });

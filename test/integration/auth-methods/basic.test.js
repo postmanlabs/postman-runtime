@@ -1,13 +1,15 @@
 var expect = require('chai').expect;
 
 describe('basic auth', function () {
-    var testrun,
-        runOptions = {
+    var testrun;
+
+    function getRunOptions () {
+        return {
             collection: {
                 item: {
                     name: 'DigestAuth',
                     request: {
-                        url: 'https://postman-echo.com/basic-auth',
+                        url: global.ECHO_SERVER + '/basic-auth',
                         auth: {
                             type: 'basic',
                             basic: {
@@ -19,9 +21,12 @@ describe('basic auth', function () {
                 }
             }
         };
+    }
 
     describe('with correct details', function () {
         before(function (done) {
+            var runOptions = getRunOptions();
+
             runOptions.environment = {
                 values: [{
                     key: 'uname',
@@ -60,13 +65,15 @@ describe('basic auth', function () {
                 response = testrun.request.firstCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(global.ECHO_SERVER + '/basic-auth');
             expect(response).to.have.property('code', 200);
         });
     });
 
     describe('with incorrect details', function () {
         before(function (done) {
+            var runOptions = getRunOptions();
+
             runOptions.environment = {
                 values: [{
                     key: 'uname',
@@ -105,7 +112,7 @@ describe('basic auth', function () {
                 response = testrun.request.lastCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(global.ECHO_SERVER + '/basic-auth');
             expect(response).to.have.property('code', 401);
         });
     });

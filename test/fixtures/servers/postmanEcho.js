@@ -34,6 +34,22 @@ function collectBody (req, callback) {
     });
 }
 
+function corsHeaders (req, headers) {
+    return {
+        'access-control-allow-origin': req.headers.origin || '*',
+        'access-control-allow-credentials': 'true',
+        'access-control-allow-methods': 'GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS',
+        'access-control-allow-headers': req.headers['access-control-request-headers'] ||
+            'authorization,content-type,cache-control,postman-token,accept',
+        'access-control-expose-headers': 'content-length,content-type,location,set-cookie,www-authenticate',
+        ...headers
+    };
+}
+
+function writeHead (req, res, status, headers) {
+    res.writeHead(status, corsHeaders(req, headers));
+}
+
 function lowerHeaders (headers) {
     const result = {};
 
@@ -66,7 +82,7 @@ function originalUrl (req) {
     }
 
     const protocol = req.headers['x-postman-echo-original-protocol'] || (req.socket.encrypted ? 'https' : 'http'),
-        host = req.headers['x-postman-echo-original-host'] || req.headers.host;
+        host = req.headers['x-postman-echo-original-host'] || req.headers.host || req.headers[':authority'];
 
     return protocol + '://' + host + req.url;
 }
@@ -88,8 +104,8 @@ function queryArgs (req) {
     return args;
 }
 
-function sendJSON (res, status, body, headers) {
-    res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', ...headers });
+function sendJSON (req, res, status, body, headers) {
+    writeHead(req, res, status, { 'content-type': 'application/json; charset=utf-8', ...headers });
     res.end(JSON.stringify(body));
 }
 
@@ -121,9 +137,25 @@ function methodResponse (req, body) {
     };
 }
 
-function redirect (res, location, headers) {
-    res.writeHead(302, { location, ...headers });
+function redirect (req, res, location, headers) {
+    writeHead(req, res, 302, { location, ...headers });
     res.end();
+}
+
+function isBasicAuthorized (req) {
+    const authorization = req.headers.authorization || '',
+        match = authorization.match(/^Basic\s+(.+)$/i);
+
+    if (!match) {
+        return false;
+    }
+
+    try {
+        return Buffer.from(match[1], 'base64').toString() === 'postman:password';
+    }
+    catch (_) {
+        return false;
+    }
 }
 
 function handle (req, res) {
@@ -131,38 +163,48 @@ function handle (req, res) {
         const parsedUrl = new URL(originalUrl(req)),
             pathname = parsedUrl.pathname.toLowerCase();
 
+        if (req.method === 'OPTIONS') {
+            writeHead(req, res, 204, { allow: 'OPTIONS' });
+
+            return res.end();
+        }
+
         if (pathname === '/') {
-            res.writeHead(200, { 'content-type': 'text/plain' });
+            writeHead(req, res, 200, { 'content-type': 'text/plain' });
 
             return res.end('Okay!');
         }
 
         if (pathname === '/get') {
             if (req.method === 'HEAD') {
-                res.writeHead(200);
+                writeHead(req, res, 200);
 
                 return res.end();
             }
 
-            if (req.method === 'OPTIONS') {
-                res.writeHead(200, { allow: 'OPTIONS' });
-
-                return res.end();
-            }
-
-            return sendJSON(res, 200, {
+            return sendJSON(req, res, 200, {
                 args: queryArgs(req),
                 headers: echoHeaders(req),
                 url: originalUrl(req)
             }, { 'set-cookie': 'sails.sid=s%3Alocal-echo; Path=/; HttpOnly' });
         }
 
+        if (pathname === '/basic-auth') {
+            if (!isBasicAuthorized(req)) {
+                writeHead(req, res, 401);
+
+                return res.end('Unauthorized');
+            }
+
+            return sendJSON(req, res, 200, { authenticated: true });
+        }
+
         if (['/post', '/put', '/patch', '/delete'].includes(pathname)) {
-            return sendJSON(res, 200, methodResponse(req, body));
+            return sendJSON(req, res, 200, methodResponse(req, body));
         }
 
         if (pathname === '/cookies' || pathname === '/cookies/get') {
-            return sendJSON(res, 200, { cookies: parseCookies(req.headers.cookie) });
+            return sendJSON(req, res, 200, { cookies: parseCookies(req.headers.cookie) });
         }
 
         if (pathname === '/cookies/set') {
@@ -172,7 +214,7 @@ function handle (req, res) {
                 cookies.push(key + '=' + encodeURIComponent(value) + '; Path=/');
             });
 
-            return redirect(res, '/cookies', { 'set-cookie': cookies });
+            return redirect(req, res, '/cookies', { 'set-cookie': cookies });
         }
 
         if (pathname === '/cookies/delete') {
@@ -182,10 +224,10 @@ function handle (req, res) {
                 cookies.push(key + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT');
             });
 
-            return redirect(res, '/cookies', { 'set-cookie': cookies });
+            return redirect(req, res, '/cookies', { 'set-cookie': cookies });
         }
 
-        return sendJSON(res, 404, { status: 404, message: 'Not Found' });
+        return sendJSON(req, res, 404, { status: 404, message: 'Not Found' });
     });
 }
 
