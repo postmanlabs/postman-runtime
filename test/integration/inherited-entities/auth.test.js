@@ -11,7 +11,7 @@ var _ = require('lodash'),
                 item: {
                     name: 'BasicAuth Request',
                     request: {
-                        url: new URL(global.servers.digest).toString()
+                        url: global.servers.digest + '/'
                     }
                 }
             }
@@ -76,7 +76,7 @@ var _ = require('lodash'),
                 response2 = testrun.request.secondCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.equal(new URL(global.servers.digest).toString());
+            expect(request.url.toString()).to.equal(global.servers.digest + '/');
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
         });
@@ -99,12 +99,12 @@ var _ = require('lodash'),
                             item: [{
                                 name: 'digestAuth Request 1',
                                 request: {
-                                    url: new URL(global.servers.digest).toString()
+                                    url: global.servers.digest + '/'
                                 }
                             }, {
                                 name: 'digestAuth Request 2',
                                 request: {
-                                    url: new URL(global.servers.digest).toString()
+                                    url: global.servers.digest + '/'
                                 }
                             }]
                         }]
@@ -154,12 +154,12 @@ var _ = require('lodash'),
                 response3 = testrun.request.thirdCall.args[2];
 
             expect(err1).to.be.null;
-            expect(request1.url.toString()).to.equal(new URL(global.servers.digest).toString());
+            expect(request1.url.toString()).to.equal(global.servers.digest + '/');
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
 
             expect(err2).to.be.null;
-            expect(request2.url.toString()).to.equal(new URL(global.servers.digest).toString());
+            expect(request2.url.toString()).to.equal(global.servers.digest + '/');
             expect(response3).to.have.property('code', 200);
         });
     });
@@ -181,12 +181,12 @@ var _ = require('lodash'),
                             item: [{
                                 name: 'DigestAuth Request 1',
                                 request: {
-                                    url: new URL(global.servers.digest).toString()
+                                    url: global.servers.digest + '/'
                                 }
                             }, {
                                 name: 'DigestAuth Request 2',
                                 request: {
-                                    url: new URL(global.servers.digest).toString()
+                                    url: global.servers.digest + '/'
                                 }
                             }]
                         }]
@@ -237,8 +237,8 @@ var _ = require('lodash'),
 
             expect(err1).to.be.null;
             expect(err2).to.be.null;
-            expect(request1.url.toString()).to.equal(new URL(global.servers.digest).toString());
-            expect(request2.url.toString()).to.equal(new URL(global.servers.digest).toString());
+            expect(request1.url.toString()).to.equal(global.servers.digest + '/');
+            expect(request2.url.toString()).to.equal(global.servers.digest + '/');
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
             expect(response3).to.have.property('code', 200);
@@ -310,7 +310,7 @@ var _ = require('lodash'),
                 response2 = testrun.request.secondCall.args[2];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.equal(new URL(global.servers.digest).toString());
+            expect(request.url.toString()).to.equal(global.servers.digest + '/');
             expect(response1).to.have.property('code', 401);
             expect(response2).to.have.property('code', 200);
         });
