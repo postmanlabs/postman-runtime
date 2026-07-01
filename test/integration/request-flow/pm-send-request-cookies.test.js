@@ -2,7 +2,8 @@ var _ = require('lodash'),
     expect = require('chai').expect;
 
 (typeof window === 'undefined' ? describe : describe.skip)('cookie sandbox request interaction', function () {
-    var cookieUrl = 'https://postman-echo.com/cookies';
+    var cookieUrl = global.ECHO_SERVER + '/cookies',
+        cookieDomain = new URL(global.ECHO_SERVER).hostname;
 
     describe('intra-sandbox', function () {
         describe('explicit', function () {
@@ -80,7 +81,7 @@ var _ = require('lodash'),
                                         pm.cookies.add({
                                             key: 'foo',
                                             value: 'bar',
-                                            domain: '.postman-echo.com'
+                                            domain: '${cookieDomain}'
                                         });
                                         `
                                     }
