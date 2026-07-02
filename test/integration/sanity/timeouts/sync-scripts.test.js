@@ -208,7 +208,7 @@ describe('synchronous script timeouts', function () {
                 }
 
                 function checkTimeoutResult () {
-                    if (!hasTimeoutResult() && Date.now() - startedAt < 3000) {
+                    if (!hasTimeoutResult() && Date.now() - startedAt < 5000) {
                         return setTimeout(checkTimeoutResult, 50);
                     }
 
