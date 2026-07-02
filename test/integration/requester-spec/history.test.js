@@ -10,7 +10,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: global.ECHO_HTTP_SERVER + '/get',
                             method: 'GET',
                             header: [{
                                 key: 'Connection',
@@ -65,7 +65,7 @@ var expect = require('chai').expect,
                 collection: {
                     item: [{
                         request: {
-                            url: 'https://postman-echo.com/get',
+                            url: global.ECHO_HTTPS_SERVER + '/get',
                             method: 'GET',
                             header: [{
                                 key: 'Connection',
@@ -75,7 +75,8 @@ var expect = require('chai').expect,
                     }]
                 },
                 requester: {
-                    verbose: true
+                    verbose: true,
+                    strictSSL: false
                 }
             }, function (err, result) {
                 testrun = result;

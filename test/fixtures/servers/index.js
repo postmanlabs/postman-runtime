@@ -22,6 +22,7 @@ module.exports = {
                 if (err) { return next(err); }
 
                 URLS[s.name] = s.server.url;
+                s.server.httpsUrl && (URLS[s.name + 'Https'] = s.server.httpsUrl);
                 next();
             });
         }, function (err) {

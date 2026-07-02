@@ -3,23 +3,25 @@ var sinon = require('sinon').createSandbox(),
     AuthLoader = require('../../../../lib/authorizer/index').AuthLoader;
 
 describe('auth control flow', function () {
-    var runOptions = {
-        collection: {
-            item: {
-                name: 'FakeAuth',
-                request: {
-                    url: 'https://postman-echo.com/basic-auth',
-                    auth: {
-                        type: 'fake',
-                        fake: {
-                            username: 'postman',
-                            password: 'password'
+    function getRunOptions () {
+        return {
+            collection: {
+                item: {
+                    name: 'FakeAuth',
+                    request: {
+                        url: global.ECHO_SERVER + '/basic-auth',
+                        auth: {
+                            type: 'fake',
+                            fake: {
+                                username: 'postman',
+                                password: 'password'
+                            }
                         }
                     }
                 }
             }
-        }
-    };
+        };
+    }
 
     after(function () {
         sinon.restore();
@@ -51,7 +53,7 @@ describe('auth control flow', function () {
         before(function (done) {
             AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
-            this.run(runOptions, function (err, results) {
+            this.run(getRunOptions(), function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -83,7 +85,7 @@ describe('auth control flow', function () {
                 request = testrun.request.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(global.ECHO_SERVER + '/basic-auth');
         });
 
         it('should call sign and post, not init', function () {
@@ -122,7 +124,7 @@ describe('auth control flow', function () {
         before(function (done) {
             AuthLoader.addHandler(fakeHandler, 'fake');
             // perform the collection run
-            this.run(runOptions, function (err, results) {
+            this.run(getRunOptions(), function (err, results) {
                 testrun = results;
                 done(err);
             });
@@ -154,7 +156,7 @@ describe('auth control flow', function () {
                 request = testrun.request.firstCall.args[3];
 
             expect(err).to.be.null;
-            expect(request.url.toString()).to.eql('https://postman-echo.com/basic-auth');
+            expect(request.url.toString()).to.eql(global.ECHO_SERVER + '/basic-auth');
         });
 
         it('should skip signing', function () {

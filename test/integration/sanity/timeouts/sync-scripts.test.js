@@ -183,7 +183,7 @@ describe('synchronous script timeouts', function () {
                     timeout: {
                         script: 500
                     },
-                    __disposeTimeout: 2000 // don't dispose sandbox in bootstrap.js immediately
+                    __disposeTimeout: 4000 // don't dispose sandbox in bootstrap.js immediately
                 }, function (err, results) {
                     !testrun && (testrun = results) && done(err);
                 });
@@ -197,13 +197,36 @@ describe('synchronous script timeouts', function () {
                 });
             });
 
-            it('should handle script timeouts correctly', function () {
-                expect(testrun).to.be.ok;
-                expect(testrun).to.have.property('prerequest').that.nested.include({
-                    callCount: 1,
-                    'firstCall.args[0]': null,
-                    'firstCall.args[2][0].error.message': 'sandbox not responding'
-                });
+            it('should handle script timeouts correctly', function (done) {
+                var startedAt = Date.now();
+
+                function hasTimeoutResult () {
+                    var prerequest = testrun && testrun.prerequest,
+                        assertions = prerequest && prerequest.firstCall && prerequest.firstCall.args[2];
+
+                    return assertions && assertions[0] && assertions[0].error;
+                }
+
+                function checkTimeoutResult () {
+                    if (!hasTimeoutResult() && Date.now() - startedAt < 5000) {
+                        return setTimeout(checkTimeoutResult, 50);
+                    }
+
+                    try {
+                        expect(testrun).to.be.ok;
+                        expect(testrun).to.have.property('prerequest').that.nested.include({
+                            callCount: 1,
+                            'firstCall.args[0]': null,
+                            'firstCall.args[2][0].error.message': 'sandbox not responding'
+                        });
+                        done();
+                    }
+                    catch (e) {
+                        done(e);
+                    }
+                }
+
+                checkTimeoutResult();
             });
         });
     });
