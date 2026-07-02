@@ -1,5 +1,5 @@
 /**
- * Unit tests for the per-partition (per-VU) cookie jar.
+ * Unit tests for the per-partition cookie jar.
  *
  * Covers the allocation/lifecycle seams in isolation:
  *   - Partition#getCookieJar / Partition#resetCookieJar

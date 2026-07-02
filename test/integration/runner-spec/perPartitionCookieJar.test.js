@@ -7,11 +7,13 @@
  * observed exactly where it matters — on the wire — rather than through
  * pm.* scopes.
  *
- * All tests sequence VU loops deterministically (VU1 starts only after
- * VU0's loops complete), so assertions are exact instead of statistical:
- *   - shared jar (flag off / explicit jar): VU1's first read MUST carry
- *     VU0's cookie
- *   - per-partition jars (flag on): VU1's first read MUST carry nothing
+ * All tests sequence partition loops deterministically (partition 1
+ * starts only after partition 0's loops complete), so assertions are
+ * exact instead of statistical:
+ *   - shared jar (flag off / explicit jar): partition 1's first read
+ *     MUST carry partition 0's cookie
+ *   - per-partition jars (flag on): partition 1's first read MUST
+ *     carry nothing
  *
  * Complements test/unit/per-partition-cookie-jar.test.js, which covers
  * the allocation/lifecycle seams with mocks.
@@ -32,14 +34,14 @@ var _ = require('lodash'),
     this.timeout(30 * 1000); // local server only — should be fast
 
     var httpServer,
-        reads; // [{vu, cookie}] in arrival order, recorded by the server
+        reads; // [{partition, cookie}] in arrival order, recorded by the server
 
     before(function (done) {
         httpServer = server.createHTTPServer();
 
         httpServer.on('/read', function (req, res) {
             reads.push({
-                vu: url.parse(req.url, true).query.vu,
+                partition: url.parse(req.url, true).query.partition,
                 cookie: req.headers.cookie || ''
             });
             res.writeHead(200, { 'content-type': 'text/plain' });
@@ -66,12 +68,13 @@ var _ = require('lodash'),
     });
 
     // Collection: each loop reads first (observing whatever the jar
-    // attaches), then sets this VU's marker cookie. Read-first ordering is
-    // what makes shared-vs-isolated deterministic for the next VU.
+    // attaches), then sets this partition's marker cookie. Read-first
+    // ordering is what makes shared-vs-isolated deterministic for the
+    // next partition.
     function readThenSetCollection () {
         return new Collection({
             item: [
-                { id: 'read-item', name: 'read', request: httpServer.url + '/read?vu={{marker}}' },
+                { id: 'read-item', name: 'read', request: httpServer.url + '/read?partition={{marker}}' },
                 { id: 'set-item', name: 'set', request: httpServer.url + '/set?marker={{marker}}' }
             ]
         });
@@ -88,8 +91,8 @@ var _ = require('lodash'),
      * @param {Collection} opts.collection -
      * @param {Object} [opts.requester] - requester options for the run
      * @param {Array} opts.schedule - array of steps executed in order:
-     *   { start: <vuIndex>, marker: <String> }  → startParallelIteration
-     *   { stop: <vuIndex> }                     → stopParallelIteration
+     *   { start: <partitionIndex>, marker: <String> }  → startParallelIteration
+     *   { stop: <partitionIndex> }                     → stopParallelIteration
      *   each `start` step consumes one iteration trigger before advancing.
      * @param {Function} done - (err, spies)
      */
@@ -156,30 +159,30 @@ var _ = require('lodash'),
         });
     }
 
-    describe('flag ON — wire isolation and VU-lifetime persistence', function () {
+    describe('flag ON — wire isolation and partition-lifetime persistence', function () {
         before(function (done) {
             runSchedule({
                 collection: readThenSetCollection(),
                 requester: { perPartitionCookieJar: true },
                 schedule: [
-                    { start: 0, marker: 'vu0' }, // VU0 loop 1: read (empty), set vu0
-                    { start: 0, marker: 'vu0' }, // VU0 loop 2: read (own cookie persists)
-                    { start: 1, marker: 'vu1' }, // VU1 loop 1: read — must NOT see vu0
-                    { start: 1, marker: 'vu1' } // VU1 loop 2: read (own cookie persists)
+                    { start: 0, marker: 'p0' }, // partition 0 loop 1: read (empty), set p0
+                    { start: 0, marker: 'p0' }, // partition 0 loop 2: read (own cookie persists)
+                    { start: 1, marker: 'p1' }, // partition 1 loop 1: read — must NOT see p0
+                    { start: 1, marker: 'p1' } // partition 1 loop 2: read (own cookie persists)
                 ]
             }, done);
         });
 
-        it('keeps VU1 blind to VU0\'s cookie even though VU0 set it first', function () {
-            expect(reads[2]).to.eql({ vu: 'vu1', cookie: '' });
+        it('keeps partition 1 blind to partition 0\'s cookie even though partition 0 set it first', function () {
+            expect(reads[2]).to.eql({ partition: 'p1', cookie: '' });
         });
 
-        it('persists each VU\'s own cookie across loop iterations (sign-in-once pattern)', function () {
+        it('persists each partition\'s own cookie across loop iterations (sign-in-once pattern)', function () {
             expect(reads).to.eql([
-                { vu: 'vu0', cookie: '' },
-                { vu: 'vu0', cookie: 'marker=vu0' },
-                { vu: 'vu1', cookie: '' },
-                { vu: 'vu1', cookie: 'marker=vu1' }
+                { partition: 'p0', cookie: '' },
+                { partition: 'p0', cookie: 'marker=p0' },
+                { partition: 'p1', cookie: '' },
+                { partition: 'p1', cookie: 'marker=p1' }
             ]);
         });
     });
@@ -189,16 +192,16 @@ var _ = require('lodash'),
             runSchedule({
                 collection: readThenSetCollection(),
                 schedule: [
-                    { start: 0, marker: 'vu0' },
-                    { start: 1, marker: 'vu1' }
+                    { start: 0, marker: 'p0' },
+                    { start: 1, marker: 'p1' }
                 ]
             }, done);
         });
 
-        it('leaks VU0\'s cookie into VU1\'s first request (the bug this option fixes)', function () {
+        it('leaks partition 0\'s cookie into partition 1\'s first request (the bug this option fixes)', function () {
             expect(reads).to.eql([
-                { vu: 'vu0', cookie: '' },
-                { vu: 'vu1', cookie: 'marker=vu0' }
+                { partition: 'p0', cookie: '' },
+                { partition: 'p1', cookie: 'marker=p0' }
             ]);
         });
     });
@@ -214,16 +217,16 @@ var _ = require('lodash'),
                     cookieJar: RequestCookieJar()
                 },
                 schedule: [
-                    { start: 0, marker: 'vu0' },
-                    { start: 1, marker: 'vu1' }
+                    { start: 0, marker: 'p0' },
+                    { start: 1, marker: 'p1' }
                 ]
             }, done);
         });
 
         it('behaves as a shared (caller-owned) jar across partitions', function () {
             expect(reads).to.eql([
-                { vu: 'vu0', cookie: '' },
-                { vu: 'vu1', cookie: 'marker=vu0' }
+                { partition: 'p0', cookie: '' },
+                { partition: 'p1', cookie: 'marker=p0' }
             ]);
         });
     });
@@ -234,19 +237,19 @@ var _ = require('lodash'),
                 collection: readThenSetCollection(),
                 requester: { perPartitionCookieJar: true },
                 schedule: [
-                    { start: 0, marker: 'vu0' }, // loop 1: read (empty), set vu0
-                    { start: 0, marker: 'vu0' }, // loop 2: read (cookie present)
-                    { stop: 0 }, // VU recycled — jar must reset
-                    { start: 0, marker: 'vu0-reborn' } // loop 3: read must be empty again
+                    { start: 0, marker: 'p0' }, // loop 1: read (empty), set p0
+                    { start: 0, marker: 'p0' }, // loop 2: read (cookie present)
+                    { stop: 0 }, // partition recycled — jar must reset
+                    { start: 0, marker: 'p0-reborn' } // loop 3: read must be empty again
                 ]
             }, done);
         });
 
-        it('gives the reborn VU an empty jar (no residue from the dead VU)', function () {
+        it('gives the recycled partition an empty jar (no residue from the stopped one)', function () {
             expect(reads).to.eql([
-                { vu: 'vu0', cookie: '' },
-                { vu: 'vu0', cookie: 'marker=vu0' },
-                { vu: 'vu0-reborn', cookie: '' }
+                { partition: 'p0', cookie: '' },
+                { partition: 'p0', cookie: 'marker=p0' },
+                { partition: 'p0-reborn', cookie: '' }
             ]);
         });
     });
@@ -257,7 +260,7 @@ var _ = require('lodash'),
                 item: [{
                     id: 'prog-item',
                     name: 'programmatic',
-                    request: httpServer.url + '/read?vu={{marker}}',
+                    request: httpServer.url + '/read?partition={{marker}}',
                     event: [{
                         listen: 'prerequest',
                         script: {
@@ -280,16 +283,16 @@ var _ = require('lodash'),
                 collection: collection,
                 requester: { perPartitionCookieJar: true },
                 schedule: [
-                    { start: 0, marker: 'vu0' },
-                    { start: 1, marker: 'vu1' }
+                    { start: 0, marker: 'p0' },
+                    { start: 1, marker: 'p1' }
                 ]
             }, done);
         });
 
-        it('routes script jar writes to the writing VU\'s own jar only', function () {
+        it('routes script jar writes to the writing partition\'s own jar only', function () {
             expect(reads).to.eql([
-                { vu: 'vu0', cookie: 'prog=vu0' },
-                { vu: 'vu1', cookie: 'prog=vu1' } // NOT 'prog=vu0; prog=vu1'
+                { partition: 'p0', cookie: 'prog=p0' },
+                { partition: 'p1', cookie: 'prog=p1' } // NOT 'prog=p0; prog=p1'
             ]);
         });
     });
@@ -300,7 +303,7 @@ var _ = require('lodash'),
                 item: [{
                     id: 'sr-item',
                     name: 'send-request',
-                    request: httpServer.url + '/read?vu={{marker}}',
+                    request: httpServer.url + '/read?partition={{marker}}',
                     event: [{
                         listen: 'test',
                         script: {
@@ -324,18 +327,18 @@ var _ = require('lodash'),
                 collection: collection,
                 requester: { perPartitionCookieJar: true },
                 schedule: [
-                    { start: 0, marker: 'vu0' }, // loop 1: read empty, sendRequest sets sr-vu0
-                    { start: 0, marker: 'vu0' }, // loop 2: read must carry sr-vu0
-                    { start: 1, marker: 'vu1' } // VU1 must not see VU0's sendRequest cookie
+                    { start: 0, marker: 'p0' }, // loop 1: read empty, sendRequest sets sr-p0
+                    { start: 0, marker: 'p0' }, // loop 2: read must carry sr-p0
+                    { start: 1, marker: 'p1' } // partition 1 must not see partition 0's sendRequest cookie
                 ]
             }, done);
         });
 
-        it('makes the nested request\'s Set-Cookie visible to the same VU only', function () {
+        it('makes the nested request\'s Set-Cookie visible to the same partition only', function () {
             expect(reads).to.eql([
-                { vu: 'vu0', cookie: '' },
-                { vu: 'vu0', cookie: 'marker=sr-vu0' },
-                { vu: 'vu1', cookie: '' }
+                { partition: 'p0', cookie: '' },
+                { partition: 'p0', cookie: 'marker=sr-p0' },
+                { partition: 'p1', cookie: '' }
             ]);
         });
     });

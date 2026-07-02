@@ -3,10 +3,10 @@
   new features:
     - >-
       Add requester.perPartitionCookieJar option — allocates an isolated
-      cookie jar per partition (per-VU) in parallelized runs instead of one
-      shared jar per run. Opt-in; an explicitly supplied requester.cookieJar
-      always wins. Jars are reset on stopSinglePartition under the
-      full-fresh-on-reuse contract.
+      cookie jar per parallel partition (equals per-iteration in
+      customParallelIterations mode, where recycled partitions get a fresh
+      jar) instead of one shared jar per run. Opt-in; an explicitly supplied
+      requester.cookieJar always wins.
 
 7.54.0:
   date: 2026-05-05
