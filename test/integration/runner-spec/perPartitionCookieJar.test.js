@@ -207,9 +207,9 @@ var _ = require('lodash'),
     });
 
     describe('flag ON + explicit requester.cookieJar — explicit jar wins', function () {
-        before(function (done) {
-            sinon.stub(console, 'warn'); // the constructor warns; keep output clean
+        var runSpies;
 
+        before(function (done) {
             runSchedule({
                 collection: readThenSetCollection(),
                 requester: {
@@ -220,7 +220,10 @@ var _ = require('lodash'),
                     { start: 0, marker: 'p0' },
                     { start: 1, marker: 'p1' }
                 ]
-            }, done);
+            }, function (err, spies) {
+                runSpies = spies;
+                done(err);
+            });
         });
 
         it('behaves as a shared (caller-owned) jar across partitions', function () {
@@ -228,6 +231,16 @@ var _ = require('lodash'),
                 { partition: 'p0', cookie: '' },
                 { partition: 'p1', cookie: 'marker=p0' }
             ]);
+        });
+
+        it('surfaces the ignored warning through the console trigger (not raw stdout)', function () {
+            var warned = runSpies.console.getCalls().filter(function (call) {
+                return call.args[1] === 'warn' &&
+                    typeof call.args[2] === 'string' &&
+                    _.includes(call.args[2], 'perPartitionCookieJar is ignored');
+            });
+
+            expect(warned).to.have.lengthOf(1);
         });
     });
 

@@ -222,8 +222,6 @@ var sinon = require('sinon').createSandbox(),
         });
 
         it('is disabled when an explicit requester.cookieJar is supplied (explicit jar wins)', function () {
-            sinon.stub(console, 'warn'); // silence the one-time warning
-
             var run = makeRun({
                 customParallelIterations: true,
                 requester: {
@@ -236,10 +234,11 @@ var sinon = require('sinon').createSandbox(),
             expect(run.getCookieJarFor({ partitionIndex: 0 })).to.be.undefined;
         });
 
-        it('warns when both perPartitionCookieJar and cookieJar are supplied', function () {
-            var warn = sinon.stub(console, 'warn');
-
-            makeRun({
+        it('flags the ignored-warning intent when both perPartitionCookieJar and cookieJar are supplied', function () {
+            // the warning itself is emitted through the console trigger in
+            // Run#start (see the end-to-end suite); the constructor only
+            // records that it must fire.
+            var run = makeRun({
                 customParallelIterations: true,
                 requester: {
                     perPartitionCookieJar: true,
@@ -247,8 +246,16 @@ var sinon = require('sinon').createSandbox(),
                 }
             });
 
-            expect(warn.calledOnce).to.be.true;
-            expect(warn.firstCall.args[0]).to.include('perPartitionCookieJar');
+            expect(run._perPartitionCookieJarIgnored).to.be.true;
+        });
+
+        it('does not flag the ignored-warning intent when only perPartitionCookieJar is supplied', function () {
+            var run = makeRun({
+                customParallelIterations: true,
+                requester: { perPartitionCookieJar: true }
+            });
+
+            expect(run._perPartitionCookieJarIgnored).to.be.false;
         });
     });
 
