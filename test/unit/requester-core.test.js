@@ -1296,6 +1296,86 @@ describe('requester util', function () {
             });
         });
 
+        describe('NAT64-embedded IPv4 (64:ff9b::/96, RFC 6052)', function () {
+            it('should block a NAT64 address whose embedded IPv4 falls within a blocked IPv4 CIDR', function () {
+                // 64:ff9b::7f00:1 embeds 127.0.0.1
+                expect(requesterCore.isAddressRestricted('64:ff9b::7f00:1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should block a NAT64 address for a link-local IPv4 (169.254.x.x)', function () {
+                // 64:ff9b::a9fe:a9fe embeds 169.254.169.254
+                expect(requesterCore.isAddressRestricted('64:ff9b::a9fe:a9fe', {
+                    restrictedAddresses: { '169.254.0.0/16': true }
+                })).to.be.true;
+            });
+
+            it('should not block a NAT64 address whose embedded IPv4 is outside all denied CIDRs', function () {
+                // 64:ff9b::808:808 embeds 8.8.8.8 — not in 127.0.0.0/8
+                expect(requesterCore.isAddressRestricted('64:ff9b::808:808', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.false;
+            });
+
+            it('should block a bracketed NAT64 address', function () {
+                expect(requesterCore.isAddressRestricted('[64:ff9b::7f00:1]', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+        });
+
+        describe('IPv4-translated (::ffff:0:x.x.x.x, RFC 6145)', function () {
+            it('should block an IPv4-translated address within a blocked IPv4 CIDR', function () {
+                // ::ffff:0:7f00:1 embeds 127.0.0.1
+                expect(requesterCore.isAddressRestricted('::ffff:0:7f00:1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should block an IPv4-translated address for a link-local IPv4', function () {
+                // ::ffff:0:a9fe:a9fe embeds 169.254.169.254
+                expect(requesterCore.isAddressRestricted('::ffff:0:a9fe:a9fe', {
+                    restrictedAddresses: { '169.254.0.0/16': true }
+                })).to.be.true;
+            });
+
+            it('should not block an IPv4-translated address outside all denied CIDRs', function () {
+                expect(requesterCore.isAddressRestricted('::ffff:0:808:808', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.false;
+            });
+        });
+
+        describe('6to4 (2002::/16, RFC 3056)', function () {
+            it('should block a 6to4 address whose embedded IPv4 falls within a blocked IPv4 CIDR', function () {
+                // 2002:7f00:0001:: embeds 127.0.0.1
+                expect(requesterCore.isAddressRestricted('2002:7f00:1::', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should block a 6to4 address for a link-local IPv4', function () {
+                // 2002:a9fe:a9fe:: embeds 169.254.169.254
+                expect(requesterCore.isAddressRestricted('2002:a9fe:a9fe::', {
+                    restrictedAddresses: { '169.254.0.0/16': true }
+                })).to.be.true;
+            });
+
+            it('should not block a 6to4 address whose embedded IPv4 is outside all denied CIDRs', function () {
+                // 2002:0808:0808:: embeds 8.8.8.8 — not in 127.0.0.0/8
+                expect(requesterCore.isAddressRestricted('2002:808:808::', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.false;
+            });
+
+            it('should block a bracketed 6to4 address', function () {
+                expect(requesterCore.isAddressRestricted('[2002:7f00:1::]', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+        });
+
         describe('lazy CIDR init (N2)', function () {
             it('should parse CIDR entries from restrictedAddresses without a pre-set restrictedCidrs', function () {
                 var opts = {
