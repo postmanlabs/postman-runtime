@@ -1,5 +1,4 @@
-7.55.0:
-  date: 2026-06-10
+unreleased:
   new features:
     - >-
       Add requester.perPartitionCookieJar option — allocates an isolated
