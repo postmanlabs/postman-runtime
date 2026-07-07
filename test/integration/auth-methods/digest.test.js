@@ -2,7 +2,8 @@ var fs = require('fs'),
     path = require('path'),
     expect = require('chai').expect;
 
-describe('digest auth', function () {
+// Browser XHR cannot reliably expose Digest challenge/retry flows; keep this coverage in Node.
+(typeof window === 'undefined' ? describe : describe.skip)('digest auth', function () {
     var USERNAME = 'postman',
         PASSWORD = 'password',
         testrun;
@@ -918,7 +919,7 @@ describe('digest auth', function () {
                                     opaque: '5ccc069c403ebaf9f0171e9517f40e'
                                 }
                             },
-                            url: 'https://postman-echo.com/get',
+                            url: global.ECHO_SERVER + '/get',
                             method: 'GET',
                             body: {
                                 mode: 'file',
