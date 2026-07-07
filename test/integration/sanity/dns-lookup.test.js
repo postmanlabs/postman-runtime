@@ -5,10 +5,11 @@ var dns = require('dns'),
     var testrun;
 
     before(function (done) {
-        var self = this;
+        var self = this,
+            echoUrl = new URL(global.ECHO_SERVER);
 
         // Not hard-coding since this can change
-        dns.lookup('postman-echo.com', function (err, echoIp) {
+        dns.lookup(echoUrl.hostname, function (err, echoIp) {
             if (err) {
                 return done(err);
             }
@@ -16,14 +17,14 @@ var dns = require('dns'),
             return self.run({
                 collection: {
                     item: {
-                        request: 'http://fakepostman-echo.com/get?foo=bar'
+                        request: `http://echo-server.test:${echoUrl.port}/get?foo=bar`
                     }
                 },
                 network: {
                     hostLookup: {
                         type: 'hostIpMap',
                         hostIpMap: {
-                            'fakepostman-echo.com': echoIp
+                            'echo-server.test': echoIp
                         }
                     }
                 }

@@ -694,7 +694,7 @@ var fs = require('fs'),
             this.run({
                 collection: {
                     item: [{
-                        request: 'https://postman-echo.com/cookies/set?foo=bar'
+                        request: `${global.ECHO_SERVER}/cookies/set?foo=bar`
                     }],
                     protocolProfileBehavior: {
                         disableCookies: false

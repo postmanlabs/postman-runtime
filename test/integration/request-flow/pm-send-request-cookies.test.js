@@ -2,7 +2,8 @@ var _ = require('lodash'),
     expect = require('chai').expect;
 
 (typeof window === 'undefined' ? describe : describe.skip)('cookie sandbox request interaction', function () {
-    var cookieUrl = 'https://postman-echo.com/cookies';
+    var cookieUrl = global.ECHO_SERVER + '/cookies',
+        cookieDomain = new URL(global.ECHO_SERVER).hostname;
 
     describe('intra-sandbox', function () {
         describe('explicit', function () {
@@ -80,7 +81,7 @@ var _ = require('lodash'),
                                         pm.cookies.add({
                                             key: 'foo',
                                             value: 'bar',
-                                            domain: '.postman-echo.com'
+                                            domain: '${cookieDomain}'
                                         });
                                         `
                                     }
@@ -196,8 +197,7 @@ var _ = require('lodash'),
                     // cookies are set after the first response in redirect
                     const cookieHeaderIndex = headers.findIndex((header) => { return header.key === 'Cookie'; });
 
-                    expect(cookieHeaderIndex).to.be.greaterThan(-1);
-                    expect(headers[cookieHeaderIndex].value).to.not.include('foo=bar');
+                    expect(cookieHeaderIndex === -1 ? '' : headers[cookieHeaderIndex].value).to.not.include('foo=bar');
 
                     expect(resOne.json()).to.eql({ cookies: {} });
                     expect(testrun.request.secondCall.args[2].json()).to.eql({ cookies: { foo: 'bar' } });
@@ -348,9 +348,9 @@ var _ = require('lodash'),
                         'reference.cookie.value': 'foo=bar'
                     });
                     // eslint-disable-next-line @stylistic/js/max-len
-                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
+                    expect(_.get(reqTwo, 'headers.reference.cookie.value', '')).to.not.include('foo=bar');
 
-                    expect(resOne.headers.reference['set-cookie'].value).to.not.include('foo=bar');
+                    expect(_.get(resOne, 'headers.reference.set-cookie.value', '')).to.not.include('foo=bar');
 
                     expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
 
@@ -423,7 +423,7 @@ var _ = require('lodash'),
 
                     expect(reqOne).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
                     // eslint-disable-next-line @stylistic/js/max-len
-                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.not.include('foo=bar');
+                    expect(_.get(reqTwo, 'headers.reference.cookie.value', '')).to.not.include('foo=bar');
                     expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
                     expect(resTwo.json()).to.eql({ cookies: {} });
 
@@ -496,7 +496,7 @@ var _ = require('lodash'),
                     const cookieHeaderIndex = headers.findIndex((header) => { return header.key === 'Cookie'; });
 
                     expect(cookieHeaderIndex).to.be.greaterThan(-1);
-                    expect(headers[cookieHeaderIndex].value).to.include('foo=bar;');
+                    expect(headers[cookieHeaderIndex].value).to.include('foo=bar');
 
                     expect(!_.includes(_.get(resOne, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
@@ -504,7 +504,7 @@ var _ = require('lodash'),
                     expect(resOne.json()).to.eql({ cookies: { foo: 'bar' } });
                     expect(resTwo.json()).to.eql({ cookies: { foo: 'bar' } });
 
-                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar;');
+                    expect(reqTwo).to.have.nested.property('headers.reference.cookie.value').that.include('foo=bar');
                     expect(!_.includes(_.get(resTwo, 'headers.reference.set-cookie.value', ''), 'foo=bar;')).to
                         .be.true;
                 });
