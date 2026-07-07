@@ -8,7 +8,7 @@ var expect = require('chai').expect;
             collection: {
                 item: [{
                     request: {
-                        url: 'https://expired.badssl.com',
+                        url: global.ECHO_HTTPS_SERVER + '/get',
                         method: 'GET'
                     }
                 }]
@@ -19,9 +19,9 @@ var expect = require('chai').expect;
         });
     });
 
-    it('should handle server side SSL errors correctly correctly', function () {
+    it('should handle server side SSL errors correctly', function () {
         expect(testrun).to.be.ok;
-        expect(testrun.request.getCall(0)).to.have.nested.property('args[0].code', 'CERT_HAS_EXPIRED');
+        expect(testrun.request.getCall(0)).to.have.nested.property('args[0].code', 'UNABLE_TO_VERIFY_LEAF_SIGNATURE');
     });
 
     it('should have completed the run', function () {

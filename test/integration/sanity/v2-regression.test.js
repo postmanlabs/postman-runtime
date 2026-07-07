@@ -9,7 +9,7 @@ var request = require('postman-request'),
             requester: { strictSSL: false, cookieJar: request.jar() },
             environment: {
                 values: [{ type: 'any', value: 'abhijit3', key: 'envKey' },
-                    { type: 'any', value: 'postman-echo.com', key: 'envFileUrl' },
+                    { type: 'any', value: 'localhost', key: 'envFileUrl' },
                     { type: 'any', value: '1', key: 'dataVar2' }]
             },
             collection: {
@@ -25,13 +25,16 @@ var request = require('postman-request'),
                             ]
                         }
                     }],
-                    request: { url: 'https://postman-echo.com/cookies/set?foo1={{envKey}}&foo2=bar', method: 'GET' }
+                    request: {
+                        url: global.ECHO_HTTP_SERVER + '/cookies/set?foo1={{envKey}}&foo2=bar',
+                        method: 'GET'
+                    }
                 }, {
                     event: [{
                         listen: 'test',
                         script: { exec: ['tests[\'Status code is 200\'] = responseCode.code === 200;'] }
                     }],
-                    request: { url: 'https://expired.badssl.com', method: 'GET' }
+                    request: { url: global.ECHO_HTTPS_SERVER + '/get', method: 'GET' }
                 }, {
                     event: [{
                         listen: 'test',
@@ -44,7 +47,7 @@ var request = require('postman-request'),
                         }
                     }],
                     request: {
-                        url: 'https://postman-echo.com/headers',
+                        url: global.ECHO_HTTP_SERVER + '/get',
                         method: 'GET',
                         header: [{ key: '//disabled-header', value: 'randomHeaderString', disabled: true }]
                     }
