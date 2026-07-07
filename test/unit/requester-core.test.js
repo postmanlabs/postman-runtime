@@ -986,8 +986,7 @@ describe('requester util', function () {
         });
 
         it('bindOn.redirect should abort and emit error for a restricted raw IP', function () {
-            var ipaddr = require('ipaddr.js'),
-                request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+            var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
                 networkOpts = {
                     restrictedAddresses: { '127.0.0.2': true },
                     restrictedCidrs: []
@@ -1020,7 +1019,7 @@ describe('requester util', function () {
                 fakeRequest = {
                     uri: { hostname: '8.8.8.8' },
                     abort: function () { aborted = true; },
-                    emit: function () {}
+                    emit: function () { /* noop */ }
                 };
 
             reqOptions.bindOn.redirect[0].call(fakeRequest);
@@ -1038,7 +1037,7 @@ describe('requester util', function () {
                 fakeRequest = {
                     uri: { hostname: 'postman-echo.com' },
                     abort: function () { aborted = true; },
-                    emit: function () {}
+                    emit: function () { /* noop */ }
                 };
 
             reqOptions.bindOn.redirect[0].call(fakeRequest);
@@ -1110,6 +1109,32 @@ describe('requester util', function () {
             expect(aborted).to.be.true;
             expect(emittedError).to.be.an('error');
             expect(emittedError.message).to.include('10.10.10.10');
+        });
+
+        it('bindOn.redirect should not emit error again once the request is already aborted', function () {
+            // postman-request re-binds bindOn listeners on every redirect hop, so a
+            // restricted target reached after a prior hop can fire the listener twice;
+            // the second invocation must be a no-op to avoid a duplicate `error` event
+            var request = new sdk.Request({ url: 'http://postman-echo.com/get' }),
+                networkOpts = {
+                    restrictedAddresses: { '127.0.0.2': true },
+                    restrictedCidrs: []
+                },
+                reqOptions = requesterCore.getRequestOptions(request, { network: networkOpts }),
+                errorEmitCount = 0,
+                fakeRequest = {
+                    uri: { hostname: '127.0.0.2' },
+                    _aborted: false,
+                    abort: function () { this._aborted = true; },
+                    emit: function (evt) { if (evt === 'error') { errorEmitCount += 1; } }
+                };
+
+            reqOptions.bindOn.redirect[0].call(fakeRequest);
+            // simulate a second (duplicate) listener firing on the same hop
+            reqOptions.bindOn.redirect[0].call(fakeRequest);
+
+            expect(fakeRequest._aborted).to.be.true;
+            expect(errorEmitCount).to.equal(1);
         });
     });
 
@@ -1288,11 +1313,24 @@ describe('requester util', function () {
                 })).to.be.true;
             });
 
-            it('should not treat ::1 as IPv4-compatible (its seventh group is 0)', function () {
-                // ::1 looks like ::0.0.0.1 which is NOT in 127.0.0.0/8
+            it('should not match ::1 against an unrelated IPv4 CIDR (no dotted quad)', function () {
+                // ::1 has no dotted quad, so it is treated as the IPv6 loopback, not 0.0.0.1
                 expect(requesterCore.isAddressRestricted('::1', {
                     restrictedAddresses: { '127.0.0.0/8': true }
                 })).to.be.false;
+            });
+
+            it('should block ::0.x.x.x (leading-zero embedded IPv4) via a 0.0.0.0/8 CIDR', function () {
+                // regression: a leading-zero octet must not be skipped, else 0.0.0.0/8 is bypassable
+                expect(requesterCore.isAddressRestricted('::0.127.0.1', {
+                    restrictedAddresses: { '0.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should block ::0.0.0.1 via a 0.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::0.0.0.1', {
+                    restrictedAddresses: { '0.0.0.0/8': true }
+                })).to.be.true;
             });
         });
 

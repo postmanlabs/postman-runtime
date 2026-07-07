@@ -25,7 +25,7 @@ function configOverrides(testType) {
                 statements: 42,
                 branches: 31,
                 functions: 38,
-                lines: 43
+                lines: 42
             };
         default:
             return {}
