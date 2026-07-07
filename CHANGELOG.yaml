@@ -1,6 +1,9 @@
-unreleased:
+7.55.0:
+  date: 2026-07-06
   new features:
-    - GH-1549 Add support for per-partition cookie jar via requester.perPartitionCookieJar
+    - >-
+      GH-1549 Add support for per-partition cookie jar via
+      requester.perPartitionCookieJar
     - GH-1548 Add CIDR/subnet range support to `restrictedAddresses`
 
 7.54.0:
