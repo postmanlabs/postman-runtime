@@ -110,6 +110,28 @@ describe('streaming iteration data', function () {
         });
     });
 
+    describe('releasing the streaming source', function () {
+        it('should call cancel once the run completes', function (done) {
+            var cancelled = 0;
+
+            this.run({
+                collection: collection,
+                data: {
+                    __streamingIterationData: true,
+                    length: 2,
+                    rows: (async function *() { yield { n: 0 }; yield { n: 1 }; }()),
+                    // A real consumer's cancel releases the engine cursor; the run
+                    // must invoke it on teardown so the cursor never outlives the run.
+                    cancel: function () { cancelled += 1; }
+                }
+            }, function (err) {
+                expect(err).to.not.exist;
+                expect(cancelled).to.equal(1);
+                done();
+            });
+        });
+    });
+
     describe('parallel run over a streaming source', function () {
         // Driven through Runner directly: the guard rejects the run before it
         // starts, and the shared bootstrap harness assumes run() always succeeds.

@@ -72,6 +72,54 @@ describe('datasets', function () {
         });
     });
 
+    describe('should release a streaming cursor the script leaves open (teardown backstop)', function () {
+        var testrun,
+            cancelled = 0,
+            datasetsResolverStub = sinon.stub().callsFake(function (cmd, datasetId, args, callback) {
+                // Streaming reply: async-iterable rows + a cancel that releases the
+                // engine cursor. The script never iterates result.rows, so no
+                // __pull/__cancel handshake fires — the runner must still release
+                // the cursor when the execution tears down.
+                callback(null, {
+                    columns: ['id'],
+                    rows: (async function *() { yield { id: 1 }; yield { id: 2 }; }()),
+                    cancel: function () { cancelled += 1; }
+                });
+            });
+
+        before(function (done) {
+            this.run({
+                collection: {
+                    item: {
+                        event: [{
+                            listen: 'prerequest',
+                            script: {
+                                // Open the stream but deliberately never iterate result.rows.
+                                exec: 'await pm.datasets(\'ds-789\').executeView(\'v-1\');'
+                            }
+                        }],
+                        request: global.servers.http
+                    }
+                },
+                script: {
+                    datasetsResolver: datasetsResolverStub
+                }
+            }, function (err, results) {
+                testrun = results;
+                done(err);
+            });
+        });
+
+        it('should have completed the run', function () {
+            expect(testrun).to.be.ok;
+            expect(testrun.done.getCall(0).args[0]).to.be.null;
+        });
+
+        it('should have released the cursor via cancel on teardown', function () {
+            expect(cancelled).to.equal(1);
+        });
+    });
+
     describe('should be able to call pm.datasets(id).executeView via datasetsResolver', function () {
         var testrun,
             datasetsResolverStub = sinon.stub().callsFake(function (cmd, datasetId, args, callback) {
