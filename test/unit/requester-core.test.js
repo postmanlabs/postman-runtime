@@ -1165,6 +1165,61 @@ describe('requester util', function () {
             });
         });
 
+        describe('bare exact-match entries get IPv6-embedding normalization too', function () {
+            // regression: a bare-IP entry (no '/') used to be checked via string equality
+            // only, so any non-identical encoding of the exact same address bypassed it,
+            // even when other CIDR entries existed elsewhere in the same restrictedAddresses
+            it('should block an IPv4-mapped IPv6 form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('::ffff:169.254.169.254', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.true;
+            });
+
+            it('should block a bracketed IPv4-mapped IPv6 form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('[::ffff:169.254.169.254]', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.true;
+            });
+
+            it('should block a NAT64-embedded form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('64:ff9b::a9fe:a9fe', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.true;
+            });
+
+            it('should not block an unrelated IP against an exact-match-only list', function () {
+                expect(requesterCore.isAddressRestricted('8.8.8.8', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.false;
+            });
+
+            it('should block a mapped-IPv6 form of an exact entry even when a CIDR entry ' +
+                'for a different range is also present', function () {
+                expect(requesterCore.isAddressRestricted('::ffff:127.0.0.1', {
+                    restrictedAddresses: { '127.0.0.1': true, '10.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should still block a bare IPv6 exact-match entry via a differently-formatted ' +
+                'literal of the same address', function () {
+                expect(requesterCore.isAddressRestricted('0:0:0:0:0:0:0:1', {
+                    restrictedAddresses: { '::1': true }
+                })).to.be.true;
+            });
+
+            it('should not treat a hostname entry as a parseable address (no throw, no match)', function () {
+                expect(requesterCore.isAddressRestricted('other.corp', {
+                    restrictedAddresses: { 'internal.corp': true }
+                })).to.be.false;
+            });
+
+            it('should still exact-match a hostname entry', function () {
+                expect(requesterCore.isAddressRestricted('internal.corp', {
+                    restrictedAddresses: { 'internal.corp': true }
+                })).to.be.true;
+            });
+        });
+
         describe('CIDR range matching', function () {
             var ipv4CidrOpts;
 
