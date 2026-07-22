@@ -32,6 +32,16 @@ first.
 ### TODO / removal
 
 Once the sandbox change ships upstream in a published `postman-sandbox`
-release, re-point `package.json`'s `postman-sandbox` dependency from
-`file:vendor/postman-sandbox-6.7.2-per-vu-variables.tgz` back to the published
-semver range, run `npm install`, and delete this vendored tarball.
+release, revert all of the temporary vendoring in this order:
+
+1. Re-point `package.json`'s `postman-sandbox` dependency from
+   `file:vendor/postman-sandbox-6.7.2-per-vu-variables.tgz` back to the
+   published semver range and run `npm install`.
+2. Remove the `vendor/` entry from `.npmignore` (added so the tarball never
+   ships in a published runtime).
+3. Remove the temporary `postman-sandbox` `file:` exemption in
+   `test/system/repository.test.js` (the `should point to specific package
+   version` test).
+4. Revert the installed-version assertion change in
+   `test/unit/version.test.js`.
+5. Delete this vendored tarball and the `vendor/` directory.

@@ -48,7 +48,18 @@ describe('project repository', function () {
             });
 
             it('should point to specific package version; (*, ^, ~) not expected', function () {
-                _.forEach(json.dependencies, function (dep) {
+                // TEMPORARY: postman-sandbox is pinned to a vendored, unreleased build via a
+                // `file:` spec (see vendor/README.md). Exempt only that exact spec from the
+                // exact-semver check. Remove this exemption when postman-sandbox ships the
+                // cycles -1 -> Infinity transform upstream and the dependency is re-pointed
+                // back to a published semver.
+                const vendoredSandboxSpec = 'file:vendor/postman-sandbox-6.7.2-per-vu-variables.tgz';
+
+                _.forEach(json.dependencies, function (dep, name) {
+                    if (name === 'postman-sandbox' && dep === vendoredSandboxSpec) {
+                        return;
+                    }
+
                     expect((/^\d/).test(dep)).to.be.ok;
                 });
             });
