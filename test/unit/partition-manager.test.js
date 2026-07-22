@@ -399,6 +399,20 @@ describe('PartitionManager', function () {
             expect(mockRunInstance.triggers.calledWith(null)).to.be.true;
         });
 
+        it('should settle stored completion callback when customParallelIterations is enabled', function () {
+            var completionCallback = sinon.stub();
+
+            mockRunInstance.options.customParallelIterations = true;
+            partitionManager.options = mockRunInstance.options;
+            partitionManager.completionCallback = completionCallback;
+
+            partitionManager.triggerStopAction();
+
+            expect(completionCallback.calledOnceWithExactly(null)).to.be.true;
+            expect(mockRunInstance.triggers.called).to.be.false;
+            expect(partitionManager.completionCallback).to.be.null;
+        });
+
         it('should not trigger stop action when customParallelIterations is disabled', function () {
             mockRunInstance.options.customParallelIterations = false;
             partitionManager.options = mockRunInstance.options; // Ensure options are set
