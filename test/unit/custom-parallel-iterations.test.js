@@ -57,9 +57,9 @@ describe('customParallelIterations', function () {
             expect(partition.resetVariables).to.be.a('function');
             partition.resetVariables();
             expect(partition.variables).to.not.equal(before);
-            expect(partition.variables).to.have.all.keys(
+            expect(partition.variables).to.have.all.keys([
                 'environment', 'globals', 'vaultSecrets', 'collectionVariables', '_variables'
-            );
+            ]);
         });
 
         describe('runtime-managed mode regression', function () {
@@ -167,11 +167,16 @@ describe('customParallelIterations', function () {
 
             function runLoop (n) {
                 mgr.runSinglePartition(0, null, function () {
-                    if (!p) { p = mgr.partitions[0]; sinon.stub(p, 'hasInstructions').returns(false); }
+                    if (!p) {
+                        p = mgr.partitions[0];
+                        sinon.stub(p, 'hasInstructions').returns(false);
+                    }
                     actualIterations.push(p.cursor.iteration);
                     expectedIterations.push(n);
+
                     if (n === 4) {
                         expect(actualIterations).to.eql([0, 1, 2, 3, 4]);
+
                         return done();
                     }
                     runLoop(n + 1);
@@ -336,10 +341,10 @@ describe('customParallelIterations', function () {
 
                     mgr.stopSinglePartition(0, function () {
                         expect(p.variables).to.not.equal(originalVars);
-                        expect(p.variables).to.have.all.keys(
+                        expect(p.variables).to.have.all.keys([
                             'environment', 'globals', 'vaultSecrets',
                             'collectionVariables', '_variables'
-                        );
+                        ]);
                         done();
                     });
                 });
@@ -476,7 +481,7 @@ describe('customParallelIterations', function () {
         describe('Change 5 — cr block early-returns in custom mode', function () {
             it('fires iteration trigger ONCE and returns next() without queuing more work', function () {
                 var next = sinon.spy(),
-                    crCoords = Object.assign({}, baseCoords, { cr: true });
+                    crCoords = { ...baseCoords, cr: true };
 
                 parallelProc.call(ctx, {
                     coords: crCoords,
@@ -496,11 +501,12 @@ describe('customParallelIterations', function () {
 
             it('preserves auto-loop in runtime-managed mode (regression)', function () {
                 var next = sinon.spy(),
-                    crCoords = Object.assign({}, baseCoords, {
+                    crCoords = {
+                        ...baseCoords,
                         cr: true,
                         iteration: 1,
-                        partitionCycles: 5     // not at end of partition
-                    });
+                        partitionCycles: 5 // not at end of partition
+                    };
 
                 ctx.isCustomParallelIterations = false;
                 parallelProc.call(ctx, {
@@ -529,9 +535,8 @@ describe('customParallelIterations', function () {
                         empty: false
                     },
                     // coords = post-rollover snapshot from whatnext (iteration+1)
-                    snapshotCoords = Object.assign({}, payloadCoords, {
-                        iteration: 3
-                    });
+                    snapshotCoords = { ...payloadCoords, iteration: 3 },
+                    arg;
 
                 ctx.isCustomParallelIterations = true;
                 // wire whatnext to return the post-rollover snapshot
@@ -547,7 +552,7 @@ describe('customParallelIterations', function () {
                 // In custom mode, the trigger must carry payload.coords
                 // (iteration === 2, the loop that just completed), NOT
                 // the post-rollover snapshot (iteration === 3).
-                var arg = ctx.triggers.iteration.firstCall.args[1];
+                arg = ctx.triggers.iteration.firstCall.args[1];
 
                 expect(arg.iteration).to.equal(2);
             });
@@ -563,9 +568,8 @@ describe('customParallelIterations', function () {
                         eof: true,
                         empty: false
                     },
-                    snapshotCoords = Object.assign({}, payloadCoords, {
-                        iteration: 3
-                    });
+                    snapshotCoords = { ...payloadCoords, iteration: 3 },
+                    arg;
 
                 ctx.isCustomParallelIterations = false;
                 partition.cursor.whatnext.returns(snapshotCoords);
@@ -580,7 +584,7 @@ describe('customParallelIterations', function () {
                 // Newman/desktop mode: preserve the existing post-rollover
                 // behavior at the eof site. Trigger carries the snapshot
                 // coords (iteration === 3).
-                var arg = ctx.triggers.iteration.firstCall.args[1];
+                arg = ctx.triggers.iteration.firstCall.args[1];
 
                 expect(arg.iteration).to.equal(3);
             });
