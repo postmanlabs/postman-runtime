@@ -22,7 +22,7 @@ var _ = require('lodash'),
     Runner = require('../../../index.js').Runner;
 
 describe('customParallelIterations end-to-end', function () {
-    this.timeout(120 * 1000);  // network calls to postman-echo.com
+    this.timeout(120 * 1000); // network calls to postman-echo.com
 
     // Self-contained driver that exercises the perftest invocation pattern:
     //   runner.run() → run.start() → startParallelIteration() loop until
@@ -47,16 +47,16 @@ describe('customParallelIterations end-to-end', function () {
             run = runInstance;
 
             spies.start = sinon.spy(function () {
-                run.startParallelIteration(0, null, function () {});
+                run.startParallelIteration(0, null, function () { /* noop */ });
             });
 
             spies.iteration = sinon.spy(function () {
                 loopCount += 1;
                 if (loopCount >= opts.maxLoops) {
-                    run.abort(function () {});
+                    run.abort(function () { /* noop */ });
                 }
                 else {
-                    run.startParallelIteration(0, null, function () {});
+                    run.startParallelIteration(0, null, function () { /* noop */ });
                 }
             });
 
@@ -174,7 +174,8 @@ describe('customParallelIterations end-to-end', function () {
                                     '// after stop+restart.',
                                     'pm.variables.set("dead-vu-marker", "loop-" + pm.info.iteration);',
                                     'pm.test("marker survives within a loop", function () {',
-                                    '    pm.expect(pm.variables.get("dead-vu-marker")).to.equal("loop-" + pm.info.iteration);',
+                                    '    pm.expect(pm.variables.get("dead-vu-marker"))',
+                                    '        .to.equal("loop-" + pm.info.iteration);',
                                     '});'
                                 ].join('\n')
                             }
@@ -200,7 +201,7 @@ describe('customParallelIterations end-to-end', function () {
                 run = runInstance;
 
                 spies.start = sinon.spy(function () {
-                    run.startParallelIteration(0, null, function () {});
+                    run.startParallelIteration(0, null, function () { /* noop */ });
                 });
 
                 spies.iteration = sinon.spy(function (e, cursor) {
@@ -213,15 +214,15 @@ describe('customParallelIterations end-to-end', function () {
                             // Then immediately restart. Per the contract,
                             // pm.info.iteration must reset to 0 and the
                             // pm.variables scope must be re-cloned.
-                            run.startParallelIteration(0, null, function () {});
+                            run.startParallelIteration(0, null, function () { /* noop */ });
                         });
                     }
                     else if (iterationCount === 4) {
                         // 2 loops pre-stop + 2 loops post-restart. Done.
-                        run.abort(function () {});
+                        run.abort(function () { /* noop */ });
                     }
                     else {
-                        run.startParallelIteration(0, null, function () {});
+                        run.startParallelIteration(0, null, function () { /* noop */ });
                     }
                 });
 
@@ -252,7 +253,11 @@ describe('customParallelIterations end-to-end', function () {
                             listen: 'test',
                             script: {
                                 type: 'text/javascript',
-                                exec: 'pm.test("iterationCount is 4", function () { pm.expect(pm.info.iterationCount).to.equal(4); });'
+                                exec: [
+                                    'pm.test("iterationCount is 4", function () {',
+                                    '    pm.expect(pm.info.iterationCount).to.equal(4);',
+                                    '});'
+                                ].join('\n')
                             }
                         }]
                     }]
