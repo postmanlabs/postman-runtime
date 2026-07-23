@@ -4,9 +4,9 @@ var expect = require('chai').expect,
 
 describe('Streaming iteration data', function () {
     // Exercises the streaming iteration-data path end to end through the runner:
-    // a lazy async row source with a known length drives per-iteration data
-    // through the sliding-window IterationDataStream, and the source is released
-    // (cancel) when the run ends.
+    // a lazy async-iterable row source with a known length drives per-iteration
+    // data (one row pulled per iteration), and the source is released (its
+    // finally runs, via the iterator's return()) when the run ends.
     it('should stream a row per iteration and release the source on completion', function (mochaDone) {
         var cancelled = 0,
             errored = false,
@@ -35,22 +35,22 @@ describe('Streaming iteration data', function () {
                 }]
             }),
 
-            onCancel = function () { cancelled += 1; },
-
-            // The generic streaming descriptor any consumer hands to runner.run().
-            data = {
-                __streamingIterationData: true,
-                length: rows.length,
-                rows: (async function *() {
+            // The generic streaming source any consumer hands to runner.run():
+            // an async generator (releasing its cursor in finally) tagged with a
+            // length. This is the shape the SDK's iterationSource() produces.
+            data = (async function *() {
+                try {
                     for (var i = 0; i < rows.length; i++) { yield rows[i]; }
-                }()),
-                cancel: onCancel
-            },
+                }
+                finally { cancelled += 1; }
+            }()),
 
             check = function (fn) {
                 try { fn(); }
                 catch (e) { errored = true; mochaDone(e); }
             };
+
+        data.length = rows.length;
 
         runner.run(collection, { data }, function (err, run) {
             expect(err).to.be.null;
@@ -67,17 +67,21 @@ describe('Streaming iteration data', function () {
                 },
                 done (err) {
                     if (errored) { return; }
-                    check(function () {
-                        expect(err).to.be.null;
-                        // iteration count is derived from the streamed length
-                        expect(iterationsSeen).to.eql([0, 1, 2]);
-                        // each iteration received its own row, in order
-                        expect(assertions).to.have.lengthOf(3);
-                        assertions.forEach(function (a) { expect(a).to.include({ passed: true }); });
-                        // the source cursor is released exactly once when the run ends
-                        expect(cancelled).to.equal(1);
+                    // Release is async: the iterator's return() resumes the source
+                    // into its finally (cancel) on the next tick, so assert after it.
+                    setImmediate(function () {
+                        check(function () {
+                            expect(err).to.be.null;
+                            // iteration count is derived from the streamed length
+                            expect(iterationsSeen).to.eql([0, 1, 2]);
+                            // each iteration received its own row, in order
+                            expect(assertions).to.have.lengthOf(3);
+                            assertions.forEach(function (a) { expect(a).to.include({ passed: true }); });
+                            // the source cursor is released exactly once when the run ends
+                            expect(cancelled).to.equal(1);
+                        });
+                        !errored && mochaDone();
                     });
-                    !errored && mochaDone();
                 }
             });
         });

@@ -2,10 +2,10 @@
  * Streaming iteration data — consumer-agnostic contract.
  *
  * The runner accepts iteration data either as a materialised array or as a
- * streaming source, so it never has to buffer a large data set. This test feeds
- * the streaming form directly (a plain async generator + a known length) with no
- * CLI and no dataset-engine-sdk involved — exactly what any other consumer would
- * build from `sdk.viewRowCount()` + `sdk.executeViewStream()`.
+ * streaming source — an async-iterable of rows that also exposes a `length` —
+ * so it never has to buffer a large data set. This test feeds the streaming form
+ * directly (a plain async generator tagged with a length) with no CLI and no
+ * dataset-engine-sdk involved — exactly what the SDK's `iterationSource()` builds.
  */
 
 var Runner = require('../../../index.js').Runner,
@@ -29,15 +29,16 @@ var Runner = require('../../../index.js').Runner,
         }]
     };
 
-// Build the generic streaming descriptor a consumer would hand to runner.run().
+// Build the generic streaming source a consumer would hand to runner.run():
+// an async generator tagged with its length.
 function streamingData (rows) {
-    return {
-        __streamingIterationData: true,
-        length: rows.length,
-        rows: (async function *() {
-            for (var i = 0; i < rows.length; i++) { yield rows[i]; }
-        }())
-    };
+    var gen = (async function *() {
+        for (var i = 0; i < rows.length; i++) { yield rows[i]; }
+    }());
+
+    gen.length = rows.length;
+
+    return gen;
 }
 
 describe('streaming iteration data', function () {
@@ -115,22 +116,32 @@ describe('streaming iteration data', function () {
 
     describe('releasing the streaming source', function () {
         it('should call cancel once the run completes', function (done) {
-            var cancelled = 0;
+            var cancelled = 0,
+                // A real consumer (the SDK's iterationSource) releases the engine
+                // cursor in the generator's finally; the run must trigger it on
+                // teardown via the iterator's return() so it never outlives the run.
+                source = (async function *() {
+                    try {
+                        yield { n: 0 };
+                        yield { n: 1 };
+                    }
+                    finally { cancelled += 1; }
+                }());
+
+            source.length = 2;
 
             this.run({
                 collection: collection,
-                data: {
-                    __streamingIterationData: true,
-                    length: 2,
-                    rows: (async function *() { yield { n: 0 }; yield { n: 1 }; }()),
-                    // A real consumer's cancel releases the engine cursor; the run
-                    // must invoke it on teardown so the cursor never outlives the run.
-                    cancel: function () { cancelled += 1; }
-                }
+                data: source
             }, function (err) {
                 expect(err).to.not.exist;
-                expect(cancelled).to.equal(1);
-                done();
+                // Release is async now: the iterator's return() resumes the
+                // generator into its finally (cancel) on the next tick, so assert
+                // after it — unlike the old synchronous close().
+                setImmediate(function () {
+                    expect(cancelled).to.equal(1);
+                    done();
+                });
             });
         });
     });
