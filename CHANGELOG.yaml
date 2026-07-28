@@ -6,6 +6,7 @@ unreleased:
     - >-
       GH-1556 Vendored the NTLM message builder and removed the `httpntlm`
       dependency
+    - Updated dependencies
 
 7.55.1:
   date: 2026-07-21
