@@ -1,3 +1,7 @@
+unreleased:
+  chores:
+    - Vendored the NTLM message builder and removed the `httpntlm` dependency
+
 7.55.1:
   date: 2026-07-21
   chores:
