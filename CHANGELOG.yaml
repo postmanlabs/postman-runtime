@@ -1,4 +1,7 @@
 unreleased:
+  new features:
+    - GH-1553 Add support for streaming iteration data sources
+    - GH-1553 Add support for streaming `datasetsResolver` results
   chores:
     - >-
       GH-1556 Vendored the NTLM message builder and removed the `httpntlm`
