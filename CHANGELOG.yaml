@@ -1,4 +1,5 @@
-unreleased:
+7.56.0:
+  date: 2026-07-28
   new features:
     - GH-1553 Added support for streaming iteration data sources
     - GH-1553 Added support for streaming `datasetsResolver` results
