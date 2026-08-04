@@ -51,8 +51,3 @@ docs/
 codecov.yml
 .editorconfig
 .jsdoc-config.json
-
-# - TEMPORARY: exclude the vendored unreleased postman-sandbox build so it never
-#   ships in a published runtime. Remove when postman-sandbox ships the
-#   cycles -1 -> Infinity transform upstream (see vendor/README.md).
-vendor/
