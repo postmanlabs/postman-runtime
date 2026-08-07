@@ -214,6 +214,35 @@ describe('PartitionManager', function () {
                 done();
             });
         });
+
+        it('should complete with the error when a pool finishes with an error', function (done) {
+            var testError = new Error('pool error');
+
+            sinon.stub(partitionManager.priorityPartition, 'hasInstructions').returns(false);
+            mockRunInstance.options.customParallelIterations = false;
+            partitionManager._processPartition.callsArgWith(1, testError);
+
+            partitionManager.process(function (err) {
+                expect(err).to.equal(testError);
+                done();
+            });
+        });
+
+        it('should complete immediately (null) if the run is aborted while a pool finishes', function (done) {
+            sinon.stub(partitionManager.priorityPartition, 'hasInstructions').returns(false);
+            mockRunInstance.options.customParallelIterations = false;
+            partitionManager._processPartition.callsFake(function (partition, cb) {
+                mockRunInstance.aborted = true; // aborted mid-flight, before the pool reports done
+
+                return cb(null);
+            });
+
+            partitionManager.process(function (err) {
+                expect(err).to.be.null;
+                expect(mockRunInstance.host.dispose.called).to.be.true;
+                done();
+            });
+        });
     });
 
     describe('_processPartition', function () {
@@ -382,6 +411,100 @@ describe('PartitionManager', function () {
                 expect(err).to.be.null;
                 done();
             });
+        });
+    });
+
+    describe('customParallelIterations reuse', function () {
+        beforeEach(function () {
+            mockRunInstance.isCustomParallelIterations = true;
+            mockRunInstance.state._variables = { values: [] };
+            partitionManager.createPartitions();
+            sinon.stub(partitionManager, '_processPartition').callsArgWith(1, null);
+        });
+
+        it('runSinglePartition routes the row to BOTH _variables and iterationData', function (done) {
+            var row = { seq: 7 };
+
+            partitionManager.runSinglePartition(0, row, function () {
+                var partition = partitionManager.partitions[0];
+
+                expect(partition.variables._variables).to.equal(row);
+                expect(partition.iterationData).to.equal(row);
+                done();
+            });
+        });
+
+        it('runSinglePartition bumps cursor.iteration from the per-VU loop counter', function (done) {
+            partitionManager.runSinglePartition(0, null, function () {
+                var partition = partitionManager.partitions[0];
+
+                // first run: cursor.iteration = 0, loopIteration advanced to 1
+                expect(partition.cursor.iteration).to.equal(0);
+                expect(partition.loopIteration).to.equal(1);
+
+                partitionManager.runSinglePartition(0, null, function () {
+                    expect(partition.cursor.iteration).to.equal(1);
+                    expect(partition.loopIteration).to.equal(2);
+                    done();
+                });
+            });
+        });
+
+        it('stopSinglePartition bumps the generation and resets the loop counter', function (done) {
+            var partition = partitionManager.partitions[0];
+
+            sinon.stub(partition, 'clearPool');
+            sinon.stub(partition, 'resetVariables');
+            sinon.stub(partition, 'resetCookieJar');
+            partition.loopIteration = 5;
+
+            partitionManager.stopSinglePartition(0, function () {
+                expect(partition.stopped).to.be.true;
+                expect(partition.generation).to.equal(1);
+                expect(partition.loopIteration).to.equal(0);
+                expect(partition.resetVariables.calledOnce).to.be.true;
+                expect(partition.resetCookieJar.calledOnce).to.be.true;
+                done();
+            });
+        });
+    });
+
+    describe('updatePartitionVariables', function () {
+        var partition;
+
+        beforeEach(function () {
+            partitionManager.createPartitions();
+            partition = partitionManager.partitions[0];
+            partition.stopped = false;
+            partition.generation = 2;
+            partition.variables._variables = 'SENTINEL';
+        });
+
+        it('applies the write when no generation is supplied (non-parallel/back-compat)', function () {
+            partitionManager.updatePartitionVariables(0, { _variables: { values: [] } });
+            expect(partition.variables._variables).to.not.equal('SENTINEL');
+        });
+
+        it('applies the write when the generation matches', function () {
+            partitionManager.updatePartitionVariables(0, { _variables: { values: [] } }, 2);
+            expect(partition.variables._variables).to.not.equal('SENTINEL');
+        });
+
+        it('drops a stale write whose generation no longer matches (reused slot)', function () {
+            partitionManager.updatePartitionVariables(0, { _variables: { values: [] } }, 1);
+            expect(partition.variables._variables).to.equal('SENTINEL');
+        });
+
+        it('drops the write when the partition is stopped', function () {
+            partition.stopped = true;
+            partitionManager.updatePartitionVariables(0, { _variables: { values: [] } }, 2);
+            expect(partition.variables._variables).to.equal('SENTINEL');
+        });
+
+        it('is a no-op for a missing partition index', function () {
+            expect(function () {
+                partitionManager.updatePartitionVariables(99, { _variables: { values: [] } }, 0);
+            }).to.not.throw();
         });
     });
 

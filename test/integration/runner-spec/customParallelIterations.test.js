@@ -272,6 +272,87 @@ describe('customParallelIterations end-to-end', function () {
                 run.start(spies);
             });
         });
+
+        it('recycled VU does not inherit the previous occupant\'s pm.variables (no leak)', function (done) {
+            done = once(done);
+
+            var collection = new Collection({
+                    item: [{
+                        request: 'https://postman-echo.com/get',
+                        event: [{
+                            listen: 'test',
+                            script: {
+                                type: 'text/javascript',
+                                exec: [
+                                    '// At the first loop of any (re)used VU slot the scope must be',
+                                    '// pristine — it must NOT carry a marker from a prior occupant.',
+                                    'if (pm.info.iteration === 0) {',
+                                    '    pm.test("fresh scope on (re)start", function () {',
+                                    '        pm.expect(pm.variables.get("dead-vu-marker")).to.be.undefined;',
+                                    '    });',
+                                    '}',
+                                    'pm.variables.set("dead-vu-marker", "loop-" + pm.info.iteration);'
+                                ].join('\n')
+                            }
+                        }]
+                    }]
+                }),
+                runner = new Runner({}),
+                spies = {},
+                run,
+                iterationCount = 0;
+
+            _.forEach(_.keys(Runner.Run.triggers), function (name) {
+                spies[name] = sinon.spy();
+            });
+
+            runner.run(collection, {
+                customParallelIterations: true,
+                iterationCount: 1,
+                maxConcurrency: 1
+            }, function (err, runInstance) {
+                if (err) { return done(err); }
+                run = runInstance;
+
+                spies.start = sinon.spy(function () {
+                    run.startParallelIteration(0, null, function () { /* noop */ });
+                });
+
+                spies.iteration = sinon.spy(function () {
+                    iterationCount += 1;
+
+                    if (iterationCount === 2) {
+                        // Stop after 2 loops, then immediately reuse the slot.
+                        run.stopParallelIteration(0, function () {
+                            run.startParallelIteration(0, null, function () { /* noop */ });
+                        });
+                    }
+                    else if (iterationCount === 4) {
+                        run.abort(function () { /* noop */ });
+                    }
+                    else {
+                        run.startParallelIteration(0, null, function () { /* noop */ });
+                    }
+                });
+
+                spies.done = sinon.spy(function () {
+                    setTimeout(function () { run.host.dispose(); }, 0);
+
+                    var fresh = spies.assertion.args
+                        .reduce(function (acc, args) { return acc.concat(args[1] || []); }, [])
+                        .filter(function (a) { return a.name === 'fresh scope on (re)start'; });
+
+                    // iteration 0 fires twice: the very first loop and the post-restart loop.
+                    expect(fresh.length).to.equal(2);
+                    // Both must be pristine. Before the fix, the recycled VU cloned the
+                    // dead VU's mutated run-global scope and saw "loop-1" (the leak).
+                    expect(fresh.every(function (a) { return a.passed; })).to.be.true;
+                    done();
+                });
+
+                run.start(spies);
+            });
+        });
     });
 
     describe('runtime-managed mode regression', function () {
