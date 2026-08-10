@@ -1,4 +1,5 @@
-unreleased:
+7.56.1:
+  date: 2026-08-10
   fixed bugs:
     - Normalized script file sanitization checks before filtering
   chores:
