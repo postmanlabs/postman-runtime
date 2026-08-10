@@ -1207,17 +1207,35 @@ describe('requester util', function () {
                 })).to.be.true;
             });
 
+            it('should block an IPv4-compatible hex form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('::7f00:1', {
+                    restrictedAddresses: { '127.0.0.1': true }
+                })).to.be.true;
+            });
+
+            it('should block a low-32-bit hex form that begins with 0.0', function () {
+                expect(requesterCore.isAddressRestricted('::7f01', {
+                    restrictedAddresses: { '0.0.127.1': true }
+                })).to.be.true;
+            });
+
+            it('should still block a bracketed IPv6 exact-match entry via an equivalent literal', function () {
+                expect(requesterCore.isAddressRestricted('0:0:0:0:0:0:0:1', {
+                    restrictedAddresses: { '[::1]': true }
+                })).to.be.true;
+            });
+
             it('should not treat a hostname entry as a parseable address (no throw, no match)', function () {
                 expect(requesterCore.isAddressRestricted('other.corp', {
                     restrictedAddresses: { 'internal.corp': true }
                 })).to.be.false;
             });
-
             it('should still exact-match a hostname entry', function () {
                 expect(requesterCore.isAddressRestricted('internal.corp', {
                     restrictedAddresses: { 'internal.corp': true }
                 })).to.be.true;
             });
+
         });
 
         describe('CIDR range matching', function () {
@@ -1387,6 +1405,24 @@ describe('requester util', function () {
                     restrictedAddresses: { '0.0.0.0/8': true }
                 })).to.be.true;
             });
+
+            it('should block ::7f00:1 via a 127.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::7f00:1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should block ::7f01 via a 0.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::7f01', {
+                    restrictedAddresses: { '0.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should not match ::1 against an unrelated 0.0.0.0/8 IPv4 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::1', {
+                    restrictedAddresses: { '0.0.0.0/8': true }
+                })).to.be.false;
+            });
         });
 
         describe('NAT64-embedded IPv4 (64:ff9b::/96, RFC 6052)', function () {
@@ -1501,4 +1537,3 @@ describe('requester util', function () {
         });
     });
 });
-
