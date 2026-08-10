@@ -1165,6 +1165,50 @@ describe('requester util', function () {
             });
         });
 
+        describe('bare exact-match entries get IPv6-embedding normalization too', function () {
+            it('should block an IPv4-mapped IPv6 form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('::ffff:169.254.169.254', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.true;
+            });
+
+            it('should block a NAT64-embedded form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('64:ff9b::a9fe:a9fe', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.true;
+            });
+
+            it('should block an IPv4-compatible hex form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('::7f00:1', {
+                    restrictedAddresses: { '127.0.0.1': true }
+                })).to.be.true;
+            });
+
+            it('should block a low-32-bit hex form that begins with 0.0', function () {
+                expect(requesterCore.isAddressRestricted('::7f01', {
+                    restrictedAddresses: { '0.0.127.1': true }
+                })).to.be.true;
+            });
+
+            it('should still block a bracketed IPv6 exact-match entry via an equivalent literal', function () {
+                expect(requesterCore.isAddressRestricted('0:0:0:0:0:0:0:1', {
+                    restrictedAddresses: { '[::1]': true }
+                })).to.be.true;
+            });
+
+            it('should still exact-match a hostname entry', function () {
+                expect(requesterCore.isAddressRestricted('internal.corp', {
+                    restrictedAddresses: { 'internal.corp': true }
+                })).to.be.true;
+            });
+
+            it('should not treat a hostname entry as a parseable address', function () {
+                expect(requesterCore.isAddressRestricted('other.corp', {
+                    restrictedAddresses: { 'internal.corp': true }
+                })).to.be.false;
+            });
+        });
+
         describe('CIDR range matching', function () {
             var ipv4CidrOpts;
 
@@ -1332,6 +1376,24 @@ describe('requester util', function () {
                     restrictedAddresses: { '0.0.0.0/8': true }
                 })).to.be.true;
             });
+
+            it('should block ::7f00:1 via a 127.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::7f00:1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should block ::7f01 via a 0.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::7f01', {
+                    restrictedAddresses: { '0.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should not match ::1 against an unrelated 0.0.0.0/8 IPv4 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::1', {
+                    restrictedAddresses: { '0.0.0.0/8': true }
+                })).to.be.false;
+            });
         });
 
         describe('NAT64-embedded IPv4 (64:ff9b::/96, RFC 6052)', function () {
@@ -1444,6 +1506,163 @@ describe('requester util', function () {
                 expect(opts.restrictedCidrs).to.be.an('array').with.lengthOf(0);
             });
         });
+
+        describe('special-use IPv4 ranges', function () {
+            it('should restrict CGNAT addresses within 100.64.0.0/10', function () {
+                expect(requesterCore.isAddressRestricted('100.64.1.1', {
+                    restrictedAddresses: { '100.64.0.0/10': true }
+                })).to.be.true;
+                expect(requesterCore.isAddressRestricted('100.100.100.200', {
+                    restrictedAddresses: { '100.64.0.0/10': true }
+                })).to.be.true;
+            });
+
+            it('should restrict multicast 224.0.0.1 within 224.0.0.0/4', function () {
+                expect(requesterCore.isAddressRestricted('224.0.0.1', {
+                    restrictedAddresses: { '224.0.0.0/4': true }
+                })).to.be.true;
+            });
+
+            it('should restrict reserved 240.0.0.1 within 240.0.0.0/4', function () {
+                expect(requesterCore.isAddressRestricted('240.0.0.1', {
+                    restrictedAddresses: { '240.0.0.0/4': true }
+                })).to.be.true;
+            });
+
+            it('should restrict benchmarking 198.18.0.1 within 198.18.0.0/15', function () {
+                expect(requesterCore.isAddressRestricted('198.18.0.1', {
+                    restrictedAddresses: { '198.18.0.0/15': true }
+                })).to.be.true;
+            });
+
+            it('should restrict 6to4-anycast 192.88.99.1 within 192.88.99.0/24', function () {
+                expect(requesterCore.isAddressRestricted('192.88.99.1', {
+                    restrictedAddresses: { '192.88.99.0/24': true }
+                })).to.be.true;
+            });
+
+            it('should restrict TEST-NET addresses (192.0.2/24, 198.51.100/24, 203.0.113/24)', function () {
+                var opts = {
+                    restrictedAddresses: {
+                        '192.0.2.0/24': true,
+                        '198.51.100.0/24': true,
+                        '203.0.113.0/24': true
+                    }
+                };
+
+                expect(requesterCore.isAddressRestricted('192.0.2.1', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('198.51.100.1', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('203.0.113.1', opts)).to.be.true;
+            });
+
+            it('should restrict the limited broadcast 255.255.255.255 via an exact entry', function () {
+                expect(requesterCore.isAddressRestricted('255.255.255.255', {
+                    restrictedAddresses: { '255.255.255.255': true }
+                })).to.be.true;
+            });
+
+            it('should restrict IETF-protocol 192.0.0.1 within 192.0.0.0/24', function () {
+                expect(requesterCore.isAddressRestricted('192.0.0.1', {
+                    restrictedAddresses: { '192.0.0.0/24': true }
+                })).to.be.true;
+            });
+        });
+
+        describe('alternate IPv4 encodings resolving to 127.0.0.1', function () {
+            var loopbackCidr = { '127.0.0.0/8': true };
+
+            it('should restrict the decimal (dword) form 2130706433', function () {
+                expect(requesterCore.isAddressRestricted('2130706433', {
+                    restrictedAddresses: loopbackCidr
+                })).to.be.true;
+            });
+
+            it('should restrict the octal form 0177.0.0.1', function () {
+                expect(requesterCore.isAddressRestricted('0177.0.0.1', {
+                    restrictedAddresses: loopbackCidr
+                })).to.be.true;
+            });
+
+            it('should restrict the mixed-hex form 0x7f.0.0.1', function () {
+                expect(requesterCore.isAddressRestricted('0x7f.0.0.1', {
+                    restrictedAddresses: loopbackCidr
+                })).to.be.true;
+            });
+
+            it('should restrict the single-hex (dword) form 0x7f000001', function () {
+                expect(requesterCore.isAddressRestricted('0x7f000001', {
+                    restrictedAddresses: loopbackCidr
+                })).to.be.true;
+            });
+
+            it('should restrict the short (class-A) form 127.1', function () {
+                expect(requesterCore.isAddressRestricted('127.1', {
+                    restrictedAddresses: loopbackCidr
+                })).to.be.true;
+            });
+
+            it('should restrict the zero-padded form 127.000.000.001', function () {
+                expect(requesterCore.isAddressRestricted('127.000.000.001', {
+                    restrictedAddresses: loopbackCidr
+                })).to.be.true;
+            });
+        });
+
+        describe('IPv4-compatible IPv6 in hex form', function () {
+            it('should restrict the hex form ::7f00:1 (embeds 127.0.0.1) via a 127.0.0.0/8 CIDR', function () {
+                // ::7f00:1 embeds 127.0.0.1 in the low 32 bits; ipaddr.js reports it as
+                // generic unicast, so without explicit normalization it would not be matched
+                // against a 127.0.0.0/8 entry the way the dotted form is.
+                expect(requesterCore.isAddressRestricted('::7f00:1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should restrict a bracketed [::7f00:1]', function () {
+                expect(requesterCore.isAddressRestricted('[::7f00:1]', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should NOT treat ::1 as a hex-compat address under 127.0.0.0/8', function () {
+                // ::1 has parts[6] === 0, so it is the IPv6 loopback, not 0.0.x.x — the
+                // parts[6] !== 0 guard must keep it out of the 127.0.0.0/8 IPv4 match
+                expect(requesterCore.isAddressRestricted('::1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.false;
+            });
+
+            it('leaves a public IPv6 (2606:4700::1) unaffected by hex-compat normalization', function () {
+                expect(requesterCore.isAddressRestricted('2606:4700::1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.false;
+            });
+        });
+
+        describe('IPv6 range matching', function () {
+            it('should restrict a link-local fe80::1 within fe80::/10', function () {
+                expect(requesterCore.isAddressRestricted('fe80::1', {
+                    restrictedAddresses: { 'fe80::/10': true }
+                })).to.be.true;
+            });
+
+            it('should restrict a public IPv6 2606:4700::1 under the ::/0 catch-all CIDR', function () {
+                expect(requesterCore.isAddressRestricted('2606:4700::1', {
+                    restrictedAddresses: { '::/0': true }
+                })).to.be.true;
+            });
+        });
+
+        describe('Teredo addresses', function () {
+            it('documents that Teredo addresses are not normalized (2001::/32)', function () {
+                // A Teredo address carries the Teredo server's IPv4 (bits 32-63), not the
+                // destination, so it is intentionally left un-normalized. This test pins the
+                // current behavior; if a future change decides to normalize Teredo, this
+                // expectation should be revisited deliberately.
+                expect(requesterCore.isAddressRestricted('2001:0:7f00:1:0:0:0:1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.false;
+            });
+        });
     });
 });
-
