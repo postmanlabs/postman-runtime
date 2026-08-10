@@ -1165,6 +1165,50 @@ describe('requester util', function () {
             });
         });
 
+        describe('bare exact-match entries get IPv6-embedding normalization too', function () {
+            it('should block an IPv4-mapped IPv6 form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('::ffff:169.254.169.254', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.true;
+            });
+
+            it('should block a NAT64-embedded form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('64:ff9b::a9fe:a9fe', {
+                    restrictedAddresses: { '169.254.169.254': true }
+                })).to.be.true;
+            });
+
+            it('should block an IPv4-compatible hex form of an exact-match-only entry', function () {
+                expect(requesterCore.isAddressRestricted('::7f00:1', {
+                    restrictedAddresses: { '127.0.0.1': true }
+                })).to.be.true;
+            });
+
+            it('should block a low-32-bit hex form that begins with 0.0', function () {
+                expect(requesterCore.isAddressRestricted('::7f01', {
+                    restrictedAddresses: { '0.0.127.1': true }
+                })).to.be.true;
+            });
+
+            it('should still block a bracketed IPv6 exact-match entry via an equivalent literal', function () {
+                expect(requesterCore.isAddressRestricted('0:0:0:0:0:0:0:1', {
+                    restrictedAddresses: { '[::1]': true }
+                })).to.be.true;
+            });
+
+            it('should still exact-match a hostname entry', function () {
+                expect(requesterCore.isAddressRestricted('internal.corp', {
+                    restrictedAddresses: { 'internal.corp': true }
+                })).to.be.true;
+            });
+
+            it('should not treat a hostname entry as a parseable address', function () {
+                expect(requesterCore.isAddressRestricted('other.corp', {
+                    restrictedAddresses: { 'internal.corp': true }
+                })).to.be.false;
+            });
+        });
+
         describe('CIDR range matching', function () {
             var ipv4CidrOpts;
 
@@ -1331,6 +1375,24 @@ describe('requester util', function () {
                 expect(requesterCore.isAddressRestricted('::0.0.0.1', {
                     restrictedAddresses: { '0.0.0.0/8': true }
                 })).to.be.true;
+            });
+
+            it('should block ::7f00:1 via a 127.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::7f00:1', {
+                    restrictedAddresses: { '127.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should block ::7f01 via a 0.0.0.0/8 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::7f01', {
+                    restrictedAddresses: { '0.0.0.0/8': true }
+                })).to.be.true;
+            });
+
+            it('should not match ::1 against an unrelated 0.0.0.0/8 IPv4 CIDR', function () {
+                expect(requesterCore.isAddressRestricted('::1', {
+                    restrictedAddresses: { '0.0.0.0/8': true }
+                })).to.be.false;
             });
         });
 
@@ -1604,4 +1666,3 @@ describe('requester util', function () {
         });
     });
 });
-
