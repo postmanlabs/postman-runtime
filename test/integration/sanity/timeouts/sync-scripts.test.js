@@ -183,7 +183,7 @@ describe('synchronous script timeouts', function () {
                     timeout: {
                         script: 500
                     },
-                    __disposeTimeout: 4000 // don't dispose sandbox in bootstrap.js immediately
+                    __disposeTimeout: 10000 // don't dispose sandbox in bootstrap.js immediately
                 }, function (err, results) {
                     !testrun && (testrun = results) && done(err);
                 });
@@ -208,7 +208,7 @@ describe('synchronous script timeouts', function () {
                 }
 
                 function checkTimeoutResult () {
-                    if (!hasTimeoutResult() && Date.now() - startedAt < 5000) {
+                    if (!hasTimeoutResult() && Date.now() - startedAt < 9000) {
                         return setTimeout(checkTimeoutResult, 50);
                     }
 

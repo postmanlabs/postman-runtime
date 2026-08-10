@@ -167,6 +167,62 @@ describe('runner util', function () {
         });
     });
 
+    describe('.pullDatasetBatch', function () {
+        // serves one `pull` of a streamed pm.datasets result
+        function rowSource (count) {
+            return (async function *() {
+                for (var i = 0; i < count; i++) { yield { id: i }; }
+            }());
+        }
+
+        it('should stop at the limit and report the stream as open', function () {
+            return runnerUtil.pullDatasetBatch(rowSource(10), 4).then(function (frame) {
+                expect(frame.done).to.be.false;
+                expect(frame.rows).to.eql([{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }]);
+            });
+        });
+
+        it('should serve successive batches from the same iterator', function () {
+            var iterator = rowSource(5)[Symbol.asyncIterator]();
+
+            return runnerUtil.pullDatasetBatch(iterator, 3).then(function (frame) {
+                expect(frame).to.eql({ rows: [{ id: 0 }, { id: 1 }, { id: 2 }], done: false });
+
+                return runnerUtil.pullDatasetBatch(iterator, 3);
+            }).then(function (frame) {
+                // ran out inside the batch, so the short tail is reported as done
+                expect(frame).to.eql({ rows: [{ id: 3 }, { id: 4 }], done: true });
+            });
+        });
+
+        it('should report done with the rows read so far when the source runs out', function () {
+            return runnerUtil.pullDatasetBatch(rowSource(2), 10).then(function (frame) {
+                expect(frame.done).to.be.true;
+                expect(frame.rows).to.eql([{ id: 0 }, { id: 1 }]);
+            });
+        });
+
+        it('should report done with no rows for an empty source', function () {
+            return runnerUtil.pullDatasetBatch(rowSource(0), 10).then(function (frame) {
+                expect(frame).to.eql({ rows: [], done: true });
+            });
+        });
+
+        it('should reject when the source throws mid-batch', function () {
+            var source = (async function *() {
+                yield { id: 0 };
+                throw new Error('engine cursor died');
+            }());
+
+            return runnerUtil.pullDatasetBatch(source, 10).then(function () {
+                throw new Error('expected the batch to reject');
+            }, function (err) {
+                expect(err).to.be.an('error');
+                expect(err.message).to.equal('engine cursor died');
+            });
+        });
+    });
+
     describe('.processExecutionResult', function () {
         var mockOptions;
 

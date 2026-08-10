@@ -1,3 +1,23 @@
+unreleased:
+  fixed bugs:
+    - Normalized script file sanitization checks before filtering
+
+7.56.0:
+  date: 2026-07-28
+  new features:
+    - GH-1553 Added support for streaming iteration data sources
+    - GH-1553 Added support for streaming `datasetsResolver` results
+  chores:
+    - >-
+      GH-1556 Vendored the NTLM message builder and removed the `httpntlm`
+      dependency
+    - Updated dependencies
+
+7.55.1:
+  date: 2026-07-21
+  chores:
+    - Updated dependencies
+
 7.55.0:
   date: 2026-07-06
   new features:
