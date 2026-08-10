@@ -1,6 +1,8 @@
 unreleased:
   fixed bugs:
     - Normalized script file sanitization checks before filtering
+  chores:
+    - Updated dependencies
 
 7.56.0:
   date: 2026-07-28
