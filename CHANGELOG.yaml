@@ -1,3 +1,7 @@
+unreleased:
+  fixed bugs:
+    - Normalized script file sanitization checks before filtering
+
 7.56.0:
   date: 2026-07-28
   new features:
