@@ -113,6 +113,20 @@ describe('cursor', function () {
             done();
         });
     });
+    it('should have whatnext() match next() behavior at final position', function () {
+        var Cursor = require('../../lib/runner/cursor'),
+            cursor = new Cursor(2, 1, 1, 0), // length=2, at last position
+            predicted = cursor.whatnext(cursor.current());
+
+        cursor.next(function () {
+            var actual = cursor.current();
+
+            expect(predicted.eof).to.equal(actual.eof);
+            expect(predicted.position).to.equal(actual.position);
+            expect(predicted.iteration).to.equal(actual.iteration);
+        });
+    });
+
 
     describe('partition support', function () {
         it('should accept partitionIndex and partitionCycles parameters', function () {
