@@ -3,6 +3,106 @@ const sdk = require('postman-collection'),
     collectionRunner = require('../../../lib/runner');
 
 describe('pm.execution.runRequest handling', function () {
+    it('should expose the same report to parent and nested request scripts', function (done) {
+        const report = {
+                spec: '0.1.0-alpha.1',
+                type: 'summary',
+                totals: { requests: 7 },
+                by_op: [{ name: 'GET /workload', count: 7 }]
+            },
+            assertionNames = [],
+            collection = new sdk.Collection({
+                item: [{
+                    id: 'root-request-id',
+                    event: [{
+                        listen: 'prerequest',
+                        script: {
+                            exec: `
+                                pm.test('parent report is available', function () {
+                                    pm.expect(
+                                        pm.performanceTest.output.report.json
+                                    ).to.deep.equal(${JSON.stringify(report)});
+                                });
+                                await pm.execution.runRequest('nested-request-id');
+                            `
+                        }
+                    }],
+                    request: { url: 'https://postman-echo.com/status/204', method: 'GET' }
+                }]
+            });
+
+        new collectionRunner().run(collection, {
+            script: {
+                performanceTest: { output: { report } },
+                requestResolver: function (_requestId, _nestedRequestContext, callback) {
+                    callback(null, {
+                        item: [{
+                            id: 'nested-request-id',
+                            event: [{
+                                listen: 'prerequest',
+                                script: {
+                                    exec: `
+                                        pm.test('nested report is available', function () {
+                                            pm.expect(
+                                                pm.performanceTest.output.report.json
+                                            ).to.deep.equal(${JSON.stringify(report)});
+                                        });
+                                    `
+                                }
+                            }],
+                            request: { url: 'https://postman-echo.com/status/204', method: 'GET' }
+                        }]
+                    });
+                }
+            }
+        }, function (_err, run) {
+            run.start({
+                assertion (_cursor, assertions) {
+                    assertions.forEach(function (assertion) {
+                        expect(assertion.passed).to.be.true;
+                        assertionNames.push(assertion.name);
+                    });
+                },
+                done (err) {
+                    expect(assertionNames).to.include.members([
+                        'parent report is available',
+                        'nested report is available'
+                    ]);
+                    done(err);
+                }
+            });
+        });
+    });
+
+    it('should leave pm.performanceTest undefined when the report option is absent', function (done) {
+        const collection = new sdk.Collection({
+            item: [{
+                event: [{
+                    listen: 'prerequest',
+                    script: {
+                        exec: `pm.test('report is absent', function () {
+                            pm.expect(typeof pm.performanceTest).to.equal('undefined');
+                        });`
+                    }
+                }],
+                request: { url: 'https://postman-echo.com/status/204', method: 'GET' }
+            }]
+        });
+
+        new collectionRunner().run(collection, {}, function (_err, run) {
+            run.start({
+                assertion (_cursor, assertions) {
+                    assertions.forEach(function (assertion) {
+                        expect(assertion.passed).to.be.true;
+                    });
+                },
+                done (err) {
+                    done(err);
+                }
+            });
+        });
+    });
+
     it('[overview] should receive calls from postman-sandbox, resolve a request using bridge & ' +
         'make an API call to return a response',
     function (done) {
