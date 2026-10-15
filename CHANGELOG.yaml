@@ -1,3 +1,9 @@
+unreleased:
+  chores:
+    - >-
+      Asked sandbox to send back only variable mutations after each script and
+      rebuilt full scopes on the host, to cut per-script bridge copying
+
 7.56.1:
   date: 2026-08-10
   fixed bugs:
