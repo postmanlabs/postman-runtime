@@ -262,12 +262,12 @@ var _ = require('lodash'),
             new Runner({}).run(mainCollection('await pm.execution.runRequest(\'nested-item\');'), {
                 iterationCount: 2,
                 data: [{ vu: 'p0' }, { vu: 'p0' }],
-                requester,
+                requester: requester,
                 script: { requestResolver: requestResolver() }
             }, function (err, run) {
                 if (err) { return done(err); }
 
-                run.start({ done: done });
+                run.start({ done });
             });
         }
 
