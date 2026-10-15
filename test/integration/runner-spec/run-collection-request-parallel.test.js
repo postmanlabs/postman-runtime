@@ -175,6 +175,42 @@ var _ = require('lodash'),
         });
     });
 
+    describe('with per-VU iteration data', function () {
+        var spies;
+
+        before(function (done) {
+            runWaves({
+                collection: mainCollection(`
+                    // the caller's own row; its content depends on how the host shapes it, only equality matters
+                    pm.environment.set('callerRow', JSON.stringify(pm.iterationData.toObject()));
+                    pm.test('caller has a row', function () {
+                        pm.expect(pm.iterationData.toObject()).to.not.eql({});
+                    });
+                    await pm.execution.runRequest('nested-item');
+                `),
+                options: {
+                    script: {
+                        requestResolver: requestResolver(`
+                            pm.test('nested sees its caller row', function () {
+                                pm.expect(JSON.stringify(pm.iterationData.toObject()))
+                                    .to.equal(pm.environment.get('callerRow'));
+                            });
+                        `)
+                    }
+                },
+                waves: [[{ index: 0, vu: 'p0' }, { index: 1, vu: 'p1' }]]
+            }, function (err, _spies) {
+                spies = _spies;
+                done(err);
+            });
+        });
+
+        it('should hand the nested request the calling VU\'s iteration data row', function () {
+            expect(passedAssertions(spies, 'caller has a row')).to.eql([0, 1]);
+            expect(passedAssertions(spies, 'nested sees its caller row')).to.eql([0, 1]);
+        });
+    });
+
     describe('with partitions calling runRequest concurrently', function () {
         var spies;
 
