@@ -392,6 +392,9 @@ var _ = require('lodash'),
                 });
                 spies.console = sinon.spy(maybeFinish);
                 spies.done = sinon.spy(function (err) {
+                    // timeout.global calls `done` again after run.abort, see runWaves
+                    if (spies.done.callCount > 1) { return; }
+
                     setTimeout(function () { run.host.dispose(); }, 0);
                     done(err);
                 });
