@@ -89,4 +89,33 @@ var fs = require('fs'),
             done();
         });
     });
+
+    describe('when loading an array src fails as a whole', function () {
+        var async = require('async'),
+            mapLimit = async.mapLimit;
+
+        beforeEach(function () {
+            // the per-file iteratee swallows load errors, so force the batch callback to get one
+            sinon.stub(async, 'mapLimit').callsFake(function (arr, limit, iteratee, cb) {
+                if (Array.isArray(arr) && arr[0] === 'A') {
+                    return cb(new Error('batch failed'));
+                }
+
+                return mapLimit.apply(this, arguments);
+            });
+        });
+
+        afterEach(function () {
+            async.mapLimit.restore();
+        });
+
+        it('should disable that param and still send later params', function (done) {
+            runWith.call(this, [file('f1', ['A']), file('f2', 'B')], function (err, testrun, resp) {
+                expect(err).to.not.be.ok;
+                expect(warnings(testrun)).to.eql(['Form param `f1`, file load error: batch failed']);
+                expect(resp.files).to.have.all.keys('upload-csv.json');
+                done();
+            });
+        });
+    });
 });
