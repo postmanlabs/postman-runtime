@@ -10,8 +10,8 @@ var fs = require('fs'),
         C: 'test/fixtures/new.csv'
     },
     resolver = {
-        stat: function (src, cb) { fs.stat(FILES[src] || 'nonexistent/' + src, cb); },
-        createReadStream: function (src) { return fs.createReadStream(FILES[src]); }
+        stat (src, cb) { fs.stat(FILES[src] || 'nonexistent/' + src, cb); },
+        createReadStream (src) { return fs.createReadStream(FILES[src]); }
     };
 
 (IS_BROWSER ? describe.skip : describe)('file upload with multiple file params', function () {
@@ -23,7 +23,7 @@ var fs = require('fs'),
                     request: {
                         url: 'https://postman-echo.com/post',
                         method: 'POST',
-                        body: { mode: 'formdata', formdata }
+                        body: { mode: 'formdata', formdata: formdata }
                     }
                 }]
             }
@@ -39,8 +39,10 @@ var fs = require('fs'),
         });
     }
 
-    function file (key, src) { return { key, type: 'file', src }; }
-    function warnings (testrun) { return testrun.console.args.map(function (a) { return a[2]; }); }
+    function file (key, src) { return { key: key, type: 'file', src: src }; }
+    function warnings (testrun) {
+        return testrun.console.args.map(function (a) { return a[2]; });
+    }
 
     it('should send every param when each has a single-element array src', function (done) {
         runWith.call(this, [file('f1', ['A']), file('f2', ['B'])], function (err, testrun, resp) {
