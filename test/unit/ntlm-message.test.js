@@ -157,6 +157,47 @@ describe('ntlm message', function () {
             expect(parsed.targetInfo).to.be.undefined;
             expect(parsed.targetInfoLen).to.be.undefined;
         });
+
+        it('should return null and report an error when the message is shorter than the fixed header', function () {
+            var raw = Buffer.from(TYPE_2_MESSAGE.slice('NTLM '.length), 'base64');
+
+            // 10 bytes gets past the type check offset but not the target name fields, and 31 bytes
+            // is one short of the full server challenge
+            [1, 8, 10, 24, 31].forEach(function (length) {
+                var err;
+
+                expect(ntlm.parseType2Message('NTLM ' + raw.subarray(0, length).toString('base64'),
+                    function (error) { err = error; })).to.be.null;
+                expect(err, `length ${length}`).to.be.an.instanceOf(Error);
+                expect(err.message).to.equal('Server returned a truncated type 2 message');
+            });
+        });
+
+        it('should return null and report an error when target info is flagged but truncated', function () {
+            var raw = Buffer.from(TYPE_2_MESSAGE.slice('NTLM '.length), 'base64');
+
+            // the fixture has NegotiateTargetInfo set, so cut it inside the target info fields
+            [32, 40, 47].forEach(function (length) {
+                var err;
+
+                expect(ntlm.parseType2Message('NTLM ' + raw.subarray(0, length).toString('base64'),
+                    function (error) { err = error; })).to.be.null;
+                expect(err, `length ${length}`).to.be.an.instanceOf(Error);
+                expect(err.message).to.equal('Server returned a truncated type 2 message');
+            });
+        });
+
+        it('should parse a minimal message without target info', function () {
+            var raw = Buffer.from(TYPE_2_MESSAGE.slice('NTLM '.length), 'base64').subarray(0, 32),
+                parsed;
+
+            raw.writeInt32LE(raw.readInt32LE(20) & ~0x00800000, 20);
+            parsed = ntlm.parseType2Message('NTLM ' + raw.toString('base64'), function () { /* noop */ });
+
+            expect(parsed.type).to.equal(2);
+            expect(parsed.serverChallenge).to.have.lengthOf(8);
+            expect(parsed.targetInfo).to.be.undefined;
+        });
     });
 
     describe('createType3Message', function () {
