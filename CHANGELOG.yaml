@@ -1,3 +1,18 @@
+7.56.3:
+  date: 2026-10-21
+  fixed bugs:
+    - >-
+      Fixed `pm.execution.runRequest` hanging in runs with
+      `customParallelIterations`: the nested run now runs once, sequentially,
+      the `runRequest` chain is kept per script execution instead of in run
+      state shared by all partitions, nested requests use the calling
+      partition's cookie jar, and stopping a partition aborts its in-flight
+      nested runs
+    - >-
+      Updated `postman-request` to `v2.88.1-postman.51`, which rejects TLS
+      chains through the compromised eMudhra intermediate CAs
+      (https://emudhra.we-have-a-problem.com/)
+
 7.56.2:
   date: 2026-10-19
   chores:
