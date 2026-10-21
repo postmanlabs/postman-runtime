@@ -1,8 +1,21 @@
 unreleased:
+  fixed bugs:
+    - >-
+      Fixed `pm.execution.runRequest` hanging in runs with
+      `customParallelIterations`: the nested run now runs once, sequentially,
+      the `runRequest` chain is kept per script execution instead of in run
+      state shared by all partitions, nested requests use the calling
+      partition's cookie jar, and stopping a partition aborts its in-flight
+      nested runs
   chores:
     - >-
       Asked sandbox to send back only variable mutations after each script and
       rebuilt full scopes on the host, to cut per-script bridge copying
+
+7.56.2:
+  date: 2026-10-19
+  chores:
+    - Updated dependencies
 
 7.56.1:
   date: 2026-08-10
