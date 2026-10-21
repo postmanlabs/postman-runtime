@@ -406,6 +406,23 @@ describe('PartitionManager', function () {
             });
         });
 
+        it('should abort the nested runs of a stopped partition and give it a fresh set', function (done) {
+            var partition = partitionManager.partitions[0],
+                nestedRun = { abort: sinon.stub() },
+                stoppedNestedRuns = partition.nestedRuns;
+
+            stoppedNestedRuns.runs.add(nestedRun);
+
+            partitionManager.stopSinglePartition(0, function (err) {
+                expect(err).to.be.null;
+                expect(nestedRun.abort.calledOnce).to.be.true;
+                expect(stoppedNestedRuns.aborted).to.be.true;
+                expect(partition.nestedRuns).to.not.equal(stoppedNestedRuns);
+                expect(partition.nestedRuns).to.eql({ aborted: false, runs: new Set() });
+                done();
+            });
+        });
+
         it('should handle stopping non-existent partition gracefully', function (done) {
             partitionManager.stopSinglePartition(99, function (err) {
                 expect(err).to.be.null;
