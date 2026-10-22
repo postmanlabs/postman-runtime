@@ -22,7 +22,7 @@ describe('event command variableMutationsOnly', function () {
         return { mutations: scope.mutations.toJSON() };
     }
 
-    function runScript (options, sandboxResult, done) {
+    function runScript (options, sandboxResult, done, context) {
         var host = new EventEmitter(),
             item = new sdk.Item({
                 name: 'request',
@@ -58,7 +58,7 @@ describe('event command variableMutationsOnly', function () {
             name: 'prerequest',
             item: item,
             coords: {},
-            context: {
+            context: context || {
                 _variables: new sdk.VariableScope({ values: [{ key: 'v', value: 'v1' }] }),
                 environment: new sdk.VariableScope({ values: [{ key: 'e', value: 'e1' }] }),
                 globals: new sdk.VariableScope({ values: [{ key: 'g', value: 'g1' }] }),
@@ -132,6 +132,35 @@ describe('event command variableMutationsOnly', function () {
             if (err) { return done(err); }
 
             expect(result.environment.toObject()).to.eql({ e: 'full' });
+            done();
+        });
+    });
+
+    it('should rebuild scopes the run does not hold as VariableScope instances', function (done) {
+        // item command falls back to a plain object for a scope missing from its payload
+        runScript({ script: { variableMutationsOnly: true } }, {
+            _variables: mutationsOnly('v', 'v2'),
+            environment: mutationsOnly('e', 'e2')
+        }, function (err, runnerContext, result) {
+            if (err) { return done(err); }
+
+            expect(result._variables.toObject()).to.eql({ v: 'v2' });
+            expect(result.environment.toObject()).to.eql({ e: 'e2' });
+            expect(runnerContext.state._variables.toObject()).to.eql({ v: 'v2' });
+            done();
+        }, {
+            _variables: {}
+        });
+    });
+
+    it('should keep a scope as sent when the sandbox sends back no mutations for it', function (done) {
+        runScript({ script: { variableMutationsOnly: true } }, {
+            environment: {}
+        }, function (err, runnerContext, result) {
+            if (err) { return done(err); }
+
+            expect(result.environment.toObject()).to.eql({ e: 'e1' });
+            expect(result.environment).to.not.have.property('mutations');
             done();
         });
     });
