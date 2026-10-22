@@ -1,5 +1,5 @@
 unreleased:
-  chores:
+  new features:
     - >-
       Added `script.variableMutationsOnly` option (default off) to ask sandbox to
       send back only variable mutations after each script and rebuild full scopes

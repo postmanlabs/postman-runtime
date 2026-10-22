@@ -1,24 +1,21 @@
-var sinon = require('sinon'),
-    expect = require('chai').expect,
-    PostmanSandbox = require('postman-sandbox/lib/postman-sandbox'),
-
-    SCOPES = ['environment', 'globals', 'collectionVariables'];
+var expect = require('chai').expect;
 
 describe('script.variableMutationsOnly option', function () {
-    var executeSpy;
+    var testrun;
 
-    function runOptions (script) {
-        return {
-            script: script,
+    before(function (done) {
+        this.run({
+            script: { variableMutationsOnly: true },
             environment: { values: [{ key: 'e', value: 'e1' }, { key: 'eGone', value: 'x' }] },
             globals: { values: [{ key: 'g', value: 'g1' }] },
             collection: {
                 variable: [{ key: 'c', value: 'c1' }],
-                item: {
+                item: [{
                     event: [{
                         listen: 'prerequest',
                         script: {
                             exec: [
+                                'pm.variables.set("v", "v1");',
                                 'pm.environment.set("e", "e2");',
                                 'pm.environment.unset("eGone");',
                                 'pm.globals.set("gNew", "g2");',
@@ -27,67 +24,54 @@ describe('script.variableMutationsOnly option', function () {
                         }
                     }],
                     request: `${global.ECHO_SERVER}/get`
-                }
+                }, {
+                    event: [{
+                        listen: 'test',
+                        script: {
+                            exec: [
+                                'pm.test("variables carried over", function () {',
+                                '    pm.expect(pm.variables.get("v")).to.equal("v1");',
+                                '    pm.expect(pm.environment.toObject()).to.eql({ e: "e2" });',
+                                '    pm.expect(pm.globals.toObject()).to.eql({ g: "g1", gNew: "g2" });',
+                                '    pm.expect(pm.collectionVariables.toObject()).to.eql({ c: "c2" });',
+                                '});'
+                            ]
+                        }
+                    }],
+                    request: `${global.ECHO_SERVER}/get?e={{e}}&c={{c}}`
+                }]
             }
-        };
-    }
+        }, function (err, results) {
+            testrun = results;
+            done(err);
+        });
+    });
 
-    function expectFullScopes (testrun) {
+    it('should have completed the run', function () {
+        expect(testrun).to.be.ok;
+        expect(testrun.done.getCall(0).args[0]).to.be.null;
+        expect(testrun).to.nested.include({
+            'done.calledOnce': true,
+            'script.callCount': 2
+        });
+    });
+
+    it('should give the script callback full scopes', function () {
         var result = testrun.script.getCall(0).args[2];
 
+        expect(result._variables.toObject()).to.eql({ v: 'v1' });
         expect(result.environment.toObject()).to.eql({ e: 'e2' });
         expect(result.globals.toObject()).to.eql({ g: 'g1', gNew: 'g2' });
         expect(result.collectionVariables.toObject()).to.eql({ c: 'c2' });
-    }
-
-    afterEach(function () {
-        executeSpy && executeSpy.restore();
-        executeSpy = null;
     });
 
-    it('should not ask the sandbox for mutations only by default', function (done) {
-        executeSpy = sinon.spy(PostmanSandbox.prototype, 'execute');
-
-        this.run(runOptions(), function (err, testrun) {
-            if (err) { return done(err); }
-
-            expect(executeSpy.getCall(0).args[1]).to.have.property('variableMutationsOnly', false);
-            expectFullScopes(testrun);
-            done();
-        });
+    it('should resolve the changed variables in the next request', function () {
+        expect(testrun.request.getCall(1).args[3].url.query.toObject()).to.eql({ e: 'e2', c: 'c2' });
     });
 
-    it('should ask the sandbox for mutations only when opted in', function (done) {
-        executeSpy = sinon.spy(PostmanSandbox.prototype, 'execute');
+    it('should carry the changed variables to the next script', function () {
+        var assertions = testrun.assertion.getCall(0).args[1];
 
-        this.run(runOptions({ variableMutationsOnly: true }), function (err, testrun) {
-            if (err) { return done(err); }
-
-            expect(executeSpy.getCall(0).args[1]).to.have.property('variableMutationsOnly', true);
-            expectFullScopes(testrun);
-            done();
-        });
-    });
-
-    it('should rebuild full scopes when the sandbox sends back mutations only', function (done) {
-        var execute = PostmanSandbox.prototype.execute;
-
-        // stand in for a sandbox that honours the option, whatever version is installed
-        executeSpy = sinon.stub(PostmanSandbox.prototype, 'execute').callsFake(function (target, options, callback) {
-            return execute.call(this, target, options, function (err, result) {
-                result && SCOPES.forEach(function (scope) {
-                    result[scope] = { mutations: result[scope].mutations };
-                });
-
-                callback(err, result);
-            });
-        });
-
-        this.run(runOptions({ variableMutationsOnly: true }), function (err, testrun) {
-            if (err) { return done(err); }
-
-            expectFullScopes(testrun);
-            done();
-        });
+        expect(assertions[0]).to.include({ name: 'variables carried over', passed: true });
     });
 });
