@@ -192,6 +192,11 @@ runner.run(collection, {
         // using the `teleport-javascript` serialization library.
         serializeLogs: false,
 
+        // Option to get back only the variable mutations after each script instead of the full
+        // environment, globals and collectionVariables scopes, which are then rebuilt on the host.
+        // Cuts copying for large scopes. Changes made without set, unset or clear are lost.
+        variableMutationsOnly: false,
+
         // Function to resolve requests that have been referenced via `pm.execution.runRequest`
         // Expects a full collection JSON with a single request item and pre-request + test scripts
         // along with variables for the collection
