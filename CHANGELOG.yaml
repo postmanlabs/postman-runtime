@@ -1,3 +1,14 @@
+unreleased:
+  new features:
+    - >-
+      Added `script.variableMutationsOnly` option (default off) to ask sandbox to
+      send back only variable mutations after each script and rebuild full scopes
+      on the host, to cut per-script bridge copying
+  chores:
+    - >-
+      Updated `postman-sandbox` to `v6.9.0`, which adds the
+      `variableMutationsOnly` execute option
+
 7.56.3:
   date: 2026-10-21
   fixed bugs:
