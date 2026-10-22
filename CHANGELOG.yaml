@@ -1,4 +1,16 @@
 unreleased:
+  new features:
+    - >-
+      Added `script.variableMutationsOnly` option (default off) to ask sandbox to
+      send back only variable mutations after each script and rebuild full scopes
+      on the host, to cut per-script bridge copying
+  chores:
+    - >-
+      Updated `postman-sandbox` to `v6.9.0`, which adds the
+      `variableMutationsOnly` execute option
+
+7.56.3:
+  date: 2026-10-21
   fixed bugs:
     - >-
       Fixed `pm.execution.runRequest` hanging in runs with
@@ -7,6 +19,10 @@ unreleased:
       state shared by all partitions, nested requests use the calling
       partition's cookie jar, and stopping a partition aborts its in-flight
       nested runs
+    - >-
+      Updated `postman-request` to `v2.88.1-postman.51`, which rejects TLS
+      chains through the compromised eMudhra intermediate CAs
+      (https://emudhra.we-have-a-problem.com/)
 
 7.56.2:
   date: 2026-10-19
