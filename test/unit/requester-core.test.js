@@ -1444,6 +1444,146 @@ describe('requester util', function () {
                 expect(opts.restrictedCidrs).to.be.an('array').with.lengthOf(0);
             });
         });
+
+        describe('hostname pre-check and verdict cache', function () {
+            var ipaddr = require('ipaddr.js'),
+                sinon = require('sinon'),
+                POLICY = {
+                    localhost: true,
+                    127.1: true,
+                    '::1': true,
+                    '[::1]': true,
+                    '127.0.0.0/8': true,
+                    '0.0.0.0/8': true,
+                    '::1/128': true,
+                    'fe80::/10': true,
+                    '169.254.0.0/16': true,
+                    '10.0.0.0/8': true,
+                    '172.16.0.0/12': true,
+                    '192.168.0.0/16': true,
+                    'fc00::/7': true
+                },
+                // verdicts recorded from the implementation before the pre-check and cache were added
+                BLOCKED = [
+                    'localhost', 'LOCALHOST', '127.0.0.1', '127.1', '0x7f.0.0.1', '0177.0.0.1', '2130706433',
+                    '0x7f000001', '10.1.2.3', '192.168.1.5', '169.254.169.254', '::1', '[::1]',
+                    '::ffff:127.0.0.1', '[::ffff:10.0.0.1]', '::10.0.0.1', '64:ff9b::a9fe:a9fe',
+                    '2002:a9fe:a9fe::', 'fe80::1', 'fe80::1%eth0', 'fc00::1'
+                ],
+                ALLOWED = [
+                    'example.com', 'EXAMPLE.COM', 'example.com.', 'localhost.example.com', 'postman-echo.com',
+                    'k8s-gotunabl-4726ea8024.elb.us-east-1.amazonaws.com', '93.184.216.34', '8.8.8.8',
+                    '2001:4860:4860::8888', 'cafe.babe', 'deadbeef', 'abc', 'a.b.c.d', '127.0.0.1.', 'x'
+                ],
+                // hostnames that contain characters no IP literal can have ('x', 'cafe.babe' and
+                // 'deadbeef' only use IP-literal characters, so they stay on the full path)
+                NAMES = ['example.com', 'EXAMPLE.COM', 'example.com.', 'localhost.example.com', 'postman-echo.com',
+                    'k8s-gotunabl-4726ea8024.elb.us-east-1.amazonaws.com'],
+                processSpy;
+
+            function freshOpts () {
+                return { restrictedAddresses: { ...POLICY } };
+            }
+
+            beforeEach(function () {
+                processSpy = sinon.spy(ipaddr, 'process');
+            });
+
+            afterEach(function () {
+                processSpy.restore();
+            });
+
+            it('should keep every blocked verdict unchanged', function () {
+                BLOCKED.forEach(function (host) {
+                    expect(requesterCore.isAddressRestricted(host, freshOpts()), host).to.be.true;
+                });
+            });
+
+            it('should keep every allowed verdict unchanged', function () {
+                ALLOWED.forEach(function (host) {
+                    expect(requesterCore.isAddressRestricted(host, freshOpts()), host).to.be.false;
+                });
+            });
+
+            it('should give the same verdicts on a repeat call with the same networkOptions', function () {
+                var opts = freshOpts();
+
+                BLOCKED.concat(ALLOWED).forEach(function (host) {
+                    var first = requesterCore.isAddressRestricted(host, opts);
+
+                    expect(requesterCore.isAddressRestricted(host, opts), host).to.equal(first);
+                });
+            });
+
+            it('should not try to parse a hostname as an IP address', function () {
+                NAMES.forEach(function (host) {
+                    expect(requesterCore.isAddressRestricted(host, freshOpts()), host).to.be.false;
+                });
+                expect(processSpy.callCount).to.equal(0);
+            });
+
+            it('should still check a listed name before the pre-check', function () {
+                expect(requesterCore.isAddressRestricted('localhost', freshOpts())).to.be.true;
+                expect(requesterCore.isAddressRestricted('LocalHost', freshOpts())).to.be.true;
+            });
+
+            it('should still parse anything shaped like an IP address', function () {
+                // none of these are exact entries in POLICY, so each must reach the parser
+                ['127.0.0.1', '0x7f.0.0.1', '0177.0.0.1', '2130706433', '10.1', '::2', 'fe80::1%eth0',
+                    '93.184.216.34', 'cafe.babe', 'deadbeef', '127.0.0.1.'].forEach(function (host) {
+                    processSpy.resetHistory();
+                    requesterCore.isAddressRestricted(host, freshOpts());
+                    expect(processSpy.callCount, host).to.be.at.least(1);
+                });
+            });
+
+            it('should not parse the same address twice for the same networkOptions', function () {
+                var opts = freshOpts();
+
+                expect(requesterCore.isAddressRestricted('93.184.216.34', opts)).to.be.false;
+                expect(requesterCore.isAddressRestricted('169.254.169.254', opts)).to.be.true;
+                processSpy.resetHistory();
+
+                expect(requesterCore.isAddressRestricted('93.184.216.34', opts)).to.be.false;
+                expect(requesterCore.isAddressRestricted('169.254.169.254', opts)).to.be.true;
+                expect(processSpy.callCount).to.equal(0);
+            });
+
+            it('should treat different spellings as separate entries', function () {
+                var opts = freshOpts();
+
+                expect(requesterCore.isAddressRestricted('example.com', opts)).to.be.false;
+                expect(requesterCore.isAddressRestricted('[::1]', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('::1', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('0x7f.0.0.1', opts)).to.be.true;
+            });
+
+            it('should still block an address a name later resolves to (DNS rebinding)', function () {
+                var opts = freshOpts();
+
+                // Check A on the name, Check B on the first resolved address
+                expect(requesterCore.isAddressRestricted('example.com', opts)).to.be.false;
+                expect(requesterCore.isAddressRestricted('93.184.216.34', opts)).to.be.false;
+
+                // DNS now answers with the metadata address: Check A on the name, Check B on the new address
+                expect(requesterCore.isAddressRestricted('example.com', opts)).to.be.false;
+                expect(requesterCore.isAddressRestricted('169.254.169.254', opts)).to.be.true;
+            });
+
+            it('should keep the cache bounded and correct after many distinct addresses', function () {
+                var opts = freshOpts(),
+                    i;
+
+                for (i = 0; i < 1500; i++) {
+                    expect(requesterCore.isAddressRestricted('8.8.' + Math.floor(i / 256) + '.' + (i % 256), opts))
+                        .to.be.false;
+                }
+
+                expect(opts.restrictedVerdicts.size).to.be.at.most(1000);
+                expect(requesterCore.isAddressRestricted('10.1.2.3', opts)).to.be.true;
+                expect(requesterCore.isAddressRestricted('93.184.216.34', opts)).to.be.false;
+            });
+        });
     });
 });
 
