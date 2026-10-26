@@ -1583,7 +1583,27 @@ describe('requester util', function () {
                 expect(requesterCore.isAddressRestricted('10.1.2.3', opts)).to.be.true;
                 expect(requesterCore.isAddressRestricted('93.184.216.34', opts)).to.be.false;
             });
+
+            it('should evict the least recently used entry, keeping recently used ones', function () {
+                var opts = freshOpts(),
+                    i;
+
+                requesterCore.isAddressRestricted('93.184.216.34', opts);
+                requesterCore.isAddressRestricted('10.1.2.3', opts);
+
+                for (i = 0; i < 998; i++) {
+                    requesterCore.isAddressRestricted('8.8.' + Math.floor(i / 256) + '.' + (i % 256), opts);
+                }
+
+                // cache is full; touch the oldest entry, then overflow by one
+                expect(opts.restrictedVerdicts.size).to.equal(1000);
+                requesterCore.isAddressRestricted('93.184.216.34', opts);
+                requesterCore.isAddressRestricted('9.9.9.9', opts);
+
+                expect(opts.restrictedVerdicts.size).to.equal(1000);
+                expect(opts.restrictedVerdicts.has('93.184.216.34')).to.be.true;
+                expect(opts.restrictedVerdicts.has('10.1.2.3')).to.be.false;
+            });
         });
     });
 });
-
