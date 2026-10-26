@@ -234,6 +234,7 @@ var expect = require('chai').expect;
             // response will always be undefined because there is no server on this IP
             // the error checks are the more important ones here
             expect(error.message).to.equal('NETERR: getaddrinfo ENOTFOUND 169.254.169.254');
+            expect(error.code).to.equal('ENOTFOUND');
             expect(response).to.be.undefined;
         });
 

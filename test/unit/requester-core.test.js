@@ -1006,6 +1006,7 @@ describe('requester util', function () {
             expect(emittedError).to.be.an('error');
             expect(emittedError.message).to.include('NETERR:');
             expect(emittedError.message).to.include('127.0.0.2');
+            expect(emittedError.code).to.equal('ENOTFOUND');
         });
 
         it('bindOn.redirect should not abort for a non-restricted raw IP', function () {

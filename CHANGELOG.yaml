@@ -5,6 +5,7 @@ unreleased:
       send back only variable mutations after each script and rebuild full scopes
       on the host, to cut per-script bridge copying
   fixed bugs:
+    - Requests blocked by `restrictedAddresses` now fail with `code: 'ENOTFOUND'`, as a real DNS failure does
     - GH-1569 Fixed form-data File params after an array `src` File param being skipped
     - Fixed a listener leak for nested request events after script execution
   chores:
