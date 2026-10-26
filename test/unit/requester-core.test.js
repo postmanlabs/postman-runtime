@@ -255,7 +255,7 @@ describe('requester util', function () {
             expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
         });
 
-        it('should fail a single-address lookup that resolves to a restricted address with code ENOTFOUND', function (done) {
+        it('should fail a single-address lookup to a restricted address with code ENOTFOUND', function (done) {
             var request = new sdk.Request({
                     url: 'http://internal.example.test/get'
                 }),
