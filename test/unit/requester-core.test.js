@@ -255,6 +255,28 @@ describe('requester util', function () {
             expect(requesterCore.getRequestOptions(request, options).lookup).to.be.a('function');
         });
 
+        it('should fail a single-address lookup that resolves to a restricted address with code ENOTFOUND', function (done) {
+            var request = new sdk.Request({
+                    url: 'http://internal.example.test/get'
+                }),
+                lookup = requesterCore.getRequestOptions(request, {
+                    network: {
+                        restrictedAddresses: { '10.0.0.0/8': true },
+                        hostLookup: {
+                            type: 'hostIpMap',
+                            hostIpMap: { 'internal.example.test': '10.1.2.3' }
+                        }
+                    }
+                }).lookup;
+
+            lookup('internal.example.test', { all: false }, function (err) {
+                expect(err).to.be.an('error');
+                expect(err.code).to.equal('ENOTFOUND');
+                expect(err.message).to.equal('NETERR: getaddrinfo ENOTFOUND internal.example.test');
+                done();
+            });
+        });
+
         it('should override lookup function for hosts', function () {
             var request = new sdk.Request({
                     url: 'https://postman-echo.com/get'
