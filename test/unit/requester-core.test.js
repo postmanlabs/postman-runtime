@@ -1537,6 +1537,57 @@ describe('requester util', function () {
                 });
             });
 
+            // the pre-check is only safe while every colon-free string ipaddr.js accepts stays inside
+            // [0-9a-fx.]; this fails if an ipaddr.js upgrade widens that set (e.g. '0o' octal parts)
+            it('should send every colon-free string ipaddr.js accepts to the parser', function () {
+                var seed = 1571,
+                    PART_PREFIXES = ['', '', '0', '0x', '0o', '0b', '0d', '+', '-', '00x', '0x0'],
+                    PART_CHARS = '0123456789abcdefxobdghnz_%-+ ',
+                    JUNK = ['', '', '', '.', '%eth0', '%0', '/8', ' ', '..', 'e1', 'n'],
+                    checked = 0,
+                    host,
+                    i;
+
+                // seeded so a failure reproduces
+                function rand (n) {
+                    seed = (Math.imul(seed, 1103515245) + 12345) >>> 0;
+
+                    return (seed >>> 16) % n;
+                }
+
+                function randomHost () {
+                    var parts = [],
+                        count = 1 + rand(4),
+                        part,
+                        j,
+                        k;
+
+                    for (j = 0; j < count; j++) {
+                        part = PART_PREFIXES[rand(PART_PREFIXES.length)];
+                        for (k = 1 + rand(4); k > 0; k--) {
+                            part += rand(3) ? String(rand(10)) : PART_CHARS[rand(PART_CHARS.length)];
+                        }
+                        parts.push(part);
+                    }
+
+                    return parts.join('.') + JUNK[rand(JUNK.length)];
+                }
+
+                for (i = 0; i < 50000; i++) {
+                    host = randomHost().toLowerCase();
+
+                    if (ipaddr.isValid(host) && !host.includes(':')) {
+                        checked++;
+                        processSpy.resetHistory();
+                        requesterCore.isAddressRestricted(host, { restrictedAddresses: { '169.254.0.0/16': true } });
+                        expect(processSpy.callCount, host).to.be.at.least(1);
+                    }
+                }
+
+                // guard against a generator that stops producing valid addresses
+                expect(checked).to.be.above(1000);
+            });
+
             it('should not parse the same address twice for the same networkOptions', function () {
                 var opts = freshOpts();
 
