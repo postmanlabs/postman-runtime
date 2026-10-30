@@ -20,7 +20,16 @@ var expect = require('chai').expect,
                     version: runtimePackage.dependencies['postman-request']
                 },
                 'postman-sandbox': {
-                    version: runtimePackage.dependencies['postman-sandbox'],
+                    // In deep-dependency mode version() resolves the *installed*
+                    // package version (not the package.json spec string). This
+                    // normally coincides with the spec, but postman-sandbox is
+                    // temporarily vendored via a file: tarball
+                    // (file:vendor/postman-sandbox-*.tgz), so the spec no longer
+                    // equals the resolved version. Use the installed version here.
+                    // Revert to runtimePackage.dependencies['postman-sandbox']
+                    // once the sandbox change ships upstream and the dep is
+                    // re-pointed to a published semver.
+                    version: sandboxPackage.version,
                     dependencies: {
                         uvm: {
                             version: sandboxPackage.dependencies.uvm
