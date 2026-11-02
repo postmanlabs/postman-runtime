@@ -197,6 +197,11 @@ runner.run(collection, {
         // Cuts copying for large scopes.
         variableMutationsOnly: false,
 
+        // Option to move the response body to the sandbox for test scripts instead of copying it as
+        // base64. The body is empty on the host after the item's last test script, so read it in the
+        // `response` callback. Nested runs always get a copy.
+        transferResponseBody: false,
+
         // Function to resolve requests that have been referenced via `pm.execution.runRequest`
         // Expects a full collection JSON with a single request item and pre-request + test scripts
         // along with variables for the collection
