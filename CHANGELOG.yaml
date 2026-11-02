@@ -1,6 +1,10 @@
 unreleased:
   new features:
     - >-
+      Added `script.transferResponseBody` option (default off) to move the
+      response body to the sandbox for test scripts instead of copying it as
+      base64
+    - >-
       Added `script.variableMutationsOnly` option (default off) to ask sandbox to
       send back only variable mutations after each script and rebuild full scopes
       on the host, to cut per-script bridge copying
