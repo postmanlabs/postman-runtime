@@ -198,8 +198,9 @@ runner.run(collection, {
         variableMutationsOnly: false,
 
         // Option to move the response body to the sandbox for test scripts instead of copying it as
-        // base64. The body is empty on the host after the item's last test script, so read it in the
-        // `response` callback. Nested runs always get a copy.
+        // base64, when the sandbox supports it. The body is empty on the host once the item's last test
+        // script starts, so read it in the `response` callback; the `script`, `test` and `item`
+        // callbacks see an empty body. Nested runs always get a copy.
         transferResponseBody: false,
 
         // Function to resolve requests that have been referenced via `pm.execution.runRequest`
