@@ -2945,6 +2945,36 @@ describe('Auth Handler:', function () {
                 workstation: 'sample.work'
             });
         });
+
+        it('should report an error instead of throwing on a truncated type 2 message', function (done) {
+            var request = new Request({
+                    auth: {
+                        type: 'ntlm',
+                        ntlm: { username: 'testuser', password: 'testpass' }
+                    },
+                    url: 'postman-echo.com/get'
+                }),
+                authInterface = createAuthInterface(request.auth),
+                handler = AuthLoader.getHandler(request.auth.type),
+
+                // signature and type only, so reading the target name fields would run past the end
+                truncated = Buffer.concat([Buffer.from('NTLMSSP\0', 'ascii'), Buffer.from([2, 0])]),
+                response = new sdk.Response({
+                    code: 401,
+                    header: [{ key: 'WWW-Authenticate', value: 'NTLM ' + truncated.toString('base64') }]
+                });
+
+            // the type 1 message has been sent, so the server response should carry the challenge
+            authInterface.set({ state: 'T1_MSG_CREATED', ntlmHeader: 'NTLM type1' });
+
+            handler.post(authInterface, response, function (err, success) {
+                expect(err).to.be.an.instanceOf(Error);
+                expect(success).to.be.true;
+                expect(authInterface.get('state')).to.equal('INITIALIZED');
+                expect(authInterface.get('ntlmHeader')).to.be.undefined;
+                done();
+            });
+        });
     });
 
     describe('EdgeGrid', function () {
