@@ -46,7 +46,7 @@
     "async": "3.2.6",
     "aws4": "1.13.2",
     "des.js": "1.1.0",
-    "handlebars": "4.7.9",
+    "handlebars": "4.7.10",
     "ipaddr.js": "2.4.0",
     "jose": "5.10.0",
     "js-md4": "0.3.2",
