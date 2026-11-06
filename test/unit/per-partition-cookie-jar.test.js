@@ -88,6 +88,10 @@ var sinon = require('sinon').createSandbox(),
     describe('PartitionManager#stopSinglePartition', function () {
         function managerFor (isCustom) {
             var mockRunInstance = {
+                    // Mirror Run's derived single-source-of-truth flag
+                    // (see run.js: this.isCustomParallelIterations =
+                    // Boolean(this.options.customParallelIterations)).
+                    isCustomParallelIterations: isCustom,
                     options: {
                         iterationCount: 1,
                         maxConcurrency: 1,
