@@ -1,5 +1,5 @@
 /**
- * pm.execution.runRequest under customParallelIterations: every partition (VU) of the run calls
+ * pm.execution.runRequest under customParallelIterations: every partition of the run calls
  * runRequest on its own, so each partition must get its own nested request chain and its own cookies.
  *
  * Runs against a LOCAL http server that records every hit, so state mixing between partitions is
@@ -21,28 +21,28 @@ var _ = require('lodash'),
     this.timeout(10 * 1000);
 
     var httpServer,
-        onTarget, // optional hook called with the vu of every /target hit
-        hits; // [{path, vu, cookie}] in arrival order, recorded by the server
+        onTarget, // optional hook called with the pid of every /target hit
+        hits; // [{path, pid, cookie}] in arrival order, recorded by the server
 
     before(function (done) {
         httpServer = server.createHTTPServer();
 
         httpServer.on('/main', function (req, res) {
-            var vu = url.parse(req.url, true).query.vu;
+            var pid = url.parse(req.url, true).query.pid;
 
-            hits.push({ path: '/main', vu: vu, cookie: req.headers.cookie || '' });
-            res.writeHead(200, { 'content-type': 'text/plain', 'set-cookie': 'main=' + vu + '; Path=/' });
+            hits.push({ path: '/main', pid: pid, cookie: req.headers.cookie || '' });
+            res.writeHead(200, { 'content-type': 'text/plain', 'set-cookie': 'main=' + pid + '; Path=/' });
             res.end('ok');
         });
 
         // delayed, so that nested requests of concurrent partitions are in flight together
         httpServer.on('/target', function (req, res) {
-            var vu = url.parse(req.url, true).query.vu;
+            var pid = url.parse(req.url, true).query.pid;
 
-            hits.push({ path: '/target', vu: vu, cookie: req.headers.cookie || '' });
-            onTarget && onTarget(vu);
+            hits.push({ path: '/target', pid: pid, cookie: req.headers.cookie || '' });
+            onTarget && onTarget(pid);
             setTimeout(function () {
-                res.writeHead(200, { 'content-type': 'text/plain', 'set-cookie': 'nested=' + vu + '; Path=/' });
+                res.writeHead(200, { 'content-type': 'text/plain', 'set-cookie': 'nested=' + pid + '; Path=/' });
                 res.end('ok');
             }, 100);
         });
@@ -64,7 +64,7 @@ var _ = require('lodash'),
             item: [{
                 id: 'main-item',
                 event: [{ listen: 'test', script: { exec: testScript } }],
-                request: httpServer.url + '/main?vu={{vu}}'
+                request: httpServer.url + '/main?pid={{pid}}'
             }]
         });
     }
@@ -75,7 +75,7 @@ var _ = require('lodash'),
                 item: {
                     id: 'nested-item',
                     event: testScript ? [{ listen: 'test', script: { exec: testScript } }] : [],
-                    request: httpServer.url + '/target?vu={{vu}}'
+                    request: httpServer.url + '/target?pid={{pid}}'
                 }
             });
         };
@@ -88,7 +88,7 @@ var _ = require('lodash'),
      * @param {Object} opts -
      * @param {Collection} opts.collection -
      * @param {Object} opts.options - extra run options
-     * @param {Array} opts.waves - [[{ index: <partitionIndex>, vu: <String> }]]
+     * @param {Array} opts.waves - [[{ index: <partitionIndex>, pid: <String> }]]
      * @param {Function} done - (err, spies)
      */
     function runWaves (opts, done) {
@@ -113,7 +113,7 @@ var _ = require('lodash'),
             pending = wave.length;
             wave.forEach(function (start) {
                 run.startParallelIteration(start.index,
-                    new VariableScope({ values: [{ key: 'vu', value: start.vu }] }), _.noop);
+                    new VariableScope({ values: [{ key: 'pid', value: start.pid }] }), _.noop);
             });
         }
 
@@ -160,7 +160,7 @@ var _ = require('lodash'),
                     });
                 `),
                 options: { script: { requestResolver: requestResolver() } },
-                waves: [[{ index: 0, vu: 'p0' }]]
+                waves: [[{ index: 0, pid: 'p0' }]]
             }, function (err, _spies) {
                 spies = _spies;
                 done(err);
@@ -175,22 +175,58 @@ var _ = require('lodash'),
         });
     });
 
+    describe('with per-partition iteration data', function () {
+        var spies;
+
+        before(function (done) {
+            runWaves({
+                collection: mainCollection(`
+                    // the caller's own row; its content depends on how the host shapes it, only equality matters
+                    pm.environment.set('callerRow', JSON.stringify(pm.iterationData.toObject()));
+                    pm.test('caller has a row', function () {
+                        pm.expect(pm.iterationData.toObject()).to.not.eql({});
+                    });
+                    await pm.execution.runRequest('nested-item');
+                `),
+                options: {
+                    script: {
+                        requestResolver: requestResolver(`
+                            pm.test('nested sees its caller row', function () {
+                                pm.expect(JSON.stringify(pm.iterationData.toObject()))
+                                    .to.equal(pm.environment.get('callerRow'));
+                            });
+                        `)
+                    }
+                },
+                waves: [[{ index: 0, pid: 'p0' }, { index: 1, pid: 'p1' }]]
+            }, function (err, _spies) {
+                spies = _spies;
+                done(err);
+            });
+        });
+
+        it('should hand the nested request the calling partition\'s iteration data row', function () {
+            expect(passedAssertions(spies, 'caller has a row')).to.eql([0, 1]);
+            expect(passedAssertions(spies, 'nested sees its caller row')).to.eql([0, 1]);
+        });
+    });
+
     describe('with partitions calling runRequest concurrently', function () {
         var spies;
 
         before(function (done) {
             runWaves({
                 collection: mainCollection(`
-                    console.log('main', pm.variables.get('vu'));
+                    console.log('main', pm.variables.get('pid'));
                     const res = await pm.execution.runRequest('nested-item');
                     pm.test('nested request ok', function () {
                         pm.expect(res.code).to.equal(200);
                     });
                 `),
                 options: {
-                    script: { requestResolver: requestResolver('console.log(\'nested\', pm.variables.get(\'vu\'));') }
+                    script: { requestResolver: requestResolver('console.log(\'nested\', pm.variables.get(\'pid\'));') }
                 },
-                waves: [[{ index: 0, vu: 'p0' }, { index: 1, vu: 'p1' }, { index: 2, vu: 'p2' }]]
+                waves: [[{ index: 0, pid: 'p0' }, { index: 1, pid: 'p1' }, { index: 2, pid: 'p2' }]]
             }, function (err, _spies) {
                 spies = _spies;
                 done(err);
@@ -204,7 +240,7 @@ var _ = require('lodash'),
         });
 
         it('should send one nested request per partition', function () {
-            expect(_.map(_.filter(hits, { path: '/target' }), 'vu').sort()).to.eql(['p0', 'p1', 'p2']);
+            expect(_.map(_.filter(hits, { path: '/target' }), 'pid').sort()).to.eql(['p0', 'p1', 'p2']);
         });
 
         it('should tag the logs of each partition, nested ones included, to that partition', function () {
@@ -233,7 +269,7 @@ var _ = require('lodash'),
                     maxInvokableNestedRequests: 3,
                     script: { requestResolver: requestResolver(recurse) }
                 },
-                waves: [[{ index: 0, vu: 'p0' }, { index: 1, vu: 'p1' }]]
+                waves: [[{ index: 0, pid: 'p0' }, { index: 1, pid: 'p1' }]]
             }, function (err, _spies) {
                 spies = _spies;
                 done(err);
@@ -242,7 +278,7 @@ var _ = require('lodash'),
 
         it('should enforce the depth limit for each partition on its own', function () {
             expect(spies.done.calledOnce).to.be.true;
-            expect(_.countBy(_.filter(hits, { path: '/target' }), 'vu')).to.eql({ p0: 3, p1: 3 });
+            expect(_.countBy(_.filter(hits, { path: '/target' }), 'pid')).to.eql({ p0: 3, p1: 3 });
         });
 
         it('should report the depth limit on the root request of each partition', function () {
@@ -261,7 +297,7 @@ var _ = require('lodash'),
 
             new Runner({}).run(mainCollection('await pm.execution.runRequest(\'nested-item\');'), {
                 iterationCount: 2,
-                data: [{ vu: 'p0' }, { vu: 'p0' }],
+                data: [{ pid: 'p0' }, { pid: 'p0' }],
                 requester: requester,
                 script: { requestResolver: requestResolver() }
             }, function (err, run) {
@@ -305,8 +341,8 @@ var _ = require('lodash'),
                     script: { requestResolver: requestResolver() }
                 },
                 waves: [
-                    [{ index: 0, vu: 'p0' }, { index: 1, vu: 'p1' }],
-                    [{ index: 0, vu: 'p0' }, { index: 1, vu: 'p1' }]
+                    [{ index: 0, pid: 'p0' }, { index: 1, pid: 'p1' }],
+                    [{ index: 0, pid: 'p0' }, { index: 1, pid: 'p1' }]
                 ]
             }, function (err, _spies) {
                 spies = _spies;
@@ -323,13 +359,13 @@ var _ = require('lodash'),
 
         it('should send the calling partition\'s cookies on nested requests', function () {
             expect(_.filter(hits, { path: '/target' }).slice(0, 2).map(function (hit) {
-                return hit.vu + ':' + hit.cookie;
+                return hit.pid + ':' + hit.cookie;
             }).sort()).to.eql(['p0:main=p0', 'p1:main=p1']);
         });
 
         it('should store cookies set by nested requests in the calling partition\'s jar', function () {
             expect(_.filter(hits, { path: '/main' }).slice(2).map(function (hit) {
-                return hit.vu + ':' + hit.cookie;
+                return hit.pid + ':' + hit.cookie;
             }).sort()).to.eql(['p0:main=p0; nested=p0', 'p1:main=p1; nested=p1']);
         });
     });
@@ -350,7 +386,8 @@ var _ = require('lodash'),
                 spies[name] = sinon.spy();
             });
 
-            // the run is over once the stopped VU's script has given up and the new VU's iteration is done
+            // the run is over once the stopped partition's script has given up and the
+            // new partition's iteration is done
             function maybeFinish () {
                 var all = logs();
 
@@ -362,22 +399,22 @@ var _ = require('lodash'),
                 }
             }
 
-            // stop VU "old" while its nested request is on the wire, and reuse its index straight away
-            onTarget = function (vu) {
-                if (vu !== 'old') { return; }
+            // stop partition "old" while its nested request is on the wire, and reuse its index straight away
+            onTarget = function (pid) {
+                if (pid !== 'old') { return; }
 
                 run.stopParallelIteration(0);
-                run.startParallelIteration(0, new VariableScope({ values: [{ key: 'vu', value: 'new' }] }), _.noop);
+                run.startParallelIteration(0, new VariableScope({ values: [{ key: 'pid', value: 'new' }] }), _.noop);
             };
 
             new Runner({}).run(mainCollection(`
                 await pm.execution.runRequest('nested-item');
                 try {
                     await pm.execution.runRequest('nested-item');
-                    console.log('second', pm.variables.get('vu'));
+                    console.log('second', pm.variables.get('pid'));
                 }
                 catch (e) {
-                    console.log('second failed', pm.variables.get('vu'), e.message);
+                    console.log('second failed', pm.variables.get('pid'), e.message);
                 }
             `), {
                 customParallelIterations: true,
@@ -387,7 +424,7 @@ var _ = require('lodash'),
 
                 run = runInstance;
                 spies.start = sinon.spy(function () {
-                    run.startParallelIteration(0, new VariableScope({ values: [{ key: 'vu', value: 'old' }] }),
+                    run.startParallelIteration(0, new VariableScope({ values: [{ key: 'pid', value: 'old' }] }),
                         _.noop);
                 });
                 spies.console = sinon.spy(maybeFinish);
@@ -409,11 +446,11 @@ var _ = require('lodash'),
 
         it('should not start new nested requests for the stopped partition', function () {
             expect(logs()).to.include('second failed old pm.execution.runRequest: the iteration was stopped.');
-            expect(_.filter(hits, { path: '/target', vu: 'old' })).to.have.lengthOf(1);
+            expect(_.filter(hits, { path: '/target', pid: 'old' })).to.have.lengthOf(1);
         });
 
         it('should give the next occupant of the index its own chain', function () {
-            expect(_.filter(hits, { path: '/target', vu: 'new' })).to.have.lengthOf(2);
+            expect(_.filter(hits, { path: '/target', pid: 'new' })).to.have.lengthOf(2);
         });
     });
 });
