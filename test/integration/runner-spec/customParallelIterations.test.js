@@ -38,7 +38,7 @@ describe('customParallelIterations end-to-end', function () {
         };
     }
 
-    // Self-contained driver that exercises the perftest invocation pattern:
+    // Self-contained driver that exercises the host-driven invocation pattern:
     //   runner.run() → run.start() → startParallelIteration() loop until
     //   maxLoops reached → abort.
     function runCustomMode (opts, done) {
@@ -206,9 +206,9 @@ describe('customParallelIterations end-to-end', function () {
                                 exec: [
                                     '// Stamp a marker in pm.variables so we can detect leakage',
                                     '// after stop+restart.',
-                                    'pm.variables.set("dead-vu-marker", "loop-" + pm.info.iteration);',
+                                    'pm.variables.set("stale-partition-marker", "loop-" + pm.info.iteration);',
                                     'pm.test("marker survives within a loop", function () {',
-                                    '    pm.expect(pm.variables.get("dead-vu-marker"))',
+                                    '    pm.expect(pm.variables.get("stale-partition-marker"))',
                                     '        .to.equal("loop-" + pm.info.iteration);',
                                     '});'
                                 ].join('\n')
@@ -243,7 +243,7 @@ describe('customParallelIterations end-to-end', function () {
                     cursorObservations.push(cursor && cursor.iteration);
 
                     if (iterationCount === 2) {
-                        // Stop the VU after 2 loops.
+                        // Stop the partition after 2 loops.
                         run.stopParallelIteration(0, function () {
                             // Then immediately restart. Per the contract,
                             // pm.info.iteration must reset to 0 and the
@@ -273,7 +273,7 @@ describe('customParallelIterations end-to-end', function () {
             });
         });
 
-        it('recycled VU does not inherit the previous occupant\'s pm.variables (no leak)', function (done) {
+        it('recycled partition does not inherit the previous occupant\'s pm.variables (no leak)', function (done) {
             done = once(done);
 
             var collection = new Collection({
@@ -284,14 +284,14 @@ describe('customParallelIterations end-to-end', function () {
                             script: {
                                 type: 'text/javascript',
                                 exec: [
-                                    '// At the first loop of any (re)used VU slot the scope must be',
+                                    '// At the first loop of any (re)used partition slot the scope must be',
                                     '// pristine — it must NOT carry a marker from a prior occupant.',
                                     'if (pm.info.iteration === 0) {',
                                     '    pm.test("fresh scope on (re)start", function () {',
-                                    '        pm.expect(pm.variables.get("dead-vu-marker")).to.be.undefined;',
+                                    '        pm.expect(pm.variables.get("stale-partition-marker")).to.be.undefined;',
                                     '    });',
                                     '}',
-                                    'pm.variables.set("dead-vu-marker", "loop-" + pm.info.iteration);'
+                                    'pm.variables.set("stale-partition-marker", "loop-" + pm.info.iteration);'
                                 ].join('\n')
                             }
                         }]
@@ -344,8 +344,8 @@ describe('customParallelIterations end-to-end', function () {
 
                     // iteration 0 fires twice: the very first loop and the post-restart loop.
                     expect(fresh.length).to.equal(2);
-                    // Both must be pristine. Before the fix, the recycled VU cloned the
-                    // dead VU's mutated run-global scope and saw "loop-1" (the leak).
+                    // Both must be pristine. Before the fix, the recycled partition cloned
+                    // the stopped partition's mutated run-global scope and saw "loop-1" (the leak).
                     expect(fresh.every(function (a) { return a.passed; })).to.be.true;
                     done();
                 });

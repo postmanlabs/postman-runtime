@@ -451,7 +451,7 @@ describe('PartitionManager', function () {
             });
         });
 
-        it('runSinglePartition bumps cursor.iteration from the per-VU loop counter', function (done) {
+        it('runSinglePartition bumps cursor.iteration from the per-partition loop counter', function (done) {
             partitionManager.runSinglePartition(0, null, function () {
                 var partition = partitionManager.partitions[0];
 

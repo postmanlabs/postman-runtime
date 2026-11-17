@@ -490,7 +490,7 @@ describe('customParallelIterations', function () {
                 }, next);
 
                 expect(ctx.triggers.iteration.callCount).to.equal(1);
-                // beforeIteration MUST NOT fire — perftest's startParallelIteration
+                // beforeIteration MUST NOT fire — the host's startParallelIteration
                 // will queue the next loop, which carries its own beforeIteration.
                 expect(ctx.triggers.beforeIteration.callCount).to.equal(0);
                 // No auto-loop: queueDelay must not run.

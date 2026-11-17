@@ -5,10 +5,10 @@ unreleased:
       send back only variable mutations after each script and rebuild full scopes
       on the host, to cut per-script bridge copying
     - >-
-      Added per-VU iteration data and iteration counter for the
-      `customParallelIterations` run mode, so each virtual user sees its own
-      `pm.info.iteration` and its own `pm.iterationData` row when iterations
-      run in parallel across partitions
+      Added per-partition iteration data and iteration counter for the
+      `customParallelIterations` run mode, so each partition driven via
+      `startParallelIteration` sees its own `pm.info.iteration` and its own
+      `pm.iterationData` row when iterations run in parallel
   fixed bugs:
     - GH-1569 Fixed form-data File params after an array `src` File param being skipped
     - Fixed a listener leak for nested request events after script execution
