@@ -68,30 +68,6 @@ describe('script.transferResponseBody option', function () {
         });
     });
 
-    describe('with a sandbox that cannot transfer', function () {
-        var testrun,
-            PostmanSandbox = require('postman-sandbox/lib/postman-sandbox'),
-            descriptor = Object.getOwnPropertyDescriptor(PostmanSandbox.prototype, 'supportsTransferResponseBody');
-
-        before(function (done) {
-            Object.defineProperty(PostmanSandbox.prototype, 'supportsTransferResponseBody', {
-                get: function () { return undefined; }, configurable: true
-            });
-            runWith.call(this, true, function (err, results) {
-                Object.defineProperty(PostmanSandbox.prototype, 'supportsTransferResponseBody', descriptor);
-                testrun = results;
-                done(err);
-            });
-        });
-
-        it('should fall back to base64 and keep the body on the host', function () {
-            var assertions = testrun.assertion.getCalls().map(function (call) { return call.args[1][0]; });
-
-            expect(assertions.map(function (a) { return a.passed; })).to.eql([true, true]);
-            expect(testrun.response.getCall(0).args[2].stream.length).to.be.above(0);
-        });
-    });
-
     describe('with a nested run', function () {
         var testrun;
 

@@ -197,11 +197,9 @@ runner.run(collection, {
         // Cuts copying for large scopes.
         variableMutationsOnly: false,
 
-        // Option to move the response body to the sandbox for test scripts instead of copying it as
-        // base64, when the sandbox supports it. Read the body in the `response` callback: once the
-        // item's last test script starts, the host copy may be emptied (bodies under ~4KB are copied
-        // instead), so later callbacks can't rely on it. Earlier test scripts and nested runs always
-        // get a copy.
+        // Move the response body to the sandbox for test scripts instead of copying it, when the sandbox
+        // supports it. Read the body in the `response` callback: the host copy may be emptied once the
+        // item's last test script starts.
         transferResponseBody: false,
 
         // Function to resolve requests that have been referenced via `pm.execution.runRequest`
