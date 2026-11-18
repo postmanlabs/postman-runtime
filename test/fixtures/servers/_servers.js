@@ -13,7 +13,11 @@ const fs = require('fs'),
     passport = require('passport'),
     ntlmUtils = require('httpntlm').ntlm,
     enableServerDestroy = require('server-destroy'),
-    DigestStrategy = require('passport-http').DigestStrategy;
+    DigestStrategy = require('passport-http').DigestStrategy,
+
+    // Node 27 raised the default from 5s to 65s. Tests expect an idle keep-alive socket to close
+    // within 5s, so a later run does not reuse a connection an earlier run opened.
+    KEEP_ALIVE_TIMEOUT = 5000;
 
 /**
  * Echo raw request message to test
@@ -129,6 +133,7 @@ function createSSLServer (opts) {
         server.url = 'https://localhost:' + server.port;
     });
 
+    server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT;
     enableServerDestroy(server);
 
     return server;
@@ -198,6 +203,7 @@ function createRedirectServer () {
         server.url = 'http://localhost:' + server.port;
     });
 
+    server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT;
     enableServerDestroy(server);
 
     return server;
@@ -224,6 +230,7 @@ function createHTTPServer () {
         server.url = 'http://localhost:' + server.port;
     });
 
+    server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT;
     enableServerDestroy(server);
 
     return server;
@@ -652,6 +659,7 @@ function createNTLMServer (options) {
         server.url = 'http://localhost:' + server.port;
     });
 
+    server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT;
     enableServerDestroy(server);
 
     return server;
@@ -676,6 +684,7 @@ function createBytesServer () {
         server.url = 'http://localhost:' + server.port;
     });
 
+    server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT;
     enableServerDestroy(server);
 
     return server;
@@ -768,12 +777,14 @@ function createHTTP2Server (opts) {
         server.url = 'https://localhost:' + server.port;
     });
 
+    server.keepAliveTimeout = KEEP_ALIVE_TIMEOUT;
     enableServerDestroy(server);
 
     return server;
 }
 
 module.exports = {
+    KEEP_ALIVE_TIMEOUT,
     createSSLServer,
     createHTTPServer,
     createProxyServer,
