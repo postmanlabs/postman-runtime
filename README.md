@@ -197,6 +197,11 @@ runner.run(collection, {
         // Cuts copying for large scopes.
         variableMutationsOnly: false,
 
+        // Move the response body to the sandbox for test scripts instead of copying it, when the sandbox
+        // supports it. Read the body in the `response` callback: the host copy may be emptied once the
+        // item's last test script starts.
+        transferResponseBody: false,
+
         // Function to resolve requests that have been referenced via `pm.execution.runRequest`
         // Expects a full collection JSON with a single request item and pre-request + test scripts
         // along with variables for the collection
