@@ -241,6 +241,9 @@ module.exports = {
         httpServer = http.createServer(handle);
         httpsServer = http2.createSecureServer({ allowHTTP1: true, ...options }, handle);
 
+        httpServer.keepAliveTimeout = server.KEEP_ALIVE_TIMEOUT;
+        httpsServer.keepAliveTimeout = server.KEEP_ALIVE_TIMEOUT;
+
         enableServerDestroy(httpServer);
         enableServerDestroy(httpsServer);
 

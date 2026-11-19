@@ -18,6 +18,7 @@ module.exports = {
             module.exports.port = this.address().port;
             module.exports.url = 'http://localhost:' + module.exports.port;
 
+            _digestServer.keepAliveTimeout = server.KEEP_ALIVE_TIMEOUT;
             enableServerDestroy(_digestServer);
             cb();
         });

@@ -11,6 +11,11 @@ unreleased:
     - >-
       Updated `postman-sandbox` to `v6.9.0`, which adds the
       `variableMutationsOnly` execute option
+    - >-
+      Updated `postman-request` to `v2.88.1-postman.53`, which reports an
+      HTTP/2 stream reset after the response starts as a request error instead
+      of throwing an uncaught exception, and cleans up the previous hop when it
+      follows a redirect
 
 7.56.3:
   date: 2026-10-21
