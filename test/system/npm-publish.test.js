@@ -4,7 +4,9 @@ const expect = require('chai').expect,
 
 describe('npm publish', function () {
     const stdout = exec('npm pack --dry-run --json').toString(),
-        packageInfo = JSON.parse(stdout.substring(stdout.indexOf('[')))[0],
+        // npm 12 prints an object keyed by package name, older npm an array
+        packOutput = JSON.parse(stdout.substring(stdout.search(/^[[{]/m))),
+        packageInfo = Array.isArray(packOutput) ? packOutput[0] : packOutput['postman-runtime'],
         packagedFiles = packageInfo.files.map(function (file) { return file.path; });
 
     it('should have a valid package name', function () {
