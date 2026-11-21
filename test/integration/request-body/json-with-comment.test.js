@@ -120,6 +120,19 @@ const expect = require('chai').expect,
             ]
         },
         {
+            suitName: 'with explicit json language',
+            scenarios: [
+                {
+                    name: 'preserves base64 comment markers',
+                    language: 'json',
+                    expectToRemoveComments: false,
+                    rawContent: 'abc//Z',
+                    rawContentInRequestTrigger: 'abc//Z',
+                    expectedObject: null
+                }
+            ]
+        },
+        {
             suitName: 'with raw language is not json',
             scenarios: [
                 {
@@ -148,7 +161,7 @@ const expect = require('chai').expect,
             scenarios: [
                 {
                     name: 'and content-type header is application/json',
-                    expectToRemoveComments: true,
+                    expectToRemoveComments: false,
                     headers: [
                         {
                             key: 'Content-Type',
@@ -157,12 +170,13 @@ const expect = require('chai').expect,
                     ],
                     withoutBodyOptions: true,
                     rawContent: '{//test\n"a": "value"}',
-                    rawContentInRequestTrigger: '{\n"a": "value"}',
-                    expectedObject: { a: 'value' }
+                    rawContentInRequestTrigger: '{//test\n"a": "value"}',
+                    expectedObject: null
+
                 },
                 {
                     name: 'and content-type header is application/vnd.api+json',
-                    expectToRemoveComments: true,
+                    expectToRemoveComments: false,
                     headers: [
                         {
                             key: 'Content-Type',
@@ -171,8 +185,9 @@ const expect = require('chai').expect,
                     ],
                     withoutBodyOptions: true,
                     rawContent: '{//test\n"a": "value"}',
-                    rawContentInRequestTrigger: '{\n"a": "value"}',
-                    expectedObject: { a: 'value' }
+                    rawContentInRequestTrigger: '{//test\n"a": "value"}',
+                    expectedObject: null
+
                 },
                 {
                     name: 'and content-type header is text/plain',
@@ -225,7 +240,7 @@ testSuit.forEach((test) => {
                                         ...(!scenario.withoutBodyOptions && {
                                             options: {
                                                 raw: {
-                                                    language: scenario.language || 'json'
+                                                    language: scenario.language || 'jsonc'
                                                 }
                                             }
                                         })
@@ -259,6 +274,12 @@ testSuit.forEach((test) => {
 
                     expect(response).to.have.property('code', 200);
                     expect(responseBody).to.have.property('json').that.eql(scenario.expectedObject);
+
+                    const expectedBody = typeof scenario.rawContentInRequestTrigger === 'string' ?
+                        scenario.rawContentInRequestTrigger :
+                        JSON.stringify(scenario.rawContentInRequestTrigger);
+
+                    expect(responseBody).to.have.property('data', expectedBody);
                 });
 
                 it('should return raw body in request trigger with comments' +
@@ -269,6 +290,47 @@ testSuit.forEach((test) => {
                     expect(rawBody).to.eql(scenario.rawContentInRequestTrigger);
                 });
             });
+        });
+    });
+});
+
+describe('Raw body variable preservation', function () {
+    it('should preserve //Z after variable interpolation', function (done) {
+        this.run({
+            collection: {
+                variable: [
+                    { key: 'photoBase64', value: 'abc//Z' }
+                ],
+                item: {
+                    request: {
+                        url: global.servers.http + '/echo',
+                        method: 'POST',
+                        header: [
+                            { key: 'Content-Type', value: 'application/json' }
+                        ],
+                        body: {
+                            mode: 'raw',
+                            raw: '{{photoBase64}}',
+                            options: {
+                                raw: { language: 'json' }
+                            }
+                        }
+                    }
+                }
+            }
+        }, function (err, results) {
+            if (err) { return done(err); }
+
+            try {
+                const response = results.response.getCall(0).args[2],
+                    responseBody = JSON.parse(response.stream.toString());
+
+                expect(responseBody.data).to.equal('abc//Z');
+                done();
+            }
+            catch (error) {
+                done(error);
+            }
         });
     });
 });

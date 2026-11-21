@@ -6,6 +6,7 @@ const expect = require('chai').expect,
             suitName: 'with single line comment',
             scenarios: [
                 {
+                    expectedContentType: 'application/json',
                     rawContent: '{// some comment\n"a": "value"\n}',
                     rawContentAfterDryRun: '{\n"a": "value"\n}'
                 }
@@ -40,6 +41,16 @@ const expect = require('chai').expect,
             ]
         },
         {
+            suitName: 'with explicit json language',
+            scenarios: [
+                {
+                    language: 'json',
+                    rawContent: 'abc//Z',
+                    rawContentAfterDryRun: 'abc//Z'
+                }
+            ]
+        },
+        {
             suitName: 'with non json raw language',
             scenarios: [
                 {
@@ -63,7 +74,7 @@ const expect = require('chai').expect,
             scenarios: [
                 {
                     name: 'and content-type header is application/json',
-                    expectToRemoveComments: true,
+                    expectToRemoveComments: false,
                     headers: [
                         {
                             key: 'Content-Type',
@@ -72,11 +83,11 @@ const expect = require('chai').expect,
                     ],
                     withoutBodyOptions: true,
                     rawContent: '{//test\n"a": "value"}',
-                    rawContentAfterDryRun: '{\n"a": "value"}'
+                    rawContentAfterDryRun: '{//test\n"a": "value"}'
                 },
                 {
                     name: 'and content-type header is application/vnd.api+json',
-                    expectToRemoveComments: true,
+                    expectToRemoveComments: false,
                     headers: [
                         {
                             key: 'Content-Type',
@@ -85,7 +96,7 @@ const expect = require('chai').expect,
                     ],
                     withoutBodyOptions: true,
                     rawContent: '{//test\n"a": "value"}',
-                    rawContentAfterDryRun: '{\n"a": "value"}'
+                    rawContentAfterDryRun: '{//test\n"a": "value"}'
                 },
                 {
                     name: 'and content-type header is text/plain',
@@ -132,7 +143,7 @@ testSuit.forEach((test) => {
                                 ...(!scenario.withoutBodyOptions && {
                                     options: {
                                         raw: {
-                                            language: scenario.language || 'json'
+                                            language: scenario.language || 'jsonc'
                                         }
                                     }
                                 })
@@ -146,6 +157,16 @@ testSuit.forEach((test) => {
                         done(err);
                     });
                 });
+
+                if (scenario.expectedContentType) {
+                    it('should set the expected Content-Type', function () {
+                        const header = result.headers.toJSON().find((item) => {
+                            return item.key.toLowerCase() === 'content-type';
+                        });
+
+                        expect(header).to.have.property('value', scenario.expectedContentType);
+                    });
+                }
 
                 it('should return raw body with comment' +
                 `${scenario.expectToRemoveComments ? ' removed' : ''}`, function () {
